@@ -192,3 +192,31 @@ def test_day_summary_collects_daily_sleep_workout_and_stress_counts(store, conn)
     assert d["daily"]["recovery"] == 61.0 and d["daily"]["source"] == "imported"
     assert d["workouts"][0]["sport"] == "run" and d["workouts"][0]["start"].startswith("2026-06-10T11:00")
     assert set(d["stress"]) >= {"heuristic", "counts"}
+
+
+def test_sample_buckets_is_evenly_spaced_deterministic_and_capped():
+    b = list(range(1000, 1000 + 5000))
+    out = q._sample(b, 400)
+    assert len(out) <= 400 and out[0] == b[0] and out == sorted(out)
+    assert out == q._sample(b, 400)
+    assert q._sample(b[:24], 400) == b[:24]   # sparse data: every bucket is used
+    assert q._sample([], 400) == []
+
+
+def test_baseline_reads_a_bounded_number_of_windows(store, conn, monkeypatch):
+    """A busy database must not make the baseline read every window of the last 14 days."""
+    seen = []
+    real = q.compute_stress_timeline
+
+    def spy(rr, hr, motion, baseline):
+        seen.append(len(rr))
+        return real(rr, hr, motion, baseline)
+
+    monkeypatch.setattr(q, "compute_stress_timeline", spy)
+    base = utc(2026, 6, 1, 10)
+    # 600 five-minute buckets with a handful of beats each (enough to be candidates, cheap to build)
+    rows = [({"ts": base + w * 300 + i, "rrMs": 800 + (i % 3), "seq": 0}, {}) for w in range(600) for i in range(3)]
+    put(store, "rrInterval", rows)
+    q.stress_timeline(conn, utc(2026, 6, 10, 10), utc(2026, 6, 10, 10, 5), now=NOW)
+    history_calls = [n for n in seen if n <= 3]
+    assert 0 < len(history_calls) <= q.BASELINE_SAMPLES + 1

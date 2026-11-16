@@ -66,6 +66,8 @@ class Store:
         self.conn.executescript(_SCHEMA)
         for s in REGISTRY.values():
             self.conn.execute(_table_sql(s))
+            if s.delivery == "append" and s.key[0].name == "ts":
+                self.conn.execute(f"CREATE INDEX IF NOT EXISTS idx_{s.name}_ts ON {_q(s.name)} (\"ts\")")
         with self.lock:
             if self.conn.execute("SELECT 1 FROM meta WHERE k='receiver_state_id'").fetchone() is None:
                 self.conn.execute("INSERT INTO meta VALUES ('receiver_state_id', ?)", (str(uuid.uuid4()),))

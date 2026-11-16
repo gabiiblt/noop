@@ -17,6 +17,7 @@ from .tz import day_bounds, local_day_of, local_iso
 MAX_ROWS = 5000
 FUTURE_SLACK_S = 86400
 BASELINE_DAYS = 14
+BASELINE_SAMPLES = 400  # 5-minute windows read for the personal baseline (plenty for a median/MAD)
 DISCLAIMER = ("Heuristic estimate from heart-rate variability, heart rate and motion; "
               "not medical advice or a diagnosis.")
 
@@ -111,16 +112,34 @@ def _motion(conn, a: int, b: int, cap: int):
         "SELECT ts, x, y, z FROM gravitySample WHERE ts>=? AND ts<? AND ts<=? ORDER BY ts", (a, b, cap))])
 
 
+def _sample(buckets: list[int], limit: int) -> list[int]:
+    """Evenly spaced, deterministic subset (all of them when there are few)."""
+    if len(buckets) <= limit:
+        return list(buckets)
+    step = len(buckets) / limit
+    return [buckets[int(i * step)] for i in range(limit)]
+
+
 def _baseline(conn, start: int, cap: int):
+    """Personal baseline from at most BASELINE_SAMPLES still, waking 5-minute windows of the previous
+    BASELINE_DAYS days. Windows are sampled (a median/MAD does not need all ~4,000), and each is read
+    with small time-indexed queries, so the cost does not grow with how much data the phone has sent."""
     lo = start - BASELINE_DAYS * 86400
     sleeps = [(r["startTs"], r["endTs"]) for r in conn.execute(
         "SELECT startTs, endTs FROM sleepSession WHERE endTs>=? AND startTs<?", (lo, start))]
-    wins = compute_stress_timeline(_history_rr(conn, lo, start, cap), _hr_pairs(conn, lo, start, cap),
-                                   _motion(conn, lo, start, cap), None)
-    hist = [(w.rmssd, w.mean_hr) for w in wins
-            if w.rmssd is not None and w.mean_hr is not None and w.motion is not None
-            and w.motion <= STILL_MOTION_MAX
-            and not any(s < w.end_ts and w.start_ts < e for s, e in sleeps)]
+    buckets = [r[0] for r in conn.execute(
+        "SELECT ts/? AS b FROM rrInterval WHERE ts>=? AND ts<? AND ts<=? GROUP BY b ORDER BY b",
+        (WINDOW_S, lo, start, cap))]
+    hist = []
+    for b in _sample(buckets, BASELINE_SAMPLES):
+        a, e = b * WINDOW_S, (b + 1) * WINDOW_S
+        if any(s < e and a < en for s, en in sleeps):
+            continue
+        for w in compute_stress_timeline(_history_rr(conn, a, e, cap), _hr_pairs(conn, a, e, cap),
+                                         _motion(conn, a, e, cap), None):
+            if (w.start_ts == a and w.rmssd is not None and w.mean_hr is not None and w.motion is not None
+                    and w.motion <= STILL_MOTION_MAX):
+                hist.append((w.rmssd, w.mean_hr))
     return personal_baseline(hist), len(hist)
 
 

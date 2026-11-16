@@ -63,3 +63,26 @@ def test_scopes_do_not_overwrite_each_other(tmp_path):
     s.upsert_rows(hr, "src1", "dev", [({"ts": 1}, {"bpm": 60})], "1.0")
     s.upsert_rows(hr, "src2", "dev", [({"ts": 1}, {"bpm": 70})], "1.0")
     assert s.conn.execute("SELECT COUNT(*) FROM hrSample").fetchone()[0] == 2
+
+
+def test_ts_index_exists_for_every_time_keyed_append_stream(tmp_path):
+    """Range reads by time (MCP tools) must not scan whole tables: the PK starts with the source/device scope."""
+    s = Store(str(tmp_path / "s.sqlite"))
+    idx = {r[0] for r in s.conn.execute("SELECT name FROM sqlite_master WHERE type='index'")}
+    for name, st in REGISTRY.items():
+        if st.delivery == "append" and st.key[0].name == "ts":
+            assert f"idx_{name}_ts" in idx, name
+
+
+def test_ts_range_query_uses_the_index(tmp_path):
+    s = Store(str(tmp_path / "s.sqlite"))
+    plan = " ".join(str(r[3]) for r in s.conn.execute(
+        "EXPLAIN QUERY PLAN SELECT ts, bpm FROM hrSample WHERE ts>=1 AND ts<100"))
+    assert "idx_hrSample_ts" in plan, plan
+
+
+def test_existing_database_gains_the_indexes_on_reopen(tmp_path):
+    p = str(tmp_path / "s.sqlite")
+    Store(p).conn.execute("DROP INDEX idx_hrSample_ts")
+    again = Store(p)
+    assert again.conn.execute("SELECT 1 FROM sqlite_master WHERE name='idx_hrSample_ts'").fetchone()
