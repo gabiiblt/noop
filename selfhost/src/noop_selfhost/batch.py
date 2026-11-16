@@ -11,7 +11,7 @@ import uuid
 import zlib
 from dataclasses import dataclass, field
 
-from .registry import EXT, REGISTRY, Col, Stream, streams_for
+from .registry import REGISTRY, VERSIONS, Col, Stream, streams_for
 
 MAX_RECORDS = 5000
 MAX_DECODED = 4_194_304
@@ -144,7 +144,8 @@ def _check_window(h: dict, s: Stream) -> dict:
     return w
 
 
-def parse_batch(body: bytes, content_encoding: str | None, version: str, allowed: set[str]) -> Batch:
+def parse_batch(body: bytes, content_encoding: str | None, version: str | None, allowed: set[str]) -> Batch:
+    """`version=None` takes the protocol version from the batch header (it must be a known one)."""
     decoded = _decode(body, content_encoding)
     if decoded.startswith(b"\xef\xbb\xbf") or not decoded.endswith(b"\n"):
         raise ProtocolError(400, "malformed_ndjson")
@@ -155,7 +156,9 @@ def parse_batch(body: bytes, content_encoding: str | None, version: str, allowed
     h = objs[0]
     if not isinstance(h, dict) or h.get("type") != "batch":
         raise ProtocolError(400, "bad_header")
-    if h.get("protocolVersion") != version:
+    if version is None:
+        version = h.get("protocolVersion")
+    if version not in VERSIONS or h.get("protocolVersion") != version:
         raise ProtocolError(422, "unsupported_version")
     for k in ("batchId", "sourceId"):
         if not _is_uuid(h.get(k)):

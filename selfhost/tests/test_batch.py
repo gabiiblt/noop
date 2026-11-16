@@ -69,6 +69,13 @@ def test_unsupported_content_encoding_415():
     assert status(hr_body(), "br") == 415
 
 
+def test_version_none_takes_it_from_header_and_rejects_unknown():
+    assert parse_batch(hr_body(), None, None, ALL).header["protocolVersion"] == V1
+    with pytest.raises(ProtocolError) as e:
+        parse_batch(hr_body(protocolVersion="3.0"), None, None, ALL)
+    assert e.value.status == 422
+
+
 def test_wrong_record_count_400():
     assert status(hr_body(n=2, recordCount=3)) == 400
 

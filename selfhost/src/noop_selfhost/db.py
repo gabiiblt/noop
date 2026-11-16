@@ -4,12 +4,14 @@ Every exported table is scoped by `(_src, _dev)` = (sourceId, deviceId) plus the
 """
 from __future__ import annotations
 
+import json
 import sqlite3
 import threading
 import uuid
 from contextlib import contextmanager
 from typing import Iterable, Iterator
 
+from .batch import Batch, ProtocolError
 from .registry import REGISTRY, Col, Stream
 
 _SQL_TYPE = {"int": "INTEGER", "real": "REAL", "text": "TEXT", "bool": "INTEGER", "blob": "BLOB"}
@@ -115,6 +117,25 @@ class Store:
             return run(conn)
         with self.transaction() as c:
             return run(c)
+
+    def accept_append(self, batch: Batch) -> dict:
+        """Apply an append batch and record its acknowledgement atomically (idempotent by batchId)."""
+        h = batch.header
+        src, dev, bid = h["sourceId"], h["deviceId"], h["batchId"]
+        with self.transaction() as c:
+            row = c.execute("SELECT bodySha256, ackJson FROM ledger WHERE _src=? AND _dev=? AND batchId=?",
+                            (src, dev, bid)).fetchone()
+            if row is not None:
+                if row[0] != batch.sha256:
+                    raise ProtocolError(409, "batch_id_conflict")
+                return json.loads(row[1])
+            self.upsert_rows(batch.stream, src, dev, [(r.key, r.data) for r in batch.records],
+                             h["protocolVersion"], conn=c)
+            ack = {"protocolVersion": h["protocolVersion"], "batchId": bid, "stream": h["stream"],
+                   "deviceId": dev, "endCursor": h["endCursor"], "acceptedRows": len(batch.records),
+                   "status": "accepted"}
+            c.execute("INSERT INTO ledger VALUES (?,?,?,?,?)", (src, dev, bid, batch.sha256, json.dumps(ack)))
+        return ack
 
     @staticmethod
     def connect_ro(path: str) -> sqlite3.Connection:
