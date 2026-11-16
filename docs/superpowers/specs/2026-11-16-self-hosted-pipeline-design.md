@@ -1,6 +1,7 @@
 # Self-hosted WHOOP data pipeline + MCP — design
 
-Status: **draft for approval** (no code written yet). Personal, private use under the repo's
+Status: **approved by the owner on 2026-11-16** (coach messages excluded); next step is the
+implementation plan. No code written yet. Personal, private use under the repo's
 PolyForm Noncommercial license. Date: 2026-11-16.
 
 ## 1. Intent
@@ -116,7 +117,6 @@ iPhone NOOPiOS ──HTTPS (Tailscale)──▶ tailscale serve :443 ──▶ 1
   `get_stream_range(stream,start,end,limit)` over a **fixed whitelist** of the exported streams
   (no raw SQL, hard row cap, pagination). Waveform blobs (PPG/ECG) are never returned inline to the
   agent: only counts/availability or short decoded summaries, to avoid flooding the model context.
-  `coachMessage` is not exposed.
 - **`get_stress_timeline` is a heuristic, not medical.** Per ~5-minute window: RMSSD from RR
   (same range/ectopic filtering as the app's `HRVAnalyzer`, minimum beat count) compared to a
   personal baseline (median/MAD over the trailing ~14 days of comparable waking windows), combined
@@ -144,9 +144,10 @@ What "all" means, from the current schema (migration v48), one stream each, expl
 - **Mutable, day/`startTs`-keyed, replace-window:** `appleDaily`, `metricSeries`,
   `scoreInputProvenance`, `liveSession`, `ouraRaw`.
 - **Small id-keyed tables, whole-table snapshot (hash-elided when unchanged):** `labMarker`,
-  `coachMessage`, `liftExercise`, `liftProgram`, `liftProgramItem`, `liftSession`, `liftSet`.
-- **Deliberately not exported:** `device` (name/MAC are private and the protocol already omits
-  them), `cursors` and the `synced` columns (local bookkeeping), `rawBatch` (a local replay buffer
+  `liftExercise`, `liftProgram`, `liftProgramItem`, `liftSession`, `liftSet`.
+- **Deliberately not exported:** `coachMessage` (owner's AI-coach conversations; **owner decision:
+  excluded**, not in the client registry at all), `device` (name/MAC are private and the protocol
+  already omits them), `cursors` and the `synced` columns (local bookkeeping), `rawBatch` (a local replay buffer
   that the app prunes after 24 h / 50 MB; its decoded content is exported via the streams above),
   `rawImuSample` (dropped by migration v41, no longer exists).
 - **Full history, not 14 days:** on a fresh destination the sender first replays the *entire*
@@ -154,9 +155,6 @@ What "all" means, from the current schema (migration v48), one stream each, expl
   switches to the rolling 14-day window + daily hashes. The receiver accepts any window.
 - **Blobs** (`samples`, `fields`, `record`) are sent as base64 strings and stored as BLOBs. The
   receiver keeps them verbatim; decoding stays out of the pipeline.
-- **Privacy note:** `coachMessage` holds the owner's conversations with the in-app AI coach. It is
-  exported as requested ("all data"), but the receiver can decline it through its capability list,
-  and the MCP server does not expose it. Say so if you want it excluded by default.
 
 Volume and behaviour (to be measured, not assumed): waveform streams dominate (PPG is 24 × i16 per
 second when optical capture is on; an ECG record is ~1.5 KB). The first upload of a long history
