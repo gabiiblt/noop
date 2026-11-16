@@ -132,3 +132,22 @@ def streams_for(version: str) -> list[Stream]:
     if version == EXT:
         return list(_STREAMS)
     raise ValueError(f"unsupported protocol version: {version}")
+
+
+def registry_json() -> dict:
+    """Machine-readable registry. Committed as the fixture the Swift package's parity test reads
+    (Packages/SelfHostPush/Tests/SelfHostPushTests/Fixtures/registry.json); regenerate with
+    `python -m noop_selfhost.registry > <that file>` after any registry change."""
+    def col(c: Col) -> dict:
+        return {"name": c.name, "type": c.type, "nullable": c.nullable}
+
+    return {"streams": [
+        {"name": s.name, "phase": s.phase, "delivery": s.delivery, "selector": s.selector,
+         "key": [col(c) for c in s.key], "data": [col(c) for c in s.data],
+         "extData": [col(c) for c in s.ext_data]}
+        for s in _STREAMS]}
+
+
+if __name__ == "__main__":
+    import json
+    print(json.dumps(registry_json(), indent=1))
