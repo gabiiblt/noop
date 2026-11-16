@@ -5,11 +5,15 @@ public enum PushError: Error, Equatable, Sendable {
     case retryable(String)
     /// Misconfiguration or protocol violation: surfaced to the user, retried only after a change.
     case fatal(String)
+    /// The receiver refused this one batch (400, 409, 413, 422): only that stream is affected, so the
+    /// other streams may continue. Surfaced to the user like `fatal`.
+    case rejected(String)
 
     public var message: String {
         switch self {
         case .retryable(let m): return m
         case .fatal(let m): return m
+        case .rejected(let m): return m
         }
     }
 
@@ -158,6 +162,8 @@ public final class PushTransport {
             throw PushError.fatal("authentication failed (HTTP \(status))")
         case 406:
             throw PushError.fatal("no common protocol version (HTTP 406)")
+        case 400, 409, 413, 422:
+            throw PushError.rejected("HTTP \(status)\(suffix)")
         default:
             throw PushError.fatal("HTTP \(status)\(suffix)")
         }

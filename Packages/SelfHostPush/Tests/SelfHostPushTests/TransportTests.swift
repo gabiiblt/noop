@@ -224,6 +224,19 @@ final class TransportTests: XCTestCase {
         }
     }
 
+    func testPerBatchRefusalsAreRejectedNotFatal() {
+        for status in [400, 409, 413, 422] {
+            XCTAssertThrowsError(try PushTransport.check(status: status, body: Data())) { error in
+                XCTAssertEqual(error as? PushError, .rejected("HTTP \(status)"))
+            }
+        }
+        for status in [401, 403, 406, 404] {
+            XCTAssertThrowsError(try PushTransport.check(status: status, body: Data())) { error in
+                guard case .fatal = (error as? PushError) ?? .retryable("") else { return XCTFail("HTTP \(status)") }
+            }
+        }
+    }
+
     func testRedirectIsFatalAndSessionNeverFollowsRedirects() {
         XCTAssertThrowsError(try PushTransport.check(status: 302, body: Data())) { error in
             XCTAssertEqual(error as? PushError, .fatal("redirect not followed (HTTP 302)"))
