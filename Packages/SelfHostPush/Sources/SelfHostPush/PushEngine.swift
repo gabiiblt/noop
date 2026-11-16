@@ -41,9 +41,16 @@ public final class PushEngine {
 
     // MARK: Ordering
 
+    /// Cheap, high-value streams first; the big waveform streams last so a short background window is
+    /// spent on heart rate, sleep and scores before it is spent on raw sensor data.
     private static let order: [String: Int] = [
         "hrSample": 0, "rrInterval": 1, "sleepSession": 2, "dailyMetric": 3, "workout": 4, "journal": 5,
         "battery": 6, "event": 7, "spo2Sample": 8, "skinTempSample": 9, "respSample": 10, "gravitySample": 11,
+        "appleDaily": 20, "metricSeries": 21, "scoreInputProvenance": 22, "liveSession": 23,
+        "labMarker": 24, "liftExercise": 25, "liftProgram": 26, "liftProgramItem": 27, "liftSession": 28,
+        "liftSet": 29, "ouraRaw": 30,
+        "stepSample": 40, "ppgHrSample": 41, "sleepStateSample": 42, "appleStepHour": 43,
+        "v18AuxSample": 90, "ppgWaveformSample": 91, "ecgWaveformSample": 92,
     ]
 
     static func priority(_ spec: StreamSpec) -> Int {
@@ -125,7 +132,8 @@ public final class PushEngine {
             let sent = try await pushWindows(spec, device: device, ns: ns, version: version, ext: ext)
             return (sent, true)
         case .snapshot:
-            return (0, true)
+            let sent = try await pushSnapshot(spec, device: device, ns: ns, version: version, ext: ext)
+            return (sent, true)
         }
     }
 
@@ -221,7 +229,14 @@ public final class PushEngine {
             }
             if chunks.isEmpty { chunks = [[]] }  // an empty authoritative window is still sent
             let boundsText = "\(bounds.0)|\(bounds.1)"
-            let identity = ["window", version.rawValue, progress.sourceId, device, spec.name, boundsText,
+            let candidates = Set(newHash.keys).union(old.keys).filter { $0 >= first && $0 <= lastDay }
+            // The identity includes the state the receiver is believed to hold (the last acknowledged
+            // per-day hashes). A retry of an interrupted attempt sees the same prior state and so
+            // reproduces identical ids and bytes; a window that returns to an EARLIER state after an
+            // intervening change (A, then B, then A again) gets fresh ids, so the receiver re-applies it
+            // instead of answering from its acknowledgement cache and staying at B.
+            let priorState = candidates.sorted().map { "\($0)=\(old[$0] ?? "-")" }.joined(separator: ",")
+            let identity = ["window", version.rawValue, progress.sourceId, device, spec.name, boundsText, priorState,
                             sha256Hex(Data(lines.joined(separator: "\n").utf8))].joined(separator: "\n")
             let replacementId = deterministicUUID(identity)
             for (i, chunk) in chunks.enumerated() {
@@ -236,12 +251,49 @@ public final class PushEngine {
             // Every part was acknowledged: only now do the per-day hashes advance.
             var set: [String: String] = [:]
             var remove: [String] = []
-            let candidates = Set(newHash.keys).union(old.keys).filter { $0 >= first && $0 <= lastDay }
             for d in candidates {
                 if let h = newHash[d] { set[d] = h } else { remove.append(d) }
             }
             try progress.applyDayHashes(set: set, remove: remove, ns: ns, device: device, stream: spec.name)
         }
+        return sent
+    }
+
+    // MARK: Snapshot streams
+
+    /// Whole-table replacement for a small id-keyed table, skipped when the table is unchanged since the
+    /// last acknowledged snapshot. Emptied after being populated sends one empty authoritative snapshot.
+    private func pushSnapshot(_ spec: StreamSpec, device: String, ns: String, version: PushVersion,
+                              ext: Bool) async throws -> Int {
+        let rows = try source.allRows(spec, deviceId: device)
+        let lines = rows.map { encodeRecordLine(spec, key: $0.key, data: $0.data, ext: ext) }
+        let newHash: String? = lines.isEmpty ? nil : sha256Hex(Data(lines.joined(separator: "\n").utf8))
+        let old = try progress.snapshotHash(ns: ns, device: device, stream: spec.name)
+        if newHash == old { return 0 }
+
+        var chunks: [[String]] = []
+        var rest = lines
+        while !rest.isEmpty {
+            let n = countFitting(rest)
+            if n == 0 { throw PushError.fatal("a single \(spec.name) record is larger than 4 MiB") }
+            chunks.append(Array(rest.prefix(n)))
+            rest = Array(rest.dropFirst(n))
+        }
+        if chunks.isEmpty { chunks = [[]] }
+        // Same rule as the windows: the prior acknowledged state is part of the identity.
+        let identity = ["snapshot", version.rawValue, progress.sourceId, device, spec.name, old ?? "-",
+                        newHash ?? "empty"].joined(separator: "\n")
+        let replacementId = deterministicUUID(identity)
+        var sent = 0
+        for (i, chunk) in chunks.enumerated() {
+            let window = WindowSpec(replacementId: replacementId, selector: "all", startInclusive: nil,
+                                    endExclusive: nil, part: i + 1, parts: chunks.count)
+            let batch = encodeBatch(version: version, sourceId: progress.sourceId, deviceId: device, spec: spec,
+                                    recordLines: chunk, startCursor: nil, endCursor: nil, window: window)
+            _ = try await transport.post(endpoint, batch: batch, version: version)
+            sent += chunk.count
+        }
+        try progress.setSnapshotHash(newHash, ns: ns, device: device, stream: spec.name)
         return sent
     }
 }
