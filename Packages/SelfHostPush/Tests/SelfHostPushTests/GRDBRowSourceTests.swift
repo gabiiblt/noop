@@ -16,7 +16,7 @@ final class GRDBRowSourceTests: XCTestCase {
 
     func testAppendPageIsOrderedByRowidAndLimited() async throws {
         let (path, w) = try await makeDatabase()
-        try w.write { db in
+        try await w.write { db in
             // inserted OUT of timestamp order, as a later offload backfills older rows
             for ts in [300, 100, 200, 50] {
                 try db.execute(sql: "INSERT INTO hrSample (deviceId, ts, bpm) VALUES ('strap', ?, 60)", arguments: [ts])
@@ -33,7 +33,7 @@ final class GRDBRowSourceTests: XCTestCase {
 
     func testEqualRRBeatsWithDifferentSeqAreBothReturnedWithMetadata() async throws {
         let (path, w) = try await makeDatabase()
-        try w.write { db in
+        try await w.write { db in
             try db.execute(sql: "INSERT INTO rrInterval (deviceId, ts, rrMs, seq, ord, srcChannel, tsSuspect) VALUES ('strap', 5, 800, 0, 1, NULL, NULL)")
             try db.execute(sql: "INSERT INTO rrInterval (deviceId, ts, rrMs, seq, ord, srcChannel, tsSuspect) VALUES ('strap', 5, 800, 1, 2, 3, 1)")
         }
@@ -48,7 +48,7 @@ final class GRDBRowSourceTests: XCTestCase {
 
     func testRowLookupByRowidChecksTheDevice() async throws {
         let (path, w) = try await makeDatabase()
-        try w.write { db in
+        try await w.write { db in
             try db.execute(sql: "INSERT INTO hrSample (deviceId, ts, bpm) VALUES ('strap', 7, 61)")
         }
         let src = try GRDBRowSource(databasePath: path)
@@ -66,15 +66,20 @@ final class GRDBRowSourceTests: XCTestCase {
         var config = Configuration()
         config.readonly = true
         let ro = try DatabaseQueue(path: path, configuration: config)
-        XCTAssertThrowsError(try ro.write { db in
-            try db.execute(sql: "INSERT INTO hrSample (deviceId, ts, bpm) VALUES ('x', 1, 1)")
-        })
+        do {
+            try await ro.write { db in
+                try db.execute(sql: "INSERT INTO hrSample (deviceId, ts, bpm) VALUES ('x', 1, 1)")
+            }
+            XCTFail("a read-only connection accepted a write")
+        } catch {
+            // expected: SQLITE_READONLY
+        }
     }
 
     func testDeviceIdsIncludeComputedNoopSourceAndBlankDatabaseIsEmpty() async throws {
         let (path, w) = try await makeDatabase()
         XCTAssertEqual(try GRDBRowSource(databasePath: path).deviceIds(), [])
-        try w.write { db in
+        try await w.write { db in
             try db.execute(sql: "INSERT INTO dailyMetric (deviceId, day) VALUES ('strap', '2026-08-01')")
             try db.execute(sql: "INSERT INTO dailyMetric (deviceId, day) VALUES ('strap-noop', '2026-08-01')")
             try db.execute(sql: "INSERT INTO sleepSession (deviceId, startTs, endTs) VALUES ('apple-health', 1, 2)")
@@ -84,7 +89,7 @@ final class GRDBRowSourceTests: XCTestCase {
 
     func testDeviceIdsIncludeDevicesThatOnlyHaveRowsInExtensionTables() async throws {
         let (path, w) = try await makeDatabase()
-        try w.write { db in
+        try await w.write { db in
             // mood entries are stored in metricSeries under their own device id and nowhere else
             try db.execute(sql: "INSERT INTO metricSeries (deviceId, day, key, value) VALUES ('noop-mood', '2026-08-01', 'mood', 4)")
             try db.execute(sql: "INSERT INTO appleDaily (deviceId, day, steps) VALUES ('apple-health', '2026-08-01', 5000)")
@@ -96,7 +101,7 @@ final class GRDBRowSourceTests: XCTestCase {
 
     func testAllRowsSortedByKeyWithBooleansAndTextJSONKeptAsStrings() async throws {
         let (path, w) = try await makeDatabase()
-        try w.write { db in
+        try await w.write { db in
             try db.execute(sql: "INSERT INTO sleepSession (deviceId, startTs, endTs, efficiency, stagesJSON, userEdited) VALUES ('strap', 2000, 3000, 0.9, '{\"light\":200}', 1)")
             try db.execute(sql: "INSERT INTO sleepSession (deviceId, startTs, endTs, userEdited) VALUES ('strap', 1000, 1500, 0)")
         }
@@ -112,7 +117,7 @@ final class GRDBRowSourceTests: XCTestCase {
 
     func testBlobColumnsAreBase64AndExtMembersReadWhenPresent() async throws {
         let (path, w) = try await makeDatabase()
-        try w.write { db in
+        try await w.write { db in
             try db.execute(sql: "INSERT INTO ppgWaveformSample (deviceId, ts, samples, burstIndex, baseCode) VALUES ('strap', 1, ?, 4, NULL)",
                            arguments: [Data([0, 1, 2, 255])])
             try db.execute(sql: "INSERT INTO dailyMetric (deviceId, day, avgSdnn, sleepHrOnly) VALUES ('strap', '2026-08-01', 55.5, 1)")
@@ -129,7 +134,7 @@ final class GRDBRowSourceTests: XCTestCase {
     func testMissingTableOrColumnYieldsNothingOrNull() throws {
         let path = tempURL().path
         let w = try DatabaseQueue(path: path)
-        try w.write { db in
+        try await w.write { db in
             try db.execute(sql: "CREATE TABLE hrSample (deviceId TEXT, ts INTEGER, bpm INTEGER, PRIMARY KEY (deviceId, ts))")
             try db.execute(sql: "INSERT INTO hrSample VALUES ('strap', 1, 60)")
             // an old sleepSession without the later columns (userEdited, motionJSON ...)

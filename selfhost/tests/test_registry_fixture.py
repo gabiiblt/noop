@@ -4,7 +4,7 @@ import pathlib
 from noop_selfhost.registry import registry_json
 
 FIXTURE = (pathlib.Path(__file__).resolve().parents[2]
-           / "Packages/SelfHostPush/Tests/SelfHostPushTests/Fixtures/registry.json")
+           / "Packages/SelfHostPush/Tests/SelfHostPushTests/Parity/registry.json")
 
 
 def test_swift_parity_fixture_matches_python_registry():

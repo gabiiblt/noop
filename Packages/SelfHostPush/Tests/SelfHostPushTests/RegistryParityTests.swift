@@ -1,13 +1,13 @@
 import XCTest
 @testable import SelfHostPush
 
-/// Fixtures/registry.json is generated from selfhost/src/noop_selfhost/registry.py
+/// Parity/registry.json is generated from selfhost/src/noop_selfhost/registry.py
 /// (`python -m noop_selfhost.registry`) and checked there by test_registry_fixture.py. This test is the
 /// Swift half: a drift on either side fails one of the two suites.
 final class RegistryParityTests: XCTestCase {
     private func fixture() throws -> [[String: Any]] {
         let url = try XCTUnwrap(Bundle.module.url(forResource: "registry", withExtension: "json",
-                                                  subdirectory: "Fixtures"))
+                                                  subdirectory: "Parity"))
         let obj = try JSONSerialization.jsonObject(with: Data(contentsOf: url))
         let root = try XCTUnwrap(obj as? [String: Any])
         return try XCTUnwrap(root["streams"] as? [[String: Any]])

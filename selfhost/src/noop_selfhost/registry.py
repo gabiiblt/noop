@@ -136,7 +136,7 @@ def streams_for(version: str) -> list[Stream]:
 
 def registry_json() -> dict:
     """Machine-readable registry. Committed as the fixture the Swift package's parity test reads
-    (Packages/SelfHostPush/Tests/SelfHostPushTests/Fixtures/registry.json); regenerate with
+    (Packages/SelfHostPush/Tests/SelfHostPushTests/Parity/registry.json); regenerate with
     `python -m noop_selfhost.registry > <that file>` after any registry change."""
     def col(c: Col) -> dict:
         return {"name": c.name, "type": c.type, "nullable": c.nullable}

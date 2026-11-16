@@ -31,7 +31,7 @@ public enum Phase: String, Sendable {
 
 /// One exported stream. The source table has the same name as the stream and a `deviceId` column.
 /// Kept in lock-step with selfhost/src/noop_selfhost/registry.py (RegistryParityTests compares both
-/// against Fixtures/registry.json).
+/// against Parity/registry.json).
 public struct StreamSpec: Equatable, Sendable {
     public let name: String
     public let key: [Column]

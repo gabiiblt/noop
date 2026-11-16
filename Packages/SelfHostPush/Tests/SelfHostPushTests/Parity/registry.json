@@ -1,0 +1,1280 @@
+{
+ "streams": [
+  {
+   "name": "hrSample",
+   "phase": "v1",
+   "delivery": "append",
+   "selector": "ts",
+   "key": [
+    {
+     "name": "ts",
+     "type": "int",
+     "nullable": false
+    }
+   ],
+   "data": [
+    {
+     "name": "bpm",
+     "type": "int",
+     "nullable": false
+    }
+   ],
+   "extData": []
+  },
+  {
+   "name": "rrInterval",
+   "phase": "v1",
+   "delivery": "append",
+   "selector": "ts",
+   "key": [
+    {
+     "name": "ts",
+     "type": "int",
+     "nullable": false
+    },
+    {
+     "name": "rrMs",
+     "type": "int",
+     "nullable": false
+    },
+    {
+     "name": "seq",
+     "type": "int",
+     "nullable": false
+    }
+   ],
+   "data": [
+    {
+     "name": "ord",
+     "type": "int",
+     "nullable": true
+    },
+    {
+     "name": "srcChannel",
+     "type": "int",
+     "nullable": true
+    },
+    {
+     "name": "tsSuspect",
+     "type": "int",
+     "nullable": true
+    }
+   ],
+   "extData": []
+  },
+  {
+   "name": "event",
+   "phase": "v1",
+   "delivery": "append",
+   "selector": "ts",
+   "key": [
+    {
+     "name": "ts",
+     "type": "int",
+     "nullable": false
+    },
+    {
+     "name": "kind",
+     "type": "text",
+     "nullable": false
+    }
+   ],
+   "data": [
+    {
+     "name": "payloadJSON",
+     "type": "text",
+     "nullable": false
+    }
+   ],
+   "extData": []
+  },
+  {
+   "name": "battery",
+   "phase": "v1",
+   "delivery": "append",
+   "selector": "ts",
+   "key": [
+    {
+     "name": "ts",
+     "type": "int",
+     "nullable": false
+    }
+   ],
+   "data": [
+    {
+     "name": "soc",
+     "type": "real",
+     "nullable": true
+    },
+    {
+     "name": "mv",
+     "type": "int",
+     "nullable": true
+    },
+    {
+     "name": "charging",
+     "type": "bool",
+     "nullable": true
+    }
+   ],
+   "extData": []
+  },
+  {
+   "name": "spo2Sample",
+   "phase": "v1",
+   "delivery": "append",
+   "selector": "ts",
+   "key": [
+    {
+     "name": "ts",
+     "type": "int",
+     "nullable": false
+    }
+   ],
+   "data": [
+    {
+     "name": "red",
+     "type": "int",
+     "nullable": false
+    },
+    {
+     "name": "ir",
+     "type": "int",
+     "nullable": false
+    }
+   ],
+   "extData": []
+  },
+  {
+   "name": "skinTempSample",
+   "phase": "v1",
+   "delivery": "append",
+   "selector": "ts",
+   "key": [
+    {
+     "name": "ts",
+     "type": "int",
+     "nullable": false
+    }
+   ],
+   "data": [
+    {
+     "name": "raw",
+     "type": "int",
+     "nullable": false
+    },
+    {
+     "name": "aux1Raw",
+     "type": "int",
+     "nullable": true
+    },
+    {
+     "name": "aux2Raw",
+     "type": "int",
+     "nullable": true
+    }
+   ],
+   "extData": []
+  },
+  {
+   "name": "respSample",
+   "phase": "v1",
+   "delivery": "append",
+   "selector": "ts",
+   "key": [
+    {
+     "name": "ts",
+     "type": "int",
+     "nullable": false
+    }
+   ],
+   "data": [
+    {
+     "name": "raw",
+     "type": "int",
+     "nullable": false
+    }
+   ],
+   "extData": []
+  },
+  {
+   "name": "gravitySample",
+   "phase": "v1",
+   "delivery": "append",
+   "selector": "ts",
+   "key": [
+    {
+     "name": "ts",
+     "type": "int",
+     "nullable": false
+    }
+   ],
+   "data": [
+    {
+     "name": "x",
+     "type": "real",
+     "nullable": false
+    },
+    {
+     "name": "y",
+     "type": "real",
+     "nullable": false
+    },
+    {
+     "name": "z",
+     "type": "real",
+     "nullable": false
+    },
+    {
+     "name": "dynAccel",
+     "type": "real",
+     "nullable": true
+    }
+   ],
+   "extData": []
+  },
+  {
+   "name": "dailyMetric",
+   "phase": "v1",
+   "delivery": "replace_window",
+   "selector": "day",
+   "key": [
+    {
+     "name": "day",
+     "type": "text",
+     "nullable": false
+    }
+   ],
+   "data": [
+    {
+     "name": "totalSleepMin",
+     "type": "real",
+     "nullable": true
+    },
+    {
+     "name": "efficiency",
+     "type": "real",
+     "nullable": true
+    },
+    {
+     "name": "deepMin",
+     "type": "real",
+     "nullable": true
+    },
+    {
+     "name": "remMin",
+     "type": "real",
+     "nullable": true
+    },
+    {
+     "name": "lightMin",
+     "type": "real",
+     "nullable": true
+    },
+    {
+     "name": "disturbances",
+     "type": "int",
+     "nullable": true
+    },
+    {
+     "name": "restingHr",
+     "type": "int",
+     "nullable": true
+    },
+    {
+     "name": "avgHrv",
+     "type": "real",
+     "nullable": true
+    },
+    {
+     "name": "recovery",
+     "type": "real",
+     "nullable": true
+    },
+    {
+     "name": "strain",
+     "type": "real",
+     "nullable": true
+    },
+    {
+     "name": "exerciseCount",
+     "type": "int",
+     "nullable": true
+    },
+    {
+     "name": "spo2Pct",
+     "type": "real",
+     "nullable": true
+    },
+    {
+     "name": "skinTempDevC",
+     "type": "real",
+     "nullable": true
+    },
+    {
+     "name": "respRateBpm",
+     "type": "real",
+     "nullable": true
+    },
+    {
+     "name": "steps",
+     "type": "int",
+     "nullable": true
+    },
+    {
+     "name": "activeKcalEst",
+     "type": "real",
+     "nullable": true
+    },
+    {
+     "name": "spo2Red",
+     "type": "int",
+     "nullable": true
+    },
+    {
+     "name": "spo2Ir",
+     "type": "int",
+     "nullable": true
+    }
+   ],
+   "extData": [
+    {
+     "name": "avgSdnn",
+     "type": "real",
+     "nullable": true
+    },
+    {
+     "name": "skinTempC",
+     "type": "real",
+     "nullable": true
+    },
+    {
+     "name": "sleepHrOnly",
+     "type": "bool",
+     "nullable": true
+    }
+   ]
+  },
+  {
+   "name": "sleepSession",
+   "phase": "v1",
+   "delivery": "replace_window",
+   "selector": "startTs",
+   "key": [
+    {
+     "name": "startTs",
+     "type": "int",
+     "nullable": false
+    }
+   ],
+   "data": [
+    {
+     "name": "endTs",
+     "type": "int",
+     "nullable": false
+    },
+    {
+     "name": "efficiency",
+     "type": "real",
+     "nullable": true
+    },
+    {
+     "name": "restingHr",
+     "type": "int",
+     "nullable": true
+    },
+    {
+     "name": "avgHrv",
+     "type": "real",
+     "nullable": true
+    },
+    {
+     "name": "stagesJSON",
+     "type": "text",
+     "nullable": true
+    },
+    {
+     "name": "userEdited",
+     "type": "bool",
+     "nullable": false
+    },
+    {
+     "name": "startTsAdjusted",
+     "type": "int",
+     "nullable": true
+    },
+    {
+     "name": "motionJSON",
+     "type": "text",
+     "nullable": true
+    },
+    {
+     "name": "sleepStateJSON",
+     "type": "text",
+     "nullable": true
+    },
+    {
+     "name": "stagingSparse",
+     "type": "int",
+     "nullable": true
+    }
+   ],
+   "extData": []
+  },
+  {
+   "name": "workout",
+   "phase": "v1",
+   "delivery": "replace_window",
+   "selector": "startTs",
+   "key": [
+    {
+     "name": "startTs",
+     "type": "int",
+     "nullable": false
+    },
+    {
+     "name": "sport",
+     "type": "text",
+     "nullable": false
+    }
+   ],
+   "data": [
+    {
+     "name": "endTs",
+     "type": "int",
+     "nullable": false
+    },
+    {
+     "name": "source",
+     "type": "text",
+     "nullable": false
+    },
+    {
+     "name": "durationS",
+     "type": "real",
+     "nullable": true
+    },
+    {
+     "name": "energyKcal",
+     "type": "real",
+     "nullable": true
+    },
+    {
+     "name": "avgHr",
+     "type": "int",
+     "nullable": true
+    },
+    {
+     "name": "maxHr",
+     "type": "int",
+     "nullable": true
+    },
+    {
+     "name": "strain",
+     "type": "real",
+     "nullable": true
+    },
+    {
+     "name": "distanceM",
+     "type": "real",
+     "nullable": true
+    },
+    {
+     "name": "zonesJSON",
+     "type": "text",
+     "nullable": true
+    },
+    {
+     "name": "notes",
+     "type": "text",
+     "nullable": true
+    },
+    {
+     "name": "routePolyline",
+     "type": "text",
+     "nullable": true
+    },
+    {
+     "name": "steps",
+     "type": "int",
+     "nullable": true
+    }
+   ],
+   "extData": []
+  },
+  {
+   "name": "journal",
+   "phase": "v1",
+   "delivery": "replace_window",
+   "selector": "day",
+   "key": [
+    {
+     "name": "day",
+     "type": "text",
+     "nullable": false
+    },
+    {
+     "name": "question",
+     "type": "text",
+     "nullable": false
+    }
+   ],
+   "data": [
+    {
+     "name": "answeredYes",
+     "type": "bool",
+     "nullable": false
+    },
+    {
+     "name": "notes",
+     "type": "text",
+     "nullable": true
+    },
+    {
+     "name": "numericValue",
+     "type": "real",
+     "nullable": true
+    }
+   ],
+   "extData": []
+  },
+  {
+   "name": "stepSample",
+   "phase": "ext",
+   "delivery": "append",
+   "selector": "ts",
+   "key": [
+    {
+     "name": "ts",
+     "type": "int",
+     "nullable": false
+    }
+   ],
+   "data": [
+    {
+     "name": "counter",
+     "type": "int",
+     "nullable": false
+    },
+    {
+     "name": "activityClass",
+     "type": "int",
+     "nullable": true
+    }
+   ],
+   "extData": []
+  },
+  {
+   "name": "ppgHrSample",
+   "phase": "ext",
+   "delivery": "append",
+   "selector": "ts",
+   "key": [
+    {
+     "name": "ts",
+     "type": "int",
+     "nullable": false
+    }
+   ],
+   "data": [
+    {
+     "name": "bpm",
+     "type": "real",
+     "nullable": false
+    },
+    {
+     "name": "conf",
+     "type": "real",
+     "nullable": false
+    }
+   ],
+   "extData": []
+  },
+  {
+   "name": "sleepStateSample",
+   "phase": "ext",
+   "delivery": "append",
+   "selector": "ts",
+   "key": [
+    {
+     "name": "ts",
+     "type": "int",
+     "nullable": false
+    }
+   ],
+   "data": [
+    {
+     "name": "state",
+     "type": "int",
+     "nullable": false
+    },
+    {
+     "name": "rawByte",
+     "type": "int",
+     "nullable": true
+    }
+   ],
+   "extData": []
+  },
+  {
+   "name": "appleStepHour",
+   "phase": "ext",
+   "delivery": "replace_window",
+   "selector": "ts",
+   "key": [
+    {
+     "name": "ts",
+     "type": "int",
+     "nullable": false
+    }
+   ],
+   "data": [
+    {
+     "name": "steps",
+     "type": "int",
+     "nullable": false
+    }
+   ],
+   "extData": []
+  },
+  {
+   "name": "v18AuxSample",
+   "phase": "ext",
+   "delivery": "append",
+   "selector": "ts",
+   "key": [
+    {
+     "name": "ts",
+     "type": "int",
+     "nullable": false
+    }
+   ],
+   "data": [
+    {
+     "name": "fields",
+     "type": "blob",
+     "nullable": false
+    }
+   ],
+   "extData": []
+  },
+  {
+   "name": "ppgWaveformSample",
+   "phase": "ext",
+   "delivery": "append",
+   "selector": "ts",
+   "key": [
+    {
+     "name": "ts",
+     "type": "int",
+     "nullable": false
+    }
+   ],
+   "data": [
+    {
+     "name": "samples",
+     "type": "blob",
+     "nullable": false
+    },
+    {
+     "name": "burstIndex",
+     "type": "int",
+     "nullable": true
+    },
+    {
+     "name": "baseCode",
+     "type": "int",
+     "nullable": true
+    }
+   ],
+   "extData": []
+  },
+  {
+   "name": "ecgWaveformSample",
+   "phase": "ext",
+   "delivery": "append",
+   "selector": "ts",
+   "key": [
+    {
+     "name": "ts",
+     "type": "int",
+     "nullable": false
+    },
+    {
+     "name": "sequence",
+     "type": "int",
+     "nullable": false
+    }
+   ],
+   "data": [
+    {
+     "name": "record",
+     "type": "blob",
+     "nullable": false
+    }
+   ],
+   "extData": []
+  },
+  {
+   "name": "appleDaily",
+   "phase": "ext",
+   "delivery": "replace_window",
+   "selector": "day",
+   "key": [
+    {
+     "name": "day",
+     "type": "text",
+     "nullable": false
+    }
+   ],
+   "data": [
+    {
+     "name": "steps",
+     "type": "int",
+     "nullable": true
+    },
+    {
+     "name": "activeKcal",
+     "type": "real",
+     "nullable": true
+    },
+    {
+     "name": "basalKcal",
+     "type": "real",
+     "nullable": true
+    },
+    {
+     "name": "vo2max",
+     "type": "real",
+     "nullable": true
+    },
+    {
+     "name": "avgHr",
+     "type": "int",
+     "nullable": true
+    },
+    {
+     "name": "maxHr",
+     "type": "int",
+     "nullable": true
+    },
+    {
+     "name": "walkingHr",
+     "type": "int",
+     "nullable": true
+    },
+    {
+     "name": "weightKg",
+     "type": "real",
+     "nullable": true
+    }
+   ],
+   "extData": []
+  },
+  {
+   "name": "metricSeries",
+   "phase": "ext",
+   "delivery": "replace_window",
+   "selector": "day",
+   "key": [
+    {
+     "name": "day",
+     "type": "text",
+     "nullable": false
+    },
+    {
+     "name": "key",
+     "type": "text",
+     "nullable": false
+    }
+   ],
+   "data": [
+    {
+     "name": "value",
+     "type": "real",
+     "nullable": false
+    }
+   ],
+   "extData": []
+  },
+  {
+   "name": "scoreInputProvenance",
+   "phase": "ext",
+   "delivery": "replace_window",
+   "selector": "day",
+   "key": [
+    {
+     "name": "day",
+     "type": "text",
+     "nullable": false
+    },
+    {
+     "name": "key",
+     "type": "text",
+     "nullable": false
+    }
+   ],
+   "data": [
+    {
+     "name": "sourceId",
+     "type": "text",
+     "nullable": false
+    }
+   ],
+   "extData": []
+  },
+  {
+   "name": "liveSession",
+   "phase": "ext",
+   "delivery": "replace_window",
+   "selector": "startTs",
+   "key": [
+    {
+     "name": "startTs",
+     "type": "int",
+     "nullable": false
+    }
+   ],
+   "data": [
+    {
+     "name": "endTs",
+     "type": "int",
+     "nullable": true
+    },
+    {
+     "name": "chargeAtStart",
+     "type": "real",
+     "nullable": true
+    },
+    {
+     "name": "floorBpm",
+     "type": "real",
+     "nullable": true
+    },
+    {
+     "name": "ceilingBpm",
+     "type": "real",
+     "nullable": true
+    },
+    {
+     "name": "inBandSec",
+     "type": "real",
+     "nullable": true
+    },
+    {
+     "name": "belowSec",
+     "type": "real",
+     "nullable": true
+    },
+    {
+     "name": "aboveSec",
+     "type": "real",
+     "nullable": true
+    },
+    {
+     "name": "pushCount",
+     "type": "int",
+     "nullable": true
+    },
+    {
+     "name": "easeCount",
+     "type": "int",
+     "nullable": true
+    },
+    {
+     "name": "hrSource",
+     "type": "text",
+     "nullable": true
+    }
+   ],
+   "extData": []
+  },
+  {
+   "name": "ouraRaw",
+   "phase": "ext",
+   "delivery": "snapshot",
+   "selector": null,
+   "key": [
+    {
+     "name": "endpoint",
+     "type": "text",
+     "nullable": false
+    },
+    {
+     "name": "documentId",
+     "type": "text",
+     "nullable": false
+    }
+   ],
+   "data": [
+    {
+     "name": "day",
+     "type": "text",
+     "nullable": true
+    },
+    {
+     "name": "payloadJSON",
+     "type": "text",
+     "nullable": true
+    },
+    {
+     "name": "fetchedAt",
+     "type": "int",
+     "nullable": true
+    }
+   ],
+   "extData": []
+  },
+  {
+   "name": "labMarker",
+   "phase": "ext",
+   "delivery": "snapshot",
+   "selector": null,
+   "key": [
+    {
+     "name": "id",
+     "type": "text",
+     "nullable": false
+    }
+   ],
+   "data": [
+    {
+     "name": "markerKey",
+     "type": "text",
+     "nullable": true
+    },
+    {
+     "name": "category",
+     "type": "text",
+     "nullable": true
+    },
+    {
+     "name": "day",
+     "type": "text",
+     "nullable": true
+    },
+    {
+     "name": "takenAt",
+     "type": "int",
+     "nullable": true
+    },
+    {
+     "name": "value",
+     "type": "real",
+     "nullable": true
+    },
+    {
+     "name": "valueText",
+     "type": "text",
+     "nullable": true
+    },
+    {
+     "name": "unit",
+     "type": "text",
+     "nullable": true
+    },
+    {
+     "name": "source",
+     "type": "text",
+     "nullable": true
+    },
+    {
+     "name": "note",
+     "type": "text",
+     "nullable": true
+    },
+    {
+     "name": "referenceText",
+     "type": "text",
+     "nullable": true
+    }
+   ],
+   "extData": []
+  },
+  {
+   "name": "liftExercise",
+   "phase": "ext",
+   "delivery": "snapshot",
+   "selector": null,
+   "key": [
+    {
+     "name": "id",
+     "type": "text",
+     "nullable": false
+    }
+   ],
+   "data": [
+    {
+     "name": "name",
+     "type": "text",
+     "nullable": true
+    },
+    {
+     "name": "primaryMuscle",
+     "type": "text",
+     "nullable": true
+    },
+    {
+     "name": "secondaryMuscles",
+     "type": "text",
+     "nullable": true
+    },
+    {
+     "name": "createdAt",
+     "type": "int",
+     "nullable": true
+    },
+    {
+     "name": "lastUsedTs",
+     "type": "int",
+     "nullable": true
+    }
+   ],
+   "extData": []
+  },
+  {
+   "name": "liftProgram",
+   "phase": "ext",
+   "delivery": "snapshot",
+   "selector": null,
+   "key": [
+    {
+     "name": "id",
+     "type": "text",
+     "nullable": false
+    }
+   ],
+   "data": [
+    {
+     "name": "name",
+     "type": "text",
+     "nullable": true
+    },
+    {
+     "name": "note",
+     "type": "text",
+     "nullable": true
+    },
+    {
+     "name": "createdAt",
+     "type": "int",
+     "nullable": true
+    },
+    {
+     "name": "updatedAt",
+     "type": "int",
+     "nullable": true
+    },
+    {
+     "name": "archived",
+     "type": "int",
+     "nullable": true
+    }
+   ],
+   "extData": []
+  },
+  {
+   "name": "liftProgramItem",
+   "phase": "ext",
+   "delivery": "snapshot",
+   "selector": null,
+   "key": [
+    {
+     "name": "id",
+     "type": "text",
+     "nullable": false
+    }
+   ],
+   "data": [
+    {
+     "name": "programId",
+     "type": "text",
+     "nullable": true
+    },
+    {
+     "name": "ord",
+     "type": "int",
+     "nullable": true
+    },
+    {
+     "name": "exercise",
+     "type": "text",
+     "nullable": true
+    },
+    {
+     "name": "targetSets",
+     "type": "int",
+     "nullable": true
+    },
+    {
+     "name": "targetRepsLow",
+     "type": "int",
+     "nullable": true
+    },
+    {
+     "name": "targetRepsHigh",
+     "type": "int",
+     "nullable": true
+    },
+    {
+     "name": "targetRpe",
+     "type": "real",
+     "nullable": true
+    },
+    {
+     "name": "targetWeightKg",
+     "type": "real",
+     "nullable": true
+    },
+    {
+     "name": "restSec",
+     "type": "int",
+     "nullable": true
+    },
+    {
+     "name": "note",
+     "type": "text",
+     "nullable": true
+    }
+   ],
+   "extData": []
+  },
+  {
+   "name": "liftSession",
+   "phase": "ext",
+   "delivery": "snapshot",
+   "selector": null,
+   "key": [
+    {
+     "name": "id",
+     "type": "text",
+     "nullable": false
+    }
+   ],
+   "data": [
+    {
+     "name": "startTs",
+     "type": "int",
+     "nullable": true
+    },
+    {
+     "name": "endTs",
+     "type": "int",
+     "nullable": true
+    },
+    {
+     "name": "sport",
+     "type": "text",
+     "nullable": true
+    },
+    {
+     "name": "programId",
+     "type": "text",
+     "nullable": true
+    },
+    {
+     "name": "programName",
+     "type": "text",
+     "nullable": true
+    },
+    {
+     "name": "sessionRpe",
+     "type": "real",
+     "nullable": true
+    },
+    {
+     "name": "note",
+     "type": "text",
+     "nullable": true
+    }
+   ],
+   "extData": []
+  },
+  {
+   "name": "liftSet",
+   "phase": "ext",
+   "delivery": "snapshot",
+   "selector": null,
+   "key": [
+    {
+     "name": "id",
+     "type": "text",
+     "nullable": false
+    }
+   ],
+   "data": [
+    {
+     "name": "sessionId",
+     "type": "text",
+     "nullable": true
+    },
+    {
+     "name": "ord",
+     "type": "int",
+     "nullable": true
+    },
+    {
+     "name": "exercise",
+     "type": "text",
+     "nullable": true
+    },
+    {
+     "name": "primaryMuscle",
+     "type": "text",
+     "nullable": true
+    },
+    {
+     "name": "secondaryMuscles",
+     "type": "text",
+     "nullable": true
+    },
+    {
+     "name": "setIndex",
+     "type": "int",
+     "nullable": true
+    },
+    {
+     "name": "weightKg",
+     "type": "real",
+     "nullable": true
+    },
+    {
+     "name": "reps",
+     "type": "int",
+     "nullable": true
+    },
+    {
+     "name": "rpe",
+     "type": "real",
+     "nullable": true
+    },
+    {
+     "name": "isWarmup",
+     "type": "int",
+     "nullable": true
+    },
+    {
+     "name": "startTs",
+     "type": "int",
+     "nullable": true
+    },
+    {
+     "name": "endTs",
+     "type": "int",
+     "nullable": true
+    },
+    {
+     "name": "restSec",
+     "type": "int",
+     "nullable": true
+    },
+    {
+     "name": "note",
+     "type": "text",
+     "nullable": true
+    }
+   ],
+   "extData": []
+  }
+ ]
+}

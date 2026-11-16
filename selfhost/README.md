@@ -17,7 +17,7 @@ tailnet by `tailscale serve`; every request needs your bearer token.
 |---|---|
 | `src/noop_selfhost/receiver.py`, `batch.py`, `db.py` | The receiver: `docs/PUSH_PROTOCOL.md` v1 plus the fork extension `1.100`. Idempotent, deduplicated, atomic window replacement. |
 | `src/noop_selfhost/mcp_server.py`, `queries.py`, `stress.py`, `sleep.py`, `tz.py` | The read-only MCP server and its logic. Europe/Paris time. |
-| `src/noop_selfhost/registry.py` | The single list of exported streams. Mirrored by `Packages/SelfHostPush` (parity checked by `Fixtures/registry.json`). |
+| `src/noop_selfhost/registry.py` | The single list of exported streams. Mirrored by `Packages/SelfHostPush` (parity checked by `Parity/registry.json`). |
 | `src/noop_selfhost/simulator.py` | Replays a copy of your real `whoop.sqlite` against the receiver, to test the server before the app. |
 | `PROTOCOL_EXT.md` | What `1.100` adds on top of the upstream protocol. |
 | `deploy/` | systemd unit, `tailscale serve` steps, MCP config example, backup script. **Start with `deploy/README.md`.** |
