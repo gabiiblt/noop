@@ -145,7 +145,7 @@ class Store:
         (ack, ledger row, upsert and delete share one transaction).
         """
         h, s = batch.header, batch.stream
-        if s.delivery != "replace_window":
+        if s.delivery not in ("replace_window", "snapshot"):
             raise ProtocolError(422, "unsupported_delivery")
         w = h["window"]
         src, dev, bid, rid = h["sourceId"], h["deviceId"], h["batchId"], w["replacementId"]
@@ -168,7 +168,7 @@ class Store:
                 raise ProtocolError(409, "superseded_generation")
             elif seen[0] == "applied":
                 raise ProtocolError(409, "conflicting_replacement")
-            start, end = str(w["startInclusive"]), str(w["endExclusive"])
+            start, end = str(w.get("startInclusive", "")), str(w.get("endExclusive", ""))
             for p, parts, a, b in c.execute(
                     "SELECT part, parts, startInclusive, endExclusive FROM window_parts WHERE _src=? AND _dev=? "
                     "AND stream=? AND replacementId=?", (*scope, rid)).fetchall():
@@ -201,11 +201,13 @@ class Store:
         if len(keep) != len(rows):
             raise ProtocolError(400, "duplicate_key")
         self.upsert_rows(s, src, dev, rows, version, conn=c)
-        sel = _q(s.selector)
-        existing = c.execute(
-            f"SELECT {', '.join(_q(n) for n in names)} FROM {_q(s.name)} "
-            f"WHERE _src=? AND _dev=? AND {sel} >= ? AND {sel} < ?",
-            (src, dev, w["startInclusive"], w["endExclusive"])).fetchall()
+        select = f"SELECT {', '.join(_q(n) for n in names)} FROM {_q(s.name)} WHERE _src=? AND _dev=?"
+        if s.delivery == "snapshot":  # whole-table replacement for this (source, device)
+            existing = c.execute(select, (src, dev)).fetchall()
+        else:
+            sel = _q(s.selector)
+            existing = c.execute(f"{select} AND {sel} >= ? AND {sel} < ?",
+                                 (src, dev, w["startInclusive"], w["endExclusive"])).fetchall()
         gone = [tuple(r) for r in existing if tuple(r) not in keep]
         where = " AND ".join(f"{_q(n)}=?" for n in names)
         c.executemany(f"DELETE FROM {_q(s.name)} WHERE _src=? AND _dev=? AND {where}",
