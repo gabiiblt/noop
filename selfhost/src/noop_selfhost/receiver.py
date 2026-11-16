@@ -62,7 +62,8 @@ def create_app(store: Store, token: str, enabled_streams: set[str] | None = None
         try:
             batch = parse_batch(body, request.headers.get("content-encoding"), None, allowed)
             version = batch.header["protocolVersion"]
-            ack = await run_in_threadpool(store.accept_append, batch)
+            accept = store.accept_append if batch.stream.delivery == "append" else store.accept_window_part
+            ack = await run_in_threadpool(accept, batch)
             return JSONResponse(ack)
         except ProtocolError as e:
             return err(e.status, e.code, version)

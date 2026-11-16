@@ -48,9 +48,10 @@ CREATE TABLE IF NOT EXISTS window_parts (
   payload TEXT NOT NULL, startInclusive TEXT NOT NULL, endExclusive TEXT NOT NULL,
   selector TEXT NOT NULL, ackJson TEXT NOT NULL,
   PRIMARY KEY (_src, _dev, stream, replacementId, part));
-CREATE TABLE IF NOT EXISTS window_generation (
+CREATE TABLE IF NOT EXISTS window_seen (
   _src TEXT NOT NULL, _dev TEXT NOT NULL, stream TEXT NOT NULL, replacementId TEXT NOT NULL,
-  PRIMARY KEY (_src, _dev, stream));
+  state TEXT NOT NULL CHECK (state IN ('current','superseded','applied')),
+  PRIMARY KEY (_src, _dev, stream, replacementId));
 """
 
 
@@ -88,7 +89,7 @@ class Store:
         new = str(uuid.uuid4())
         with self.transaction() as c:
             c.execute("UPDATE meta SET v=? WHERE k='receiver_state_id'", (new,))
-            for t in ("ledger", "window_parts", "window_generation"):
+            for t in ("ledger", "window_parts", "window_seen"):
                 c.execute(f"DELETE FROM {t}")
         return new
 
@@ -136,6 +137,79 @@ class Store:
                    "status": "accepted"}
             c.execute("INSERT INTO ledger VALUES (?,?,?,?,?)", (src, dev, bid, batch.sha256, json.dumps(ack)))
         return ack
+
+    def accept_window_part(self, batch: Batch) -> dict:
+        """Stage one part of an authoritative replacement; apply atomically when the set is complete.
+
+        The acknowledgement of the completing part is returned only after the apply committed
+        (ack, ledger row, upsert and delete share one transaction).
+        """
+        h, s = batch.header, batch.stream
+        if s.delivery != "replace_window":
+            raise ProtocolError(422, "unsupported_delivery")
+        w = h["window"]
+        src, dev, bid, rid = h["sourceId"], h["deviceId"], h["batchId"], w["replacementId"]
+        scope = (src, dev, s.name)
+        with self.transaction() as c:
+            row = c.execute("SELECT bodySha256, ackJson FROM ledger WHERE _src=? AND _dev=? AND batchId=?",
+                            (src, dev, bid)).fetchone()
+            if row is not None:
+                if row[0] != batch.sha256:
+                    raise ProtocolError(409, "batch_id_conflict")
+                return json.loads(row[1])
+            seen = c.execute("SELECT state FROM window_seen WHERE _src=? AND _dev=? AND stream=? "
+                             "AND replacementId=?", (*scope, rid)).fetchone()
+            if seen is None:  # first part of a new generation supersedes older incomplete ones
+                c.execute("UPDATE window_seen SET state='superseded' WHERE _src=? AND _dev=? AND stream=? "
+                          "AND state='current'", scope)
+                c.execute("DELETE FROM window_parts WHERE _src=? AND _dev=? AND stream=?", scope)
+                c.execute("INSERT INTO window_seen VALUES (?,?,?,?, 'current')", (*scope, rid))
+            elif seen[0] == "superseded":
+                raise ProtocolError(409, "superseded_generation")
+            elif seen[0] == "applied":
+                raise ProtocolError(409, "conflicting_replacement")
+            start, end = str(w["startInclusive"]), str(w["endExclusive"])
+            for p, parts, a, b in c.execute(
+                    "SELECT part, parts, startInclusive, endExclusive FROM window_parts WHERE _src=? AND _dev=? "
+                    "AND stream=? AND replacementId=?", (*scope, rid)).fetchall():
+                if p == w["part"] or parts != w["parts"] or (a, b) != (start, end):
+                    raise ProtocolError(409, "conflicting_part")
+            ack = {"protocolVersion": h["protocolVersion"], "batchId": bid, "stream": s.name,
+                   "deviceId": dev, "endCursor": None, "acceptedRows": len(batch.records),
+                   "status": "accepted"}
+            c.execute("INSERT INTO window_parts (_src,_dev,stream,replacementId,part,parts,batchId,bodySha256,"
+                      "payload,startInclusive,endExclusive,selector,ackJson) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)",
+                      (*scope, rid, w["part"], w["parts"], bid, batch.sha256,
+                       json.dumps([[r.key, r.data] for r in batch.records]), start, end,
+                       w["selector"], json.dumps(ack)))
+            c.execute("INSERT INTO ledger VALUES (?,?,?,?,?)", (src, dev, bid, batch.sha256, json.dumps(ack)))
+            staged = c.execute("SELECT payload FROM window_parts WHERE _src=? AND _dev=? AND stream=? "
+                               "AND replacementId=? ORDER BY part", (*scope, rid)).fetchall()
+            if len(staged) == w["parts"]:
+                self._apply_window(c, s, src, dev, w, h["protocolVersion"], [json.loads(p[0]) for p in staged])
+                c.execute("UPDATE window_seen SET state='applied' WHERE _src=? AND _dev=? AND stream=? "
+                          "AND replacementId=?", (*scope, rid))
+                c.execute("DELETE FROM window_parts WHERE _src=? AND _dev=? AND stream=? AND replacementId=?",
+                          (*scope, rid))
+        return ack
+
+    def _apply_window(self, c: sqlite3.Connection, s: Stream, src: str, dev: str, w: dict,
+                      version: str, parts: list[list]) -> None:
+        names = [col.name for col in s.key]
+        rows = [(k, d) for part in parts for k, d in part]
+        keep = {tuple(k[n] for n in names) for k, _ in rows}
+        if len(keep) != len(rows):
+            raise ProtocolError(400, "duplicate_key")
+        self.upsert_rows(s, src, dev, rows, version, conn=c)
+        sel = _q(s.selector)
+        existing = c.execute(
+            f"SELECT {', '.join(_q(n) for n in names)} FROM {_q(s.name)} "
+            f"WHERE _src=? AND _dev=? AND {sel} >= ? AND {sel} < ?",
+            (src, dev, w["startInclusive"], w["endExclusive"])).fetchall()
+        gone = [tuple(r) for r in existing if tuple(r) not in keep]
+        where = " AND ".join(f"{_q(n)}=?" for n in names)
+        c.executemany(f"DELETE FROM {_q(s.name)} WHERE _src=? AND _dev=? AND {where}",
+                      [(src, dev, *g) for g in gone])
 
     @staticmethod
     def connect_ro(path: str) -> sqlite3.Connection:
