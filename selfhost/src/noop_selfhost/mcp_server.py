@@ -5,11 +5,13 @@ Times in/out are Europe/Paris; naive ISO inputs are Paris local time."""
 from __future__ import annotations
 
 import argparse
+import re
 import sqlite3
 import sys
 
 from mcp.server.mcpserver import MCPServer
 from mcp.server.mcpserver.exceptions import ToolError
+from mcp.server.transport_security import TransportSecuritySettings
 
 from . import queries as q
 from .db import Store
@@ -99,19 +101,49 @@ def create_server(db_path: str) -> MCPServer:
     return server
 
 
+LOOPBACK_HOSTS = ["127.0.0.1:*", "localhost:*", "[::1]:*"]
+LOOPBACK_ORIGINS = ["http://127.0.0.1:*", "http://localhost:*", "http://[::1]:*"]
+_HOST_PORT = re.compile(r"^(\[[0-9A-Fa-f:.]+\]|[A-Za-z0-9.-]+):([0-9]{1,5})$")
+
+
+def http_security(allow_hosts: list[str]) -> TransportSecuritySettings:
+    """DNS-rebinding guard for the HTTP transport: loopback plus exact extra `host:port` values.
+
+    The SDK only admits 127.0.0.1/localhost Host headers when bound to loopback, which refuses (421) a
+    request relayed from a Docker bridge address or published by `tailscale serve` under the tailnet name.
+    Each extra value must be an exact host:port (no wildcard), and the guard itself stays on."""
+    extra = []
+    for value in allow_hosts:
+        m = _HOST_PORT.match(value)
+        if not m or not 1 <= int(m.group(2)) <= 65535:
+            raise ValueError(f"--allow-host expects an exact host:port such as 172.21.0.1:8789, got {value!r}")
+        extra.append(value)
+    return TransportSecuritySettings(
+        enable_dns_rebinding_protection=True,
+        allowed_hosts=LOOPBACK_HOSTS + extra,
+        allowed_origins=LOOPBACK_ORIGINS,
+    )
+
+
 def main(argv: list[str] | None = None) -> None:
     ap = argparse.ArgumentParser(prog="noop-mcp")
     ap.add_argument("--db", required=True)
     ap.add_argument("--http", metavar="HOST:PORT", help="serve Streamable HTTP on loopback instead of stdio")
+    ap.add_argument("--allow-host", metavar="HOST:PORT", action="append", default=[],
+                    help="with --http: also accept this exact Host header (a relay or tailscale serve "
+                         "address); repeatable")
     a = ap.parse_args(argv)
+    if a.allow_host and not a.http:
+        sys.exit("noop-mcp: --allow-host only applies with --http")
     server = create_server(a.db)
     if a.http:
         from .receiver import parse_listen
         try:
             host, port = parse_listen(a.http)
+            security = http_security(a.allow_host)
         except ValueError as e:
             sys.exit(f"noop-mcp: {e}")
-        server.run("streamable-http", host=host, port=port)
+        server.run("streamable-http", host=host, port=port, transport_security=security)
     else:
         server.run("stdio")
 

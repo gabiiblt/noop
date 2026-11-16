@@ -78,3 +78,57 @@ def test_no_tool_accepts_free_form_sql(server):
     for t in asyncio.run(server.list_tools()):
         props = " ".join(t.input_schema.get("properties", {}))
         assert "sql" not in props.lower() and "query" not in props.lower()
+
+
+# --- Host-header allow-list for the HTTP transport -------------------------------------------------
+# The SDK's DNS-rebinding guard only admits 127.0.0.1/localhost Host headers when bound to loopback, so a
+# relay (a Docker bridge address) or `tailscale serve` (the tailnet name) got 421. `--allow-host` adds exact
+# host:port values while keeping the guard on.
+
+from starlette.testclient import TestClient
+
+from noop_selfhost.mcp_server import http_security, main
+
+INIT = {"jsonrpc": "2.0", "id": 1, "method": "initialize",
+        "params": {"protocolVersion": "2025-06-18", "capabilities": {},
+                   "clientInfo": {"name": "t", "version": "1"}}}
+HDRS = {"content-type": "application/json", "accept": "application/json, text/event-stream"}
+
+
+def post_init(server, host_header, extra=()):
+    app = server.streamable_http_app(transport_security=http_security(list(extra)))
+    with TestClient(app, base_url="http://127.0.0.1:8788") as c:
+        return c.post("/mcp", json=INIT, headers={**HDRS, "host": host_header})
+
+
+def test_loopback_host_is_accepted_by_default(server):
+    assert post_init(server, "127.0.0.1:8788").status_code == 200
+
+
+def test_foreign_host_is_still_refused_by_default(server):
+    assert post_init(server, "172.21.0.1:8789").status_code == 421
+
+
+def test_allowed_host_is_accepted(server):
+    assert post_init(server, "172.21.0.1:8789", ["172.21.0.1:8789"]).status_code == 200
+
+
+def test_allow_host_is_exact_not_a_prefix(server):
+    assert post_init(server, "172.21.0.1:9999", ["172.21.0.1:8789"]).status_code == 421
+
+
+def test_guard_stays_on_when_hosts_are_added():
+    s = http_security(["server.example.ts.net:8443"])
+    assert s.enable_dns_rebinding_protection
+    assert "127.0.0.1:*" in s.allowed_hosts and "server.example.ts.net:8443" in s.allowed_hosts
+
+
+@pytest.mark.parametrize("bad", ["172.21.0.1", "*:8789", "host:*", ":8789", "a b:1", "h:0", "h:70000"])
+def test_allow_host_rejects_malformed_values(bad):
+    with pytest.raises(ValueError):
+        http_security([bad])
+
+
+def test_allow_host_requires_http(tmp_path):
+    with pytest.raises(SystemExit):
+        main(["--db", str(tmp_path / "x.sqlite"), "--allow-host", "172.21.0.1:8789"])

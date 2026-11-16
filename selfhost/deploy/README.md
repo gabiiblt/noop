@@ -71,6 +71,11 @@ Same machine as the database. The agent's user needs read access to the database
 read-only, offers six tools and no free-form SQL. For an agent running elsewhere you may instead run
 `noop-mcp --db ... --http 127.0.0.1:8788` and publish it the same way with `tailscale serve`;
 that is not enabled by default.
+The HTTP server only accepts requests addressed to `127.0.0.1`/`localhost` (a DNS-rebinding guard), so
+add each address a client really uses with `--allow-host`, for example
+`--allow-host server.<tailnet>.ts.net:8443` behind `tailscale serve`, or `--allow-host 172.21.0.1:8789`
+behind a relay on a Docker bridge (a containerised agent cannot reach `tailscale serve`). Without it the
+client gets `421 Invalid Host header`.
 
 ## 8. Backups
 
