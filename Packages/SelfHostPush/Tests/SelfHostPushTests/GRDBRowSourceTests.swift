@@ -134,7 +134,7 @@ final class GRDBRowSourceTests: XCTestCase {
     func testMissingTableOrColumnYieldsNothingOrNull() throws {
         let path = tempURL().path
         let w = try DatabaseQueue(path: path)
-        try await w.write { db in
+        try w.write { db in
             try db.execute(sql: "CREATE TABLE hrSample (deviceId TEXT, ts INTEGER, bpm INTEGER, PRIMARY KEY (deviceId, ts))")
             try db.execute(sql: "INSERT INTO hrSample VALUES ('strap', 1, 60)")
             // an old sleepSession without the later columns (userEdited, motionJSON ...)
