@@ -12,8 +12,9 @@ A stream or member of this extension is never sent under `1.0`; a receiver rejec
 ## What the extension adds
 
 1. **More streams** (registry `phase: ext`): append `stepSample`, `ppgHrSample`,
-   `sleepStateSample`, `appleStepHour`, `v18AuxSample`, `ppgWaveformSample`, `ecgWaveformSample`;
-   replace-window `appleDaily`, `metricSeries`, `scoreInputProvenance`, `liveSession`; snapshot
+   `sleepStateSample`, `v18AuxSample`, `ppgWaveformSample`, `ecgWaveformSample`;
+   replace-window `appleDaily`, `metricSeries`, `scoreInputProvenance`, `liveSession`, and `appleStepHour`
+   (selector `ts`: numeric half-open bounds over its `ts` key; the app revises an hour in place, so it cannot be append-only); snapshot
    `ouraRaw`, `labMarker`, `liftExercise`, `liftProgram`, `liftProgramItem`, `liftSession`, `liftSet`.
 2. **Extra optional members on v1 streams:** `dailyMetric.avgSdnn`, `.skinTempC`, `.sleepHrOnly`.
 3. **Blob members** (`samples`, `fields`, `record`) are JSON strings holding standard base64.

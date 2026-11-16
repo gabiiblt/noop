@@ -75,7 +75,8 @@ that is not enabled by default.
 ## 8. Backups
 
 ```bash
-sudo install -m 750 deploy/noop-backup.sh /usr/local/bin/noop-backup
+sudo install -m 755 deploy/noop-backup.sh /usr/local/bin/noop-backup
+sudo install -d -o noop -g noop -m 750 /var/backups/noop-selfhost
 echo '17 3 * * * noop /usr/local/bin/noop-backup' | sudo tee /etc/cron.d/noop-backup
 ```
 

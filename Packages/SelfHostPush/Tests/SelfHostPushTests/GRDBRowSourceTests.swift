@@ -82,6 +82,18 @@ final class GRDBRowSourceTests: XCTestCase {
         XCTAssertEqual(try GRDBRowSource(databasePath: path).deviceIds(), ["apple-health", "strap", "strap-noop"])
     }
 
+    func testDeviceIdsIncludeDevicesThatOnlyHaveRowsInExtensionTables() async throws {
+        let (path, w) = try await makeDatabase()
+        try w.write { db in
+            // mood entries are stored in metricSeries under their own device id and nowhere else
+            try db.execute(sql: "INSERT INTO metricSeries (deviceId, day, key, value) VALUES ('noop-mood', '2026-08-01', 'mood', 4)")
+            try db.execute(sql: "INSERT INTO appleDaily (deviceId, day, steps) VALUES ('apple-health', '2026-08-01', 5000)")
+        }
+        let ids = try GRDBRowSource(databasePath: path).deviceIds()
+        XCTAssertTrue(ids.contains("noop-mood"))
+        XCTAssertTrue(ids.contains("apple-health"))
+    }
+
     func testAllRowsSortedByKeyWithBooleansAndTextJSONKeptAsStrings() async throws {
         let (path, w) = try await makeDatabase()
         try w.write { db in

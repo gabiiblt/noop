@@ -98,7 +98,7 @@ public enum PushRegistry {
         stream("stepSample", "ts:int!", "counter:int!, activityClass:int", .append, .ts, phase: .ext),
         stream("ppgHrSample", "ts:int!", "bpm:real!, conf:real!", .append, .ts, phase: .ext),
         stream("sleepStateSample", "ts:int!", "state:int!, rawByte:int", .append, .ts, phase: .ext),
-        stream("appleStepHour", "ts:int!", "steps:int!", .append, .ts, phase: .ext),
+        stream("appleStepHour", "ts:int!", "steps:int!", .replaceWindow, .ts, phase: .ext),
         stream("v18AuxSample", "ts:int!", "fields:blob!", .append, .ts, phase: .ext),
         stream("ppgWaveformSample", "ts:int!", "samples:blob!, burstIndex:int, baseCode:int", .append, .ts, phase: .ext),
         stream("ecgWaveformSample", "ts:int!, sequence:int!", "record:blob!", .append, .ts, phase: .ext),

@@ -56,7 +56,7 @@ final class TransportTests: XCTestCase {
         return PushTransport(session: PushTransport.makeSession(configuration: config))
     }
 
-    private func json(_ obj: Any) -> Data {
+    private func json(_ obj: [String: Any]) -> Data {
         return try! JSONSerialization.data(withJSONObject: obj)
     }
 
@@ -71,7 +71,7 @@ final class TransportTests: XCTestCase {
         var obj: [String: Any] = ["protocolVersion": "1.0", "batchId": b.batchId, "stream": b.stream,
                                   "deviceId": b.deviceId, "acceptedRows": b.recordCount, "status": "accepted"]
         if let c = b.endCursor {
-            obj["endCursor"] = ["rowId": c.rowId, "keySha256": c.keySha256]
+            obj["endCursor"] = ["rowId": c.rowId, "keySha256": c.keySha256] as [String: Any]
         } else {
             obj["endCursor"] = NSNull()
         }
@@ -168,7 +168,7 @@ final class TransportTests: XCTestCase {
             { $0["stream"] = "battery" },
             { $0["deviceId"] = "other" },
             { $0["protocolVersion"] = "1.100" },
-            { $0["endCursor"] = ["rowId": 8, "keySha256": String(repeating: "d", count: 64)] },
+            { $0["endCursor"] = ["rowId": 8, "keySha256": String(repeating: "d", count: 64)] as [String: Any] },
             { $0["endCursor"] = NSNull() },
             { $0.removeValue(forKey: "status") },
         ]
@@ -199,7 +199,7 @@ final class TransportTests: XCTestCase {
             XCTFail("rejected a valid window ack: \(error)")
         }
         StubURLProtocol.handler = { _ in
-            (200, self.ackJSON(for: b, mutate: { $0["endCursor"] = ["rowId": 1, "keySha256": "x"] }))
+            (200, self.ackJSON(for: b, mutate: { $0["endCursor"] = ["rowId": 1, "keySha256": "x"] as [String: Any] }))
         }
         do {
             _ = try await transport().post(endpoint, batch: b, version: .v1)

@@ -31,6 +31,16 @@ public final class ProgressStore {
                   PRIMARY KEY (ns, device, stream))
                 """)
             try db.execute(sql: "CREATE TABLE IF NOT EXISTS device (name TEXT PRIMARY KEY)")
+            try db.execute(sql: """
+                CREATE TABLE IF NOT EXISTS gen (
+                  ns TEXT NOT NULL, device TEXT NOT NULL, stream TEXT NOT NULL, value INTEGER NOT NULL,
+                  PRIMARY KEY (ns, device, stream))
+                """)
+            try db.execute(sql: """
+                CREATE TABLE IF NOT EXISTS inflight (
+                  ns TEXT NOT NULL, device TEXT NOT NULL, stream TEXT NOT NULL, item TEXT NOT NULL,
+                  PRIMARY KEY (ns, device, stream, item))
+                """)
         }
         let existing: String? = try q.read { db in
             try String.fetchOne(db, sql: "SELECT v FROM meta WHERE k = 'sourceId'")
@@ -157,6 +167,55 @@ public final class ProgressStore {
             } else {
                 try db.execute(sql: "DELETE FROM snaphash WHERE ns = ? AND device = ? AND stream = ?",
                                arguments: [ns, device, stream])
+            }
+        }
+    }
+
+    // MARK: Delivery generation and in-flight markers (replace-window and snapshot streams)
+
+    /// Counts fully acknowledged window/snapshot deliveries for a stream. It is part of the batch identity,
+    /// so a retry of an unacknowledged attempt is byte-identical while every later delivery is distinct.
+    public func generation(ns: String, device: String, stream: String) throws -> Int {
+        return try queue.read { db -> Int in
+            let v = try Int.fetchOne(db, sql: "SELECT value FROM gen WHERE ns = ? AND device = ? AND stream = ?",
+                                     arguments: [ns, device, stream])
+            return v ?? 0
+        }
+    }
+
+    public func bumpGeneration(ns: String, device: String, stream: String) throws {
+        try queue.write { db in
+            try db.execute(sql: """
+                INSERT INTO gen (ns, device, stream, value) VALUES (?, ?, ?, 1)
+                ON CONFLICT (ns, device, stream) DO UPDATE SET value = value + 1
+                """, arguments: [ns, device, stream])
+        }
+    }
+
+    /// Days (or "*" for a snapshot) whose last delivery was started but never acknowledged. The receiver
+    /// may have applied it, so they are re-sent even when the local hashes now look unchanged.
+    public func inFlight(ns: String, device: String, stream: String) throws -> Set<String> {
+        return try queue.read { db -> Set<String> in
+            let items = try String.fetchAll(db, sql: "SELECT item FROM inflight WHERE ns = ? AND device = ? AND stream = ?",
+                                            arguments: [ns, device, stream])
+            return Set(items)
+        }
+    }
+
+    public func markInFlight(_ items: [String], ns: String, device: String, stream: String) throws {
+        try queue.write { db in
+            for item in items {
+                try db.execute(sql: "INSERT OR IGNORE INTO inflight (ns, device, stream, item) VALUES (?, ?, ?, ?)",
+                               arguments: [ns, device, stream, item])
+            }
+        }
+    }
+
+    public func clearInFlight(_ items: [String], ns: String, device: String, stream: String) throws {
+        try queue.write { db in
+            for item in items {
+                try db.execute(sql: "DELETE FROM inflight WHERE ns = ? AND device = ? AND stream = ? AND item = ?",
+                               arguments: [ns, device, stream, item])
             }
         }
     }

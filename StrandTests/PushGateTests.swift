@@ -54,6 +54,23 @@ final class PushGateTests: XCTestCase {
         XCTAssertTrue(PushThrottle.shouldStart(manual: true, lastStartedAt: now.addingTimeInterval(-1), now: now))
     }
 
+    func testATriggerThatArrivesWhileRunningIsRememberedNotDropped() {
+        let now = Date(timeIntervalSince1970: 1_000_000)
+        XCTAssertEqual(PushThrottle.decision(manual: false, isRunning: true, lastStartedAt: now.addingTimeInterval(-5), now: now),
+                       .rerunAfterCurrent)
+        XCTAssertEqual(PushThrottle.decision(manual: false, isRunning: false, lastStartedAt: nil, now: now), .start)
+    }
+
+    func testAThrottledTriggerIsDeferredUntilTheGapHasPassedNotLost() {
+        let now = Date(timeIntervalSince1970: 1_000_000)
+        let last = now.addingTimeInterval(-30)
+        XCTAssertEqual(PushThrottle.decision(manual: false, isRunning: false, lastStartedAt: last, now: now),
+                       .retryAt(last.addingTimeInterval(PushThrottle.minimumGap)))
+        XCTAssertEqual(PushThrottle.decision(manual: true, isRunning: false, lastStartedAt: last, now: now), .start)
+        XCTAssertEqual(PushThrottle.decision(manual: false, isRunning: false, lastStartedAt: now.addingTimeInterval(-200), now: now),
+                       .start)
+    }
+
     func testTokenIsNeverStoredInUserDefaults() throws {
         guard PushSettings.setToken("super-secret-token-value") else {
             throw XCTSkip("Keychain is unavailable in this test host")

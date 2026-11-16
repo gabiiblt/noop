@@ -35,7 +35,7 @@ Data arrives with a delay (iOS only lets the app upload now and then), so an emp
 | Tool | Returns |
 |---|---|
 | `get_hr_range(start, end, bucket_minutes?)` | Heart rate, raw or bucketed min/avg/max. |
-| `get_rr_range(start, end)` | Beat-to-beat intervals (equal consecutive beats are kept). |
+| `get_rr_range(start, end)` | Beat-to-beat intervals. Duplicate copies (several transport channels, or the same beats re-sent under a second source) are collapsed with a conservative approximation of the app's read policy (`rr_policy.py`); equal consecutive beats are kept. |
 | `get_sleep(day)` | Sleep sessions for the wake day: start/end, efficiency, stage minutes and segments. |
 | `get_stress_timeline(start, end)` | The stress **heuristic** per 5-minute window (see below). |
 | `get_day_summary(day)` | Heart-rate stats, daily scores, sleep, workouts, stress-label counts. |
@@ -68,5 +68,6 @@ python3 -m venv .venv && .venv/bin/pip install -e '.[dev]'
 ## Measured performance
 
 On a synthetic 15-day database (1.5 M beat intervals, 1.3 M heart-rate and 1.3 M gravity rows, 231 MB):
-`get_hr_range` (1 day, 5-minute buckets) 0.03 s, `get_day_summary` 0.8 s, `get_stress_timeline` (1 day) 1.5 s.
+`get_hr_range` (1 day, 5-minute buckets) 0.03 s, `get_day_summary` 1.5 s, `get_stress_timeline` (1 day) 2.2 s
+(ranges over 7 days are refused for the stress timeline).
 The receiver creates a time index on each large table at start-up (about 2 s for that size).

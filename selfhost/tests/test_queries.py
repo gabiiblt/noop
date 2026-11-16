@@ -220,3 +220,33 @@ def test_baseline_reads_a_bounded_number_of_windows(store, conn, monkeypatch):
     q.stress_timeline(conn, utc(2026, 6, 10, 10), utc(2026, 6, 10, 10, 5), now=NOW)
     history_calls = [n for n in seen if n <= 3]
     assert 0 < len(history_calls) <= q.BASELINE_SAMPLES + 1
+
+
+def test_stream_range_filters_a_ts_selector_window_stream_by_time(store, conn):
+    put(store, "appleStepHour", [({"ts": 3600}, {"steps": 10}), ({"ts": 90_000}, {"steps": 20})])
+    out = q.stream_range(conn, "appleStepHour", 0, 7200, now=utc(2026, 1, 1))
+    assert [r["steps"] for r in out["rows"]] == [10] and out["total_in_range"] == 1
+
+
+def test_stream_range_truncates_long_text_values(store, conn):
+    put(store, "event", [({"ts": 10, "kind": "k"}, {"payloadJSON": "x" * 5000})])
+    row = q.stream_range(conn, "event", 0, 100, now=utc(2026, 1, 1))["rows"][0]
+    assert len(row["payloadJSON"]) < 2100 and "truncated 3000 chars" in row["payloadJSON"]
+
+
+def test_stress_timeline_rejects_ranges_longer_than_seven_days(conn):
+    with pytest.raises(ValueError, match="7 days"):
+        q.stress_timeline(conn, 0, 8 * 86400, now=NOW)
+    q.stress_timeline(conn, NOW - 7 * 86400, NOW, now=NOW)  # exactly the limit is fine
+
+
+def test_rr_range_applies_the_read_policy_across_sources_and_channels(store, conn):
+    t = utc(2026, 6, 10, 10)
+    beats = [({"ts": t + i, "rrMs": 800 + i, "seq": 0}, {"srcChannel": 7, "ord": i}) for i in range(3)]
+    store.upsert_rows(REGISTRY["rrInterval"], "src-A", "strap", beats, "1.0")
+    # the same beats re-sent under a second sourceId (app reinstall) and on another transport channel
+    store.upsert_rows(REGISTRY["rrInterval"], "src-B", "strap", beats, "1.0")
+    chan5 = [({"ts": t + i, "rrMs": 800 + i, "seq": 0}, {"srcChannel": 5, "ord": i}) for i in range(3)]
+    store.upsert_rows(REGISTRY["rrInterval"], "src-A", "strap", [(k | {"rrMs": k["rrMs"]}, d) for k, d in chan5], "1.0")
+    out = q.rr_range(conn, t, t + 10, now=NOW)
+    assert [p["rr_ms"] for p in out["points"]] == [800, 801, 802]

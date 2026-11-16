@@ -7,6 +7,7 @@ import sqlite3
 import time
 
 from .registry import REGISTRY
+from .rr_policy import apply_read_policy
 from .sleep import parse_stages, pick_sleep, wake_day
 from .stress import (
     MIN_BASELINE_WINDOWS, STILL_MOTION_MAX, WINDOW_S, compute_stress_timeline, gravity_motion,
@@ -17,6 +18,9 @@ from .tz import day_bounds, local_day_of, local_iso
 MAX_ROWS = 5000
 FUTURE_SLACK_S = 86400
 BASELINE_DAYS = 14
+MAX_STRESS_RANGE_S = 7 * 86400
+MAX_TEXT = 2000
+RR_FETCH_CAP = 8 * MAX_ROWS
 BASELINE_SAMPLES = 400  # 5-minute windows read for the personal baseline (plenty for a median/MAD)
 DISCLAIMER = ("Heuristic estimate from heart-rate variability, heart rate and motion; "
               "not medical advice or a diagnosis.")
@@ -58,14 +62,25 @@ def hr_range(conn: sqlite3.Connection, start: int, end: int, bucket_s: int | Non
     return out
 
 
+_RR_COLS = 'ts, rrMs, seq, ord, srcChannel, "_dev" AS dev, "_src" AS src'
+
+
+def _rr_rows(conn, a: int, b: int, cap: int, limit: int) -> list[dict]:
+    return apply_read_policy([dict(r) for r in conn.execute(
+        f"SELECT {_RR_COLS} FROM rrInterval WHERE ts>=? AND ts<? AND ts<=? "
+        "AND (tsSuspect IS NULL OR tsSuspect=0) ORDER BY ts, seq, rowid LIMIT ?", (a, b, cap, limit))])
+
+
 def rr_range(conn: sqlite3.Connection, start: int, end: int, now: int | None = None) -> dict:
-    rows = conn.execute(
-        "SELECT ts, rrMs, seq FROM rrInterval WHERE ts>=? AND ts<? AND ts<=? "
+    cap = _cap(now)
+    raw = conn.execute(
+        f"SELECT {_RR_COLS} FROM rrInterval WHERE ts>=? AND ts<? AND ts<=? "
         "AND (tsSuspect IS NULL OR tsSuspect=0) ORDER BY ts, seq, rowid LIMIT ?",
-        (start, end, _cap(now), MAX_ROWS + 1)).fetchall()
-    points = [{"time": _t(r["ts"]), "ts": r["ts"], "rr_ms": r["rrMs"], "seq": r["seq"]} for r in rows[:MAX_ROWS]]
-    out = {"start": _t(start), "end": _t(end), "count": len(points), "truncated": len(rows) > MAX_ROWS,
-           "points": points}
+        (start, end, cap, RR_FETCH_CAP + 1)).fetchall()
+    kept = apply_read_policy([dict(r) for r in raw[:RR_FETCH_CAP]])
+    points = [{"time": _t(r["ts"]), "ts": r["ts"], "rr_ms": r["rrMs"], "seq": r["seq"]} for r in kept[:MAX_ROWS]]
+    out = {"start": _t(start), "end": _t(end), "count": len(points),
+           "truncated": len(raw) > RR_FETCH_CAP or len(kept) > MAX_ROWS, "points": points}
     if not points:
         out["note"] = "No R-R data in this range."
     return out
@@ -97,9 +112,7 @@ def sleep_for(conn: sqlite3.Connection, day: str, now: int | None = None) -> dic
 
 
 def _history_rr(conn, a: int, b: int, cap: int):
-    return [(r["ts"], r["rrMs"]) for r in conn.execute(
-        "SELECT ts, rrMs FROM rrInterval WHERE ts>=? AND ts<? AND ts<=? AND (tsSuspect IS NULL OR tsSuspect=0) "
-        "ORDER BY ts, seq, rowid", (a, b, cap))]
+    return [(r["ts"], r["rrMs"]) for r in _rr_rows(conn, a, b, cap, -1)]
 
 
 def _hr_pairs(conn, a: int, b: int, cap: int):
@@ -144,6 +157,8 @@ def _baseline(conn, start: int, cap: int):
 
 
 def stress_timeline(conn: sqlite3.Connection, start: int, end: int, now: int | None = None) -> dict:
+    if end - start > MAX_STRESS_RANGE_S:
+        raise ValueError("range too long: get_stress_timeline accepts at most 7 days per call")
     cap = _cap(now)
     base, used = _baseline(conn, start, cap)
     wins = compute_stress_timeline(_history_rr(conn, start, end, cap), _hr_pairs(conn, start, end, cap),
@@ -227,8 +242,9 @@ def stream_range(conn: sqlite3.Connection, stream: str, start: int, end: int, li
         where, params = "WHERE ts>=? AND ts<? AND ts<=?", [start, end, cap]
     elif s.selector == "day":
         where, params = "WHERE day>=? AND day<=?", [local_day_of(start), local_day_of(max(start, end - 1))]
-    elif s.selector == "startTs":
-        where, params = "WHERE startTs>=? AND startTs<? AND startTs<=?", [start, end, cap]
+    elif s.selector in ("startTs", "ts"):
+        col = _q(s.selector)
+        where, params = f"WHERE {col}>=? AND {col}<? AND {col}<=?", [start, end, cap]
     else:
         note = "snapshot stream: the whole table is returned; the time range does not apply."
     total = conn.execute(f"SELECT COUNT(*) FROM {_q(s.name)} {where}", params).fetchone()[0]
@@ -240,7 +256,11 @@ def stream_range(conn: sqlite3.Connection, stream: str, start: int, end: int, li
         row = {"device": r["_device"]}
         for c in cols:
             v = r[c.name]
-            row[c.name] = {"bytes": v} if (c.type == "blob" and v is not None) else v
+            if c.type == "blob" and v is not None:
+                v = {"bytes": v}
+            elif isinstance(v, str) and len(v) > MAX_TEXT:
+                v = v[:MAX_TEXT] + f"…[truncated {len(v) - MAX_TEXT} chars]"
+            row[c.name] = v
         t = row.get("ts", row.get("startTs"))
         if isinstance(t, int):
             row["time"] = _t(t)

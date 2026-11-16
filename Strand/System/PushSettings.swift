@@ -105,4 +105,20 @@ enum PushThrottle {
         guard let last = lastStartedAt else { return true }
         return now.timeIntervalSince(last) >= minimumGap
     }
+
+    /// What to do with a trigger. A trigger that is throttled or arrives mid-run is REMEMBERED, never
+    /// dropped: the offload that lands while a foreground run is still going is exactly the data the
+    /// midnight debrief needs.
+    static func decision(manual: Bool, isRunning: Bool, lastStartedAt: Date?, now: Date) -> PushRunDecision {
+        if isRunning { return .rerunAfterCurrent }
+        if shouldStart(manual: manual, lastStartedAt: lastStartedAt, now: now) { return .start }
+        let earliest = (lastStartedAt ?? now).addingTimeInterval(minimumGap)
+        return .retryAt(earliest)
+    }
+}
+
+enum PushRunDecision: Equatable {
+    case start
+    case rerunAfterCurrent
+    case retryAt(Date)
 }

@@ -35,3 +35,9 @@ def test_readme_documents_tailnet_only_serve_and_never_funnel():
 def test_backup_script_uses_sqlite_backup_not_cp():
     s = read("noop-backup.sh")
     assert ".backup" in s and "cp " not in s
+
+
+def test_backup_instructions_let_the_noop_user_run_the_script_and_write_the_directory():
+    text = read("README.md")
+    assert "install -m 755 deploy/noop-backup.sh" in text
+    assert "install -d -o noop -g noop -m 750 /var/backups/noop-selfhost" in text

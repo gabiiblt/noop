@@ -25,9 +25,11 @@ def sleep_rec(s):
 
 
 def send(client, starts, a, b, part=1, parts=1, rid=None, dev="strap-local-id", src=SRC,
-         stream="sleepSession", mk=sleep_rec, selector="startTs", batch_id=None):
+         stream="sleepSession", mk=sleep_rec, selector="startTs", batch_id=None, version=None):
     h = hdr(stream, len(starts), delivery="replace_window", endCursor=None, deviceId=dev, sourceId=src,
             window=win(selector, a, b, part, parts, rid))
+    if version:
+        h["protocolVersion"] = version
     if batch_id:
         h["batchId"] = batch_id
     return client.post("/push", content=nd(h, *[mk(s) for s in starts]),
@@ -143,3 +145,12 @@ def test_staged_payload_is_json(client, store):
     send(client, [100], 0, 1000, part=1, parts=2, rid=rid)
     payload = store.conn.execute("SELECT payload FROM window_parts").fetchone()[0]
     assert json.loads(payload)[0][0] == {"startTs": 100}
+
+
+def test_ts_selector_window_replaces_an_hour_updated_in_place(client, store):
+    mk = lambda ts: rec({"ts": ts[0]}, {"steps": ts[1]})  # noqa: E731
+    send(client, [(3600, 100), (7200, 200)], 0, 10_000, stream="appleStepHour", mk=mk, selector="ts", version="1.100")
+    # the app corrected hour 3600 (HealthKit) and the receiver must follow, not keep the stale count
+    send(client, [(3600, 150)], 0, 10_000, stream="appleStepHour", mk=mk, selector="ts", version="1.100")
+    rows = store.conn.execute("SELECT ts, steps FROM appleStepHour ORDER BY ts").fetchall()
+    assert rows == [(3600, 150)]

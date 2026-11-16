@@ -249,4 +249,134 @@ final class ExtensionTests: XCTestCase {
         XCTAssertEqual(t.attempts[1].batchId, t.attempts[2].batchId, "same prior state, same bytes, same id")
         XCTAssertEqual(t.attempts[1].body, t.attempts[2].body)
     }
+
+    // MARK: Review fixes: flip-flopping content, lost acknowledgements, cancellation
+
+    func testAFlipFlopNeverReusesAnIdentityEvenOnTheFourthDelivery() async throws {
+        let src = FakeSource()
+        let t = FakeTransport(streams: extNames, version: .ext)
+        let e = try makeEngine(src, t)
+        for recovery in [50.0, 80.0, 50.0, 80.0] {  // A, B, A, B
+            src.set(spec("dailyMetric"), [dailyRow("2026-08-01", recovery: recovery)])
+            _ = await run(e)
+        }
+        XCTAssertEqual(t.posted.count, 4)
+        XCTAssertEqual(Set(t.posted.map { $0.batchId }).count, 4, "a repeated batch id would be answered from the receiver's cache")
+        XCTAssertEqual(Set(t.posted.map { self.window($0)?["replacementId"] as? String }).count, 4)
+    }
+
+    func testASnapshotFlipFlopNeverReusesAnIdentityEither() async throws {
+        let src = FakeSource()
+        let t = FakeTransport(streams: extNames, version: .ext)
+        let e = try makeEngine(src, t)
+        for n in [1, 2, 1, 2] {
+            src.set(spec("liftSet"), (1...n).map { liftSetRow($0) })
+            _ = await run(e)
+        }
+        XCTAssertEqual(t.posted.count, 4)
+        XCTAssertEqual(Set(t.posted.map { $0.batchId }).count, 4)
+    }
+
+    func testALostAcknowledgementFollowedByARevertStillResendsTheWindow() async throws {
+        let src = FakeSource()
+        let t = FakeTransport(streams: extNames, version: .ext)
+        let e = try makeEngine(src, t)
+        src.set(spec("dailyMetric"), [dailyRow("2026-08-01", recovery: 50)])  // A, acknowledged
+        _ = await run(e)
+        src.set(spec("dailyMetric"), [dailyRow("2026-08-01", recovery: 80)])  // B: the POST may be applied
+        t.failOn = { _ in .retryable("timeout, acknowledgement lost") }       // but we never hear back
+        _ = await run(e)
+        src.set(spec("dailyMetric"), [dailyRow("2026-08-01", recovery: 50)])  // the data goes back to A
+        t.failOn = nil
+        let r = await run(e)
+        XCTAssertTrue(r.completed)
+        XCTAssertEqual(t.posted.count, 2, "hashes equal A again, but the receiver may hold B: A must be re-sent")
+        XCTAssertTrue(recordLines(t.posted[1])[0].contains("\"recovery\":50.0"))
+        let after = await run(e)
+        XCTAssertEqual(after.sentRows, 0, "once acknowledged there is nothing left to force")
+        XCTAssertEqual(t.posted.count, 2)
+    }
+
+    func testALostAcknowledgementFollowedByARevertStillResendsTheSnapshot() async throws {
+        let src = FakeSource()
+        let t = FakeTransport(streams: extNames, version: .ext)
+        let e = try makeEngine(src, t)
+        src.set(spec("liftSet"), [liftSetRow(1)])
+        _ = await run(e)
+        src.set(spec("liftSet"), [liftSetRow(1), liftSetRow(2)])
+        t.failOn = { _ in .retryable("acknowledgement lost") }
+        _ = await run(e)
+        src.set(spec("liftSet"), [liftSetRow(1)])
+        t.failOn = nil
+        _ = await run(e)
+        XCTAssertEqual(t.posted.count, 2)
+        XCTAssertEqual(t.posted[1].recordCount, 1)
+        let after = await run(e)
+        XCTAssertEqual(after.sentRows, 0)
+        XCTAssertEqual(t.posted.count, 2)
+    }
+
+    func testCancellationBetweenWindowPartsStopsCleanlyAndTheRetryIsByteIdentical() async throws {
+        let src = FakeSource()
+        src.set(spec("sleepSession"), (0..<6000).map { sleepRow(1_780_000_000 + Int64($0)) })
+        let t = FakeTransport(streams: extNames, version: .ext)
+        let e = try makeEngine(src, t)
+        // iOS takes the background time back after part 1: cancel the task the engine is running in
+        t.onPost = { _ in withUnsafeCurrentTask { $0?.cancel() } }
+        let r = await Task { await e.runOnce(.backgroundTask, deadline: self.farFuture) }.value
+        XCTAssertEqual(t.posted.map { $0.recordCount }, [5000], "part 2 must not start after cancellation")
+        XCTAssertEqual(r.pendingStreams, ["sleepSession"])
+        XCTAssertNil(r.error)
+        t.onPost = nil
+        let resumed = await run(e)
+        XCTAssertTrue(resumed.completed)
+        XCTAssertEqual(t.posted.map { $0.recordCount }, [5000, 5000, 1000])
+        XCTAssertEqual(t.posted[0].batchId, t.posted[1].batchId, "same generation: the retried part 1 is identical")
+        XCTAssertEqual(t.posted[0].body, t.posted[1].body)
+    }
+
+    func testCancellationBetweenSnapshotPartsStopsCleanly() async throws {
+        let src = FakeSource()
+        src.set(spec("liftSet"), (1...7000).map { liftSetRow($0) })
+        let t = FakeTransport(streams: extNames, version: .ext)
+        let e = try makeEngine(src, t)
+        t.onPost = { _ in withUnsafeCurrentTask { $0?.cancel() } }
+        let r = await Task { await e.runOnce(.backgroundTask, deadline: self.farFuture) }.value
+        XCTAssertEqual(t.posted.map { $0.recordCount }, [5000])
+        XCTAssertEqual(r.pendingStreams, ["liftSet"])
+        XCTAssertNil(r.error)
+    }
+
+    func testTheDeadlineIsCheckedBetweenWindowPartsToo() async throws {
+        let src = FakeSource()
+        src.set(spec("sleepSession"), (0..<6000).map { sleepRow(1_780_000_000 + Int64($0)) })
+        let t = FakeTransport(streams: extNames, version: .ext)
+        let e = try makeEngine(src, t)
+        var clock = Date(timeIntervalSince1970: 1000)
+        t.onPost = { _ in clock = Date(timeIntervalSince1970: 5000) }
+        let r = await e.runOnce(.offloadLanded, deadline: Date(timeIntervalSince1970: 1010), now: { clock })
+        XCTAssertEqual(t.posted.count, 1)
+        XCTAssertEqual(r.pendingStreams, ["sleepSession"])
+    }
+
+    // MARK: appleStepHour is revised in place by the app, so it is a window on ts
+
+    func testAppleStepHourIsSentAsATsWindowAndARevisedHourIsResent() async throws {
+        let ts: Int64 = 1_774_740_600  // 2026-03-29 00:30 Paris, the 23-hour day
+        let src = FakeSource()
+        src.set(spec("appleStepHour"), [SourceRow(rowId: 0, key: ["ts": .int(ts)], data: ["steps": .int(100)])])
+        let t = FakeTransport(streams: extNames, version: .ext)
+        let e = try makeEngine(src, t)
+        _ = await run(e)
+        let h = header(t.posted[0])
+        XCTAssertEqual(h["delivery"] as? String, "replace_window")
+        XCTAssertEqual(window(t.posted[0])?["selector"] as? String, "ts")
+        XCTAssertEqual(window(t.posted[0])?["startInclusive"] as? Int, 1_774_738_800)
+        XCTAssertEqual(window(t.posted[0])?["endExclusive"] as? Int, 1_774_738_800 + 23 * 3600)
+        // HealthKit revises the hour while it is still in progress
+        src.set(spec("appleStepHour"), [SourceRow(rowId: 0, key: ["ts": .int(ts)], data: ["steps": .int(150)])])
+        let r = await run(e)
+        XCTAssertEqual(r.sentRows, 1)
+        XCTAssertTrue(recordLines(t.posted[1])[0].contains("\"steps\":150"))
+    }
 }

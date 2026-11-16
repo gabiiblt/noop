@@ -96,6 +96,36 @@ final class ProgressTests: XCTestCase {
         XCTAssertEqual(try s.dayHashes(ns: "other", device: "d", stream: "dailyMetric"), [:])
     }
 
+    func testGenerationStartsAtZeroBumpsAndIsScopedPerStreamDeviceAndNamespace() throws {
+        let (s, _) = try store()
+        XCTAssertEqual(try s.generation(ns: "n", device: "d", stream: "dailyMetric"), 0)
+        try s.bumpGeneration(ns: "n", device: "d", stream: "dailyMetric")
+        try s.bumpGeneration(ns: "n", device: "d", stream: "dailyMetric")
+        XCTAssertEqual(try s.generation(ns: "n", device: "d", stream: "dailyMetric"), 2)
+        XCTAssertEqual(try s.generation(ns: "n", device: "d", stream: "journal"), 0)
+        XCTAssertEqual(try s.generation(ns: "n", device: "other", stream: "dailyMetric"), 0)
+        XCTAssertEqual(try s.generation(ns: "other", device: "d", stream: "dailyMetric"), 0)
+    }
+
+    func testGenerationAndInFlightSurviveReopen() throws {
+        let (s, url) = try store()
+        try s.bumpGeneration(ns: "n", device: "d", stream: "liftSet")
+        try s.markInFlight(["*"], ns: "n", device: "d", stream: "liftSet")
+        let again = try ProgressStore(url: url)
+        XCTAssertEqual(try again.generation(ns: "n", device: "d", stream: "liftSet"), 1)
+        XCTAssertEqual(try again.inFlight(ns: "n", device: "d", stream: "liftSet"), ["*"])
+    }
+
+    func testInFlightMarksAreSetClearedAndScoped() throws {
+        let (s, _) = try store()
+        try s.markInFlight(["2026-08-01", "2026-08-02"], ns: "n", device: "d", stream: "dailyMetric")
+        try s.markInFlight(["2026-08-02"], ns: "n", device: "d", stream: "dailyMetric")  // idempotent
+        XCTAssertEqual(try s.inFlight(ns: "n", device: "d", stream: "dailyMetric"), ["2026-08-01", "2026-08-02"])
+        XCTAssertEqual(try s.inFlight(ns: "n", device: "d", stream: "journal"), [])
+        try s.clearInFlight(["2026-08-01"], ns: "n", device: "d", stream: "dailyMetric")
+        XCTAssertEqual(try s.inFlight(ns: "n", device: "d", stream: "dailyMetric"), ["2026-08-02"])
+    }
+
     func testSnapshotHashAndKnownDevices() throws {
         let (s, _) = try store()
         try s.setSnapshotHash("abc", ns: "n", device: "d", stream: "liftSet")

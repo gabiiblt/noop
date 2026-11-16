@@ -101,8 +101,8 @@ public final class PushTransport {
         request.setValue("application/x-ndjson; charset=utf-8", forHTTPHeaderField: "Content-Type")
         request.setValue("application/json", forHTTPHeaderField: "Accept")
         request.setValue("Bearer \(endpoint.token)", forHTTPHeaderField: "Authorization")
-        let body = batch.body
-        let (data, status) = try await perform { try await self.session.upload(for: request, from: body) }
+        request.httpBody = batch.body
+        let (data, status) = try await perform { try await self.session.data(for: request) }
         try PushTransport.check(status: status, body: data)
         return try PushTransport.validateAck(data, for: batch, version: version)
     }

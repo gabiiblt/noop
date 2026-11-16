@@ -57,3 +57,9 @@ def test_unknown_version_rejected():
     import pytest
     with pytest.raises(ValueError):
         streams_for("9.9")
+
+
+def test_apple_step_hour_is_a_replace_window_on_ts_because_the_app_updates_hours_in_place():
+    s = REGISTRY["appleStepHour"]
+    assert (s.delivery, s.selector) == ("replace_window", "ts")
+    assert [c.name for c in s.key] == ["ts"]

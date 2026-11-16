@@ -98,7 +98,7 @@ public final class PushEngine {
 
         outer: for spec in specs {
             for device in devices {
-                if now() >= deadline {
+                if shouldStop(deadline, now) {
                     pend(spec.name)
                     continue
                 }
@@ -129,12 +129,18 @@ public final class PushEngine {
             return try await pushAppend(spec, device: device, ns: ns, version: version, ext: ext,
                                         deadline: deadline, now: now)
         case .replaceWindow:
-            let sent = try await pushWindows(spec, device: device, ns: ns, version: version, ext: ext)
-            return (sent, true)
+            return try await pushWindows(spec, device: device, ns: ns, version: version, ext: ext,
+                                         deadline: deadline, now: now)
         case .snapshot:
-            let sent = try await pushSnapshot(spec, device: device, ns: ns, version: version, ext: ext)
-            return (sent, true)
+            return try await pushSnapshot(spec, device: device, ns: ns, version: version, ext: ext,
+                                          deadline: deadline, now: now)
         }
+    }
+
+    /// True when the time budget is spent or the surrounding task was cancelled (iOS is about to take the
+    /// background time back). Checked between requests; progress is only ever advanced after an acknowledgement.
+    private func shouldStop(_ deadline: Date, _ now: () -> Date) -> Bool {
+        return Task.isCancelled || now() >= deadline
     }
 
     // MARK: Append streams
@@ -144,7 +150,7 @@ public final class PushEngine {
         var cursor = try progress.verifiedCursor(ns: ns, device: device, spec: spec, source: source)
         var sent = 0
         while true {
-            if now() >= deadline { return (sent, false) }
+            if shouldStop(deadline, now) { return (sent, false) }
             let rows = try source.appendPage(spec, deviceId: device, afterRowId: cursor?.rowId,
                                              limit: PushLimits.maxRecords)
             if rows.isEmpty { return (sent, true) }
@@ -174,13 +180,16 @@ public final class PushEngine {
         case .some(.startTs):
             if case .int(let t)? = row.key["startTs"] { return days.day(forTimestamp: t) }
             return nil
+        case .some(.ts):
+            if case .int(let t)? = row.key["ts"] { return days.day(forTimestamp: t) }
+            return nil
         default:
             return nil
         }
     }
 
-    private func pushWindows(_ spec: StreamSpec, device: String, ns: String, version: PushVersion,
-                             ext: Bool) async throws -> Int {
+    private func pushWindows(_ spec: StreamSpec, device: String, ns: String, version: PushVersion, ext: Bool,
+                             deadline: Date, now: @escaping () -> Date) async throws -> (sent: Int, finished: Bool) {
         let all = try source.allRows(spec, deviceId: device)
         var linesByDay: [String: [String]] = [:]
         var ordered: [(day: String, line: String)] = []
@@ -195,8 +204,12 @@ public final class PushEngine {
             newHash[d] = sha256Hex(Data(list.joined(separator: "\n").utf8))
         }
         let old = try progress.dayHashes(ns: ns, device: device, stream: spec.name)
-        let changed = Set(newHash.keys).union(old.keys).filter { newHash[$0] != old[$0] }.sorted()
-        if changed.isEmpty { return 0 }
+        // Days an earlier attempt left unacknowledged are re-evaluated even when the hashes now agree: the
+        // receiver may have applied that attempt before its acknowledgement was lost, and the data may have
+        // moved on (or back) since.
+        let forced = try progress.inFlight(ns: ns, device: device, stream: spec.name)
+        let changed = Set(newHash.keys).union(old.keys).filter { newHash[$0] != old[$0] }.union(forced).sorted()
+        if changed.isEmpty { return (0, true) }
 
         // Contiguous runs of changed days; a long quiet gap starts a new window.
         var runs: [[String]] = []
@@ -210,6 +223,7 @@ public final class PushEngine {
 
         var sent = 0
         for run in runs {
+            if shouldStop(deadline, now) { return (sent, false) }
             guard let first = run.first, let lastDay = run.last, let after = days.nextDay(lastDay) else { continue }
             let lines = ordered.filter { $0.day >= first && $0.day <= lastDay }.map { $0.line }
             let bounds: (WindowBound, WindowBound)
@@ -230,16 +244,20 @@ public final class PushEngine {
             if chunks.isEmpty { chunks = [[]] }  // an empty authoritative window is still sent
             let boundsText = "\(bounds.0)|\(bounds.1)"
             let candidates = Set(newHash.keys).union(old.keys).filter { $0 >= first && $0 <= lastDay }
-            // The identity includes the state the receiver is believed to hold (the last acknowledged
-            // per-day hashes). A retry of an interrupted attempt sees the same prior state and so
-            // reproduces identical ids and bytes; a window that returns to an EARLIER state after an
-            // intervening change (A, then B, then A again) gets fresh ids, so the receiver re-applies it
-            // instead of answering from its acknowledgement cache and staying at B.
-            let priorState = candidates.sorted().map { "\($0)=\(old[$0] ?? "-")" }.joined(separator: ",")
-            let identity = ["window", version.rawValue, progress.sourceId, device, spec.name, boundsText, priorState,
-                            sha256Hex(Data(lines.joined(separator: "\n").utf8))].joined(separator: "\n")
+            // The identity carries a per-(stream, device) generation that advances ONLY after a fully
+            // acknowledged delivery. A retry of an interrupted attempt keeps the generation and so
+            // reproduces identical ids and bytes; every later delivery, even one whose content equals an
+            // earlier delivery's (A, B, A, B, ...), gets fresh ids, so the receiver can never answer a
+            // genuinely new replacement from its acknowledgement cache and stay behind.
+            let generation = try progress.generation(ns: ns, device: device, stream: spec.name)
+            let identity = ["window", version.rawValue, progress.sourceId, device, spec.name, boundsText,
+                            "gen\(generation)", sha256Hex(Data(lines.joined(separator: "\n").utf8))]
+                .joined(separator: "\n")
             let replacementId = deterministicUUID(identity)
+            let tracked = Array(Set(run).union(candidates))
+            try progress.markInFlight(tracked, ns: ns, device: device, stream: spec.name)
             for (i, chunk) in chunks.enumerated() {
+                if i > 0 && shouldStop(deadline, now) { return (sent, false) }
                 let window = WindowSpec(replacementId: replacementId, selector: spec.selector?.rawValue ?? "day",
                                         startInclusive: bounds.0, endExclusive: bounds.1,
                                         part: i + 1, parts: chunks.count)
@@ -248,28 +266,33 @@ public final class PushEngine {
                 _ = try await transport.post(endpoint, batch: batch, version: version)
                 sent += chunk.count
             }
-            // Every part was acknowledged: only now do the per-day hashes advance.
+            // Every part was acknowledged: only now do the hashes and the generation advance.
             var set: [String: String] = [:]
             var remove: [String] = []
             for d in candidates {
                 if let h = newHash[d] { set[d] = h } else { remove.append(d) }
             }
             try progress.applyDayHashes(set: set, remove: remove, ns: ns, device: device, stream: spec.name)
+            try progress.bumpGeneration(ns: ns, device: device, stream: spec.name)
+            try progress.clearInFlight(tracked, ns: ns, device: device, stream: spec.name)
         }
-        return sent
+        return (sent, true)
     }
 
     // MARK: Snapshot streams
 
     /// Whole-table replacement for a small id-keyed table, skipped when the table is unchanged since the
-    /// last acknowledged snapshot. Emptied after being populated sends one empty authoritative snapshot.
-    private func pushSnapshot(_ spec: StreamSpec, device: String, ns: String, version: PushVersion,
-                              ext: Bool) async throws -> Int {
+    /// last acknowledged snapshot (and no earlier attempt is unacknowledged). Emptied after being
+    /// populated sends one empty authoritative snapshot.
+    private func pushSnapshot(_ spec: StreamSpec, device: String, ns: String, version: PushVersion, ext: Bool,
+                              deadline: Date, now: @escaping () -> Date) async throws -> (sent: Int, finished: Bool) {
+        if shouldStop(deadline, now) { return (0, false) }
         let rows = try source.allRows(spec, deviceId: device)
         let lines = rows.map { encodeRecordLine(spec, key: $0.key, data: $0.data, ext: ext) }
         let newHash: String? = lines.isEmpty ? nil : sha256Hex(Data(lines.joined(separator: "\n").utf8))
         let old = try progress.snapshotHash(ns: ns, device: device, stream: spec.name)
-        if newHash == old { return 0 }
+        let forced = try progress.inFlight(ns: ns, device: device, stream: spec.name).contains("*")
+        if newHash == old && !forced { return (0, true) }
 
         var chunks: [[String]] = []
         var rest = lines
@@ -280,12 +303,15 @@ public final class PushEngine {
             rest = Array(rest.dropFirst(n))
         }
         if chunks.isEmpty { chunks = [[]] }
-        // Same rule as the windows: the prior acknowledged state is part of the identity.
-        let identity = ["snapshot", version.rawValue, progress.sourceId, device, spec.name, old ?? "-",
+        // Same generation rule as the windows.
+        let generation = try progress.generation(ns: ns, device: device, stream: spec.name)
+        let identity = ["snapshot", version.rawValue, progress.sourceId, device, spec.name, "gen\(generation)",
                         newHash ?? "empty"].joined(separator: "\n")
         let replacementId = deterministicUUID(identity)
+        try progress.markInFlight(["*"], ns: ns, device: device, stream: spec.name)
         var sent = 0
         for (i, chunk) in chunks.enumerated() {
+            if i > 0 && shouldStop(deadline, now) { return (sent, false) }
             let window = WindowSpec(replacementId: replacementId, selector: "all", startInclusive: nil,
                                     endExclusive: nil, part: i + 1, parts: chunks.count)
             let batch = encodeBatch(version: version, sourceId: progress.sourceId, deviceId: device, spec: spec,
@@ -294,6 +320,8 @@ public final class PushEngine {
             sent += chunk.count
         }
         try progress.setSnapshotHash(newHash, ns: ns, device: device, stream: spec.name)
-        return sent
+        try progress.bumpGeneration(ns: ns, device: device, stream: spec.name)
+        try progress.clearInFlight(["*"], ns: ns, device: device, stream: spec.name)
+        return (sent, true)
     }
 }

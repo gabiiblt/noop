@@ -7,11 +7,11 @@ Nothing below is claimed beyond what is stated.
 
 | Check | Result |
 |---|---|
-| `selfhost` test suite (`python -m pytest`) | **151 passed** (receiver, protocol, windows, extension, tz/DST, sleep, stress, queries, MCP, deploy files, simulator, registry fixture) |
+| `selfhost` test suite (`python -m pytest`) | **167 passed** (receiver, protocol, windows, extension, tz/DST, sleep, stress, queries, MCP, deploy files, simulator, registry fixture) |
 | Real receiver process on loopback (`noop-receiver`) | capabilities OK; 401 without token; `0.0.0.0` listen refused; request bodies not logged |
 | `noop-push-simulator` against it (2,000 HR rows + 1 sleep session), run twice | 2,000 / 1 rows, second run adds zero rows (idempotent) |
 | `noop-mcp` over stdio, raw JSON-RPC | 6 tools listed; `get_sleep`, `get_hr_range`, `get_day_summary`, `get_stress_timeline` return correct data; bad input returns a model-visible tool error |
-| Latency on a synthetic 15-day database (3.8 M rows, 231 MB) | `get_stress_timeline` 1.5 s, `get_day_summary` 0.8 s, `get_hr_range` 0.03 s (was 7.6 s / 6.6 s before the time indexes and baseline sampling) |
+| Latency on a synthetic 15-day database (3.8 M rows, 231 MB) | `get_stress_timeline` 2.2 s, `get_day_summary` 1.5 s, `get_hr_range` 0.03 s (was 7.6 s / 6.6 s before the time indexes and baseline sampling) |
 | Swift syntax (tree-sitter grammar) on every new/edited Swift file | no syntax errors. **This is a syntax check only, not a compile.** |
 
 ## 2. NOT verified (no Swift toolchain, no iPhone, no Tailscale in the build environment)
@@ -54,6 +54,23 @@ sqlite3 /var/lib/noop-selfhost/selfhost.sqlite "select count(*) from hrSample; s
 
 Then leave the phone for a day and confirm catch-up happened without opening the app (uploads need iOS to
 grant background time: after a strap sync, and a nightly processing task while idle and online).
+
+## 3b. Independent review (whole branch) and what was done about it
+
+A fresh reviewer read the whole branch. Two critical and seven important findings were fixed, each with a
+test written first (Python tests were watched failing then passing; Swift tests are unrun, see section 2):
+
+- **Critical:** a window/snapshot that flip-flopped (A, B, A, B) or whose acknowledgement was lost before the
+  data reverted could leave the receiver silently out of date. Fixed with a per-stream delivery generation
+  and an in-flight marker (`ProgressStore`), so a retry is byte-identical but every new delivery is distinct,
+  and an unacknowledged delivery is re-sent even if the local data has since reverted.
+- **Critical:** the background-time expiry handler did not end the assertion, and windows/snapshots ignored the
+  deadline. Fixed: expiry cancels the task and ends the assertion; the engine checks the deadline and
+  cancellation between parts.
+- **Important:** Swift test literals that would not compile; the RR read policy and duplicate sources in the
+  MCP (false "stressed" risk); triggers dropped during a run; `appleStepHour` (updated in place) now a window;
+  device discovery for extension-only devices (e.g. mood entries); stress range capped at 7 days and long text
+  truncated; backup instructions.
 
 ## 4. Known limits and decisions (also in the plan ledger)
 

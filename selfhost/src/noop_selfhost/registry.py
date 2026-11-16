@@ -85,11 +85,11 @@ _STREAMS = [
        "replace_window", "startTs"),
     _s("journal", "day:text!, question:text!", "answeredYes:bool!, notes:text, numericValue:real",
        "replace_window", "day"),
-    # --- ext: insertion-only, append by rowid -----------------------------------------
+    # --- ext: insertion-only, append by rowid (appleStepHour moved to the windows below: updated in place) --
     _s("stepSample", "ts:int!", "counter:int!, activityClass:int", selector="ts", phase="ext"),
     _s("ppgHrSample", "ts:int!", "bpm:real!, conf:real!", selector="ts", phase="ext"),
     _s("sleepStateSample", "ts:int!", "state:int!, rawByte:int", selector="ts", phase="ext"),
-    _s("appleStepHour", "ts:int!", "steps:int!", selector="ts", phase="ext"),
+    _s("appleStepHour", "ts:int!", "steps:int!", "replace_window", "ts", phase="ext"),
     _s("v18AuxSample", "ts:int!", "fields:blob!", selector="ts", phase="ext"),
     _s("ppgWaveformSample", "ts:int!", "samples:blob!, burstIndex:int, baseCode:int", selector="ts", phase="ext"),
     _s("ecgWaveformSample", "ts:int!, sequence:int!", "record:blob!", selector="ts", phase="ext"),
