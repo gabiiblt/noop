@@ -112,7 +112,11 @@ iPhone NOOPiOS ──HTTPS (Tailscale)──▶ tailscale serve :443 ──▶ 1
   23/25 h; "day" = local calendar day).
 - Tools: `get_hr_range(start,end,resolution?)`, `get_rr_range(start,end)`, `get_sleep(day|range)`
   (handles both `stagesJSON` shapes — segment array and minutes dict — plus `sleepStateJSON`),
-  `get_stress_timeline(start,end)`, `get_day_summary(day)`.
+  `get_stress_timeline(start,end)`, `get_day_summary(day)`, plus
+  `get_stream_range(stream,start,end,limit)` over a **fixed whitelist** of the exported streams
+  (no raw SQL, hard row cap, pagination). Waveform blobs (PPG/ECG) are never returned inline to the
+  agent: only counts/availability or short decoded summaries, to avoid flooding the model context.
+  `coachMessage` is not exposed.
 - **`get_stress_timeline` is a heuristic, not medical.** Per ~5-minute window: RMSSD from RR
   (same range/ectopic filtering as the app's `HRVAnalyzer`, minimum beat count) compared to a
   personal baseline (median/MAD over the trailing ~14 days of comparable waking windows), combined
@@ -120,12 +124,57 @@ iPhone NOOPiOS ──HTTPS (Tailscale)──▶ tailscale serve :443 ──▶ 1
   carries the inputs, a 0–100 score and a `heuristic: true` + disclaimer field. Thresholds are
   tunable constants with documented defaults.
 
+### 5.4 Full-coverage extension (phase B)
+
+The owner wants all of their data on the server. `PUSH_PROTOCOL.md` v1 deliberately exports only 12
+streams and, for mutable streams, only a rolling 14 days. Full coverage therefore needs an
+extension, specified in **`selfhost/PROTOCOL_EXT.md`** (our own file; upstream's document is not
+edited). It is negotiated through the same capability handshake under a protocol minor reserved for
+this fork (e.g. `1.100`, chosen high so it can never collide with a future upstream `1.x`; *my
+call*), so a stock v1 receiver still works with phase A only.
+
+What "all" means, from the current schema (migration v48), one stream each, explicit projections:
+
+- **Already in v1 (phase A), with every column added since:** `hrSample`, `rrInterval`
+  (+`ord`,`srcChannel`,`tsSuspect`), `event`, `battery`, `spo2Sample`, `skinTempSample`
+  (+`aux1Raw`,`aux2Raw`), `respSample`, `gravitySample` (+`dynAccel`), `dailyMetric`,
+  `sleepSession`, `workout`, `journal`.
+- **Insertion-only, append by `rowid`:** `stepSample`, `ppgHrSample`, `sleepStateSample`,
+  `appleStepHour`, `v18AuxSample`, `ppgWaveformSample`, `ecgWaveformSample`.
+- **Mutable, day/`startTs`-keyed, replace-window:** `appleDaily`, `metricSeries`,
+  `scoreInputProvenance`, `liveSession`, `ouraRaw`.
+- **Small id-keyed tables, whole-table snapshot (hash-elided when unchanged):** `labMarker`,
+  `coachMessage`, `liftExercise`, `liftProgram`, `liftProgramItem`, `liftSession`, `liftSet`.
+- **Deliberately not exported:** `device` (name/MAC are private and the protocol already omits
+  them), `cursors` and the `synced` columns (local bookkeeping), `rawBatch` (a local replay buffer
+  that the app prunes after 24 h / 50 MB; its decoded content is exported via the streams above),
+  `rawImuSample` (dropped by migration v41, no longer exists).
+- **Full history, not 14 days:** on a fresh destination the sender first replays the *entire*
+  history of every mutable stream as chunked replace-window parts (e.g. 90-day windows), then
+  switches to the rolling 14-day window + daily hashes. The receiver accepts any window.
+- **Blobs** (`samples`, `fields`, `record`) are sent as base64 strings and stored as BLOBs. The
+  receiver keeps them verbatim; decoding stays out of the pipeline.
+- **Privacy note:** `coachMessage` holds the owner's conversations with the in-app AI coach. It is
+  exported as requested ("all data"), but the receiver can decline it through its capability list,
+  and the MCP server does not expose it. Say so if you want it excluded by default.
+
+Volume and behaviour (to be measured, not assumed): waveform streams dominate (PPG is 24 × i16 per
+second when optical capture is on; an ECG record is ~1.5 KB). The first upload of a long history
+can take many batches (≤ 5,000 records / 4 MiB each). Each batch advances its own cursor on
+acknowledgement, so it resumes across suspensions; the initial backlog is meant to be drained with
+the app in the foreground on a good connection, then steady-state catch-up runs in the background.
+Streams have independent cursors so a slow waveform stream never blocks heart-rate or sleep data;
+the sender drains cheap, high-value streams first.
+
+Scope note: this widens what the experimental client exports and adds a negotiated version, so it is
+a **fork-only** feature, kept in `StrandiOS/Push/` plus `selfhost/`. It stays one-way, default-off,
+independent of strap sync and endpoint-gated, as `docs/SCOPE.md` requires.
+
 ## 6. Decisions made on the owner's behalf (please check)
 
-1. v1 registry first, exactly as specified. **Phase 2 (optional, separate change):** local
-   extension negotiated as protocol `1.1` for `stepSample`, `ppgHrSample`, `sleepStateSample`,
-   `metricSeries`. Raw PPG/ECG/IMU waveforms are excluded (huge, not useful for the debrief).
-   The owner said "send everything"; this is the closest compliant reading — confirm or widen.
+1. **Owner decision: export ALL data** (see §5.4). Delivered in two phases so the first end-to-end
+   test is small: phase A = the 12 v1 streams exactly as specified; phase B = the full-coverage
+   extension (every remaining user-data table, raw waveforms, and the full historical baseline).
 2. Both sleep identities (`deviceId` and `deviceId-noop`) are exported; the MCP layer prefers the
    imported/strap source and falls back to the computed one.
 3. Progress state in a separate file, not a migration.
@@ -138,6 +187,8 @@ iPhone NOOPiOS ──HTTPS (Tailscale)──▶ tailscale serve :443 ──▶ 1
   gzip bomb, replace-window atomicity, auth, capability negotiation). Runs on Linux.
 - Stress heuristic + timezone/DST logic: pytest with synthetic RR/HR series (must track varying
   inputs, not one matching night).
+- Extension: receiver tests for blob round-trip (byte-identical), full-history chunked baseline,
+  snapshot streams, and capability narrowing (a declined stream is never sent or stored).
 - Swift pure logic: XCTest for NDJSON/fingerprint/cursor logic, to be run by the owner on macOS
   (`xcodegen generate`, `xcodebuild … test`). The iOS target compile is **not** verifiable here and
   will be reported as such.
