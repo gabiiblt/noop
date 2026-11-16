@@ -21,6 +21,7 @@ dev = ["pytest>=8"]
 [project.scripts]
 noop-receiver = "noop_selfhost.receiver:main"
 noop-mcp = "noop_selfhost.mcp_server:main"
+noop-push-simulator = "noop_selfhost.simulator:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]

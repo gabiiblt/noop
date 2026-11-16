@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "noop": {
+      "command": "/opt/noop-selfhost/venv/bin/noop-mcp",
+      "args": ["--db", "/var/lib/noop-selfhost/selfhost.sqlite"]
+    }
+  }
+}

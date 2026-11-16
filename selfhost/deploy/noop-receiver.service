@@ -1,0 +1,30 @@
+[Unit]
+Description=NOOP self-hosted receiver (loopback only; published to the tailnet by `tailscale serve`)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+User=noop
+Group=noop
+UMask=0027
+StateDirectory=noop-selfhost
+StateDirectoryMode=0750
+ExecStart=/opt/noop-selfhost/venv/bin/noop-receiver --db /var/lib/noop-selfhost/selfhost.sqlite --token-file /etc/noop-selfhost/token --listen 127.0.0.1:8787
+Restart=always
+RestartSec=3
+
+# Hardening
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+PrivateDevices=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+LockPersonality=true
+ReadWritePaths=/var/lib/noop-selfhost
+
+[Install]
+WantedBy=multi-user.target
