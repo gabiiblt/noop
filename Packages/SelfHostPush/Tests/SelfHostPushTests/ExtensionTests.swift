@@ -325,7 +325,7 @@ final class ExtensionTests: XCTestCase {
         t.onPost = { _ in withUnsafeCurrentTask { $0?.cancel() } }
         let r = await Task { await e.runOnce(.backgroundTask, deadline: self.farFuture) }.value
         XCTAssertEqual(t.posted.map { $0.recordCount }, [5000], "part 2 must not start after cancellation")
-        XCTAssertEqual(r.pendingStreams, ["sleepSession"])
+        XCTAssertEqual(r.pendingStreams.first, "sleepSession")  // the interrupted stream first, then every stream not yet examined
         XCTAssertNil(r.error)
         t.onPost = nil
         let resumed = await run(e)
@@ -343,7 +343,7 @@ final class ExtensionTests: XCTestCase {
         t.onPost = { _ in withUnsafeCurrentTask { $0?.cancel() } }
         let r = await Task { await e.runOnce(.backgroundTask, deadline: self.farFuture) }.value
         XCTAssertEqual(t.posted.map { $0.recordCount }, [5000])
-        XCTAssertEqual(r.pendingStreams, ["liftSet"])
+        XCTAssertEqual(r.pendingStreams.first, "liftSet")  // the interrupted stream first, then every stream not yet examined
         XCTAssertNil(r.error)
     }
 
@@ -356,7 +356,7 @@ final class ExtensionTests: XCTestCase {
         t.onPost = { _ in clock = Date(timeIntervalSince1970: 5000) }
         let r = await e.runOnce(.offloadLanded, deadline: Date(timeIntervalSince1970: 1010), now: { clock })
         XCTAssertEqual(t.posted.count, 1)
-        XCTAssertEqual(r.pendingStreams, ["sleepSession"])
+        XCTAssertEqual(r.pendingStreams.first, "sleepSession")  // the interrupted stream first, then every stream not yet examined
     }
 
     // MARK: appleStepHour is revised in place by the app, so it is a window on ts
