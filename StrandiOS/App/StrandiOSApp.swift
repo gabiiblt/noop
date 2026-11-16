@@ -175,6 +175,11 @@ struct StrandiOSApp: App {
         model.healthWriteBack = { [weak bridge] in
             _ = await bridge?.writeBackAfterNewData()
         }
+        // Optional self-hosted export (default OFF; a no-op unless an https endpoint and token are set).
+        // Registered before launch finishes, like the other BGTasks. The offload hook starts an
+        // independent task and returns at once, so it can never delay the strap sync.
+        PushBackgroundScheduler.register()
+        model.pushAfterOffload = { PushCoordinator.shared.trigger(.offloadLanded) }
     }
 
     /// The Shortcut-import alert's presentation binding, hoisted OUT of the `.alert` chain.
@@ -363,6 +368,8 @@ struct StrandiOSApp: App {
                 // timer or an incidental reconnect. Floored at 90s and never clock/empty-streak-suppressed
                 // (BackfillPolicy.shouldRun's .foreground case), so this is a safe no-op on rapid re-opens.
                 model.ble.requestSync(.foreground)
+                // Self-hosted export catch-up (gated: does nothing unless the user enabled and configured it).
+                PushCoordinator.shared.trigger(.foreground)
                 // #1538: settle a re-score an earlier background attempt could not finish, rather than
                 // waiting on the 15-minute idle tick now that there is a foreground with no suspension
                 // deadline. A no-op unless one is genuinely outstanding.
@@ -402,6 +409,8 @@ struct StrandiOSApp: App {
                 // or the next launch to drain it. Re-submitting on the way out costs nothing when
                 // nothing is owed, because it is skipped entirely.
                 if RescoreBackgroundScheduler.isRescoreOwed { RescoreBackgroundScheduler.schedule() }
+                // Same for the optional self-hosted export's nightly catch-up (cancelled while disabled).
+                PushBackgroundScheduler.updateSchedule()
                 // #114: capture the LAST in-app live state on the way out so the Home widget matches what
                 // the user just saw — its battery/HR/score otherwise lag to the last FOREGROUND refreshSeq
                 // bump. One reload per app-exit is low-frequency and well within WidgetKit's daily budget.

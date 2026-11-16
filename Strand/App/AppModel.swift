@@ -702,6 +702,9 @@ final class AppModel: ObservableObject {
     /// A closure rather than a direct reference because `HealthKitBridge` owns iOS-only HealthKit state
     /// while this type is shared with macOS, and the bridge is a `@StateObject` the app scene owns.
     var healthWriteBack: (() async -> Void)?
+    /// Starts the optional self-hosted push when an offload lands (StrandiOS/Push/). Deliberately
+    /// synchronous and non-awaiting: the push runs as its own task and can never delay the sync path.
+    var pushAfterOffload: (@MainActor () -> Void)?
     #endif
 
     /// Settle a re-score that is owed (#1538) — one an earlier attempt started and was killed partway
@@ -741,6 +744,7 @@ final class AppModel: ObservableObject {
         // not scored yet and only reached Health on some later foreground. This is the first moment they
         // exist. The bridge coalesces a call that lands during an in-flight write-back.
         await healthWriteBack?()
+        pushAfterOffload?()
         #endif
     }
 
@@ -781,6 +785,7 @@ final class AppModel: ObservableObject {
         // raced the data it was meant to publish and last night's sleep reached Health an app-open late.
         // Set by StrandiOSApp; nil on macOS and in tests, where there is no bridge.
         await healthWriteBack?()
+        pushAfterOffload?()
         #endif
     }
 

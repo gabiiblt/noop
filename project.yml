@@ -56,6 +56,8 @@ packages:
     path: Packages/StrandImport
   StrandDesign:
     path: Packages/StrandDesign
+  SelfHostPush:
+    path: Packages/SelfHostPush
   # Clean-room local Oura ring BLE protocol (framing, auth, decoders, driver). Pure value types,
   # zero CoreBluetooth, so it stays headless/JVM-testable; the app target imports it for OuraLiveSource.
   OuraProtocol:
@@ -299,6 +301,8 @@ targets:
           # the re-score task, which is submitted only when a re-score is OWED, and a missing strap owes
           # none, so that task would never run in the one case the warning exists for.
           - $(PRODUCT_BUNDLE_IDENTIFIER).stalebattery
+          # Self-hosted export catch-up (BGProcessingTask; registered from StrandiOSApp.init, PushBackgroundScheduler).
+          - $(PRODUCT_BUNDLE_IDENTIFIER).push
         NSBluetoothAlwaysUsageDescription: "NOOP connects directly to your WHOOP strap over Bluetooth to read heart rate, R-R intervals, battery, and sensor data locally on your iPhone. Nothing leaves your device."
         NSLocationWhenInUseUsageDescription: "NOOP records your route during an outdoor workout to show distance, pace, and a map, and keeps recording while the screen is off. The route stays on your device. Nothing leaves it."
         NSHealthShareUsageDescription: "NOOP reads your own Apple Health data on-device to compute recovery, strain, and sleep. Nothing leaves your device."
@@ -363,6 +367,8 @@ targets:
       - package: MarkdownUI
       - package: ZIPFoundation
       - package: PolarProtocol
+      # Optional self-hosted one-way export (default OFF; see docs/SCOPE.md, StrandiOS/Push/).
+      - package: SelfHostPush
       - target: NOOPiOSWidgets
       # Embed the watchOS app so the iPhone app carries it (NOOP.app/Watch/NOOPWatch.app). A watch app
       # installs by riding inside its iOS companion; without this it would never reach a paired watch.
