@@ -180,6 +180,9 @@ struct StrandiOSApp: App {
         // independent task and returns at once, so it can never delay the strap sync.
         PushBackgroundScheduler.register()
         model.pushAfterOffload = { PushCoordinator.shared.trigger(.offloadLanded) }
+        // A silent wake from the receiver also asks the strap for a fresh offload (the floored foreground
+        // request), so data newer than the phone's copy follows through `pushAfterOffload` above.
+        PushWake.onWake = { [weak model] in model?.ble.requestSync(.foreground) }
     }
 
     /// The Shortcut-import alert's presentation binding, hoisted OUT of the `.alert` chain.
@@ -370,6 +373,8 @@ struct StrandiOSApp: App {
                 model.ble.requestSync(.foreground)
                 // Self-hosted export catch-up (gated: does nothing unless the user enabled and configured it).
                 PushCoordinator.shared.trigger(.foreground)
+                // Keep the receiver's copy of the APNs token current (no-op while the export is off).
+                PushWake.registerIfEnabled()
                 // #1538: settle a re-score an earlier background attempt could not finish, rather than
                 // waiting on the 15-minute idle tick now that there is a foreground with no suspension
                 // deadline. A no-op unless one is genuinely outstanding.

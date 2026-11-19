@@ -106,7 +106,8 @@ final class PushCoordinator: ObservableObject {
     func run(_ trigger: PushTrigger, budget: TimeInterval? = nil) async -> Bool {
         // The gate: no endpoint, no token or switched off means no work and no network at all.
         guard PushSettings.shouldRun() else { return true }
-        switch PushThrottle.decision(manual: trigger == .manual, isRunning: isRunning,
+        // A remote wake is the server asking for fresh data now: like "Upload now", never held by the gap.
+        switch PushThrottle.decision(manual: trigger == .manual || trigger == .remoteWake, isRunning: isRunning,
                                      lastStartedAt: lastStartedAt, now: Date()) {
         case .rerunAfterCurrent:
             rerunRequested = true
@@ -179,6 +180,7 @@ final class PushCoordinator: ObservableObject {
         case .foreground: return 120
         case .backgroundTask: return 180
         case .manual: return 600
+        case .remoteWake: return PushWake.wakeBudget
         }
     }
 

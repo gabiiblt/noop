@@ -286,4 +286,35 @@ final class TransportTests: XCTestCase {
         XCTAssertTrue(PushTransport.classify(urlError: URLError(.cannotFindHost)).isRetryable)
         XCTAssertTrue(PushTransport.classify(urlError: URLError(.notConnectedToInternet)).isRetryable)
     }
+
+    func testWakeTokenIsPostedBesideThePushPath() async throws {
+        StubURLProtocol.handler = { _ in (200, self.json(["type": "wakeToken", "status": "stored"])) }
+        let token = Data([0x00, 0xa1, 0xff, 0x10])
+        try await transport().registerWakeToken(endpoint, deviceToken: token, environment: "development",
+                                                topic: "com.gabiwhoop.noop")
+        let req = try XCTUnwrap(StubURLProtocol.requests.first)
+        XCTAssertEqual(req.url?.absoluteString, "https://server.tailfb9ed9.ts.net/push/wake-token")
+        XCTAssertEqual(req.httpMethod, "POST")
+        XCTAssertEqual(req.value(forHTTPHeaderField: "Authorization"), "Bearer tok")
+        let body = try XCTUnwrap(JSONSerialization.jsonObject(with: bodyData(of: req)) as? [String: String])
+        XCTAssertEqual(body, ["deviceToken": "00a1ff10", "environment": "development", "topic": "com.gabiwhoop.noop"])
+    }
+
+    func testWakeTokenRefusalIsSurfaced() async {
+        StubURLProtocol.handler = { _ in (422, self.json(["type": "error", "code": "invalid_topic"])) }
+        do {
+            try await transport().registerWakeToken(endpoint, deviceToken: Data([1]), environment: "development",
+                                                    topic: "x")
+            XCTFail("expected failure")
+        } catch let e as PushError {
+            XCTAssertEqual(e, .rejected("HTTP 422 (invalid_topic)"))
+        } catch {
+            XCTFail("wrong error \(error)")
+        }
+    }
+
+    func testWakeTokenURLKeepsAnExistingTrailingSlash() {
+        let e = PushEndpoint(urlString: "https://h.ts.net:8444/push/", token: "t")!
+        XCTAssertEqual(PushTransport.wakeTokenURL(for: e).absoluteString, "https://h.ts.net:8444/push/wake-token")
+    }
 }

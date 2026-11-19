@@ -286,6 +286,9 @@ targets:
           # reporter's install, which no bluetooth-central wake survives; a processing task is the long,
           # deferrable kind that can finish it.
           - processing
+          # Silent notifications from the self-hosted receiver (`request_phone_sync`): iOS wakes the app
+          # for ~30 s to upload. Needs the aps-environment entitlement below (paid developer account).
+          - remote-notification
         # Permit every background-task identifier. Each derives from Bundle.main at runtime so it
         # tracks BUNDLE_ID_PREFIX, and each is registered from StrandiOSApp.init before launch finishes.
         BGTaskSchedulerPermittedIdentifiers:
@@ -343,6 +346,9 @@ targets:
         com.apple.developer.healthkit.access: []
         com.apple.security.application-groups:
           - $(APP_GROUP_ID)
+        # Push Notifications capability, used only for the self-hosted receiver's silent wake. Requires a
+        # paid Apple developer team; Xcode's automatic signing switches it to production for distribution.
+        aps-environment: development
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: $(BUNDLE_ID_PREFIX).noop

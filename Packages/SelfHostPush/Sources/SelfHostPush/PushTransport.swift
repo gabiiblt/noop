@@ -107,6 +107,37 @@ public final class PushTransport {
         return try PushTransport.validateAck(data, for: batch, version: version)
     }
 
+    /// Registers this phone's APNs device token with the receiver so its MCP server can wake the app with a
+    /// silent notification. Carries no health data: the token, the APNs environment and the bundle id.
+    public func registerWakeToken(_ endpoint: PushEndpoint, deviceToken: Data, environment: String,
+                                  topic: String) async throws {
+        var request = URLRequest(url: PushTransport.wakeTokenURL(for: endpoint))
+        request.httpMethod = "POST"
+        request.timeoutInterval = 20
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.setValue("application/json", forHTTPHeaderField: "Accept")
+        request.setValue("Bearer \(endpoint.token)", forHTTPHeaderField: "Authorization")
+        request.httpBody = PushTransport.wakeTokenBody(deviceToken: deviceToken, environment: environment, topic: topic)
+        let (data, status) = try await perform { try await self.session.data(for: request) }
+        try PushTransport.check(status: status, body: data)
+    }
+
+    /// `<endpoint>/wake-token`, beside the push path (`https://host:8444/push` -> `.../push/wake-token`).
+    static func wakeTokenURL(for endpoint: PushEndpoint) -> URL {
+        return endpoint.url.appendingPathComponent("wake-token")
+    }
+
+    /// Lower-case hex, the form APNs addresses a device by.
+    public static func hexToken(_ token: Data) -> String {
+        return token.map { String(format: "%02x", $0) }.joined()
+    }
+
+    static func wakeTokenBody(deviceToken: Data, environment: String, topic: String) -> Data {
+        let obj: [String: String] = ["deviceToken": hexToken(deviceToken), "environment": environment,
+                                     "topic": topic]
+        return (try? JSONSerialization.data(withJSONObject: obj, options: [.sortedKeys])) ?? Data()
+    }
+
     private func perform(_ work: () async throws -> (Data, URLResponse)) async throws -> (Data, Int) {
         do {
             let (data, response) = try await work()

@@ -1,7 +1,8 @@
 import Foundation
 
 public enum PushTrigger: String, Sendable {
-    case offloadLanded, foreground, backgroundTask, manual
+    /// `remoteWake`: the receiver's MCP server asked for fresh data with a silent notification.
+    case offloadLanded, foreground, backgroundTask, manual, remoteWake
 }
 
 public struct PushRunResult: Equatable, Sendable {

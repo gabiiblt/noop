@@ -46,7 +46,10 @@ struct PushSettingsView: View {
                 }
                 .toggleStyle(.switch)
                 .tint(StrandPalette.accent)
-                .onChange(of: enabled) { _, _ in PushBackgroundScheduler.updateSchedule() }
+                .onChange(of: enabled) { _, _ in
+                    PushBackgroundScheduler.updateSchedule()
+                    PushWake.reRegister()
+                }
 
                 VStack(alignment: .leading, spacing: 6) {
                     Text("Address").strandOverline()
@@ -128,6 +131,7 @@ struct PushSettingsView: View {
             tokenStored = true
             testResult = nil
             PushBackgroundScheduler.updateSchedule()
+            PushWake.reRegister()
         } else {
             testResult = "Could not save the token to the Keychain."
         }
