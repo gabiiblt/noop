@@ -7,6 +7,7 @@ from __future__ import annotations
 import json
 import sqlite3
 import threading
+import time
 import uuid
 from contextlib import contextmanager
 from typing import Iterable, Iterator
@@ -52,6 +53,16 @@ CREATE TABLE IF NOT EXISTS window_seen (
   _src TEXT NOT NULL, _dev TEXT NOT NULL, stream TEXT NOT NULL, replacementId TEXT NOT NULL,
   state TEXT NOT NULL CHECK (state IN ('current','superseded','applied')),
   PRIMARY KEY (_src, _dev, stream, replacementId));
+-- When the phone last delivered something, per stream and device (receiver clock, UTC seconds). Lets the
+-- MCP server tell an agent how fresh the data is, independent of the data's own timestamps.
+CREATE TABLE IF NOT EXISTS arrivals (
+  stream TEXT NOT NULL, _dev TEXT NOT NULL, lastReceivedAt INTEGER NOT NULL,
+  batches INTEGER NOT NULL, rows INTEGER NOT NULL,
+  PRIMARY KEY (stream, _dev));
+-- The phone's APNs device token, so the MCP server can wake it with a silent notification. One phone.
+CREATE TABLE IF NOT EXISTS wake_device (
+  id INTEGER PRIMARY KEY CHECK (id = 1), deviceToken TEXT NOT NULL, environment TEXT NOT NULL,
+  topic TEXT NOT NULL, updatedAt INTEGER NOT NULL);
 """
 
 
@@ -94,6 +105,21 @@ class Store:
             for t in ("ledger", "window_parts", "window_seen"):
                 c.execute(f"DELETE FROM {t}")
         return new
+
+    @staticmethod
+    def _note_arrival(c: sqlite3.Connection, stream: str, dev: str, rows: int, now: int | None = None) -> None:
+        at = int(time.time()) if now is None else now
+        c.execute("INSERT INTO arrivals VALUES (?,?,?,1,?) ON CONFLICT (stream, _dev) DO UPDATE SET "
+                  "lastReceivedAt=excluded.lastReceivedAt, batches=batches+1, rows=rows+excluded.rows",
+                  (stream, dev, at, rows))
+
+    def set_wake_device(self, device_token: str, environment: str, topic: str, now: int | None = None) -> None:
+        at = int(time.time()) if now is None else now
+        with self.transaction() as c:
+            c.execute("INSERT INTO wake_device VALUES (1,?,?,?,?) ON CONFLICT (id) DO UPDATE SET "
+                      "deviceToken=excluded.deviceToken, environment=excluded.environment, "
+                      "topic=excluded.topic, updatedAt=excluded.updatedAt",
+                      (device_token, environment, topic, at))
 
     def upsert_rows(self, stream: Stream, src: str, dev: str,
                     rows: Iterable[tuple[dict, dict]], version: str,
@@ -138,6 +164,7 @@ class Store:
                    "deviceId": dev, "endCursor": h["endCursor"], "acceptedRows": len(batch.records),
                    "status": "accepted"}
             c.execute("INSERT INTO ledger VALUES (?,?,?,?,?)", (src, dev, bid, batch.sha256, json.dumps(ack)))
+            self._note_arrival(c, h["stream"], dev, len(batch.records))
         return ack
 
     def accept_window_part(self, batch: Batch) -> dict:
@@ -185,6 +212,7 @@ class Store:
                        json.dumps([[r.key, r.data] for r in batch.records]), start, end,
                        w["selector"], json.dumps(ack)))
             c.execute("INSERT INTO ledger VALUES (?,?,?,?,?)", (src, dev, bid, batch.sha256, json.dumps(ack)))
+            self._note_arrival(c, s.name, dev, len(batch.records))
             staged = c.execute("SELECT payload FROM window_parts WHERE _src=? AND _dev=? AND stream=? "
                                "AND replacementId=? ORDER BY part", (*scope, rid)).fetchall()
             if len(staged) == w["parts"]:

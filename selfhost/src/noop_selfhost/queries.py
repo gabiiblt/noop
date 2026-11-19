@@ -270,3 +270,98 @@ def stream_range(conn: sqlite3.Connection, stream: str, start: int, end: int, li
     if note:
         out["note"] = note
     return out
+
+
+FRESH_HR_S = 20 * 60  # newest heart rate younger than this reads as "fresh" (the strap sends ~1 Hz while worn)
+
+
+def _ago(ts: int | None, now: int) -> dict | None:
+    if ts is None:
+        return None
+    return {"time": _t(ts), "minutes_ago": max(0, (now - ts) // 60)}
+
+
+def _table_exists(conn: sqlite3.Connection, name: str) -> bool:
+    return conn.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name=?", (name,)).fetchone() is not None
+
+
+def last_arrival(conn: sqlite3.Connection) -> int | None:
+    """Receiver clock of the most recent accepted batch (None before the first one, or on an old database)."""
+    if not _table_exists(conn, "arrivals"):
+        return None
+    return conn.execute("SELECT MAX(lastReceivedAt) FROM arrivals").fetchone()[0]
+
+
+def wake_device(conn: sqlite3.Connection) -> dict | None:
+    if not _table_exists(conn, "wake_device"):
+        return None
+    r = conn.execute("SELECT deviceToken, environment, topic, updatedAt FROM wake_device WHERE id=1").fetchone()
+    return None if r is None else dict(r)
+
+
+def sync_status(conn: sqlite3.Connection, now: int | None = None, wake_configured: bool = False) -> dict:
+    """How fresh the server's copy is: when the phone last delivered, and the newest data per stream.
+
+    Two clocks on purpose: `last_received` is when the phone uploaded (receiver clock), `latest_data` is
+    the newest timestamp inside the data. Fresh data uploaded late and old data uploaded now look the same
+    in one clock and different in the other."""
+    now = int(time.time()) if now is None else now
+    cap = now + FUTURE_SLACK_S
+    arrivals = {}
+    if _table_exists(conn, "arrivals"):
+        for r in conn.execute("SELECT stream, MAX(lastReceivedAt) at, SUM(batches) b, SUM(rows) n "
+                              "FROM arrivals GROUP BY stream"):
+            arrivals[r["stream"]] = r
+    streams = []
+    for s in REGISTRY.values():
+        latest = None
+        if s.selector is not None:
+            sel = _q(s.selector)
+            if s.selector == "day":
+                latest = conn.execute(f"SELECT MAX({sel}) FROM {_q(s.name)}").fetchone()[0]
+            else:
+                ts = conn.execute(f"SELECT MAX({sel}) FROM {_q(s.name)} WHERE {sel}<=?", (cap,)).fetchone()[0]
+                latest = None if ts is None else _t(ts)
+        a = arrivals.get(s.name)
+        if latest is None and a is None:
+            continue
+        streams.append({"stream": s.name, "latest_data": latest,
+                        "last_received": None if a is None else _t(a["at"]),
+                        "minutes_since_received": None if a is None else max(0, (now - a["at"]) // 60),
+                        "batches_received": None if a is None else a["b"],
+                        "rows_received": None if a is None else a["n"]})
+    hr_ts = conn.execute("SELECT MAX(ts) FROM hrSample WHERE ts<=?", (cap,)).fetchone()[0]
+    sleep_end = conn.execute("SELECT MAX(endTs) FROM sleepSession WHERE endTs<=?", (cap,)).fetchone()[0]
+    scored = conn.execute("SELECT day, recovery, strain FROM dailyMetric WHERE recovery IS NOT NULL "
+                          "OR strain IS NOT NULL ORDER BY day DESC LIMIT 1").fetchone()
+    up = last_arrival(conn)
+    dev = wake_device(conn)
+    out = {
+        "now": _t(now),
+        "last_upload": _ago(up, now),
+        "latest_heart_rate": _ago(hr_ts, now),
+        "latest_sleep_end": _ago(sleep_end, now),
+        "latest_daily_scores": None if scored is None else dict(scored),
+        "streams": streams,
+        "phone_wake": {"available": wake_configured and dev is not None,
+                       "server_configured": wake_configured,
+                       "phone_registered": dev is not None,
+                       "registered": None if dev is None else _t(dev["updatedAt"])},
+    }
+    if hr_ts is None:
+        out["verdict"] = "empty"
+        out["advice"] = "No heart-rate data has reached the server yet."
+    elif now - hr_ts <= FRESH_HR_S:
+        out["verdict"] = "fresh"
+        out["advice"] = "Data is current to within a few minutes."
+    else:
+        out["verdict"] = "stale"
+        out["advice"] = (f"The newest heart rate is {(now - hr_ts) // 60} minutes old: the phone has not "
+                         "uploaded since, or the strap has not synced to the phone. "
+                         + ("Call request_phone_sync to wake the phone and wait for fresh data."
+                            if out["phone_wake"]["available"] else
+                            "Say how old the data is rather than guessing what happened since."))
+    if scored is None:
+        out["scores_note"] = ("No daily recovery/strain score yet. NOOP computes them on the phone and needs "
+                              "several nights of data to calibrate after a fresh install.")
+    return out

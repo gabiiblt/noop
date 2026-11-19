@@ -68,7 +68,7 @@ sudo -u noop /opt/noop-selfhost/venv/bin/noop-push-simulator --db /tmp/whoop-cop
 Same machine as the database. The agent's user needs read access to the database file
 (`sudo usermod -aG noop <agent-user>`; the directory is `0750 noop:noop`). Register
 `deploy/noop-mcp.example.json` in your agent's MCP configuration (stdio transport). The server is
-read-only, offers six tools and no free-form SQL. For an agent running elsewhere you may instead run
+read-only, offers eight tools and no free-form SQL. For an agent running elsewhere you may instead run
 `noop-mcp --db ... --http 127.0.0.1:8788` and publish it the same way with `tailscale serve`;
 that is not enabled by default.
 The HTTP server only accepts requests addressed to `127.0.0.1`/`localhost` (a DNS-rebinding guard), so
@@ -77,7 +77,36 @@ add each address a client really uses with `--allow-host`, for example
 behind a relay on a Docker bridge (a containerised agent cannot reach `tailscale serve`). Without it the
 client gets `421 Invalid Host header`.
 
-## 8. Backups
+## 8. Let agents wake the phone (optional, paid Apple developer account)
+
+`request_phone_sync` sends the iPhone a silent notification so it uploads now, then waits for the upload.
+It needs an APNs key and an app built with the Push Notifications capability (`aps-environment` in
+`project.yml`). Without it everything else works and `get_sync_status` still reports how fresh the data is.
+
+1. developer.apple.com, Certificates, Identifiers & Profiles, **Keys**, **+**: tick **Apple Push
+   Notifications service (APNs)**, download `AuthKey_<KEYID>.p8` (downloadable once) and note the
+   **Key ID**. Your **Team ID** is under Membership details.
+2. Copy the key to the server, readable by the `noop` user only:
+
+   ```bash
+   sudo install -o root -g noop -m 640 AuthKey_KEYID.p8 /etc/noop-selfhost/apns.p8
+   ```
+
+3. Add the three flags to the `noop-mcp` command (systemd unit or MCP config) and restart it:
+
+   ```
+   --apns-key /etc/noop-selfhost/apns.p8 --apns-key-id KEYID --apns-team-id TEAMID
+   ```
+
+4. Rebuild and run the app from Xcode, then open NOOP once with Self-hosted Export on: the phone registers
+   its device token with the receiver (`POST /push/wake-token`). `get_sync_status` then reports
+   `phone_wake.available: true`.
+
+The server must reach `api.push.apple.com` / `api.sandbox.push.apple.com` (outbound HTTPS). iOS
+rate-limits silent notifications and never wakes an app the user force-quit, so a wake can go
+unanswered; the tool then says so instead of waiting forever.
+
+## 9. Backups
 
 ```bash
 sudo install -m 755 deploy/noop-backup.sh /usr/local/bin/noop-backup

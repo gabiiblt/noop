@@ -4,8 +4,10 @@ from __future__ import annotations
 
 import argparse
 import hmac
+import json
 import ipaddress
 import os
+import re
 import sqlite3
 import stat
 import sys
@@ -17,6 +19,14 @@ from starlette.concurrency import run_in_threadpool
 from .batch import MAX_WIRE, ProtocolError, parse_batch
 from .db import Store
 from .registry import REGISTRY, V1, VERSIONS, streams_for
+
+
+# APNs device tokens are hex (32 bytes today; Apple documents them as variable length). The topic is the
+# app's bundle id. Both are validated so the MCP server only ever sends what a phone really registered.
+DEVICE_TOKEN_RE = re.compile(r"^[0-9a-f]{64,200}$")
+TOPIC_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9.-]{0,154}$")
+APNS_ENVIRONMENTS = ("development", "production")
+MAX_WAKE_BODY = 2048
 
 
 def create_app(store: Store, token: str, enabled_streams: set[str] | None = None) -> FastAPI:
@@ -69,6 +79,33 @@ def create_app(store: Store, token: str, enabled_streams: set[str] | None = None
             return err(e.status, e.code, version)
         except sqlite3.OperationalError:
             return err(503, "receiver_busy", version)
+
+    @app.post("/push/wake-token")
+    async def wake_token(request: Request):
+        """The phone's APNs registration, so `request_phone_sync` can wake it. Health data never travels here."""
+        if not authorized(request):
+            return unauthorized()
+        body = await request.body()
+        if len(body) > MAX_WAKE_BODY:
+            return err(413, "payload_too_large")
+        try:
+            doc = json.loads(body)
+        except ValueError:
+            return err(400, "invalid_json")
+        if not isinstance(doc, dict):
+            return err(400, "invalid_json")
+        token, env, topic = doc.get("deviceToken"), doc.get("environment"), doc.get("topic")
+        if not (isinstance(token, str) and DEVICE_TOKEN_RE.match(token)):
+            return err(422, "invalid_device_token")
+        if env not in APNS_ENVIRONMENTS:
+            return err(422, "invalid_environment")
+        if not (isinstance(topic, str) and TOPIC_RE.match(topic)):
+            return err(422, "invalid_topic")
+        try:
+            await run_in_threadpool(store.set_wake_device, token, env, topic)
+        except sqlite3.OperationalError:
+            return err(503, "receiver_busy")
+        return {"type": "wakeToken", "status": "stored"}
 
     return app
 
