@@ -32,27 +32,28 @@ Behaviour worth reproducing (ported to Swift):
 
 ## Licensing (decisive)
 
-Decisions of 2026-11-25: the maintainer of NOOP holds a written authorization from Duarte Santos (author of openGym),
-dated 2026-11-25, naming **Gabriel Bolatoglu** and the app "Noop". It grants an MIT licence on openGym's **source code,
-and on the images, icons and other graphic resources of which Duarte Santos is the author**, commercial use included, on top
-of the public AGPL-3.0, and says the files may be handed to an AI assistant to carry out the integration. It states that he
-alone holds the rights needed to license that code and that it includes no third-party code. The PDF stays with the
-maintainer and is **not** committed. It supersedes an earlier version that named only "Gabriel".
+Decisions of 2026-11-25: the maintainer of NOOP holds a written authorization from Duarte Santos (author of openGym), dated
+2026-11-25, version 3, naming **Gabriel Bolatoglu** and the app "Noop". It supersedes versions 1 and 2. Its terms:
+
+- An MIT licence on openGym's **source code and the images, icons and other graphics Duarte Santos authored**, commercial
+  use included, on top of the public AGPL-3.0, and files may be handed to an AI assistant to carry out the integration.
+- An extension to **third-party elements** in the repository (Gym visual media, MuscleMap geometry, catalogue text and
+  translations, free-exercise-db data) **"only to the extent I have the right to transmit them, with no warranty from me"**,
+  with Gabriel respecting those third parties' licences and assuming their use.
+
+The PDF stays with the maintainer and is **not** committed.
 
 | Asset | Status for NOOP (PolyForm Noncommercial 1.0.0) |
 |---|---|
-| openGym source code (JS/React, API, MCP server), and graphics Duarte Santos authored | **Reusable under the MIT grant**, which allows copy, modify, merge, sublicense. Condition: keep Duarte Santos's copyright and the MIT notice with every copy or substantial portion. In practice this means porting logic to Swift (progression, 1RM, volume, set model, plate math) and recording the origin of each port in `ATTRIBUTION.md`. |
-| 13,109 media files in `catalogue/media` | **Still excluded.** They are licensed to openGym by Gym visual, so Duarte Santos is not their author and the grant ("dont je suis l'auteur") does not reach them. The notice forbids reuse in other apps and any AI use. |
-| Exercise text and translations in `catalogue/` | **Not covered until confirmed.** The grant says "source code". The 1,324 `textSource: exercisedb` entries are MIT (ExerciseDB via hasaneyldrm) and need that notice. The rest is AGPL community-edited text. Ask Duarte to extend the authorization in writing, or use free-exercise-db (the decided path). |
-| MuscleMap body geometry | Authored by Melih Colpan, not Duarte Santos: usable on its own MIT terms, with its notice. |
+| openGym source code and graphics Duarte Santos authored | **Reusable under the MIT grant** (copy, modify, merge, sublicense). Keep Duarte Santos's copyright and the MIT notice with every ported file or substantial portion, recorded in `ATTRIBUTION.md`. In practice: port logic to Swift (progression, 1RM, volume, set model, plate math). |
+| 13,109 media files from Gym visual | **Still excluded.** Version 3 can only pass on what Duarte may transmit, and Gym visual's own notice says the media may be used only inside the openGym app, that other uses need a licence from gymvisual.com, and that they may not be fed to any AI system. His extension therefore does not give us rights he does not hold. Options if these animations are wanted: buy a licence from gymvisual.com. Nothing from `catalogue/media` is copied, read or processed. |
+| MuscleMap body geometry (Melih Colpan) | MIT. Mention it in `ATTRIBUTION.md` when used (version 3 asks for it, and the MIT terms require it anyway). |
+| Catalogue text and translations (5,632 French entries among 22 languages) | **Usable** to the extent Duarte can transmit them; his contributor licence agreement lets him relicense community contributions. The 1,323 `textSource: exercisedb` entries also need the ExerciseDB MIT notice. We accept the residual risk stated in the grant (no warranty). |
+| `yuhonas/free-exercise-db` | Unlicense (public domain): 876 exercises, two JPG stills each (about 105 MB raw). Image provenance is declared by that repository, not verified by us. |
 
-The authorization is personal to Gabriel Bolatoglu, and MIT allows him to sublicense, so NOOP's users receive the code under
-NOOP's terms. The openGym copyright and MIT notice must travel with every ported file or substantial portion. This is a
-practical note, not legal advice.
-
-**Exercise images and database (decided):** `yuhonas/free-exercise-db`, Unlicense (public domain), 876 exercises with two
-JPG stills each (about 105 MB raw), name, level, mechanic, equipment, primary/secondary muscles and instructions. Its image
-provenance is declared by that repository, not verified by us. Custom exercises can carry the user's own photo.
+**Images and database (decided):** exercise text, muscles, equipment and translations come from the openGym catalogue;
+**images come only from free-exercise-db**, matched to catalogue entries by name with a manual review. Entries with no image
+show a muscle illustration instead. Custom exercises can carry the user's own photo.
 
 ## Where NOOP stands today
 
@@ -93,15 +94,15 @@ Ordering rationale: training is the largest self-contained area and the best pil
 before the app-wide pass. Performance is measured first so we optimise real hot spots, not guesses.
 
 0. **Decisions.** Done: images and exercise database from free-exercise-db; **iPhone only** (Android is not touched, now or
-   in this plan); openGym code reusable under the MIT grant. Still open: the keep-list of metrics (built in phase 2) and
-   whether Duarte extends the authorization to the catalogue text.
+   in this plan); openGym code reusable under the MIT grant. Still open: the keep-list of metrics (built in phase 2).
+   Catalogue text and translations are usable under authorization v3.
 1. **Performance baseline.** Instruments (Time Profiler, Allocations, Hitches) on a device with a realistic database;
    MetricKit is already wired. Set budgets: cold launch, steady memory, no dropped frames while scrolling Today, Trends and
    the exercise list. Fix measured hot spots only (candidates: the multi-minute re-score pass, large single-file views that
    already break the type checker, unbounded in-memory series, full-size images). One concern per PR.
 2. **Metric inventory.** A checklist of every metric and control on every screen, generated from the code, so the redesign
    cannot silently drop one. Each redesigned screen is ticked against it.
-3. **Training data foundation.** Migrations, the catalogue import (free-exercise-db, mapped to NOOP muscles, ids permanent),
+3. **Training data foundation.** Migrations, the catalogue import (openGym text and translations, images from free-exercise-db matched by name, mapped to NOOP muscles, ids permanent),
    the media pipeline (downsample to WebP, lazy load, disk cache, size measured against the sideload IPA limit), tests.
 4. **Training UI.** Exercise library (search, muscle filter, equipment filter, image), session screen (set types, rest timer,
    supersets, PR detection), workout detail with real stats (volume, sets, reps, PRs, 1RM, muscle split, heart-rate zones,
