@@ -32,22 +32,23 @@ Behaviour worth reproducing (ported to Swift):
 
 ## Licensing (decisive)
 
-Decisions of 2026-11-25: the maintainer of NOOP holds a signed written authorization from Duarte Santos (author of
-openGym), dated 2026-11-25, granting **Gabriel** an MIT licence on **openGym's source code**, commercial use included, on top of
-the public AGPL-3.0. It states that Duarte Santos alone holds the rights needed to license that code and that it includes no
-third-party code. The signed PDF stays with the maintainer and is **not** committed (it carries a signature).
+Decisions of 2026-11-25: the maintainer of NOOP holds a written authorization from Duarte Santos (author of openGym),
+dated 2026-11-25, naming **Gabriel Bolatoglu** and the app "Noop". It grants an MIT licence on openGym's **source code,
+and on the images, icons and other graphic resources of which Duarte Santos is the author**, commercial use included, on top
+of the public AGPL-3.0, and says the files may be handed to an AI assistant to carry out the integration. It states that he
+alone holds the rights needed to license that code and that it includes no third-party code. The PDF stays with the
+maintainer and is **not** committed. It supersedes an earlier version that named only "Gabriel".
 
 | Asset | Status for NOOP (PolyForm Noncommercial 1.0.0) |
 |---|---|
-| openGym source code (JS/React, API, MCP server) | **Reusable under the MIT grant**, which allows copy, modify, merge, sublicense. Condition: keep Duarte Santos's copyright and the MIT notice with every copy or substantial portion. In practice this means porting logic to Swift (progression, 1RM, volume, set model, plate math) and recording the origin of each port in `ATTRIBUTION.md`. |
-| 13,109 media files in `catalogue/media` | **Still excluded.** They are licensed to openGym by Gym visual, not by Duarte Santos, and the notice forbids reuse in other apps and any AI use. The grant covers "ce code" only. |
-| Exercise text and translations in `catalogue/` | **Not covered until confirmed.** The grant says "source code". The 1,324 `textSource: exercisedb` entries are MIT (ExerciseDB via hasaneyldrm) and need that notice. The rest is AGPL community-edited text. Ask Duarte to extend the authorization in writing, or use free-exercise-db. |
-| MuscleMap body geometry | MIT (Melih Colpan): usable with the notice. |
+| openGym source code (JS/React, API, MCP server), and graphics Duarte Santos authored | **Reusable under the MIT grant**, which allows copy, modify, merge, sublicense. Condition: keep Duarte Santos's copyright and the MIT notice with every copy or substantial portion. In practice this means porting logic to Swift (progression, 1RM, volume, set model, plate math) and recording the origin of each port in `ATTRIBUTION.md`. |
+| 13,109 media files in `catalogue/media` | **Still excluded.** They are licensed to openGym by Gym visual, so Duarte Santos is not their author and the grant ("dont je suis l'auteur") does not reach them. The notice forbids reuse in other apps and any AI use. |
+| Exercise text and translations in `catalogue/` | **Not covered until confirmed.** The grant says "source code". The 1,324 `textSource: exercisedb` entries are MIT (ExerciseDB via hasaneyldrm) and need that notice. The rest is AGPL community-edited text. Ask Duarte to extend the authorization in writing, or use free-exercise-db (the decided path). |
+| MuscleMap body geometry | Authored by Melih Colpan, not Duarte Santos: usable on its own MIT terms, with its notice. |
 
-Two details worth fixing in the authorization, to keep the record clean: it names "Gabriel" without surname or GitHub
-handle (`gabiiblt`), and a grant to one person only works for NOOP's other users because MIT allows sublicensing. A line
-such as "Gabriel (GitHub gabiiblt) and anyone to whom he distributes the software" removes any doubt. This is
-a practical note, not legal advice.
+The authorization is personal to Gabriel Bolatoglu, and MIT allows him to sublicense, so NOOP's users receive the code under
+NOOP's terms. The openGym copyright and MIT notice must travel with every ported file or substantial portion. This is a
+practical note, not legal advice.
 
 **Exercise images and database (decided):** `yuhonas/free-exercise-db`, Unlicense (public domain), 876 exercises with two
 JPG stills each (about 105 MB raw), name, level, mechanic, equipment, primary/secondary muscles and instructions. Its image
