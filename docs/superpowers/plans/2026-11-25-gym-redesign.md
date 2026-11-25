@@ -13,9 +13,10 @@ Status: proposal, nothing implemented. Written after reading `gabiiblt/openGym` 
 ## What openGym teaches us
 
 openGym is a React 19 + Capacitor app with a plain Node API and one JSON document per profile. It is not a library
-to embed; it is a reference for **behaviour and data shape**.
+to embed. Under the MIT grant below its code can be ported, and its pure functions (with their tests) give us
+reference values.
 
-Behaviour worth reproducing (re-implemented, not copied):
+Behaviour worth reproducing (ported to Swift):
 
 - A catalogue of 5,600+ exercises with permanent ids (never reused or deleted: workouts and routines store the id), body part,
   equipment, target and secondary muscles, instructions, a `hold` flag (timed holds), a `track: distance` flag
@@ -29,20 +30,28 @@ Behaviour worth reproducing (re-implemented, not copied):
   lifts as a percentage of body weight, edit any past session.
 - An MCP server (read tools + `log_workout`) computed by the same pure functions as the UI.
 
-## Licensing constraints (decisive)
+## Licensing (decisive)
 
-| Asset | Licence | Consequence for NOOP (PolyForm Noncommercial 1.0.0) |
-|---|---|---|
-| openGym code | AGPL-3.0, author Duarte Santos | **No code copied.** AGPL is incompatible with NOOP's licence. Ideas, behaviour and algorithms are free; implementation is clean-room. Permission from the author (his CLA lets him relicense) is the only way to reuse code. |
-| 13,109 media files in `catalogue/media` | Gym visual, proprietary | **Cannot be used in NOOP.** The notice forbids reuse in independent apps, extraction, and any AI use. |
-| Exercise text, 1,324 `textSource: exercisedb` entries | MIT (ExerciseDB v1 via hasaneyldrm) | Usable with the MIT notice. |
-| Other exercise text, muscle-map data, translations | AGPL | Not usable. |
-| MuscleMap body geometry | MIT | Usable with notice (only if we want a body map). |
+Decisions of 2026-11-25: the maintainer of NOOP holds a signed written authorization from Duarte Santos (author of
+openGym), dated 2026-11-25, granting **Gabriel** an MIT licence on **openGym's source code**, commercial use included, on top of
+the public AGPL-3.0. It states that Duarte Santos alone holds the rights needed to license that code and that it includes no
+third-party code. The signed PDF stays with the maintainer and is **not** committed (it carries a signature).
 
-**Image and database source:** `yuhonas/free-exercise-db` is Unlicense (public domain), 876 exercises, two JPG stills each
-(about 105 MB raw), with name, level, mechanic, equipment, primary/secondary muscles and instructions. Its image provenance
-is declared by the repository, not verified by us. Fallback for anything missing: user-supplied photos on custom exercises.
-Decision needed before phase 3.
+| Asset | Status for NOOP (PolyForm Noncommercial 1.0.0) |
+|---|---|
+| openGym source code (JS/React, API, MCP server) | **Reusable under the MIT grant**, which allows copy, modify, merge, sublicense. Condition: keep Duarte Santos's copyright and the MIT notice with every copy or substantial portion. In practice this means porting logic to Swift (progression, 1RM, volume, set model, plate math) and recording the origin of each port in `ATTRIBUTION.md`. |
+| 13,109 media files in `catalogue/media` | **Still excluded.** They are licensed to openGym by Gym visual, not by Duarte Santos, and the notice forbids reuse in other apps and any AI use. The grant covers "ce code" only. |
+| Exercise text and translations in `catalogue/` | **Not covered until confirmed.** The grant says "source code". The 1,324 `textSource: exercisedb` entries are MIT (ExerciseDB via hasaneyldrm) and need that notice. The rest is AGPL community-edited text. Ask Duarte to extend the authorization in writing, or use free-exercise-db. |
+| MuscleMap body geometry | MIT (Melih Colpan): usable with the notice. |
+
+Two details worth fixing in the authorization, to keep the record clean: it names "Gabriel" without surname or GitHub
+handle (`gabiiblt`), and a grant to one person only works for NOOP's other users because MIT allows sublicensing. A line
+such as "Gabriel (GitHub gabiiblt) and anyone to whom he distributes the software" removes any doubt. This is
+a practical note, not legal advice.
+
+**Exercise images and database (decided):** `yuhonas/free-exercise-db`, Unlicense (public domain), 876 exercises with two
+JPG stills each (about 105 MB raw), name, level, mechanic, equipment, primary/secondary muscles and instructions. Its image
+provenance is declared by that repository, not verified by us. Custom exercises can carry the user's own photo.
 
 ## Where NOOP stands today
 
@@ -58,7 +67,7 @@ all already exported by the push; Hevy CSV, Liftosaur and program (xlsx/csv) imp
 
 ## Data model changes and what must follow them into the push
 
-Every field below needs, in the same change: a GRDB migration + test, the Android Room twin (parity contract),
+Every field below needs, in the same change: a GRDB migration + test (iPhone only, see phase 7),
 `Packages/SelfHostPush/.../StreamSpec.swift`, `selfhost/src/noop_selfhost/registry.py`, the parity fixture
 `Parity/registry.json`, a protocol extension bump documented in `selfhost/PROTOCOL_EXT.md`, and receiver tests.
 
@@ -82,7 +91,9 @@ twin of the volume and 1RM formulas, checked by an oracle test (Swift output pas
 Ordering rationale: training is the largest self-contained area and the best pilot of the new design language, so it goes
 before the app-wide pass. Performance is measured first so we optimise real hot spots, not guesses.
 
-0. **Decisions** (no code): image/catalogue source, Android parity timing, the keep-list of metrics (below).
+0. **Decisions.** Done: images and exercise database from free-exercise-db; **iPhone only** (Android is not touched, now or
+   in this plan); openGym code reusable under the MIT grant. Still open: the keep-list of metrics (built in phase 2) and
+   whether Duarte extends the authorization to the catalogue text.
 1. **Performance baseline.** Instruments (Time Profiler, Allocations, Hitches) on a device with a realistic database;
    MetricKit is already wired. Set budgets: cold launch, steady memory, no dropped frames while scrolling Today, Trends and
    the exercise list. Fix measured hot spots only (candidates: the multi-minute re-score pass, large single-file views that
@@ -96,11 +107,14 @@ before the app-wide pass. Performance is measured first so we optimise real hot 
    duration, rest), history with edit, progress per exercise, records.
 5. **Self-host push and MCP** for everything added in 3 and 4 (kept in step with each PR, not left to the end).
 6. **App-wide "unslop" pass**, screen by screen, tokens only (design system is law), checked against the inventory.
-7. **Android parity** for data, push and logic (UI parity is feature-level).
+7. ~~Android parity~~ **Out of scope** (decision 2026-11-25). Consequence: new tables are iOS-only, so a `.noopbak` backup
+   moved between iPhone and Android may carry data the other side ignores or rejects. Keep the backup whitelist change
+   explicit and tested, and never restore across platforms without checking.
 
 ## Verification
 
-- Swift packages: `swift test` for pure logic. Python: `pytest` in `selfhost/`. Oracle tests for any shared formula.
+- Swift packages: `swift test` for pure logic. Python: `pytest` in `selfhost/`. Oracle tests for every ported formula: run
+  openGym's own pure functions under Node to produce expected values, and paste them as the Swift test literals.
 - App targets cannot be compiled in the cloud environment: open PRs so `app-build.yml` compiles `Strand` and `NOOPiOS` and
   runs `StrandTests`, and build locally with `xcodebuild` before merging.
 - Device checks (not CI-able): scrolling smoothness, memory in Instruments, a real session end to end, and that the session
@@ -108,8 +122,8 @@ before the app-wide pass. Performance is measured first so we optimise real hot 
 
 ## Risks
 
-- Muscle vocabulary change is a stored-data contract change: needs a migration and Android twin.
+- Muscle vocabulary change is a stored-data contract change: needs a migration, and breaks parity with the Android app.
 - Image weight versus sideloaded IPA size.
 - Breaking the `.noopbak` backup whitelist and the Hevy/program importers when tables change.
 - Redesign scope creep: mitigated by the metric inventory and one-screen-per-PR.
-- Image source provenance and the AGPL boundary: stay clean-room; never paste openGym code or media.
+- Image source provenance. openGym code may be ported under the MIT grant; its media and unconfirmed catalogue text may not.
