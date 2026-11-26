@@ -57,7 +57,9 @@ public enum LiftMetrics {
     public static func volumeLoadKg(_ sets: [LiftSetRow]) -> Double? {
         let total = sets.reduce(into: 0.0) { sum, s in
             guard !s.isWarmup, let w = s.weightKg, let r = s.reps, w > 0, r > 0 else { return }
-            sum += w * Double(r)
+            // A drop set's drops are extra work on top of its main set (v49, iOS only: no row the Android
+            // twin can hold carries drops, so the two still agree on every set they share).
+            sum += w * Double(r) + s.dropVolumeKg
         }
         return total > 0 ? total : nil
     }
