@@ -11,7 +11,7 @@ from noop_selfhost.mcp_server import create_server
 from noop_selfhost.registry import REGISTRY
 
 TOOLS = {"get_hr_range", "get_rr_range", "get_sleep", "get_stress_timeline", "get_day_summary",
-         "get_sync_status", "request_phone_sync",
+         "get_sync_status", "request_phone_sync", "get_lift_sessions", "get_exercise_progress",
          "get_stream_range"}
 
 
@@ -29,7 +29,7 @@ def call(server, name, args):
     return res
 
 
-def test_server_registers_exactly_eight_tools(server):
+def test_server_registers_exactly_ten_tools(server):
     assert {t.name for t in asyncio.run(server.list_tools())} == TOOLS
 
 

@@ -365,3 +365,101 @@ def sync_status(conn: sqlite3.Connection, now: int | None = None, wake_configure
         out["scores_note"] = ("No daily recovery/strain score yet. NOOP computes them on the phone and needs "
                               "several nights of data to calibrate after a fresh install.")
     return out
+
+
+# --- Strength training (Lift Log) ----------------------------------------------------------------------
+# Same arithmetic as the app (StrandAnalytics LiftMetrics): Epley 1RM up to 12 reps, a single rep is its own
+# weight; volume is weight x reps of working sets plus a drop set's drops; warm-ups and 0-rep sets excluded.
+
+E1RM_REP_CEILING = 12
+
+
+def e1rm(weight, reps):
+    if not weight or not reps or weight <= 0 or reps <= 0 or reps > E1RM_REP_CEILING:
+        return None
+    return float(weight) if reps == 1 else weight * (1 + reps / 30.0)
+
+
+def _drop_volume(row) -> float:
+    if row["setType"] != "dropset" or not row["dropsJSON"]:
+        return 0.0
+    try:
+        import json
+        return sum((p.get("weightKg") or 0) * max(0, p.get("reps") or 0) for p in json.loads(row["dropsJSON"]))
+    except (ValueError, TypeError, AttributeError):
+        return 0.0
+
+
+def _set_out(r) -> dict:
+    out = {"exercise": r["exercise"], "set": r["setIndex"], "weight_kg": r["weightKg"], "reps": r["reps"],
+           "rpe": r["rpe"], "warmup": bool(r["isWarmup"])}
+    for k, name in (("setType", "type"), ("rir", "rir"), ("side", "side"), ("durationSec", "duration_s"),
+                    ("distanceM", "distance_m"), ("catalogueId", "catalogue_id")):
+        if r[k] is not None:
+            out[name] = r[k]
+    if r["isFailure"]:
+        out["to_failure"] = True
+    return out
+
+
+def _summary(rows) -> list[dict]:
+    order, groups = [], {}
+    for r in rows:
+        if r["reps"] == 0:
+            continue
+        if r["exercise"] not in groups:
+            order.append(r["exercise"])
+            groups[r["exercise"]] = []
+        groups[r["exercise"]].append(r)
+    out = []
+    for name in order:
+        work = [r for r in groups[name] if not r["isWarmup"]]
+        vol = sum((r["weightKg"] or 0) * (r["reps"] or 0) + _drop_volume(r) for r in work
+                  if (r["weightKg"] or 0) > 0 and (r["reps"] or 0) > 0)
+        ests = [e for e in (e1rm(r["weightKg"], r["reps"]) for r in work) if e is not None]
+        out.append({"exercise": name, "working_sets": len(work), "reps": sum(r["reps"] or 0 for r in work),
+                    "volume_kg": round(vol, 1) if vol else None,
+                    "top_weight_kg": max((r["weightKg"] for r in work if r["weightKg"]), default=None),
+                    "best_e1rm_kg": round(max(ests), 1) if ests else None})
+    return out
+
+
+def lift_sessions(conn: sqlite3.Connection, start: int, end: int, with_sets: bool = False) -> dict:
+    sessions = conn.execute("SELECT * FROM liftSession WHERE startTs>=? AND startTs<? ORDER BY startTs",
+                            (start, end)).fetchall()
+    out = []
+    for s in sessions[:MAX_ROWS]:
+        rows = conn.execute("SELECT * FROM liftSet WHERE sessionId=? ORDER BY ord", (s["id"],)).fetchall()
+        item = {"id": s["id"], "start": _t(s["startTs"]), "end": _t(s["endTs"]) if s["endTs"] else None,
+                "program": s["programName"], "session_rpe": s["sessionRpe"], "exercises": _summary(rows)}
+        vols = [e["volume_kg"] for e in item["exercises"] if e["volume_kg"]]
+        item["volume_kg"] = round(sum(vols), 1) if vols else None
+        if with_sets:
+            item["sets"] = [_set_out(r) for r in rows if r["reps"] != 0]
+        out.append(item)
+    res = {"start": _t(start), "end": _t(end), "count": len(out), "sessions": out}
+    if not out:
+        res["note"] = "No Lift Log session in this range (or not uploaded yet: check get_sync_status)."
+    return res
+
+
+def exercise_progress(conn: sqlite3.Connection, exercise: str) -> dict:
+    """One exercise across sessions, matched by name or by the catalogue id that name carries."""
+    ids = [r[0] for r in conn.execute("SELECT DISTINCT catalogueId FROM liftSet WHERE exercise=? AND catalogueId IS NOT NULL",
+                                       (exercise,))]
+    marks = ",".join("?" * len(ids))
+    where = "s.exercise=?" + (f" OR s.catalogueId IN ({marks})" if ids else "")
+    rows = conn.execute(f"SELECT s.*, sess.startTs AS sessionStart FROM liftSet s JOIN liftSession sess ON "
+                        f"sess.id=s.sessionId WHERE {where} ORDER BY sess.startTs, s.ord", (exercise, *ids)).fetchall()
+    by_session = {}
+    for r in rows:
+        by_session.setdefault((r["sessionStart"], r["sessionId"]), []).append(r)
+    points = []
+    for (start, _), rs in sorted(by_session.items()):
+        summ = _summary(rs)
+        if summ:
+            points.append({"date": _t(start), **{k: v for k, v in summ[0].items() if k != "exercise"}})
+    best = max((p["best_e1rm_kg"] for p in points if p["best_e1rm_kg"]), default=None)
+    return {"exercise": exercise, "sessions": len(points), "best_e1rm_kg": best,
+            "heaviest_kg": max((p["top_weight_kg"] for p in points if p["top_weight_kg"]), default=None),
+            "points": points[-MAX_ROWS:]}

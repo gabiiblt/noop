@@ -1,6 +1,6 @@
 """Read-only MCP server over the receiver's SQLite file (official `mcp` SDK, v2 `MCPServer`).
 
-Eight tools, no free-form SQL, no write path: every call opens the database `mode=ro` (the optional
+Ten tools, no free-form SQL, no write path: every call opens the database `mode=ro` (the optional
 phone wake sends a silent notification through Apple and writes nothing).
 Times in/out are Europe/Paris; naive ISO inputs are Paris local time."""
 from __future__ import annotations
@@ -109,6 +109,21 @@ def create_server(db_path: str, apns: ApnsClient | None = None, clock=time.time,
         respSample, sleepStateSample, ppgHrSample, workout, metricSeries). Paginated, capped at 5000.
         Binary waveforms are reported as byte counts only."""
         return run(q.stream_range, stream, _ts(start, "start"), _ts(end, "end"), limit, offset)
+
+    @server.tool()
+    def get_lift_sessions(start: str, end: str, with_sets: bool = False) -> dict:
+        """Strength sessions logged in NOOP's Lift Log between start and end: program, session RPE, and per
+        exercise the working sets, reps, volume (weight x reps, drop-set drops included), top weight and best
+        estimated 1RM (Epley, 12 reps or fewer). with_sets adds every set (weight, reps, RPE, RIR, set type,
+        side, time, distance, to-failure)."""
+        return run(q.lift_sessions, _ts(start, "start"), _ts(end, "end"), with_sets)
+
+    @server.tool()
+    def get_exercise_progress(exercise: str) -> dict:
+        """One exercise across every session it was logged in (matched by name, or by the library exercise the
+        name is linked to): per session the working sets, reps, volume, top weight and best estimated 1RM, plus
+        the all-time best estimated 1RM and heaviest weight."""
+        return run(q.exercise_progress, exercise)
 
     @server.tool()
     def get_sync_status() -> dict:

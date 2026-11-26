@@ -40,6 +40,8 @@ Data arrives with a delay (iOS only lets the app upload now and then), so an emp
 | `get_stress_timeline(start, end)` | The stress **heuristic** per 5-minute window (see below). |
 | `get_day_summary(day)` | Heart-rate stats, daily scores, sleep, workouts, stress-label counts. |
 | `get_stream_range(stream, start, end, limit?, offset?)` | Rows of any other exported stream (steps, SpO2, temperature, respiration, sleep states, ...). Fixed whitelist, no SQL, capped; binary waveforms are reported as byte counts only. |
+| `get_lift_sessions(start, end, with_sets?)` | Lift Log sessions: per exercise working sets, reps, volume, top weight, best estimated 1RM; optionally every set (RPE, RIR, set type, side, time, distance, failure). |
+| `get_exercise_progress(exercise)` | One exercise across sessions (name or linked library exercise), with its best estimated 1RM and heaviest weight. |
 | `get_sync_status()` | How fresh the data is: last upload, newest heart rate / sleep / daily score, per-stream newest data and last delivery, whether a phone wake is available. |
 | `request_phone_sync(wait_seconds?)` | Wakes the iPhone with a silent notification (optional, needs an APNs key, see `deploy/README.md` §8), waits for the upload and returns the fresh status. |
 
