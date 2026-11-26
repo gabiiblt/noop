@@ -62,6 +62,7 @@ struct LiftSessionDetailSheet: View {
                 if !loaded {
                     ComingSoon(what: "Reading the session…", symbol: "dumbbell")
                 } else {
+                    summaryHero
                     figuresSection
                     exercisesSection
                     if !performed.isEmpty {
@@ -150,6 +151,43 @@ struct LiftSessionDetailSheet: View {
         return "\(date)"
     }
 
+    // MARK: - The summary
+
+    /// The workout at a glance, as a gym app ends one: how long, how many working sets, how many records. The
+    /// three numbers come from the same values the figures below read, so the two can never disagree.
+    private var summaryHero: some View {
+        NoopGlassCard(tint: StrandPalette.effortColor, padding: NoopMetrics.space5) {
+            VStack(alignment: .leading, spacing: NoopMetrics.space3) {
+                Text("Workout complete").strandOverline()
+                Text((session.programName ?? String(localized: "Session")).uppercased())
+                    .font(StrandFont.rounded(30, weight: .black))
+                    .foregroundStyle(StrandPalette.textPrimary)
+                    .lineLimit(2)
+                    .minimumScaleFactor(0.6)
+                HStack(alignment: .top, spacing: 0) {
+                    heroNumber(ActiveWorkoutClock.clock(durationSec), String(localized: "Duration"))
+                    heroNumber("\(workingSetCount)", String(localized: "Working sets"))
+                    heroNumber("\(records.count)", String(localized: "Records"))
+                }
+            }
+        }
+    }
+
+    private func heroNumber(_ value: String, _ label: String) -> some View {
+        VStack(alignment: .leading, spacing: 2) {
+            Text(value)
+                .font(StrandFont.rounded(26, weight: .heavy))
+                .foregroundStyle(StrandPalette.textPrimary)
+                .lineLimit(1)
+                .minimumScaleFactor(0.6)
+            Text(label)
+                .font(StrandFont.caption)
+                .foregroundStyle(StrandPalette.textSecondary)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .accessibilityElement(children: .combine)
+    }
+
     // MARK: - The session figures
 
     private var figuresSection: some View {
@@ -209,11 +247,11 @@ struct LiftSessionDetailSheet: View {
     }
 
     private func tile(_ label: String, _ value: String, _ caption: String) -> some View {
-        NoopCard(padding: 14) {
+        NoopGlassCard(padding: 14) {
             VStack(alignment: .leading, spacing: 3) {
                 Text(label).strandOverline()
                 Text(value)
-                    .font(StrandFont.title2)
+                    .font(StrandFont.rounded(24, weight: .bold))
                     .foregroundStyle(StrandPalette.textPrimary)
                     .lineLimit(1)
                     .minimumScaleFactor(0.6)
