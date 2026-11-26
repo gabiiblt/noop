@@ -107,3 +107,31 @@ def test_gyms_say_so_when_there_are_none(tmp_path):
     store = Store(str(tmp_path / "x.sqlite"))
     out = q.gyms(Store.connect_ro(store.path))
     assert out["count"] == 0 and "note" in out
+
+
+def test_programs_list_lines_with_their_superset_and_backups(tmp_path):
+    store = Store(str(tmp_path / "x.sqlite"))
+    store.upsert_rows(REGISTRY["liftProgram"], "s", "d", [
+        ({"id": "p"}, {"name": "Push", "archived": 0, "createdAt": 1, "updatedAt": 1})], "1.100")
+    store.upsert_rows(REGISTRY["liftProgramItem"], "s", "d", [
+        ({"id": "i1"}, {"programId": "p", "ord": 0, "exercise": "Bench", "targetSets": 3, "supersetGroup": "g",
+                        "backupsJSON": '["Dumbbell press","Push-up"]', "progression": "double"}),
+        ({"id": "i2"}, {"programId": "p", "ord": 1, "exercise": "Row", "targetSets": 3, "supersetGroup": "g",
+                        "backupsJSON": "{nope"}),
+        ({"id": "i3"}, {"programId": "p", "ord": 2, "exercise": "Curl", "targetSets": 2})], "1.100")
+    out = q.programs(Store.connect_ro(store.path))
+    lines = out["programs"][0]["lines"]
+    assert [l["exercise"] for l in lines] == ["Bench", "Row", "Curl"]
+    assert lines[0]["superset"] == lines[1]["superset"] == "g" and "superset" not in lines[2]
+    assert lines[0]["backups"] == ["Dumbbell press", "Push-up"] and lines[0]["rule"] == "double"
+    assert "backups" not in lines[1], "a malformed list reads as none"
+
+
+def test_sets_name_their_superset_and_what_they_were_swapped_from(tmp_path):
+    store = Store(str(tmp_path / "x.sqlite")); seed(store)
+    store.upsert_rows(REGISTRY["liftSet"], "s", "d", [
+        ({"id": "9"}, {"sessionId": "a", "ord": 9, "exercise": "Hack squat", "setIndex": 1, "weightKg": 100, "reps": 8,
+                       "isWarmup": 0, "isFailure": 0, "supersetGroup": "g", "swappedFrom": "Leg press"})], "1.100")
+    sets = q.lift_sessions(Store.connect_ro(store.path), 0, 50000, with_sets=True)["sessions"][0]["sets"]
+    hack = [s for s in sets if s["exercise"] == "Hack squat"][0]
+    assert hack["superset"] == "g" and hack["swapped_from"] == "Leg press"

@@ -48,6 +48,10 @@ v51 (a gym's equipment): `liftSession.gymId`, and a new snapshot stream `liftGym
 `barsJSON` (`{"<equipment>": kg}`), `dumbbellsJSON` (`[weight]`), `stacksJSON` (`{"<exercise>": [weight]}`),
 `createdAt`, `lastUsedTs`. A JSON member is NULL when empty.
 
+v52 (supersets and backups): `liftProgramItem.supersetGroup` (lines sharing it are done as a round), `.backupsJSON`
+(a JSON list of exercise names, at most five); `liftSet.supersetGroup` (the group the set was done in),
+`.swappedFrom` (the exercise the line was planned as, when a backup took its place that session).
+
 ## Never exported
 
 `coachMessage`, `device`, `cursors`, `rawBatch`, local `synced` columns, and the retired

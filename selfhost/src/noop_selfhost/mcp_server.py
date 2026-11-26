@@ -1,6 +1,6 @@
 """Read-only MCP server over the receiver's SQLite file (official `mcp` SDK, v2 `MCPServer`).
 
-Twelve tools, no free-form SQL, no write path: every call opens the database `mode=ro` (the optional
+Thirteen tools, no free-form SQL, no write path: every call opens the database `mode=ro` (the optional
 phone wake sends a silent notification through Apple and writes nothing).
 Times in/out are Europe/Paris; naive ISO inputs are Paris local time."""
 from __future__ import annotations
@@ -115,7 +115,7 @@ def create_server(db_path: str, apns: ApnsClient | None = None, clock=time.time,
         """Strength sessions logged in NOOP's Lift Log between start and end: program, session RPE, and per
         exercise the working sets, reps, volume (weight x reps, drop-set drops included), top weight and best
         estimated 1RM (Epley, 12 reps or fewer). with_sets adds every set (weight, reps, RPE, RIR, set type,
-        side, time, distance, to-failure, the target it was built from and its plan). Each session carries the gym
+        side, time, distance, to-failure, the target it was built from and its plan, its superset, and what it was swapped from). Each session carries the gym
         it was done at when one was chosen."""
         return run(q.lift_sessions, _ts(start, "start"), _ts(end, "end"), with_sets)
 
@@ -133,6 +133,13 @@ def create_server(db_path: str, apns: ApnsClient | None = None, clock=time.time,
         computed on the phone, which shows the reason for it. Sets read with get_lift_sessions (with_sets) carry
         the target each was built from."""
         return run(q.progression_rules)
+
+    @server.tool()
+    def get_programs() -> dict:
+        """Each Lift Log program with its lines: sets, rep range, weight, rest, the progression rule, the superset a
+        line belongs to (lines sharing a superset id are done as a round, one set of each in turn) and the backup
+        exercises that can take its place when its machine is taken."""
+        return run(q.programs)
 
     @server.tool()
     def get_gyms() -> dict:

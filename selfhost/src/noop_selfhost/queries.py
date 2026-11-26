@@ -407,6 +407,11 @@ def _set_out(r) -> dict:
     plan = _plan(r["planJSON"])
     if plan:
         out["plan"] = plan
+    # v52: the superset it was done in, and what the line was planned as when a backup took its place.
+    if r["supersetGroup"]:
+        out["superset"] = r["supersetGroup"]
+    if r["swappedFrom"]:
+        out["swapped_from"] = r["swappedFrom"]
     return out
 
 
@@ -463,6 +468,35 @@ def lift_sessions(conn: sqlite3.Connection, start: int, end: int, with_sets: boo
     res = {"start": _t(start), "end": _t(end), "count": len(out), "sessions": out}
     if not out:
         res["note"] = "No Lift Log session in this range (or not uploaded yet: check get_sync_status)."
+    return res
+
+
+def programs(conn: sqlite3.Connection) -> dict:
+    """Each program with its lines: targets, the progression rule, the superset a line belongs to (lines sharing a
+    `superset` id are done as a round) and the backups that can take its place when its machine is taken."""
+    import json
+    rows = conn.execute("SELECT * FROM liftProgram ORDER BY archived, updatedAt DESC LIMIT ?", (MAX_ROWS,)).fetchall()
+    out = []
+    for p in rows:
+        lines = []
+        for r in conn.execute("SELECT * FROM liftProgramItem WHERE programId=? ORDER BY ord", (p["id"],)):
+            line = {"exercise": r["exercise"], "sets": r["targetSets"], "reps_low": r["targetRepsLow"],
+                    "reps_high": r["targetRepsHigh"], "weight_kg": r["targetWeightKg"], "rest_s": r["restSec"]}
+            for k, name in (("progression", "rule"), ("targetSetsMax", "sets_max"), ("incrementKg", "increment"),
+                            ("deloadFactor", "deload_factor"), ("supersetGroup", "superset")):
+                if r[k] is not None:
+                    line[name] = r[k]
+            try:
+                backups = json.loads(r["backupsJSON"]) if r["backupsJSON"] else []
+            except (ValueError, TypeError):
+                backups = []
+            if isinstance(backups, list) and backups:
+                line["backups"] = [b for b in backups if isinstance(b, str)]
+            lines.append(line)
+        out.append({"name": p["name"], "archived": bool(p["archived"]), "note": p["note"], "lines": lines})
+    res = {"count": len(out), "programs": out}
+    if not out:
+        res["note"] = "No program (or not uploaded yet: check get_sync_status)."
     return res
 
 

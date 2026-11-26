@@ -237,7 +237,9 @@ struct LiftLogView: View {
                                 // onto the line it came from, and be there next time.
                                 programItemId: item.id,
                                 // Decides whether a gym's plates apply to this line.
-                                equipment: known?.equipment)
+                                equipment: known?.equipment,
+                                supersetGroup: item.supersetGroup,
+                                backups: item.backups)
             // A line with a progression rule runs on the rule's target for today, derived from what this
             // exercise did before (by name, or by the library exercise the name is linked to).
             let sets = history.filter { $0.exercise == item.exercise || (item.catalogueId != nil && $0.catalogueId == item.catalogueId) }

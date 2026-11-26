@@ -158,6 +158,11 @@ public struct LiftProgramItemRow: Equatable, Codable, Sendable {
     public var incrementKg: Double?
     /// How far a deload backs off, 0.5...0.95; nil takes the default 0.9.
     public var deloadFactor: Double?
+    // v52 — see `LiftSuperset.swift`.
+    /// Lines that share it are done as a round. Nil for a line on its own.
+    public var supersetGroup: String?
+    /// Exercises that can take this line's place for a session when its machine is taken, at most five.
+    public var backups: [String]
 
     public init(
         id: String,
@@ -176,7 +181,9 @@ public struct LiftProgramItemRow: Equatable, Codable, Sendable {
         progression: String? = nil,
         targetSetsMax: Int? = nil,
         incrementKg: Double? = nil,
-        deloadFactor: Double? = nil
+        deloadFactor: Double? = nil,
+        supersetGroup: String? = nil,
+        backups: [String] = []
     ) {
         self.id = id
         self.deviceId = deviceId
@@ -195,6 +202,8 @@ public struct LiftProgramItemRow: Equatable, Codable, Sendable {
         self.targetSetsMax = targetSetsMax
         self.incrementKg = incrementKg
         self.deloadFactor = deloadFactor
+        self.supersetGroup = supersetGroup
+        self.backups = LiftSuperset.cleanBackups(backups, excluding: exercise)
     }
 
     static func decode(_ row: Row) -> LiftProgramItemRow {
@@ -215,7 +224,9 @@ public struct LiftProgramItemRow: Equatable, Codable, Sendable {
             progression: row["progression"],
             targetSetsMax: row["targetSetsMax"],
             incrementKg: row["incrementKg"],
-            deloadFactor: row["deloadFactor"]
+            deloadFactor: row["deloadFactor"],
+            supersetGroup: row["supersetGroup"],
+            backups: LiftSuperset.decodeBackups(row["backupsJSON"])
         )
     }
 }
@@ -332,6 +343,11 @@ public struct LiftSetRow: Equatable, Codable, Sendable {
     public var targetWeightKg: Double?
     /// The plan the session was built from, the same on every set of the exercise in the session.
     public var plan: LiftPlanStamp?
+    // v52
+    /// The superset group the set was done in, as it was. Nil for a set done on its own.
+    public var supersetGroup: String?
+    /// The exercise the line was PLANNED as, when a backup took its place that session. Nil otherwise.
+    public var swappedFrom: String?
 
     public init(
         id: String,
@@ -360,7 +376,9 @@ public struct LiftSetRow: Equatable, Codable, Sendable {
         catalogueId: String? = nil,
         targetReps: Int? = nil,
         targetWeightKg: Double? = nil,
-        plan: LiftPlanStamp? = nil
+        plan: LiftPlanStamp? = nil,
+        supersetGroup: String? = nil,
+        swappedFrom: String? = nil
     ) {
         self.id = id
         self.deviceId = deviceId
@@ -390,6 +408,8 @@ public struct LiftSetRow: Equatable, Codable, Sendable {
         self.targetReps = targetReps
         self.targetWeightKg = targetWeightKg
         self.plan = plan
+        self.supersetGroup = supersetGroup
+        self.swappedFrom = swappedFrom
     }
 
     /// Volume for this set: weight x reps, in kilograms. Nil unless BOTH are present, and zero for a
@@ -435,7 +455,9 @@ public struct LiftSetRow: Equatable, Codable, Sendable {
             catalogueId: row["catalogueId"],
             targetReps: row["targetReps"],
             targetWeightKg: row["targetWeightKg"],
-            plan: LiftPlanStamp.decode(row["planJSON"])
+            plan: LiftPlanStamp.decode(row["planJSON"]),
+            supersetGroup: row["supersetGroup"],
+            swappedFrom: row["swappedFrom"]
         )
     }
 }
@@ -445,7 +467,7 @@ extension LiftSetRow {
         case id, deviceId, sessionId, ord, exercise, primaryMuscle, secondaryMuscles, setIndex, weightKg
         case reps, rpe, isWarmup, startTs, endTs, restSec, note
         case setType, parts, isFailure, rir, side, durationSec, distanceM, catalogueId
-        case targetReps, targetWeightKg, plan
+        case targetReps, targetWeightKg, plan, supersetGroup, swappedFrom
     }
 
     /// Decodes rows saved before v49 too (an in-progress session persisted by an older build has none
@@ -479,7 +501,9 @@ extension LiftSetRow {
             catalogueId: try c.decodeIfPresent(String.self, forKey: .catalogueId),
             targetReps: try c.decodeIfPresent(Int.self, forKey: .targetReps),
             targetWeightKg: try c.decodeIfPresent(Double.self, forKey: .targetWeightKg),
-            plan: try c.decodeIfPresent(LiftPlanStamp.self, forKey: .plan))
+            plan: try c.decodeIfPresent(LiftPlanStamp.self, forKey: .plan),
+            supersetGroup: try c.decodeIfPresent(String.self, forKey: .supersetGroup),
+            swappedFrom: try c.decodeIfPresent(String.self, forKey: .swappedFrom))
     }
 }
 
@@ -665,13 +689,14 @@ extension WhoopStore {
                     INSERT INTO liftProgramItem
                         (id, deviceId, programId, ord, exercise, targetSets,
                          targetRepsLow, targetRepsHigh, targetRpe, targetWeightKg, restSec, note, catalogueId,
-                         progression, targetSetsMax, incrementKg, deloadFactor)
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                         progression, targetSetsMax, incrementKg, deloadFactor, supersetGroup, backupsJSON)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                     """, arguments: [
                         r.id, r.deviceId, r.programId, r.ord, r.exercise, r.targetSets,
                         r.targetRepsLow, r.targetRepsHigh, r.targetRpe, r.targetWeightKg,
                         r.restSec, r.note, r.catalogueId,
                         r.progression, r.targetSetsMax, r.incrementKg, r.deloadFactor,
+                        r.supersetGroup, LiftSuperset.encodeBackups(r.backups),
                     ])
                 n += db.changesCount
             }
@@ -822,8 +847,8 @@ extension WhoopStore {
                         (id, deviceId, sessionId, ord, exercise, primaryMuscle, secondaryMuscles,
                          setIndex, weightKg, reps, rpe, isWarmup, startTs, endTs, restSec, note,
                          setType, dropsJSON, isFailure, rir, side, durationSec, distanceM, catalogueId,
-                         targetReps, targetWeightKg, planJSON)
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                         targetReps, targetWeightKg, planJSON, supersetGroup, swappedFrom)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                     ON CONFLICT(id) DO UPDATE SET
                         ord = excluded.ord,
                         exercise = excluded.exercise,
@@ -848,7 +873,9 @@ extension WhoopStore {
                         catalogueId = excluded.catalogueId,
                         targetReps = excluded.targetReps,
                         targetWeightKg = excluded.targetWeightKg,
-                        planJSON = excluded.planJSON
+                        planJSON = excluded.planJSON,
+                        supersetGroup = excluded.supersetGroup,
+                        swappedFrom = excluded.swappedFrom
                     """, arguments: [
                         r.id, r.deviceId, r.sessionId, r.ord, r.exercise,
                         r.primaryMuscle?.rawValue,
@@ -858,6 +885,7 @@ extension WhoopStore {
                         r.setType.storedValue, LiftSetPart.encode(r.parts), r.isFailure, r.rir,
                         r.side?.rawValue, r.durationSec, r.distanceM, r.catalogueId,
                         r.targetReps, r.targetWeightKg, LiftPlanStamp.encode(r.plan),
+                        r.supersetGroup, r.swappedFrom,
                     ])
                 n += db.changesCount
             }

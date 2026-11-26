@@ -145,6 +145,16 @@ To do:
    (the engine takes no `owned` grid yet), a per-exercise choice of how it is loaded (only library exercises have
    an equipment word), and a unit-aware warm-up ramp.
 4. Supersets, and a backup exercise that swaps in when a machine is taken (keeps the slot's sets and reps).
+   Done: v52 storage (`supersetGroup` and `backupsJSON` on a program line; `supersetGroup` and `swappedFrom` on each
+   set), push on both sides, MCP (`get_programs`, sets name their superset and swap); the engine runs a superset as a
+   round (one set of each in turn, no rest inside the round, the longest member's rest after it, an out-of-order
+   start goes to the other member's same set); a backup takes a line's place while nothing is recorded for it (sets,
+   reps and rest stay, the weight and the progression rule go, the replaced exercise goes to the front of the
+   backups, nothing is written back to the program line); linking lines in the program editor, backups in the line
+   editor, the superset label and swap menu in the session.
+   Not done: swapping a line that already has sets logged (openGym inserts the replacement beside it after a
+   confirmation), a swap to any exercise rather than a listed backup, a backup with its own plan, a superset's own
+   rest and circuit mode, moving a member inside a running superset.
 5. Body map: volume per muscle, muscles still recovering, muscles left untrained (MuscleMap geometry, MIT).
 6. Strength balance ratios between lifts, and lifts as a percentage of body weight.
 7. A fuller rest timer, and a rotation of sessions (A, B, C) as an alternative to weekdays.

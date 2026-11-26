@@ -200,14 +200,29 @@ struct LiftSessionView: View {
     private func exerciseCard(_ engine: LiftSessionEngine, index: Int, item: LiftPlanItem) -> some View {
         NoopCard {
             VStack(alignment: .leading, spacing: NoopMetrics.rowSpacing) {
-                VStack(alignment: .leading, spacing: 2) {
-                    Text(item.exercise)
-                        .font(StrandFont.headline)
-                        .foregroundStyle(StrandPalette.textPrimary)
-                    Text(LiftMuscleSummary.line(primary: item.primaryMuscle,
-                                                secondaries: item.secondaryMuscles))
-                        .font(StrandFont.caption)
-                        .foregroundStyle(StrandPalette.textTertiary)
+                HStack(alignment: .top) {
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(item.exercise)
+                            .font(StrandFont.headline)
+                            .foregroundStyle(StrandPalette.textPrimary)
+                        Text(LiftMuscleSummary.line(primary: item.primaryMuscle,
+                                                    secondaries: item.secondaryMuscles))
+                            .font(StrandFont.caption)
+                            .foregroundStyle(StrandPalette.textTertiary)
+                        if let members = engine.supersetMembers(of: index) {
+                            let others = members.filter { $0 != index }.map { engine.plan[$0].exercise }
+                            Text("Superset with \(others.joined(separator: ", "))")
+                                .font(StrandFont.caption)
+                                .foregroundStyle(StrandPalette.effortColor)
+                        }
+                        if let from = item.swappedFrom {
+                            Text("Instead of \(from)")
+                                .font(StrandFont.caption)
+                                .foregroundStyle(StrandPalette.textSecondary)
+                        }
+                    }
+                    Spacer(minLength: 0)
+                    swapMenu(engine, index: index, item: item)
                 }
                 // Why today's numbers are what they are, when a progression rule chose them.
                 if let why = item.rule?.why, let line = LiftProgressionCopy.text(why, system: unitSystem) {
@@ -243,6 +258,34 @@ struct LiftSessionView: View {
             }
         }
         .id(index)
+    }
+
+    /// The backups that can take this line's place, offered while nothing is recorded for it: a logged set is never
+    /// relabelled, so once the line is started the menu is gone.
+    @ViewBuilder private func swapMenu(_ engine: LiftSessionEngine, index: Int, item: LiftPlanItem) -> some View {
+        if !item.backups.isEmpty, !engine.sets.contains(where: { $0.exerciseIndex == index }) {
+            Menu {
+                ForEach(item.backups, id: \.self) { name in
+                    Button(String(localized: "Swap for \(name)")) { Task { await swap(index, to: name) } }
+                }
+            } label: {
+                Image(systemName: "arrow.left.arrow.right.circle")
+                    .font(.system(size: 20, weight: .regular))
+                    .foregroundStyle(StrandPalette.accent)
+            }
+            .accessibilityLabel(String(localized: "Swap this exercise for a backup"))
+        }
+    }
+
+    private func swap(_ index: Int, to name: String) async {
+        // The backup's muscles and equipment come from the exercise vocabulary when it knows the name.
+        var known: LiftExerciseRow?
+        if let store = await repo.storeHandle() {
+            let vocabulary = (try? await store.liftExercises(deviceId: repo.deviceId)) ?? []
+            known = vocabulary.first { $0.name == name }
+        }
+        session.swapExercise(index, to: name, primaryMuscle: known?.primaryMuscle,
+                             secondaryMuscles: known?.secondaryMuscles ?? [], equipment: known?.equipment)
     }
 
     /// Add one more set, or drop the last planned one — at the END of the exercise, because that is
@@ -981,7 +1024,10 @@ struct LiftSessionView: View {
                 // rule is stamped: every other set saves exactly what it always did.
                 targetReps: item?.rule == nil ? nil : item?.aimReps(forSet: s.slot.setIndex),
                 targetWeightKg: item?.rule == nil ? nil : item?.targetWeightKg,
-                plan: item?.rule?.stamp)
+                plan: item?.rule?.stamp,
+                // The superset it was done in, and what the line was planned as when a backup took its place.
+                supersetGroup: item?.supersetGroup,
+                swappedFrom: item?.swappedFrom)
         }
         _ = try? await store.upsertLiftSets(rows)
         await writeProgram(store: store, plan: engine.plan, sets: finished)

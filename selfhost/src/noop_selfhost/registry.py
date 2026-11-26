@@ -116,7 +116,9 @@ _STREAMS = [
        "programId:text, ord:int, exercise:text, targetSets:int, targetRepsLow:int, targetRepsHigh:int, "
        "targetRpe:real, targetWeightKg:real, restSec:int, note:text, catalogueId:text, "
        # v50 (iOS training redesign): the progression rule on the line.
-       "progression:text, targetSetsMax:int, incrementKg:real, deloadFactor:real", "snapshot", phase="ext"),
+       "progression:text, targetSetsMax:int, incrementKg:real, deloadFactor:real, "
+       # v52: superset group, and the backup exercises (JSON list of names).
+       "supersetGroup:text, backupsJSON:text", "snapshot", phase="ext"),
     _s("liftSession", "id:text!", "startTs:int, endTs:int, sport:text, programId:text, programName:text, "
        "sessionRpe:real, note:text, gymId:text", "snapshot", phase="ext"),
     _s("liftSet", "id:text!",
@@ -126,7 +128,9 @@ _STREAMS = [
        "setType:text, dropsJSON:text, isFailure:int, rir:real, side:text, durationSec:int, distanceM:real, "
        "catalogueId:text, "
        # v50: the target this set was built from, and the plan stamp (JSON) of its session.
-       "targetReps:int, targetWeightKg:real, planJSON:text",
+       "targetReps:int, targetWeightKg:real, planJSON:text, "
+       # v52: the superset group the set was done in, and what the line was planned as when a backup took over.
+       "supersetGroup:text, swappedFrom:text",
        "snapshot", phase="ext"),
     # v51 (iOS training redesign): a gym's equipment, and the session's gymId above.
     _s("liftGym", "id:text!", "name:text, unit:text, platesJSON:text, barsJSON:text, dumbbellsJSON:text, "

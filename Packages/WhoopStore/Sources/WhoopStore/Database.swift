@@ -1234,6 +1234,23 @@ extension WhoopStore {
                 t.add(column: "gymId", .text)
             }
         }
+        // v52 (iOS only, the training redesign): supersets and a backup exercise.
+        //   • liftProgramItem gains `supersetGroup` (lines sharing it are done as a round: one set of each in turn,
+        //     the rest taken after the round) and `backupsJSON` (the exercises that can take the line's place when
+        //     its machine is taken: a JSON list of names, at most five, NULL when none).
+        //   • liftSet gains `supersetGroup` (the group the set was done in, as it was) and `swappedFrom` (the exercise
+        //     the line was planned as, when a backup took its place that session).
+        // All additive and nullable. No Room twin (schema oracle: `ios-only-training`).
+        migrator.registerMigration("v52-lift-superset-backup") { db in
+            try db.alter(table: "liftProgramItem") { t in
+                t.add(column: "supersetGroup", .text)
+                t.add(column: "backupsJSON", .text)
+            }
+            try db.alter(table: "liftSet") { t in
+                t.add(column: "supersetGroup", .text)
+                t.add(column: "swappedFrom", .text)
+            }
+        }
         return migrator
     }
 }

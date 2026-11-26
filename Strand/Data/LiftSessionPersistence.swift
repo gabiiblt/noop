@@ -85,6 +85,11 @@ enum LiftSessionPersistence {
             var rule: RuleBox?
             /// The library exercise's equipment word. Absent from a snapshot written before gyms existed.
             var equipment: String?
+            /// Superset group, backups and what the line was planned as. Absent from a snapshot written before
+            /// supersets existed: a line on its own, with no backups, as planned.
+            var supersetGroup: String?
+            var backups: [String]?
+            var swappedFrom: String?
         }
 
         struct RuleBox: Codable, Equatable {
@@ -186,7 +191,11 @@ enum LiftSessionPersistence {
                                   // Written only when true, so a session nobody added to encodes as before.
                                   addedInSession: $0.addedInSession ? true : nil,
                                   rule: $0.rule.map { Snapshot.RuleBox(stamp: $0.stamp, rowReps: $0.rowReps, why: $0.why) },
-                                  equipment: $0.equipment)
+                                  equipment: $0.equipment,
+                                  supersetGroup: $0.supersetGroup,
+                                  // Written only when there are some, so a plan with none encodes as before.
+                                  backups: $0.backups.isEmpty ? nil : $0.backups,
+                                  swappedFrom: $0.swappedFrom)
             },
             stage: box(engine.stage),
             sets: engine.sets.map {
@@ -259,7 +268,10 @@ enum LiftSessionPersistence {
                          programItemId: $0.programItemId,
                          addedInSession: $0.addedInSession ?? false,
                          rule: $0.rule.map { LiftPlanRule(stamp: $0.stamp, rowReps: $0.rowReps, why: $0.why) },
-                         equipment: $0.equipment)
+                         equipment: $0.equipment,
+                         supersetGroup: $0.supersetGroup,
+                         backups: $0.backups ?? [],
+                         swappedFrom: $0.swappedFrom)
         }
         let sets = s.sets.map {
             LiftRecordedSet(exerciseIndex: $0.exerciseIndex, setIndex: $0.setIndex,

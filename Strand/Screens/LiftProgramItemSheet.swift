@@ -40,6 +40,9 @@ struct LiftProgramItemSheet: View {
     @State private var setsMaxText: String = ""
     @State private var stepText: String = ""
     @State private var deloadText: String = ""
+    /// Exercises that can take this line's place when its machine is taken, and the name being typed.
+    @State private var backups: [String] = []
+    @State private var backupText: String = ""
 
     /// The user's own exercise vocabulary, for suggestions and for adopting a known classification.
     @State private var vocabulary: [LiftExerciseRow] = []
@@ -60,7 +63,7 @@ struct LiftProgramItemSheet: View {
     }
 
     @FocusState private var focused: Field?
-    private enum Field: Hashable { case exercise, sets, reps, weight, rest, maxRpe, note, repsHigh, setsMax, step, deload }
+    private enum Field: Hashable { case exercise, sets, reps, weight, rest, maxRpe, note, repsHigh, setsMax, step, deload, backup }
 
     private var trimmedExercise: String {
         exercise.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -96,6 +99,7 @@ struct LiftProgramItemSheet: View {
                 LiftMusclePicker(primary: $primary, secondaries: $secondaries)
                 targetsSection
                 progressionSection
+                backupsSection
                 noteSection
                 footer
             }
@@ -308,6 +312,71 @@ struct LiftProgramItemSheet: View {
         }
     }
 
+    // MARK: - Backups
+
+    /// What can take this line's place when its machine is taken: the plan already says what to do instead.
+    private var backupsSection: some View {
+        VStack(alignment: .leading, spacing: NoopMetrics.gap) {
+            SectionHeader("Backups", overline: "If the machine is taken")
+            NoopCard {
+                VStack(alignment: .leading, spacing: 14) {
+                    ForEach(backups, id: \.self) { name in
+                        HStack {
+                            Text(name)
+                                .font(StrandFont.body)
+                                .foregroundStyle(StrandPalette.textPrimary)
+                            Spacer()
+                            Button {
+                                backups.removeAll { $0 == name }
+                            } label: {
+                                Image(systemName: "minus.circle").foregroundStyle(StrandPalette.textTertiary)
+                            }
+                            .buttonStyle(.plain)
+                            .accessibilityLabel(String(localized: "Remove"))
+                        }
+                    }
+                    if backups.count < LiftSuperset.maxBackups {
+                        HStack(spacing: 8) {
+                            TextField("Another exercise", text: $backupText)
+                                .textFieldStyle(.plain)
+                                .font(StrandFont.body)
+                                .foregroundStyle(StrandPalette.textPrimary)
+                                .focused($focused, equals: .backup)
+                                .onSubmit(addBackup)
+                            Button("Add", action: addBackup)
+                                .buttonStyle(.plain)
+                                .font(StrandFont.body)
+                                .foregroundStyle(StrandPalette.accent)
+                                .disabled(backupText.trimmingCharacters(in: .whitespaces).isEmpty)
+                        }
+                        ForEach(backupSuggestions, id: \.id) { row in
+                            Button(row.name) { backupText = row.name; addBackup() }
+                                .buttonStyle(.plain)
+                                .font(StrandFont.footnote)
+                                .foregroundStyle(StrandPalette.accent)
+                        }
+                    }
+                    Text("In a session, one tap swaps a backup in for this exercise. The sets, reps and rest stay; the weight does not, because it was for the other one.")
+                        .font(StrandFont.footnote)
+                        .foregroundStyle(StrandPalette.textTertiary)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+            }
+        }
+    }
+
+    /// Exercises you already use that match what is being typed, so a backup is usually one tap.
+    private var backupSuggestions: [LiftExerciseRow] {
+        guard !backupText.trimmingCharacters(in: .whitespaces).isEmpty else { return [] }
+        return Array(LiftExerciseVocabulary.suggestions(vocabulary, matching: backupText)
+            .filter { $0.name != trimmedExercise && !backups.contains($0.name) }.prefix(4))
+    }
+
+    private func addBackup() {
+        backups = LiftSuperset.cleanBackups(backups + [backupText], excluding: trimmedExercise)
+        backupText = ""
+    }
+
     private var stepLabel: LocalizedStringKey {
         unitSystem == .imperial ? "Weight step (lb)" : "Weight step (kg)"
     }
@@ -412,6 +481,7 @@ struct LiftProgramItemSheet: View {
             setsMaxText = item.targetSetsMax.map(String.init) ?? ""
             stepText = item.incrementKg.map { LiftFormat.trim(LiftFormat.display(fromKilograms: $0, system: unitSystem)) } ?? ""
             deloadText = item.deloadFactor.map { LiftFormat.trim($0 * 100) } ?? ""
+            backups = item.backups
         }
         guard let store = await repo.storeHandle() else { return }
         vocabulary = (try? await store.liftExercises(deviceId: repo.deviceId)) ?? []
@@ -491,7 +561,10 @@ struct LiftProgramItemSheet: View {
             progression: progression?.rawValue,
             targetSetsMax: progression == .triple ? setsMaxValue : nil,
             incrementKg: progression == nil ? nil : stepKg,
-            deloadFactor: progression == nil ? nil : deloadPercent.map { $0 / 100 }
+            deloadFactor: progression == nil ? nil : deloadPercent.map { $0 / 100 },
+            // A line keeps the superset it is in: that is set by linking lines in the program, not here.
+            supersetGroup: item?.supersetGroup,
+            backups: LiftSuperset.cleanBackups(backups + (backupText.isEmpty ? [] : [backupText]), excluding: name)
         ))
         dismiss()
     }

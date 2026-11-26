@@ -69,6 +69,12 @@ struct LiftPlanItem: Equatable {
     /// The equipment word of the library exercise behind this line ('barbell', 'sled machine', ...), which decides
     /// whether a gym's plates apply to it. Nil for a name the person typed, which gets no plate line.
     var equipment: String?
+    /// Lines that share it are done as a round: one set of each in turn, the rest taken after the round.
+    var supersetGroup: String?
+    /// Exercises that can take this line's place when its machine is taken, in the order they are offered.
+    var backups: [String]
+    /// The exercise this line was PLANNED as, once a backup has taken its place. Nil while it is what was planned.
+    var swappedFrom: String?
 
     /// Rest used when a program line does not specify one. Two minutes sits in the middle of the
     /// range the hypertrophy literature uses for compound work, and is only a starting value: what
@@ -88,7 +94,10 @@ struct LiftPlanItem: Equatable {
          programItemId: String? = nil,
          addedInSession: Bool = false,
          rule: LiftPlanRule? = nil,
-         equipment: String? = nil) {
+         equipment: String? = nil,
+         supersetGroup: String? = nil,
+         backups: [String] = [],
+         swappedFrom: String? = nil) {
         self.exercise = exercise
         self.primaryMuscle = primaryMuscle
         self.secondaryMuscles = secondaryMuscles
@@ -103,6 +112,9 @@ struct LiftPlanItem: Equatable {
         self.addedInSession = addedInSession
         self.rule = rule
         self.equipment = equipment
+        self.supersetGroup = supersetGroup
+        self.backups = backups
+        self.swappedFrom = swappedFrom
     }
 
     /// The reps one set was asked for: its own aim under a rule that gives each set one, else the line's reps.
@@ -270,8 +282,55 @@ struct LiftSessionEngine: Equatable {
     /// Staying on the current exercise until it is finished is also simply what lifting is: you do
     /// your sets on the machine you are standing at. The skipped exercise is not forgotten — it is
     /// still pending, and it is what you get once the current one is done.
-    func slotAfter(_ slot: LiftSlot) -> LiftSlot? {
-        slots(forExercise: slot.exerciseIndex).first { !isCompleted($0) } ?? nextPendingSlot
+    ///
+    /// A SUPERSET is done as a round instead: after a set of one member the next is the next member's, one set of
+    /// each in turn (`nextInRound`); once the round is done, the first member with sets left starts the next one.
+    /// `assumingDone` counts one more slot as completed, for asking where the session goes from a set not yet recorded.
+    func slotAfter(_ slot: LiftSlot, assumingDone: LiftSlot? = nil) -> LiftSlot? {
+        func done(_ s: LiftSlot) -> Bool { isCompleted(s) || s == assumingDone }
+        if let members = supersetMembers(of: slot.exerciseIndex) {
+            if let next = nextInRound(after: slot, members: members, assumingDone: assumingDone) { return next }
+            for m in members {
+                if let s = slots(forExercise: m).first(where: { !done($0) }) { return s }
+            }
+            return allSlots.first { !done($0) }
+        }
+        return slots(forExercise: slot.exerciseIndex).first { !done($0) } ?? allSlots.first { !done($0) }
+    }
+
+    // MARK: - Supersets
+
+    /// The plan indices that share an exercise's superset group, in plan order; nil for a line on its own.
+    func supersetMembers(of index: Int) -> [Int]? {
+        guard plan.indices.contains(index), let group = plan[index].supersetGroup else { return nil }
+        let members = plan.indices.filter { plan[$0].supersetGroup == group }
+        return members.count > 1 ? members : nil
+    }
+
+    /// Where the round goes after `slot`: the next member (in plan order, wrapping) that still owes a set of THIS
+    /// round, meaning its first unperformed set is no later than `slot`'s. Nil when the round is complete.
+    ///
+    /// Going by the set number rather than by position keeps an out-of-order start honest: someone who did B's
+    /// first set before A's goes on to A's first, not to B's second.
+    func nextInRound(after slot: LiftSlot, members: [Int], assumingDone: LiftSlot? = nil) -> LiftSlot? {
+        func done(_ s: LiftSlot) -> Bool { isCompleted(s) || s == assumingDone }
+        guard let at = members.firstIndex(of: slot.exerciseIndex) else { return nil }
+        let rotated = Array(members[(at + 1)...]) + Array(members[..<at])
+        for m in rotated {
+            if let pending = slots(forExercise: m).first(where: { !done($0) }), pending.setIndex <= slot.setIndex {
+                return pending
+            }
+        }
+        return nil
+    }
+
+    /// The rest after a set: the line's own, or after a round the LONGEST any member asked for, so nobody goes back
+    /// to the bar before the member that needs the most recovery is ready.
+    func restAfter(_ slot: LiftSlot) -> Int {
+        guard let members = supersetMembers(of: slot.exerciseIndex) else {
+            return planItem(for: slot)?.restSec ?? LiftPlanItem.defaultRestSec
+        }
+        return members.map { plan[$0].restSec }.max() ?? LiftPlanItem.defaultRestSec
     }
 
     /// The set the session is heading to after the current one — what the minimised bar and the Lock
@@ -284,8 +343,7 @@ struct LiftSessionEngine: Equatable {
         case .warmup:
             return nextPendingSlot
         case .working(let slot), .resting(let slot, _):
-            return slots(forExercise: slot.exerciseIndex).first { !isCompleted($0) && $0 != slot }
-                ?? allSlots.first { !isCompleted($0) && $0 != slot }
+            return slotAfter(slot, assumingDone: slot)
         case .finished:
             return nil
         }
@@ -395,8 +453,15 @@ struct LiftSessionEngine: Equatable {
                 exerciseIndex: slot.exerciseIndex, setIndex: slot.setIndex,
                 weightKg: nil, reps: nil, rpe: nil, isWarmup: false,
                 startTs: stageStartedAt, endTs: now, restSec: nil))
-            let rest = planItem(for: slot)?.restSec ?? LiftPlanItem.defaultRestSec
-            stage = .resting(slot, endsAt: now + rest)
+            // Inside a superset round there is no rest: the next member's set follows at once.
+            if let members = supersetMembers(of: slot.exerciseIndex),
+               let next = nextInRound(after: slot, members: members) {
+                sets[sets.count - 1].restSec = 0
+                stage = .working(next)
+                stageStartedAt = now
+                return
+            }
+            stage = .resting(slot, endsAt: now + restAfter(slot))
             stageStartedAt = now
 
         case .resting(let slot, _):
@@ -438,6 +503,36 @@ struct LiftSessionEngine: Equatable {
     mutating func updateExtras(_ slot: LiftSlot, _ extras: LiftSetExtras) {
         guard let i = sets.firstIndex(where: { $0.slot == slot }) else { return }
         sets[i].extras = extras.normalized()
+    }
+
+    // MARK: - Swapping an exercise
+
+    /// Let a backup take a line's place for this session: the machine is taken, and the plan already says what to do
+    /// instead. The line keeps its sets, reps and rest; the weight is dropped (a bench at 80 kg does not open the
+    /// dumbbells at 80) and the progression rule with it, since its target was for the other exercise. The exercise
+    /// it replaces goes to the front of the line's backups, so the machine coming free is one tap back.
+    ///
+    /// Only a line with NOTHING recorded: a logged set is never relabelled. Returns false for one that has sets
+    /// done, for the same name, or for a line that does not exist.
+    @discardableResult
+    mutating func swapExercise(at index: Int, to name: String, primaryMuscle: LiftMuscle?,
+                               secondaryMuscles: [LiftMuscle], equipment: String?) -> Bool {
+        let name = name.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard plan.indices.contains(index), !name.isEmpty, name != plan[index].exercise,
+              !sets.contains(where: { $0.exerciseIndex == index }) else { return false }
+        pushHistory()
+        let old = plan[index].exercise
+        plan[index].swappedFrom = plan[index].swappedFrom ?? old
+        plan[index].exercise = name
+        plan[index].primaryMuscle = primaryMuscle
+        plan[index].secondaryMuscles = secondaryMuscles.filter { $0 != primaryMuscle }
+        plan[index].equipment = equipment
+        plan[index].targetWeightKg = nil
+        plan[index].rule = nil
+        // The program line is the OTHER exercise's: nothing done on this one may be written back onto it.
+        plan[index].programItemId = nil
+        plan[index].backups = LiftSuperset.backupsAfterSwap(old: old, new: name, backups: plan[index].backups)
+        return true
     }
 
     // MARK: - Changing how many sets a line holds

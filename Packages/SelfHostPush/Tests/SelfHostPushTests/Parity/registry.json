@@ -1170,6 +1170,16 @@
      "name": "deloadFactor",
      "type": "real",
      "nullable": true
+    },
+    {
+     "name": "supersetGroup",
+     "type": "text",
+     "nullable": true
+    },
+    {
+     "name": "backupsJSON",
+     "type": "text",
+     "nullable": true
     }
    ],
    "extData": []
@@ -1365,6 +1375,16 @@
     },
     {
      "name": "planJSON",
+     "type": "text",
+     "nullable": true
+    },
+    {
+     "name": "supersetGroup",
+     "type": "text",
+     "nullable": true
+    },
+    {
+     "name": "swappedFrom",
      "type": "text",
      "nullable": true
     }

@@ -121,6 +121,7 @@ struct LiftProgramEditorSheet: View {
             } else {
                 ForEach(Array(items.enumerated()), id: \.element.id) { index, item in
                     itemRow(item, index: index)
+                    if index < items.count - 1 { linkButton(index) }
                 }
             }
 
@@ -133,8 +134,23 @@ struct LiftProgramEditorSheet: View {
         }
     }
 
+    /// Join a line to the next one as a superset (one set of each in turn, the rest after the round), or cut the link.
+    private func linkButton(_ index: Int) -> some View {
+        let linked = LiftSuperset.isLinkedToNext(items, index)
+        return Button {
+            items = LiftSuperset.toggledLink(items, at: index)
+        } label: {
+            Label(linked ? "Superset: tap to unlink" : "Superset with the next exercise",
+                  systemImage: linked ? "link" : "link.badge.plus")
+                .font(StrandFont.caption)
+                .foregroundStyle(linked ? StrandPalette.effortColor : StrandPalette.textTertiary)
+                .frame(maxWidth: .infinity)
+        }
+        .buttonStyle(.plain)
+    }
+
     private func itemRow(_ item: LiftProgramItemRow, index: Int) -> some View {
-        NoopCard {
+        NoopCard(tint: item.supersetGroup != nil ? StrandPalette.effortColor : nil) {
             HStack(alignment: .top, spacing: NoopMetrics.gap) {
                 Button {
                     editingItem = ItemEditTarget(id: item.id, item: item)
@@ -146,6 +162,12 @@ struct LiftProgramEditorSheet: View {
                         Text(targetSummary(item))
                             .font(StrandFont.caption)
                             .foregroundStyle(StrandPalette.textSecondary)
+                        if !item.backups.isEmpty {
+                            Text("Backups: \(item.backups.joined(separator: ", "))")
+                                .font(StrandFont.caption)
+                                .foregroundStyle(StrandPalette.textTertiary)
+                                .lineLimit(2)
+                        }
                         if let note = item.note, !note.isEmpty {
                             Text(note)
                                 .font(StrandFont.caption)
@@ -177,6 +199,7 @@ struct LiftProgramEditorSheet: View {
 
                     Button(role: .destructive) {
                         items.removeAll { $0.id == item.id }
+                        items = LiftSuperset.normalized(items)
                     } label: {
                         Image(systemName: "trash")
                     }
@@ -265,6 +288,8 @@ struct LiftProgramEditorSheet: View {
         let target = index + offset
         guard items.indices.contains(index), items.indices.contains(target) else { return }
         items.swapAt(index, target)
+        // A move can split a superset: each consecutive run stays one, a line left alone is no group.
+        items = LiftSuperset.normalized(items)
     }
 
     /// Insert a new line, or replace an edited one in place so its position is kept.
@@ -311,7 +336,7 @@ struct LiftProgramEditorSheet: View {
         // `ord` is the array index: reordering the list is all it takes to reorder the program.
         // A copy of each line with its place changed, not a rebuild: rebuilding field by field dropped every
         // column added since (the catalogue link, the progression rule) each time a program was saved.
-        let ordered = items.enumerated().map { index, item -> LiftProgramItemRow in
+        let ordered = LiftSuperset.normalized(items).enumerated().map { index, item -> LiftProgramItemRow in
             var line = item
             line.deviceId = repo.deviceId
             line.programId = id

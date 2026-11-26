@@ -465,6 +465,20 @@ final class LiftSessionController: ObservableObject {
         return true
     }
 
+    /// Let a backup take a line's place for this session (`LiftSessionEngine.swapExercise`). Numbers typed in advance
+    /// for the line's sets were for the other exercise, so they go. Returns whether anything changed.
+    @discardableResult
+    func swapExercise(_ index: Int, to name: String, primaryMuscle: LiftMuscle?,
+                      secondaryMuscles: [LiftMuscle], equipment: String?) -> Bool {
+        guard engine?.swapExercise(at: index, to: name, primaryMuscle: primaryMuscle,
+                                   secondaryMuscles: secondaryMuscles, equipment: equipment) == true else { return false }
+        for slot in pendingValues.keys where slot.exerciseIndex == index { pendingValues.removeValue(forKey: slot) }
+        for slot in pendingExtras.keys where slot.exerciseIndex == index { pendingExtras.removeValue(forKey: slot) }
+        for slot in pendingWarmups where slot.exerciseIndex == index { pendingWarmups.remove(slot) }
+        persist()
+        return true
+    }
+
     /// Drop the last pending set of an exercise. See `LiftSessionEngine.canRemoveSet(fromExercise:)`
     /// for what "can" means — a completed set is never removed this way.
     @discardableResult
