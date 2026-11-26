@@ -46,8 +46,9 @@ public struct FrostedCardSurface: View {
         // working by fading the glass itself, so a lowered slider still lets more of the screen through.
         if #available(iOS 26.0, *) {
             Color.clear
-                .noopGlass(RoundedRectangle(cornerRadius: cornerRadius, style: .continuous),
-                           tint: tint?.opacity(washStrength))
+                .noopGlass(RoundedRectangle(cornerRadius: cornerRadius, style: .continuous))
+                .overlay(RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
+                    .strokeBorder(tint?.opacity(NoopMetrics.glassRimOpacity * washStrength) ?? Color.clear, lineWidth: 0.8))
                 .opacity(op)
         } else {
             panel(op)

@@ -66,9 +66,12 @@ public struct NoopPanelSurface: View {
         // This changes decorative depth only; card geometry and the design-system colors stay the same.
         // iOS 26: the panel is Liquid Glass (NoopGlass.swift), so every surface built on it, in every screen,
         // is glass without touching the screen.
+        // The domain colour stays a thin rim, as on the solid panel: tinting the glass itself filled every tile
+        // with colour and made it read as opaque paint (seen on Today's key metrics).
         if #available(iOS 26.0, *) {
             Color.clear
-                .noopGlass(shape, tint: tint)
+                .noopGlass(shape)
+                .overlay(shape.strokeBorder(tint?.opacity(NoopMetrics.glassRimOpacity) ?? Color.clear, lineWidth: 0.8))
                 .opacity(surfaceOpacity)
         } else {
         shape

@@ -18,8 +18,11 @@ public extension NoopMetrics {
     static let glassCardRadius: CGFloat = NoopVisualStyle.cardRadius
     /// Corner radius of a small glass tile (a stat, a tool).
     static let glassTileRadius: CGFloat = NoopVisualStyle.compactRadius
-    /// How strongly a tint colours glass. One value for the whole app.
-    static let glassTintOpacity: Double = 0.32
+    /// How strongly a tint colours glass. One value for the whole app, kept light: a stronger tint turns the glass
+    /// into coloured paint and hides what is behind it.
+    static let glassTintOpacity: Double = 0.16
+    /// The domain colour as a thin rim around untinted glass (cards and panels).
+    static let glassRimOpacity: Double = 0.35
     /// Spacing under which neighbouring glass shapes in a `NoopGlassGroup` melt into one.
     static let glassMergeSpacing: CGFloat = 12
     /// Side of a round glass icon button: the 44 pt touch floor.

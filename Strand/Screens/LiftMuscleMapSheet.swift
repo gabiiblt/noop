@@ -103,24 +103,28 @@ struct BodyMapFigureView: View {
     let selected: LiftMuscle?
     let onTap: (LiftMuscle?) -> Void
 
-    /// Shade steps: the same five the activity heatmap uses, so "more colour = more" means one thing everywhere.
-    private static let opacities: [Double] = [0, 0.28, 0.5, 0.72, 0.95]
+    /// Shade steps for a trained muscle. Five levels, so "more colour = more" means one thing everywhere; the lowest
+    /// is strong enough to read as colour, not as a stain on the grey.
+    private static let opacities: [Double] = [0, 0.42, 0.62, 0.82, 1.0]
 
     var body: some View {
         GeometryReader { geo in
             Canvas { ctx, size in
                 let t = figure.transform(in: size)
+                // The parts that are not muscles (head, hands, knees, feet): a quiet neutral, so the body reads whole.
                 for p in figure.silhouette {
-                    ctx.fill(p.applying(t), with: .color(StrandPalette.surfaceInset))
+                    ctx.fill(p.applying(t), with: .color(StrandPalette.textTertiary.opacity(0.22)))
                 }
                 for (muscle, path) in figure.regions {
                     let shaded = path.applying(t)
-                    ctx.fill(shaded, with: .color(StrandPalette.surfaceInset))
                     var lvl = level(muscle)
                     for other in figure.blend[muscle] ?? [] { lvl = max(lvl, level(other)) }
-                    if lvl > 0 {
-                        ctx.fill(shaded, with: .color(color.opacity(Self.opacities[min(lvl, 4)])))
-                    }
+                    // An untouched muscle is a visible grey, never the card's own colour: drawn in the card colour it
+                    // vanished, and the body looked cut into pieces.
+                    ctx.fill(shaded, with: .color(lvl > 0 ? color.opacity(Self.opacities[min(lvl, 4)])
+                                                          : StrandPalette.textTertiary.opacity(0.38)))
+                    // The seams between muscles, so each one reads as its own shape.
+                    ctx.stroke(shaded, with: .color(StrandPalette.surfaceBase.opacity(0.9)), lineWidth: 1.2)
                     if muscle == selected {
                         ctx.stroke(shaded, with: .color(StrandPalette.textPrimary), lineWidth: 2)
                     }
@@ -216,7 +220,8 @@ struct LiftMuscleMapSheet: View {
                         BodyMapFigureView(figure: sides.front, level: levelOf, color: tint, selected: selected) { selected = $0 }
                         BodyMapFigureView(figure: sides.back, level: levelOf, color: tint, selected: selected) { selected = $0 }
                     }
-                    .frame(maxHeight: 420)
+                    .frame(maxHeight: 520)
+                    legend
                     Text("Tap a muscle for its numbers.")
                         .font(StrandFont.footnote)
                         .foregroundStyle(StrandPalette.textTertiary)
@@ -233,6 +238,24 @@ struct LiftMuscleMapSheet: View {
                 .labelsHidden()
             }
         }
+    }
+
+    /// The five shades the figure uses, from none to most, so the colour can be read without tapping.
+    private var legend: some View {
+        HStack(spacing: NoopMetrics.space2) {
+            Text("Less").font(StrandFont.caption).foregroundStyle(StrandPalette.textTertiary)
+            RoundedRectangle(cornerRadius: 3, style: .continuous)
+                .fill(StrandPalette.textTertiary.opacity(0.38))
+                .frame(width: 18, height: 10)
+            ForEach([0.42, 0.62, 0.82, 1.0], id: \.self) { step in
+                RoundedRectangle(cornerRadius: 3, style: .continuous)
+                    .fill(tint.opacity(step))
+                    .frame(width: 18, height: 10)
+            }
+            Text("More").font(StrandFont.caption).foregroundStyle(StrandPalette.textTertiary)
+        }
+        .frame(maxWidth: .infinity)
+        .accessibilityHidden(true)
     }
 
     private func levelOf(_ muscle: LiftMuscle) -> Int {
@@ -302,11 +325,14 @@ struct LiftMuscleMapSheet: View {
         VStack(alignment: .leading, spacing: NoopMetrics.gap) {
             SectionHeader(title, overline: nil)
             NoopCard {
-                VStack(alignment: .leading, spacing: 6) {
+                VStack(alignment: .leading, spacing: NoopMetrics.space3) {
                     ForEach(lines, id: \.self) { line in
-                        Text(line)
-                            .font(StrandFont.body)
-                            .foregroundStyle(StrandPalette.textPrimary)
+                        HStack(spacing: NoopMetrics.space3) {
+                            Circle().fill(tint).frame(width: 8, height: 8).accessibilityHidden(true)
+                            Text(line)
+                                .font(StrandFont.body)
+                                .foregroundStyle(StrandPalette.textPrimary)
+                        }
                     }
                 }
             }
