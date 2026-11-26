@@ -5,7 +5,8 @@ export function modeOf(cfg) {
   if (m === 'reps' || m === 'time' || m === 'cardio' || m === 'distance') return m
   return 'reps'
 }
-export const isBw = cfg => !!(cfg && cfg.bodyweight)
+import { isBodyweightEq } from './exercises.js'
+export const isBw = cfg => (cfg && cfg.bodyweight != null ? !!cfg.bodyweight : isBodyweightEq(cfg && cfg.id))
 export const isPerSide = cfg => !!(cfg && cfg.side)
 export const repStep = cfg => (isPerSide(cfg) ? 2 : 1)
 export const rerampWarmups = () => {}

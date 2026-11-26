@@ -40,6 +40,8 @@ struct LiftLogView: View {
     @State private var showingGyms = false
     /// The muscle map: volume, recovery and neglect per muscle.
     @State private var showingMuscleMap = false
+    /// Strength balance: lifts against each other and against body weight.
+    @State private var showingBalance = false
     @AppStorage(LiftGymsSheet.activeKey) private var activeGymId = ""
 
     @AppStorage(UnitPrefs.systemKey) private var unitSystemRaw = UnitSystem.metric.rawValue
@@ -81,6 +83,9 @@ struct LiftLogView: View {
         .sheet(isPresented: $showingMuscleMap) {
             LiftMuscleMapSheet()
         }
+        .sheet(isPresented: $showingBalance) {
+            LiftBalanceSheet()
+        }
     }
 
     // MARK: - Header
@@ -117,6 +122,9 @@ struct LiftLogView: View {
                 }
                 NoopButton("Muscle map", systemImage: "figure.arms.open", kind: .secondary) {
                     showingMuscleMap = true
+                }
+                NoopButton("Strength balance", systemImage: "scale.3d", kind: .secondary) {
+                    showingBalance = true
                 }
                 NoopButton("Gyms and plates", systemImage: "scalemass.fill", kind: .secondary) {
                     showingGyms = true

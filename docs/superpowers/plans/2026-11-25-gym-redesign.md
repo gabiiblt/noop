@@ -165,6 +165,13 @@ To do:
    the RIR estimate, serratus, hip flexors and shins (NOOP has no such muscle: drawn, never shaded), a muscle
    target per person.
 6. Strength balance ratios between lifts, and lifts as a percentage of body weight.
+   Done: the engine and the three tables (Poliquin, Thibaudeau, ATG) ported from openGym (`LiftBalance`,
+   `LiftBalanceTemplates`, generated from openGym's file) and checked against openGym's own `computeBalance` over 76
+   histories; the adapter (`LiftBalanceStore`: sets with a catalogue link, body weight from the profile, sex for the
+   female targets); the screen (a table picker, each lift's reading, status, target, and what is missing: a weigh-in, or
+   the anchor). Stated on screen: reference ratios, never a norm.
+   Not done: choosing a different exercise for a role (the engine supports overrides, no picker), a per-side lift, pounds
+   histories (NOOP stores kilograms), and a trend over time.
 7. A fuller rest timer, and a rotation of sessions (A, B, C) as an alternative to weekdays.
 
 New stored data from these (gyms, progression rules, supersets, backups, rotation) gets its own tables or
