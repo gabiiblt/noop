@@ -23,7 +23,7 @@ public struct LiftGymPlate: Equatable, Codable, Sendable {
     }
 }
 
-public struct LiftGymRow: Equatable, Codable, Sendable {
+public struct LiftGymRow: Equatable, Codable, Sendable, Identifiable {
     public var id: String
     public var deviceId: String
     public var name: String

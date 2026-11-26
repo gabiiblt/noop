@@ -391,7 +391,7 @@ struct LiftPlateCalculatorSheet: View {
     private var equipmentChoices: [String] { LiftPlates.barTypes + ["sled machine"] }
 
     var body: some View {
-        ScreenScaffold(title: "Plate calculator", subtitle: gym.name) {
+        ScreenScaffold(title: "Plate calculator", subtitle: LocalizedStringKey(gym.name)) {
             VStack(alignment: .leading, spacing: NoopMetrics.sectionGap) {
                 NoopCard {
                     VStack(alignment: .leading, spacing: NoopMetrics.rowSpacing) {
