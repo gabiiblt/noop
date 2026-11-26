@@ -113,6 +113,27 @@ before the app-wide pass. Performance is measured first so we optimise real hot 
    moved between iPhone and Android may carry data the other side ignores or rejects. Keep the backup whitelist change
    explicit and tested, and never restore across platforms without checking.
 
+## Training features to port from openGym (all requested, 2026-11-26)
+
+Each item is a port of openGym's code under the MIT authorization, with its origin noted in the file and
+reference values from openGym's own functions run under vitest. Every stored field joins the push and the MCP.
+
+Done: catalogue (text, French, muscles, equipment, images from free-exercise-db), personal records per set,
+progress per exercise, set model (drop set, rest-pause, failure, RIR, side, time, distance) in the store and push.
+
+To do:
+1. Logging UI for the set model: set type, drops and bursts, failure, RIR, per side, timed and distance sets.
+2. Progression rules per program or exercise: linear, double, triple progression, time, with the reason shown
+   for each target, and an automatic deload after a stall.
+3. Plate calculator per gym: plates, bars, dumbbells and machine stacks per gym, and the plates to load.
+4. Supersets, and a backup exercise that swaps in when a machine is taken (keeps the slot's sets and reps).
+5. Body map: volume per muscle, muscles still recovering, muscles left untrained (MuscleMap geometry, MIT).
+6. Strength balance ratios between lifts, and lifts as a percentage of body weight.
+7. A fuller rest timer, and a rotation of sessions (A, B, C) as an alternative to weekdays.
+
+New stored data from these (gyms, progression rules, supersets, backups, rotation) gets its own tables or
+columns, a migration with tests, registry entries on both push sides, and MCP read tools.
+
 ## Verification
 
 - Swift packages: `swift test` for pure logic. Python: `pytest` in `selfhost/`. Oracle tests for every ported formula: run
