@@ -118,3 +118,42 @@ final class LiftTrainingDetailTests: XCTestCase {
         XCTAssertEqual(items, [item])
     }
 }
+
+final class LiftHistoryQueryTests: XCTestCase {
+    private let dev = "my-whoop"
+
+    private func seed(_ store: WhoopStore) async throws {
+        _ = try await store.upsertLiftSessions([
+            LiftSessionRow(id: "old", deviceId: dev, startTs: 100, endTs: 200, sport: "Strength Training",
+                           programId: nil, programName: nil, sessionRpe: nil, note: nil),
+            LiftSessionRow(id: "new", deviceId: dev, startTs: 500, endTs: 600, sport: "Strength Training",
+                           programId: nil, programName: nil, sessionRpe: nil, note: nil),
+        ])
+        func set(_ id: String, _ session: String, _ ord: Int, _ name: String, _ cat: String?) -> LiftSetRow {
+            LiftSetRow(id: id, deviceId: dev, sessionId: session, ord: ord, exercise: name, primaryMuscle: .chest,
+                       setIndex: ord + 1, weightKg: 50, reps: 8, rpe: nil, isWarmup: false, startTs: nil,
+                       endTs: nil, restSec: nil, note: nil, catalogueId: cat)
+        }
+        _ = try await store.upsertLiftSets([
+            set("a", "old", 0, "Bench press", "0025"), set("b", "old", 1, "Curl", nil),
+            set("c", "new", 0, "Développé couché", "0025"), set("d", "new", 1, "Curl", nil),
+        ])
+    }
+
+    func testSetsBeforeASessionAreOnlyEarlierSessions() async throws {
+        let store = try await WhoopStore.inMemory()
+        try await seed(store)
+        let before = try await store.liftSetsBefore(deviceId: dev, startTs: 500)
+        XCTAssertEqual(before.map(\.id), ["a", "b"])
+    }
+
+    func testExerciseHistoryMatchesByNameOrCatalogueIdWithSessionStarts() async throws {
+        let store = try await WhoopStore.inMemory()
+        try await seed(store)
+        let bench = try await store.liftExerciseHistory(deviceId: dev, exercise: "Développé couché", catalogueId: "0025")
+        XCTAssertEqual(bench.sets.map(\.id), ["a", "c"], "renamed, still the same catalogue exercise")
+        XCTAssertEqual(bench.sessionStart, ["old": 100, "new": 500])
+        let curl = try await store.liftExerciseHistory(deviceId: dev, exercise: "Curl", catalogueId: nil)
+        XCTAssertEqual(curl.sets.map(\.id), ["b", "d"])
+    }
+}

@@ -684,6 +684,52 @@ extension WhoopStore {
         }
     }
 
+    /// Every set from sessions that STARTED before `startTs`, in session then performed order: the history a
+    /// session's records are held against (`LiftRecords.sessionRecords`). A personal log is a few thousand
+    /// rows at most, so this reads them all rather than guessing which exercises matter.
+    public func liftSetsBefore(deviceId: String, startTs: Int) async throws -> [LiftSetRow] {
+        try syncRead { db in
+            try Row.fetchAll(db, sql: """
+                SELECT s.* FROM liftSet s
+                JOIN liftSession sess ON sess.id = s.sessionId
+                WHERE s.deviceId = ? AND sess.startTs < ?
+                ORDER BY sess.startTs ASC, s.ord ASC
+                """, arguments: [deviceId, startTs]).map(LiftSetRow.decode)
+        }
+    }
+
+    /// One exercise's whole history: its sets, oldest session first, and when each session started.
+    public struct LiftExerciseHistory: Equatable, Sendable {
+        public let sets: [LiftSetRow]
+        public let sessionStart: [String: Int]
+
+        public init(sets: [LiftSetRow], sessionStart: [String: Int]) {
+            self.sets = sets
+            self.sessionStart = sessionStart
+        }
+    }
+
+    /// Every set of one exercise, matched by name OR by catalogue id, so a catalogue exercise logged under
+    /// an older or translated name still reads as the same exercise.
+    public func liftExerciseHistory(deviceId: String, exercise: String,
+                                    catalogueId: String?) async throws -> LiftExerciseHistory {
+        try syncRead { db in
+            let rows = try Row.fetchAll(db, sql: """
+                SELECT s.*, sess.startTs AS sessionStartTs FROM liftSet s
+                JOIN liftSession sess ON sess.id = s.sessionId
+                WHERE s.deviceId = ? AND (s.exercise = ? OR (? IS NOT NULL AND s.catalogueId = ?))
+                ORDER BY sess.startTs ASC, s.ord ASC
+                """, arguments: [deviceId, exercise, catalogueId, catalogueId])
+            var starts: [String: Int] = [:]
+            let sets = rows.map { row -> LiftSetRow in
+                let set = LiftSetRow.decode(row)
+                starts[set.sessionId] = row["sessionStartTs"]
+                return set
+            }
+            return LiftExerciseHistory(sets: sets, sessionStart: starts)
+        }
+    }
+
     /// Delete a session and every set in it. Returns true if a session row was removed.
     @discardableResult
     public func deleteLiftSession(id: String) async throws -> Bool {

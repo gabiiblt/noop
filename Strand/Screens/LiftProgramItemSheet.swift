@@ -41,6 +41,8 @@ struct LiftProgramItemSheet: View {
     @State private var forgetting: LiftExerciseRow?
     /// Set when the vocabulary is full, so the refusal is explained rather than silent.
     @State private var vocabularyFullLimit: Int?
+    /// The library exercise the name was picked from, until the name is edited away from it.
+    @State private var picked: CatalogueExercise?
 
     /// The app's existing metric/imperial preference — the Lift Log never adds a second weight unit
     /// setting of its own, so the plan is typed in the same unit the session records in.
@@ -91,6 +93,12 @@ struct LiftProgramItemSheet: View {
         .keyboardDoneToolbar($focused)
         .dismissesKeyboardOnTap($focused)
         .task { await loadIfNeeded() }
+        // Typing a different name after a library pick un-links it: the link is to that exact name.
+        .onChange(of: exercise) { _ in
+            if let picked, exercise.trimmingCharacters(in: .whitespacesAndNewlines) != ExerciseLibrary.name(picked) {
+                self.picked = nil
+            }
+        }
         .confirmationDialog(
             forgetting.map { Text(String(localized: "Forget \($0.name)?")) } ?? Text(""),
             isPresented: Binding(get: { forgetting != nil },
@@ -160,6 +168,11 @@ struct LiftProgramItemSheet: View {
                                 }
                             }
                         }
+                    }
+                    if picked == nil {
+                        CatalogueExerciseSuggestions(query: exercise) { adoptCatalogue($0) }
+                    } else if let picked {
+                        CatalogueExerciseRowLabel(exercise: picked, thumbnail: 40)
                     }
                 }
             }
@@ -286,6 +299,16 @@ struct LiftProgramItemSheet: View {
         exercise = row.name
         primary = row.primaryMuscle
         secondaries = Set(row.secondaryMuscles)
+        picked = nil
+        focused = nil
+    }
+
+    /// Take a library exercise: its name in the app's language, its muscles, and the link to its entry.
+    private func adoptCatalogue(_ entry: CatalogueExercise) {
+        exercise = ExerciseLibrary.name(entry)
+        primary = entry.primaryMuscle
+        secondaries = Set(entry.secondaryMuscles)
+        picked = entry
         focused = nil
     }
 
@@ -324,7 +347,8 @@ struct LiftProgramItemSheet: View {
                 try await LiftExerciseVocabulary.remember(
                     name, primary: primary,
                     secondaries: LiftExerciseVocabulary.ordered(secondaries, excluding: primary),
-                    known: vocabulary, deviceId: repo.deviceId, in: store)
+                    known: vocabulary, deviceId: repo.deviceId, in: store,
+                    catalogueId: picked?.id, equipment: picked?.equipment)
             } catch let full as WhoopStore.LiftExerciseVocabularyFull {
                 // Refused rather than silently dropped: the user typed a name and deserves to know
                 // it was not remembered.
@@ -353,7 +377,9 @@ struct LiftProgramItemSheet: View {
                 LiftFormat.kilograms(fromDisplay: $0, system: unitSystem)
             },
             restSec: Int(restText.trimmingCharacters(in: .whitespaces)),
-            note: trimmedNote.isEmpty ? nil : trimmedNote
+            note: trimmedNote.isEmpty ? nil : trimmedNote,
+            // A library pick links the line; an edited line keeps the link it had while the name is unchanged.
+            catalogueId: picked?.id ?? (name == item?.exercise ? item?.catalogueId : nil)
         ))
         dismiss()
     }

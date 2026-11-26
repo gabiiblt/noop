@@ -23,6 +23,8 @@ struct LiftSessionExerciseSheet: View {
     /// Set when the vocabulary is full, so the refusal is explained rather than silent.
     @State private var vocabularyFullLimit: Int?
     @State private var adding = false
+    /// The library exercise the name was picked from, until the name is edited away from it.
+    @State private var picked: CatalogueExercise?
 
     @FocusState private var focused: Field?
     private enum Field: Hashable { case exercise }
@@ -34,7 +36,7 @@ struct LiftSessionExerciseSheet: View {
 
     var body: some View {
         ScreenScaffold(title: "Add exercise",
-                       subtitle: "Pick one you have done before, or type a new name.") {
+                       subtitle: "Pick one you have done before, search the library, or type a new name.") {
             VStack(alignment: .leading, spacing: NoopMetrics.sectionGap) {
                 exerciseSection
                 LiftMusclePicker(primary: $primary, secondaries: $secondaries)
@@ -57,6 +59,8 @@ struct LiftSessionExerciseSheet: View {
         // A name typed out in full that is already known brings its muscles with it, as picking it from
         // the list does — unless muscles were already chosen here.
         .onChange(of: exercise) { _ in
+            // Typing a different name after a library pick un-links it: the link is to that exact name.
+            if let picked, trimmedExercise != ExerciseLibrary.name(picked) { self.picked = nil }
             guard primary == nil, secondaries.isEmpty,
                   let known = vocabulary.first(where: { $0.name == trimmedExercise }) else { return }
             primary = known.primaryMuscle
@@ -91,6 +95,11 @@ struct LiftSessionExerciseSheet: View {
                             }
                         }
                     }
+                    if picked == nil {
+                        CatalogueExerciseSuggestions(query: exercise) { adoptCatalogue($0) }
+                    } else if let picked {
+                        CatalogueExerciseRowLabel(exercise: picked, thumbnail: 40)
+                    }
                 }
             }
         }
@@ -119,6 +128,15 @@ struct LiftSessionExerciseSheet: View {
         focused = nil
     }
 
+    /// Take a library exercise: its name in the app's language, its muscles, and the link to its entry.
+    private func adoptCatalogue(_ entry: CatalogueExercise) {
+        exercise = ExerciseLibrary.name(entry)
+        primary = entry.primaryMuscle
+        secondaries = Set(entry.secondaryMuscles)
+        picked = entry
+        focused = nil
+    }
+
     private func load() async {
         guard let store = await repo.storeHandle() else { return }
         vocabulary = (try? await store.liftExercises(deviceId: repo.deviceId)) ?? []
@@ -136,7 +154,8 @@ struct LiftSessionExerciseSheet: View {
             do {
                 try await LiftExerciseVocabulary.remember(name, primary: primary, secondaries: ordered,
                                                           known: vocabulary, deviceId: repo.deviceId,
-                                                          in: store)
+                                                          in: store, catalogueId: picked?.id,
+                                                          equipment: picked?.equipment)
             } catch let full as WhoopStore.LiftExerciseVocabularyFull {
                 vocabularyFullLimit = full.limit
                 return

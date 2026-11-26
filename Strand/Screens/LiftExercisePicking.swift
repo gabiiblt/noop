@@ -26,9 +26,14 @@ enum LiftExerciseVocabulary {
     /// on (deviceId, name), so a known name is updated — its muscles, and when it was last used — never
     /// duplicated. Throws `WhoopStore.LiftExerciseVocabularyFull` for a NEW name once the vocabulary is
     /// full, which the caller explains rather than dropping the name silently.
+    ///
+    /// `catalogueId` / `equipment` come from a pick in the exercise library: they link the name to its
+    /// catalogue entry (picture, steps, records that survive a rename). A typed name passes nil, which
+    /// never clears a link the name already has.
     static func remember(_ name: String, primary: LiftMuscle?, secondaries: [LiftMuscle],
                          known vocabulary: [LiftExerciseRow], deviceId: String,
-                         in store: WhoopStore) async throws {
+                         in store: WhoopStore, catalogueId: String? = nil,
+                         equipment: String? = nil) async throws {
         let now = Int(Date().timeIntervalSince1970)
         let existing = vocabulary.first { $0.name == name }
         _ = try await store.upsertLiftExercises([LiftExerciseRow(
@@ -38,7 +43,18 @@ enum LiftExerciseVocabulary {
             primaryMuscle: primary,
             secondaryMuscles: secondaries,
             createdAt: existing?.createdAt ?? now,
-            lastUsedTs: now)])
+            lastUsedTs: now,
+            catalogueId: catalogueId,
+            equipment: equipment)])
+    }
+
+    /// Name -> catalogue id for the remembered exercises that came from the library.
+    static func catalogueIds(_ vocabulary: [LiftExerciseRow]) -> [String: String] {
+        var out: [String: String] = [:]
+        for row in vocabulary {
+            if let id = row.catalogueId, !id.isEmpty { out[row.name] = id }
+        }
+        return out
     }
 
     /// Secondaries in the vocabulary's canonical order rather than `Set` iteration order, so the stored
