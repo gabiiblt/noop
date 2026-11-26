@@ -156,6 +156,14 @@ To do:
    confirmation), a swap to any exercise rather than a listed backup, a backup with its own plan, a superset's own
    rest and circuit mode, moving a member inside a running superset.
 5. Body map: volume per muscle, muscles still recovering, muscles left untrained (MuscleMap geometry, MIT).
+   Done: the recovery model (`LiftRecovery`, openGym's `recovery.js`: per-muscle half-lives, RIR estimated from the
+   90-day best, acute:chronic gain, saturation, retained strength) checked against openGym's own code over 87
+   histories; the adapter and shading (`LiftMuscleMap`: weekly sets, fatigue, retained strength, last trained, never
+   trained); the body outlines (MuscleMap, MIT, converted by `Tools/body_geometry/convert.py`, read by `SVGPathData`);
+   the screen (front and back, three modes, tap a muscle, lists of what is recovering, left alone, never trained).
+   Not done: sport outside the gym and cardio as stimulus (openGym's `activities`), per-side sets, bodyweight load in
+   the RIR estimate, serratus, hip flexors and shins (NOOP has no such muscle: drawn, never shaded), a muscle
+   target per person.
 6. Strength balance ratios between lifts, and lifts as a percentage of body weight.
 7. A fuller rest timer, and a rotation of sessions (A, B, C) as an alternative to weekdays.
 

@@ -121,6 +121,8 @@ SpO₂, temperature) are approximations and not clinically validated.
   wording of each reason (`LiftProgressionStore.swift`, `LiftProgressionCopy.swift`).
   The plate maths (`LiftPlates.swift`, from openGym's `plates.js`, `bar.js` and `dumbbells.js`) is checked the same way
   by `Tools/lift_progression_oracle/gen_plates.mjs`.
+  The muscle recovery model (`LiftRecovery.swift`, from openGym's `recovery.js`, `onerm.js` and `effort.js`) is checked by
+  `gen_recovery.mjs` over 87 histories.
 
   ```
   Copyright (c) 2026 Duarte Santos
@@ -171,3 +173,35 @@ SpO₂, temperature) are approximations and not clinically validated.
   in `StrandiOS/Resources/ExerciseCatalogue/ExerciseImages/` comes from it, downsampled to WebP. Matches
   are listed in `Tools/exercise_catalogue/image_matches.csv`; the build is
   `Tools/exercise_catalogue/build_catalogue.py`.
+
+## Body diagram geometry
+
+The muscle outlines the muscle map is drawn from (`Strand/Resources/BodyGeometry.json`, built by
+`Tools/body_geometry/convert.py`) are derived from [**MuscleMap**](https://github.com/melihcolpan/MuscleMap) by Melih
+Colpan, used under the **MIT License** and reproduced below, as converted to JSON by openGym (Duarte Santos, MIT
+authorization to Gabriel Bolatoglu). MuscleMap's sub-group shapes were dropped, the shoulder and upper back were split by
+path into their heads, and the regions were renamed to NOOP's muscles; nothing else about the artwork was changed.
+
+```
+MIT License
+
+Copyright (c) 2026 Melih Colpan
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+```

@@ -38,6 +38,8 @@ struct LiftLogView: View {
     @State private var browsingLibrary = false
     /// The gyms sheet, and the gym a new session is done at (a preference: see `LiftGymsSheet`).
     @State private var showingGyms = false
+    /// The muscle map: volume, recovery and neglect per muscle.
+    @State private var showingMuscleMap = false
     @AppStorage(LiftGymsSheet.activeKey) private var activeGymId = ""
 
     @AppStorage(UnitPrefs.systemKey) private var unitSystemRaw = UnitSystem.metric.rawValue
@@ -76,6 +78,9 @@ struct LiftLogView: View {
         .sheet(isPresented: $showingGyms) {
             LiftGymsSheet()
         }
+        .sheet(isPresented: $showingMuscleMap) {
+            LiftMuscleMapSheet()
+        }
     }
 
     // MARK: - Header
@@ -109,6 +114,9 @@ struct LiftLogView: View {
                     NoopButton("Exercise library", systemImage: "books.vertical.fill", kind: .secondary) {
                         browsingLibrary = true
                     }
+                }
+                NoopButton("Muscle map", systemImage: "figure.arms.open", kind: .secondary) {
+                    showingMuscleMap = true
                 }
                 NoopButton("Gyms and plates", systemImage: "scalemass.fill", kind: .secondary) {
                     showingGyms = true

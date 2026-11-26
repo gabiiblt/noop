@@ -1,15 +1,16 @@
-# Lift oracles (progression, plates)
+# Lift oracles (progression, plates, recovery)
 
-Two generated test files, checked against openGym's own code: `LiftProgressionOracleTests.swift` (from `gen.mjs`)
-and `LiftPlatesOracleTests.swift` (from `gen_plates.mjs`: plate stacks, row loads, plate deltas, bars, owned weights).
+Three generated test files, checked against openGym's own code: `LiftProgressionOracleTests.swift` (from `gen.mjs`)
+`LiftPlatesOracleTests.swift` (from `gen_plates.mjs`: plate stacks, row loads, plate deltas, bars, owned weights)
+and `LiftRecoveryOracleTests.swift` (from `gen_recovery.mjs`: fatigue and retained strength per muscle over 87 histories).
 `LiftProgressionOracleTests.swift` is generated: each
 scenario in `gen.mjs` is run through openGym's own `progression.js` under Node, and what it returns is written
 out as the expected literals for the Swift port (`LiftProgression`). A Swift change is checked against the
 original, not against a re-reading of it.
 
 ```bash
-Tools/lift_progression_oracle/fetch.sh /path/to/opengym   # copies the 6 openGym files + the inert stubs into lib/
-cd Tools/lift_progression_oracle && node gen.mjs && node gen_plates.mjs   # write the two generated test files here
+Tools/lift_progression_oracle/fetch.sh /path/to/opengym   # copies the 9 openGym files + the inert stubs into lib/
+cd Tools/lift_progression_oracle && node gen.mjs && node gen_plates.mjs && node gen_recovery.mjs   # write the generated test files here
 mv Lift*OracleTests.swift ../../Packages/StrandAnalytics/Tests/StrandAnalyticsTests/
 ```
 

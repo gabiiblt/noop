@@ -16,3 +16,9 @@ export function entryRoutineId(w, en) {
   return [].concat(w?.routineIds ?? [])[0] ?? w?.routineId ?? null
 }
 export const lastAcrossRoutines = () => true
+// ---- extra STUBS for the recovery oracle (recovery.js, onerm.js, effort.js) ----
+export const workoutAt = w => Number(w?.start)
+export const entriesForExercise = () => []
+export const metricRowsForEntry = () => []
+export const EFFORT = {}
+export const effortOf = () => 'rir'
