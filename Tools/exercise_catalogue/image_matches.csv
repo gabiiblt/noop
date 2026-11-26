@@ -1,0 +1,1354 @@
+openGymId,openGymName,fedbId,fedbName,score,used
+0001,3/4 sit-up,3_4_Sit-Up,3/4 Sit-Up,1.0,yes
+0003,air bike,Air_Bike,Air Bike,1.0,yes
+0006,alternate heel touchers,Alternate_Heel_Touchers,Alternate Heel Touchers,1.0,yes
+0024,barbell bench front squat,Front_Barbell_Squat_To_A_Bench,Front Barbell Squat To A Bench,1.0,yes
+0025,barbell bench press,Barbell_Bench_Press_-_Medium_Grip,Barbell Bench Press - Medium Grip,1.0,yes
+0026,barbell bench squat,Barbell_Squat_To_A_Bench,Barbell Squat To A Bench,1.0,yes
+0027,barbell bent over row,Bent_Over_Barbell_Row,Bent Over Barbell Row,1.0,yes
+0028,barbell clean and press,Clean_and_Press,Clean and Press,1.0,yes
+0030,barbell close-grip bench press,Close-Grip_Barbell_Bench_Press,Close-Grip Barbell Bench Press,1.0,yes
+0031,barbell curl,Barbell_Curl,Barbell Curl,1.0,yes
+0032,barbell deadlift,Barbell_Deadlift,Barbell Deadlift,1.0,yes
+0033,barbell decline bench press,Decline_Barbell_Bench_Press,Decline Barbell Bench Press,1.0,yes
+0037,barbell decline wide-grip pullover,Wide-Grip_Decline_Barbell_Pullover,Wide-Grip Decline Barbell Pullover,1.0,yes
+0038,barbell drag curl,Drag_Curl,Drag Curl,1.0,yes
+0040,barbell front raise and pullover,Front_Raise_And_Pullover,Front Raise And Pullover,1.0,yes
+0042,barbell front squat,Front_Barbell_Squat,Front Barbell Squat,1.0,yes
+0043,barbell full squat,Barbell_Full_Squat,Barbell Full Squat,1.0,yes
+0044,barbell good morning,Good_Morning,Good Morning,1.0,yes
+0045,barbell guillotine bench press,Barbell_Guillotine_Bench_Press,Barbell Guillotine Bench Press,1.0,yes
+0046,barbell hack squat,Barbell_Hack_Squat,Barbell Hack Squat,1.0,yes
+0047,barbell incline bench press,Barbell_Incline_Bench_Press_-_Medium_Grip,Barbell Incline Bench Press - Medium Grip,1.0,yes
+0050,barbell incline shoulder raise,Barbell_Incline_Shoulder_Raise,Barbell Incline Shoulder Raise,1.0,yes
+0051,barbell jefferson squat,Jefferson_Squats,Jefferson Squats,1.0,yes
+0054,barbell lunge,Barbell_Lunge,Barbell Lunge,1.0,yes
+0060,barbell lying triceps extension skull crusher,EZ-Bar_Skullcrusher,EZ-Bar Skullcrusher,1.0,yes
+0063,barbell narrow stance squat,Narrow_Stance_Squats,Narrow Stance Squats,1.0,yes
+0065,barbell one arm floor press,One_Arm_Floor_Press,One Arm Floor Press,1.0,yes
+0068,barbell one leg squat,One_Leg_Barbell_Squat,One Leg Barbell Squat,1.0,yes
+0069,barbell overhead squat,Overhead_Squat,Overhead Squat,1.0,yes
+0070,barbell preacher curl,Preacher_Curl,Preacher Curl,1.0,yes
+0071,barbell press sit-up,Press_Sit-Up,Press Sit-Up,1.0,yes
+0074,barbell rack pull,Rack_Pulls,Rack Pulls,1.0,yes
+0076,barbell rear delt row,Barbell_Rear_Delt_Row,Barbell Rear Delt Row,1.0,yes
+0080,barbell reverse curl,Reverse_Barbell_Curl,Reverse Barbell Curl,1.0,yes
+0085,barbell romanian deadlift,Romanian_Deadlift,Romanian Deadlift,1.0,yes
+0088,barbell seated calf raise,Barbell_Seated_Calf_Raise,Barbell Seated Calf Raise,1.0,yes
+0089,barbell seated close-grip concentration curl,Seated_Close-Grip_Concentration_Barbell_Curl,Seated Close-Grip Concentration Barbell Curl,1.0,yes
+0090,barbell seated good morning,Seated_Good_Mornings,Seated Good Mornings,1.0,yes
+0091,barbell seated overhead press,Seated_Barbell_Military_Press,Seated Barbell Military Press,1.0,yes
+0094,barbell seated twist,Seated_Barbell_Twist,Seated Barbell Twist,1.0,yes
+0095,barbell shrug,Barbell_Shrug,Barbell Shrug,1.0,yes
+0097,barbell side split squat v. 2,Barbell_Side_Split_Squat,Barbell Side Split Squat,1.0,yes
+0098,barbell side split squat,Barbell_Side_Split_Squat,Barbell Side Split Squat,1.0,yes
+0101,barbell speed squat,Speed_Squats,Speed Squats,1.0,yes
+0105,barbell standing bradford press,Standing_Bradford_Press,Standing Bradford Press,1.0,yes
+0107,barbell standing front raise over head,Standing_Front_Barbell_Raise_Over_Head,Standing Front Barbell Raise Over Head,1.0,yes
+0109,barbell standing overhead triceps extension,Standing_Overhead_Barbell_Triceps_Extension,Standing Overhead Barbell Triceps Extension,1.0,yes
+0113,barbell standing wide-grip curl,Wide-Grip_Standing_Barbell_Curl,Wide-Grip Standing Barbell Curl,1.0,yes
+0114,barbell step-up,Barbell_Step_Ups,Barbell Step Ups,1.0,yes
+0115,barbell stiff leg good morning,Stiff_Leg_Barbell_Good_Morning,Stiff Leg Barbell Good Morning,1.0,yes
+0117,barbell sumo deadlift,Sumo_Deadlift,Sumo Deadlift,1.0,yes
+0119,barbell upright row v. 2,Upright_Barbell_Row,Upright Barbell Row,1.0,yes
+0120,barbell upright row,Upright_Barbell_Row,Upright Barbell Row,1.0,yes
+0127,barbell zercher squat,Zercher_Squats,Zercher Squats,1.0,yes
+0137,body-up,Body-Up,Body-Up,1.0,yes
+0157,cable deadlift,Cable_Deadlifts,Cable Deadlifts,1.0,yes
+0162,cable front raise,Front_Cable_Raise,Front Cable Raise,1.0,yes
+0165,cable hammer curl (with rope),Cable_Hammer_Curls_-_Rope_Attachment,Cable Hammer Curls - Rope Attachment,1.0,yes
+0166,cable hammer curl,Cable_Hammer_Curls_-_Rope_Attachment,Cable Hammer Curls - Rope Attachment,1.0,yes
+0168,cable hip adduction,Cable_Hip_Adduction,Cable Hip Adduction,1.0,yes
+0171,cable incline fly,Incline_Cable_Flye,Incline Cable Flye,1.0,yes
+0172,cable incline pushdown,Cable_Incline_Pushdown,Cable Incline Pushdown,1.0,yes
+0173,cable incline triceps extension,Cable_Incline_Triceps_Extension,Cable Incline Triceps Extension,1.0,yes
+0174,cable judo flip,Cable_Judo_Flip,Cable Judo Flip,1.0,yes
+0176,cable kneeling triceps extension,Kneeling_Cable_Triceps_Extension,Kneeling Cable Triceps Extension,1.0,yes
+0183,cable lying curl,Lying_Cable_Curl,Lying Cable Curl,1.0,yes
+0186,cable lying triceps extension v. 2,Cable_Lying_Triceps_Extension,Cable Lying Triceps Extension,1.0,yes
+0187,cable lying triceps extension,Cable_Lying_Triceps_Extension,Cable Lying Triceps Extension,1.0,yes
+0194,cable overhead triceps extension (rope attachment),Cable_Rope_Overhead_Triceps_Extension,Cable Rope Overhead Triceps Extension,1.0,yes
+0195,cable preacher curl,Cable_Preacher_Curl,Cable Preacher Curl,1.0,yes
+0196,cable pull through (with rope),Pull_Through,Pull Through,1.0,yes
+0201,cable pushdown,Triceps_Pushdown,Triceps Pushdown,1.0,yes
+0206,cable reverse curl,Reverse_Cable_Curl,Reverse Cable Curl,1.0,yes
+0212,cable seated crunch,Cable_Seated_Crunch,Cable Seated Crunch,1.0,yes
+0219,cable shoulder press,Cable_Shoulder_Press,Cable Shoulder Press,1.0,yes
+0220,cable shrug,Cable_Shrugs,Cable Shrugs,1.0,yes
+0221,cable side bend crunch (bosu ball),Bosu_Ball_Cable_Crunch_With_Side_Bends,Bosu Ball Cable Crunch With Side Bends,1.0,yes
+0226,cable standing crunch,Standing_Rope_Crunch,Standing Rope Crunch,1.0,yes
+0230,cable standing lift,Standing_Cable_Lift,Standing Cable Lift,1.0,yes
+0241,cable triceps pushdown (v-bar),Triceps_Pushdown_-_V-Bar_Attachment,Triceps Pushdown - V-Bar Attachment,1.0,yes
+0245,cable underhand pulldown,Underhand_Cable_Pulldowns,Underhand Cable Pulldowns,1.0,yes
+0246,cable upright row,Upright_Cable_Row,Upright Cable Row,1.0,yes
+0247,cable wrist curl,Cable_Wrist_Curl,Cable Wrist Curl,1.0,yes
+0251,chest dip,Dips_-_Chest_Version,Dips - Chest Version,1.0,yes
+0258,clock push-up,Clock_Push-Up,Clock Push-Up,1.0,yes
+0260,cocoons,Cocoons,Cocoons,1.0,yes
+0267,crunch (hands overhead),Crunch_-_Hands_Overhead,Crunch - Hands Overhead,1.0,yes
+0276,dead bug,Dead_Bug,Dead Bug,1.0,yes
+0277,decline crunch,Decline_Crunch,Decline Crunch,1.0,yes
+0279,decline push-up,Decline_Push-Up,Decline Push-Up,1.0,yes
+0285,dumbbell alternate biceps curl,Dumbbell_Alternate_Bicep_Curl,Dumbbell Alternate Bicep Curl,1.0,yes
+0287,dumbbell arnold press v. 2,Arnold_Dumbbell_Press,Arnold Dumbbell Press,1.0,yes
+0289,dumbbell bench press,Dumbbell_Bench_Press,Dumbbell Bench Press,1.0,yes
+0291,dumbbell bench squat,Dumbbell_Squat_To_A_Bench,Dumbbell Squat To A Bench,1.0,yes
+0293,dumbbell bent over row,Bent_Over_Two-Dumbbell_Row,Bent Over Two-Dumbbell Row,1.0,yes
+0294,dumbbell biceps curl,Dumbbell_Bicep_Curl,Dumbbell Bicep Curl,1.0,yes
+0295,dumbbell clean,Dumbbell_Clean,Dumbbell Clean,1.0,yes
+0296,dumbbell close-grip press,Close-Grip_Dumbbell_Press,Close-Grip Dumbbell Press,1.0,yes
+0297,dumbbell concentration curl,Concentration_Curls,Concentration Curls,1.0,yes
+0298,dumbbell cross body hammer curl,Cross_Body_Hammer_Curl,Cross Body Hammer Curl,1.0,yes
+0299,dumbbell cuban press,Cuban_Press,Cuban Press,1.0,yes
+0301,dumbbell decline bench press,Decline_Dumbbell_Bench_Press,Decline Dumbbell Bench Press,1.0,yes
+0302,dumbbell decline fly,Decline_Dumbbell_Flyes,Decline Dumbbell Flyes,1.0,yes
+0306,dumbbell decline triceps extension,Decline_Dumbbell_Triceps_Extension,Decline Dumbbell Triceps Extension,1.0,yes
+0308,dumbbell fly,Dumbbell_Flyes,Dumbbell Flyes,1.0,yes
+0309,dumbbell front raise v. 2,Front_Dumbbell_Raise,Front Dumbbell Raise,1.0,yes
+0310,dumbbell front raise,Front_Dumbbell_Raise,Front Dumbbell Raise,1.0,yes
+0312,dumbbell hammer curl v. 2,Hammer_Curls,Hammer Curls,1.0,yes
+0313,dumbbell hammer curl,Hammer_Curls,Hammer Curls,1.0,yes
+0314,dumbbell incline bench press,Incline_Dumbbell_Press,Incline Dumbbell Press,1.0,yes
+0317,dumbbell incline curl v. 2,Incline_Dumbbell_Curl,Incline Dumbbell Curl,1.0,yes
+0318,dumbbell incline curl,Incline_Dumbbell_Curl,Incline Dumbbell Curl,1.0,yes
+0319,dumbbell incline fly,Incline_Dumbbell_Flyes,Incline Dumbbell Flyes,1.0,yes
+0320,dumbbell incline hammer curl,Incline_Hammer_Curls,Incline Hammer Curls,1.0,yes
+0322,dumbbell incline inner biceps curl,Incline_Inner_Biceps_Curl,Incline Inner Biceps Curl,1.0,yes
+0327,dumbbell incline row,Dumbbell_Incline_Row,Dumbbell Incline Row,1.0,yes
+0328,dumbbell incline shoulder raise,Dumbbell_Incline_Shoulder_Raise,Dumbbell Incline Shoulder Raise,1.0,yes
+0332,dumbbell iron cross,Iron_Cross,Iron Cross,1.0,yes
+0334,dumbbell lateral raise,Side_Lateral_Raise,Side Lateral Raise,1.0,yes
+0336,dumbbell lunge,Dumbbell_Lunges,Dumbbell Lunges,1.0,yes
+0347,dumbbell lying pronation,Dumbbell_Lying_Pronation,Dumbbell Lying Pronation,1.0,yes
+0348,dumbbell lying rear lateral raise,Dumbbell_Lying_Rear_Lateral_Raise,Dumbbell Lying Rear Lateral Raise,1.0,yes
+0349,dumbbell lying supination,Dumbbell_Lying_Supination,Dumbbell Lying Supination,1.0,yes
+0350,dumbbell lying supine curl,Lying_Supine_Dumbbell_Curl,Lying Supine Dumbbell Curl,1.0,yes
+0351,dumbbell lying triceps extension,Lying_Dumbbell_Tricep_Extension,Lying Dumbbell Tricep Extension,1.0,yes
+0352,dumbbell neutral grip bench press,Dumbbell_Bench_Press_with_Neutral_Grip,Dumbbell Bench Press with Neutral Grip,1.0,yes
+0374,dumbbell prone incline curl,Dumbbell_Prone_Incline_Curl,Dumbbell Prone Incline Curl,1.0,yes
+0375,dumbbell pullover,Straight-Arm_Dumbbell_Pullover,Straight-Arm Dumbbell Pullover,1.0,yes
+0376,dumbbell raise,Dumbbell_Raise,Dumbbell Raise,1.0,yes
+0381,dumbbell rear lunge,Dumbbell_Rear_Lunge,Dumbbell Rear Lunge,1.0,yes
+0383,dumbbell reverse fly,Reverse_Flyes,Reverse Flyes,1.0,yes
+0391,dumbbell seated curl,Seated_Dumbbell_Curl,Seated Dumbbell Curl,1.0,yes
+0393,dumbbell seated inner biceps curl,Seated_Dumbbell_Inner_Biceps_Curl,Seated Dumbbell Inner Biceps Curl,1.0,yes
+0405,dumbbell seated shoulder press,Seated_Dumbbell_Press,Seated Dumbbell Press,1.0,yes
+0406,dumbbell shrug,Dumbbell_Shrug,Dumbbell Shrug,1.0,yes
+0407,dumbbell side bend,Dumbbell_Side_Bend,Dumbbell Side Bend,1.0,yes
+0413,dumbbell squat,Dumbbell_Squat,Dumbbell Squat,1.0,yes
+0417,dumbbell standing calf raise,Standing_Dumbbell_Calf_Raise,Standing Dumbbell Calf Raise,1.0,yes
+0418,dumbbell standing concentration curl,Standing_Concentration_Curl,Standing Concentration Curl,1.0,yes
+0429,dumbbell standing reverse curl,Standing_Dumbbell_Reverse_Curl,Standing Dumbbell Reverse Curl,1.0,yes
+0430,dumbbell standing triceps extension,Standing_Dumbbell_Triceps_Extension,Standing Dumbbell Triceps Extension,1.0,yes
+0431,dumbbell step-up,Dumbbell_Step_Ups,Dumbbell Step Ups,1.0,yes
+0436,dumbbell tate press,Tate_Press,Tate Press,1.0,yes
+0439,dumbbell zottman curl,Zottman_Curl,Zottman Curl,1.0,yes
+0452,ez barbell reverse grip preacher curl,Reverse_Barbell_Preacher_Curls,Reverse Barbell Preacher Curls,1.0,yes
+0454,ez barbell spider curl,Spider_Curl,Spider Curl,1.0,yes
+0455,finger curls,Finger_Curls,Finger Curls,1.0,yes
+0459,flutter kicks,Flutter_Kicks,Flutter Kicks,1.0,yes
+0471,handstand push-up,Handstand_Push-Ups,Handstand Push-Ups,1.0,yes
+0472,hanging leg raise,Hanging_Leg_Raise,Hanging Leg Raise,1.0,yes
+0473,hanging pike,Hanging_Pike,Hanging Pike,1.0,yes
+0490,incline close-grip push-up,Incline_Push-Up_Close-Grip,Incline Push-Up Close-Grip,1.0,yes
+0493,incline push-up,Incline_Push-Up,Incline Push-Up,1.0,yes
+0494,incline reverse grip push-up,Incline_Push-Up_Reverse_Grip,Incline Push-Up Reverse Grip,1.0,yes
+0497,inverted row v. 2,Inverted_Row,Inverted Row,1.0,yes
+0499,inverted row,Inverted_Row,Inverted Row,1.0,yes
+0500,isometric wipers,Isometric_Wipers,Isometric Wipers,1.0,yes
+0507,jackknife sit-up,Jackknife_Sit-Up,Jackknife Sit-Up,1.0,yes
+0508,janda sit-up,Janda_Sit-Up,Janda Sit-Up,1.0,yes
+0514,jump squat,Freehand_Jump_Squat,Freehand Jump Squat,1.0,yes
+0517,kettlebell advanced windmill,Advanced_Kettlebell_Windmill,Advanced Kettlebell Windmill,1.0,yes
+0518,kettlebell alternating hang clean,Alternating_Hang_Clean,Alternating Hang Clean,1.0,yes
+0519,kettlebell alternating press on floor,Alternating_Floor_Press,Alternating Floor Press,1.0,yes
+0520,kettlebell alternating press,Alternating_Kettlebell_Press,Alternating Kettlebell Press,1.0,yes
+0521,kettlebell alternating renegade row,Alternating_Renegade_Row,Alternating Renegade Row,1.0,yes
+0522,kettlebell alternating row,Alternating_Kettlebell_Row,Alternating Kettlebell Row,1.0,yes
+0523,kettlebell arnold press,Kettlebell_Arnold_Press,Kettlebell Arnold Press,1.0,yes
+0524,kettlebell bent press,Bent_Press,Bent Press,1.0,yes
+0526,kettlebell double alternating hang clean,Double_Kettlebell_Alternating_Hang_Clean,Double Kettlebell Alternating Hang Clean,1.0,yes
+0527,kettlebell double jerk,Double_Kettlebell_Jerk,Double Kettlebell Jerk,1.0,yes
+0528,kettlebell double push press,Double_Kettlebell_Push_Press,Double Kettlebell Push Press,1.0,yes
+0529,kettlebell double snatch,Double_Kettlebell_Snatch,Double Kettlebell Snatch,1.0,yes
+0530,kettlebell double windmill,Double_Kettlebell_Windmill,Double Kettlebell Windmill,1.0,yes
+0532,kettlebell figure 8,Kettlebell_Figure_8,Kettlebell Figure 8,1.0,yes
+0534,kettlebell goblet squat,Goblet_Squat,Goblet Squat,1.0,yes
+0535,kettlebell hang clean,Kettlebell_Hang_Clean,Kettlebell Hang Clean,1.0,yes
+0536,kettlebell lunge pass through,Lunge_Pass_Through,Lunge Pass Through,1.0,yes
+0544,kettlebell pistol squat,Kettlebell_Pistol_Squat,Kettlebell Pistol Squat,1.0,yes
+0545,kettlebell plyo push-up,Plyo_Kettlebell_Pushups,Plyo Kettlebell Pushups,1.0,yes
+0546,kettlebell seated press,Kettlebell_Seated_Press,Kettlebell Seated Press,1.0,yes
+0547,kettlebell seesaw press,Kettlebell_Seesaw_Press,Kettlebell Seesaw Press,1.0,yes
+0548,kettlebell sumo high pull,Kettlebell_Sumo_High_Pull,Kettlebell Sumo High Pull,1.0,yes
+0550,kettlebell thruster,Kettlebell_Thruster,Kettlebell Thruster,1.0,yes
+0554,kettlebell windmill,Kettlebell_Windmill,Kettlebell Windmill,1.0,yes
+0560,kneeling hip flexor,Kneeling_Hip_Flexor,Kneeling Hip Flexor,1.0,yes
+0562,landmine 180,Landmine_180s,Landmine 180's,1.0,yes
+0573,lever back extension,Hyperextensions_Back_Extensions,Hyperextensions (Back Extensions),1.0,yes
+0574,lever bent over row,Bent_Over_Barbell_Row,Bent Over Barbell Row,1.0,yes
+0575,lever bicep curl,Machine_Bicep_Curl,Machine Bicep Curl,1.0,yes
+0576,lever chest press,Leverage_Chest_Press,Leverage Chest Press,1.0,yes
+0577,lever chest press,Leverage_Chest_Press,Leverage Chest Press,1.0,yes
+0578,lever deadlift,Leverage_Deadlift,Leverage Deadlift,1.0,yes
+0581,lever high row,Leverage_High_Row,Leverage High Row,1.0,yes
+0585,lever leg extension,Leg_Extensions,Leg Extensions,1.0,yes
+0586,lever lying leg curl,Lying_Leg_Curls,Lying Leg Curls,1.0,yes
+0587,lever military press,Machine_Shoulder_Military_Press,Machine Shoulder (Military) Press,1.0,yes
+0592,lever preacher curl,Machine_Preacher_Curls,Machine Preacher Curls,1.0,yes
+0593,lever reverse hyperextension,Reverse_Hyperextension,Reverse Hyperextension,1.0,yes
+0594,lever seated calf raise,Seated_Calf_Raise,Seated Calf Raise,1.0,yes
+0597,lever seated hip abduction,Thigh_Abductor,Thigh Abductor,1.0,yes
+0598,lever seated hip adduction,Thigh_Adductor,Thigh Adductor,1.0,yes
+0599,lever seated leg curl,Seated_Leg_Curl,Seated Leg Curl,1.0,yes
+0603,lever shoulder press,Leverage_Shoulder_Press,Leverage Shoulder Press,1.0,yes
+0604,lever shrug,Leverage_Shrug,Leverage Shrug,1.0,yes
+0605,lever standing calf raise,Standing_Calf_Raises,Standing Calf Raises,1.0,yes
+0607,lever triceps extension,Machine_Triceps_Extension,Machine Triceps Extension,1.0,yes
+0620,lying leg raise flat bench,Flat_Bench_Lying_Leg_Raise,Flat Bench Lying Leg Raise,1.0,yes
+0630,mountain climber,Mountain_Climbers,Mountain Climbers,1.0,yes
+0635,oblique crunches floor,Oblique_Crunches_-_On_The_Floor,Oblique Crunches - On The Floor,1.0,yes
+0648,power clean,Power_Clean,Power Clean,1.0,yes
+0652,pull-up,Pullups,Pullups,1.0,yes
+0662,push-up,Pushups,Pushups,1.0,yes
+0687,russian twist,Russian_Twist,Russian Twist,1.0,yes
+0688,scapular pull-up,Scapular_Pull-Up,Scapular Pull-Up,1.0,yes
+0698,shoulder press (with band),Shoulder_Press_-_With_Bands,Shoulder Press - With Bands,1.0,yes
+0705,side bridge v. 2,Side_Bridge,Side Bridge,1.0,yes
+0706,side bridge,Side_Bridge,Side Bridge,1.0,yes
+0713,side neck stretch,Side_Neck_Stretch,Side Neck Stretch,1.0,yes
+0735,sit-up v. 2,Sit-Up,Sit-Up,1.0,yes
+0739,sled 45° leg press,Leg_Press,Leg Press,1.0,yes
+0748,smith bench press,Smith_Machine_Bench_Press,Smith Machine Bench Press,1.0,yes
+0750,smith chair squat,Chair_Squat,Chair Squat,1.0,yes
+0751,smith close-grip bench press,Smith_Machine_Close-Grip_Bench_Press,Smith Machine Close-Grip Bench Press,1.0,yes
+0752,smith deadlift,Leverage_Deadlift,Leverage Deadlift,1.0,yes
+0755,smith hack squat,Hack_Squat,Hack Squat,1.0,yes
+0756,smith hip raise,Smith_Machine_Hip_Raise,Smith Machine Hip Raise,1.0,yes
+0757,smith incline bench press,Smith_Machine_Incline_Bench_Press,Smith Machine Incline Bench Press,1.0,yes
+0760,smith leg press,Smith_Machine_Leg_Press,Smith Machine Leg Press,1.0,yes
+0763,smith reverse calf raises,Smith_Machine_Reverse_Calf_Raises,Smith Machine Reverse Calf Raises,1.0,yes
+0766,smith shoulder press,Leverage_Shoulder_Press,Leverage Shoulder Press,1.0,yes
+0767,smith shrug,Leverage_Shrug,Leverage Shrug,1.0,yes
+0769,smith sprint lunge,Lunge_Sprint,Lunge Sprint,1.0,yes
+0770,smith squat,Smith_Machine_Squat,Smith Machine Squat,1.0,yes
+0775,smith upright row,Smith_Machine_Upright_Row,Smith Machine Upright Row,1.0,yes
+0776,snatch pull,Snatch_Pull,Snatch Pull,1.0,yes
+0777,spell caster,Spell_Caster,Spell Caster,1.0,yes
+0781,split squat,Split_Squats,Split Squats,1.0,yes
+0784,squat (with band),Squats_-_With_Bands,Squats - With Bands,1.0,yes
+0786,squat jerk,Squat_Jerk,Squat Jerk,1.0,yes
+0788,standing behind neck press,Standing_Barbell_Press_Behind_Neck,Standing Barbell Press Behind Neck,1.0,yes
+0794,standing lateral stretch,Standing_Lateral_Stretch,Standing Lateral Stretch,1.0,yes
+0814,triceps dip,Dips_-_Triceps_Version,Dips - Triceps Version,1.0,yes
+0817,triceps stretch,Triceps_Stretch,Triceps Stretch,1.0,yes
+0858,wind sprints,Wind_Sprints,Wind Sprints,1.0,yes
+0861,cable seated row,Seated_Cable_Rows,Seated Cable Rows,1.0,yes
+0868,cable curl,Standing_Biceps_Cable_Curl,Standing Biceps Cable Curl,1.0,yes
+0869,lever shoulder press v. 2,Leverage_Shoulder_Press,Leverage Shoulder Press,1.0,yes
+0870,butt-ups,Butt-Ups,Butt-Ups,1.0,yes
+0871,tuck crunch,Tuck_Crunch,Tuck Crunch,1.0,yes
+0872,reverse crunch,Reverse_Crunch,Reverse Crunch,1.0,yes
+0873,cable reverse crunch,Cable_Reverse_Crunch,Cable Reverse Crunch,1.0,yes
+0874,cable standing crunch (with rope attachment),Standing_Rope_Crunch,Standing Rope Crunch,1.0,yes
+0894,band calf raise,Calf_Raises_-_With_Bands,Calf Raises - With Bands,1.0,yes
+0901,band hip extension,Hip_Extension_with_Bands,Hip Extension with Bands,1.0,yes
+0907,band lateral raise,Lateral_Raise_-_With_Bands,Lateral Raise - With Bands,1.0,yes
+0934,band upright row,Upright_Row_-_With_Bands,Upright Row - With Bands,1.0,yes
+0945,child pose,Childs_Pose,Child's Pose,1.0,yes
+0973,band calf raise v. 2,Calf_Raises_-_With_Bands,Calf Raises - With Bands,1.0,yes
+0997,band shoulder press,Shoulder_Press_-_With_Bands,Shoulder Press - With Bands,1.0,yes
+1004,band squat,Squats_-_With_Bands,Squats - With Bands,1.0,yes
+1030,lever pec deck fly,Butterfly,Butterfly,1.0,yes
+1033,lever triceps extension v. 2,Machine_Triceps_Extension,Machine Triceps Extension,1.0,yes
+1038,lever chair squat,Chair_Squat,Chair Squat,1.0,yes
+1040,lever pistol squat,Smith_Machine_Pistol_Squat,Smith Machine Pistol Squat,1.0,yes
+1046,cable elevated row,Elevated_Cable_Rows,Elevated Cable Rows,1.0,yes
+1047,cable close grip front lat pulldown,Close-Grip_Front_Lat_Pulldown,Close-Grip Front Lat Pulldown,1.0,yes
+1051,cat stretch,Cat_Stretch,Cat Stretch,1.0,yes
+1060,barbell hip thrust,Barbell_Hip_Thrust,Barbell Hip Thrust,1.0,yes
+1162,barbell standing military press,Standing_Military_Press,Standing Military Press,1.0,yes
+1164,smith calf raise v. 2,Smith_Machine_Calf_Raise,Smith Machine Calf Raise,1.0,yes
+1166,jump split,Split_Jump,Split Jump,1.0,yes
+1176,dumbbell incline front raise,Front_Incline_Dumbbell_Raise,Front Incline Dumbbell Raise,1.0,yes
+1179,flutter kicks v. 2,Flutter_Kicks,Flutter Kicks,1.0,yes
+1196,dumbbell alternate biceps curl v. 2,Dumbbell_Alternate_Bicep_Curl,Dumbbell Alternate Bicep Curl,1.0,yes
+1200,push press,Push_Press,Push Press,1.0,yes
+1204,cable one arm lat pulldown,One_Arm_Lat_Pulldown,One Arm Lat Pulldown,1.0,yes
+1206,cable pull through,Pull_Through,Pull Through,1.0,yes
+1236,dumbbell one arm row (rack support),One-Arm_Dumbbell_Row,One-Arm Dumbbell Row,1.0,yes
+1243,dead bug v. 2,Dead_Bug,Dead Bug,1.0,yes
+1254,band bench press,Bench_Press_-_With_Bands,Bench Press - With Bands,1.0,yes
+1269,cable standing up straight crossovers,Cable_Crossover,Cable Crossover,1.0,yes
+1297,isometric chest squeeze,Isometric_Chest_Squeezes,Isometric Chest Squeezes,1.0,yes
+1299,lever incline chest press,Leverage_Incline_Chest_Press,Leverage Incline Chest Press,1.0,yes
+1300,lever decline chest press,Leverage_Decline_Chest_Press,Leverage Decline Chest Press,1.0,yes
+1302,medicine ball chest pass,Medicine_Ball_Chest_Pass,Medicine Ball Chest Pass,1.0,yes
+1323,cable rope seated row,Seated_Cable_Rows,Seated Cable Rows,1.0,yes
+1326,chin-up,Chin-Up,Chin-Up,1.0,yes
+1352,lower back curl,Lower_Back_Curl,Lower Back Curl,1.0,yes
+1355,one arm against wall,One_Arm_Against_Wall,One Arm Against Wall,1.0,yes
+1359,smith bent over row,Smith_Machine_Bent_Over_Row,Smith Machine Bent Over Row,1.0,yes
+1364,standing pelvic tilt,Standing_Pelvic_Tilt,Standing Pelvic Tilt,1.0,yes
+1365,upper back stretch,Upper_Back_Stretch,Upper Back Stretch,1.0,yes
+1368,ankle circles,Ankle_Circles,Ankle Circles,1.0,yes
+1371,barbell seated calf raise,Barbell_Seated_Calf_Raise,Barbell Seated Calf Raise,1.0,yes
+1372,barbell standing calf raise,Standing_Barbell_Calf_Raise,Standing Barbell Calf Raise,1.0,yes
+1377,calf stretch with hands against wall,Calf_Stretch_Hands_Against_Wall,Calf Stretch Hands Against Wall,1.0,yes
+1394,smith reverse calf raises,Smith_Machine_Reverse_Calf_Raises,Smith Machine Reverse Calf Raises,1.0,yes
+1403,neck side stretch,Side_Neck_Stretch,Side Neck Stretch,1.0,yes
+1408,band hip lift,Hip_Lift_with_Band,Hip Lift with Band,1.0,yes
+1409,barbell glute bridge,Barbell_Glute_Bridge,Barbell Glute Bridge,1.0,yes
+1420,kneeling jump squat,Kneeling_Jump_Squat,Kneeling Jump Squat,1.0,yes
+1422,pelvic tilt into bridge,Pelvic_Tilt_Into_Bridge,Pelvic Tilt Into Bridge,1.0,yes
+1428,wrist circles,Wrist_Circles,Wrist Circles,1.0,yes
+1455,lever chest press v. 2,Leverage_Chest_Press,Leverage Chest Press,1.0,yes
+1459,dumbbell romanian deadlift,Stiff-Legged_Dumbbell_Deadlift,Stiff-Legged Dumbbell Deadlift,1.0,yes
+1471,inchworm,Inchworm,Inchworm,1.0,yes
+1479,lever incline chest press v. 2,Leverage_Incline_Chest_Press,Leverage Incline Chest Press,1.0,yes
+1495,oblique crunch v. 2,Oblique_Crunches,Oblique Crunches,1.0,yes
+1497,barbell reverse band bench press,Reverse_Band_Bench_Press,Reverse Band Bench Press,1.0,yes
+1503,band pull apart,Band_Pull_Apart,Band Pull Apart,1.0,yes
+1504,band skull crusher,Band_Skull_Crusher,Band Skull Crusher,1.0,yes
+1507,band hip flexion,Hip_Flexion_with_Band,Hip Flexion with Band,1.0,yes
+1508,band lateral raise v. 2,Lateral_Raise_-_With_Bands,Lateral Raise - With Bands,1.0,yes
+1510,crossover reverse lunge,Crossover_Reverse_Lunge,Crossover Reverse Lunge,1.0,yes
+1511,hamstring stretch,Hamstring_Stretch,Hamstring Stretch,1.0,yes
+1513,band good morning,Band_Good_Morning,Band Good Morning,1.0,yes
+1515,barbell clean deadlift,Clean_Deadlift,Clean Deadlift,1.0,yes
+1516,barbell clean from blocks,Clean_from_Blocks,Clean from Blocks,1.0,yes
+1517,barbell clean pull,Clean_Pull,Clean Pull,1.0,yes
+1520,barbell hang clean,Hang_Clean,Hang Clean,1.0,yes
+1521,barbell hang clean below the knees,Hang_Clean_-_Below_the_Knees,Hang Clean - Below the Knees,1.0,yes
+1522,barbell hang snatch,Hang_Snatch,Hang Snatch,1.0,yes
+1523,barbell hang snatch below the knees,Hang_Snatch_-_Below_Knees,Hang Snatch - Below Knees,1.0,yes
+1524,barbell heaving snatch balance,Heaving_Snatch_Balance,Heaving Snatch Balance,1.0,yes
+1525,barbell jerk dip squat,Jerk_Dip_Squat,Jerk Dip Squat,1.0,yes
+1526,barbell muscle snatch,Muscle_Snatch,Muscle Snatch,1.0,yes
+1527,barbell olympic squat,Olympic_Squat,Olympic Squat,1.0,yes
+1528,barbell power clean from blocks,Power_Clean_from_Blocks,Power Clean from Blocks,1.0,yes
+1529,barbell power jerk,Power_Jerk,Power Jerk,1.0,yes
+1530,barbell power snatch,Power_Snatch,Power Snatch,1.0,yes
+1531,barbell power snatch from blocks,Power_Snatch_from_Blocks,Power Snatch from Blocks,1.0,yes
+1532,barbell romanian deadlift from deficit,Romanian_Deadlift_from_Deficit,Romanian Deadlift from Deficit,1.0,yes
+1533,barbell snatch,Snatch,Snatch,1.0,yes
+1534,barbell snatch balance,Snatch_Balance,Snatch Balance,1.0,yes
+1535,barbell snatch deadlift,Snatch_Deadlift,Snatch Deadlift,1.0,yes
+1536,barbell snatch from blocks,Snatch_from_Blocks,Snatch from Blocks,1.0,yes
+1537,barbell split clean,Split_Clean,Split Clean,1.0,yes
+1538,barbell split jerk,Split_Jerk,Split Jerk,1.0,yes
+1549,double leg butt kick,Double_Leg_Butt_Kick,Double Leg Butt Kick,1.0,yes
+1555,dumbbell squat v. 2,Dumbbell_Squat,Dumbbell Squat,1.0,yes
+1565,kettlebell dead clean,Kettlebell_Dead_Clean,Kettlebell Dead Clean,1.0,yes
+1567,kettlebell open palm clean,Open_Palm_Kettlebell_Clean,Open Palm Kettlebell Clean,1.0,yes
+1570,knee tuck jump,Knee_Tuck_Jump,Knee Tuck Jump,1.0,yes
+1584,rocket jump,Rocket_Jump,Rocket Jump,1.0,yes
+1585,runners stretch,Runners_Stretch,Runner's Stretch,1.0,yes
+1589,single leg butt kick,Single_Leg_Butt_Kick,Single Leg Butt Kick,1.0,yes
+1593,sit squat,Sit_Squats,Sit Squats,1.0,yes
+1600,standing long jump,Standing_Long_Jump,Standing Long Jump,1.0,yes
+1604,world greatest stretch,Worlds_Greatest_Stretch,World's Greatest Stretch,1.0,yes
+1614,lever preacher curl v. 2,Machine_Preacher_Curls,Machine Preacher Curls,1.0,yes
+1628,ez barbell spider curl,Spider_Curl,Spider Curl,1.0,yes
+1636,cable overhead curl,Overhead_Cable_Curl,Overhead Cable Curl,1.0,yes
+1657,dumbbell cross body hammer curl v. 2,Cross_Body_Hammer_Curl,Cross Body Hammer Curl,1.0,yes
+1683,smith machine bicep curl,Machine_Bicep_Curl,Machine Bicep Curl,1.0,yes
+1725,cable rope incline tricep extension,Cable_Incline_Triceps_Extension,Cable Incline Triceps Extension,1.0,yes
+1751,barbell pin presses,Pin_Presses,Pin Presses,1.0,yes
+1859,cable kneeling triceps extension v. 2,Kneeling_Cable_Triceps_Extension,Kneeling Cable Triceps Extension,1.0,yes
+1862,lever cable shoulder press,Leverage_Shoulder_Press,Leverage Shoulder Press,1.0,yes
+2106,cat stretch v. 2,Cat_Stretch,Cat Stretch,1.0,yes
+2136,dumbbell cuban press v. 2,Cuban_Press,Cuban Press,1.0,yes
+2137,dumbbell arnold press,Arnold_Dumbbell_Press,Arnold Dumbbell Press,1.0,yes
+2278,lever decline chest press v. 2,Leverage_Decline_Chest_Press,Leverage Decline Chest Press,1.0,yes
+2289,lever calf press,Calf_Press,Calf Press,1.0,yes
+2291,cable wide grip lat pulldown,Wide-Grip_Lat_Pulldown,Wide-Grip Lat Pulldown,1.0,yes
+2294,dumbbell zottman preacher curl,Zottman_Preacher_Curl,Zottman Preacher Curl,1.0,yes
+2368,split squats,Split_Squats,Split Squats,1.0,yes
+2395,air bike v. 2,Air_Bike,Air Bike,1.0,yes
+2515,cable front raise v. 2,Front_Cable_Raise,Front Cable Raise,1.0,yes
+2589,dumbbell lying triceps extension v. 2,Lying_Dumbbell_Tricep_Extension,Lying Dumbbell Tricep Extension,1.0,yes
+2745,smith reverse hyperextension,Reverse_Hyperextension,Reverse Hyperextension,1.0,yes
+2752,split squat v. 2,Split_Squats,Split Squats,1.0,yes
+2960,dumbbell split squat,Split_Squat_with_Dumbbells,Split Squat with Dumbbells,1.0,yes
+3068,cable standing biceps curl (with rope),Standing_Biceps_Cable_Curl,Standing Biceps Cable Curl,1.0,yes
+3083,dumbbell seated curl v. 2,Seated_Dumbbell_Curl,Seated Dumbbell Curl,1.0,yes
+3088,frog hops,Frog_Hops,Frog Hops,1.0,yes
+3095,lateral bound,Lateral_Bound,Lateral Bound,1.0,yes
+3183,barbell hang clean below the knees v. 2,Hang_Clean_-_Below_the_Knees,Hang Clean - Below the Knees,1.0,yes
+3194,frankenstein squat,Frankenstein_Squat,Frankenstein Squat,1.0,yes
+3341,dumbbell lunge v. 2,Dumbbell_Lunges,Dumbbell Lunges,1.0,yes
+3359,cable standing chest press,Standing_Cable_Chest_Press,Standing Cable Chest Press,1.0,yes
+3411,standing hip circle,Standing_Hip_Circles,Standing Hip Circles,1.0,yes
+3436,superman,Superman,Superman,1.0,yes
+3439,medicine ball backward throw,Backward_Medicine_Ball_Throw,Backward Medicine Ball Throw,1.0,yes
+3593,barbell squat,Barbell_Squat,Barbell Squat,1.0,yes
+3684,dumbbell external rotation,External_Rotation,External Rotation,1.0,yes
+3698,inchworm v. 2,Inchworm,Inchworm,1.0,yes
+3727,barbell front bench squat,Front_Barbell_Squat_To_A_Bench,Front Barbell Squat To A Bench,1.0,yes
+3730,barbell behind the back shrug,Barbell_Shrug_Behind_The_Back,Barbell Shrug Behind The Back,1.0,yes
+3905,arm circles,Arm_Circles,Arm Circles,1.0,yes
+3996,circles arm,Arm_Circles,Arm Circles,1.0,yes
+4019,reverse crunch v. 2,Reverse_Crunch,Reverse Crunch,1.0,yes
+4029,band hip adduction,Band_Hip_Adductions,Band Hip Adductions,1.0,yes
+4064,barbell squat with chains,Squat_with_Chains,Squat with Chains,1.0,yes
+4288,middle back stretch,Middle_Back_Stretch,Middle Back Stretch,1.0,yes
+4335,dumbbell side bend v. 2,Dumbbell_Side_Bend,Dumbbell Side Bend,1.0,yes
+4336,lever biceps curl,Machine_Bicep_Curl,Machine Bicep Curl,1.0,yes
+4347,lever standing leg curl,Standing_Leg_Curl,Standing Leg Curl,1.0,yes
+4353,cable lying triceps extension (with rope),Cable_Lying_Triceps_Extension,Cable Lying Triceps Extension,1.0,yes
+4370,smith seated calf raise,Seated_Calf_Raise,Seated Calf Raise,1.0,yes
+4395,shoulder circle,Shoulder_Circles,Shoulder Circles,1.0,yes
+4509,chin to chest stretch,Chin_To_Chest_Stretch,Chin To Chest Stretch,1.0,yes
+4633,world's greatest stretch,Worlds_Greatest_Stretch,World's Greatest Stretch,1.0,yes
+4671,dynamic back stretch,Dynamic_Back_Stretch,Dynamic Back Stretch,1.0,yes
+4683,band squat v. 2,Squats_-_With_Bands,Squats - With Bands,1.0,yes
+4832,lying rear lateral raise,Dumbbell_Lying_Rear_Lateral_Raise,Dumbbell Lying Rear Lateral Raise,1.0,yes
+4859,push up to side plank v. 2,Push_Up_to_Side_Plank,Push Up to Side Plank,1.0,yes
+4928,seated calf stretch v. 2,Seated_Calf_Stretch,Seated Calf Stretch,1.0,yes
+4962,barbell box squat,Box_Squat,Box Squat,1.0,yes
+5091,barbell reverse grip bench press,Reverse_Band_Bench_Press,Reverse Band Bench Press,1.0,yes
+5122,barbell clean and jerk,Clean_and_Jerk,Clean and Jerk,1.0,yes
+5190,barbell clean and jerk v. 2,Clean_and_Jerk,Clean and Jerk,1.0,yes
+5213,mountain climber v. 2,Mountain_Climbers,Mountain Climbers,1.0,yes
+5516,lever hack squat,Hack_Squat,Hack Squat,1.0,yes
+5633,barbell narrow stance squat v. 2,Narrow_Stance_Squats,Narrow Stance Squats,1.0,yes
+5823,barbell walking lunge,Barbell_Walking_Lunge,Barbell Walking Lunge,1.0,yes
+5860,kettlebell overhead triceps extension,Kettlebell_Overhead_Triceps_Extension,Kettlebell Overhead Triceps Extension,1.0,yes
+5921,dumbbell hammer preacher curl,Preacher_Hammer_Dumbbell_Curl,Preacher Hammer Dumbbell Curl,1.0,yes
+6543,cable front raise (rope attachment),Front_Cable_Raise,Front Cable Raise,1.0,yes
+0344,dumbbell lying one arm pronated triceps extension,One_Arm_Pronated_Dumbbell_Triceps_Extension,One Arm Pronated Dumbbell Triceps Extension,0.833,no
+0346,dumbbell lying one arm supinated triceps extension,One_Arm_Supinated_Dumbbell_Triceps_Extension,One Arm Supinated Dumbbell Triceps Extension,0.833,no
+1407,calf push stretch with hands against wall,Calf_Stretch_Hands_Against_Wall,Calf Stretch Hands Against Wall,0.833,no
+0018,assisted standing triceps extension (with towel),Standing_Towel_Triceps_Extension,Standing Towel Triceps Extension,0.8,no
+0111,barbell standing rocking leg calf raise,Rocking_Standing_Calf_Raise,Rocking Standing Calf Raise,0.8,no
+0231,cable standing one arm triceps extension,Cable_One_Arm_Tricep_Extension,Cable One Arm Tricep Extension,0.8,no
+0369,dumbbell over bench wrist curl,Palms-Down_Dumbbell_Wrist_Curl_Over_A_Bench,Palms-Down Dumbbell Wrist Curl Over A Bench,0.8,no
+1414,dumbbell one arm reverse preacher curl,One_Arm_Dumbbell_Preacher_Curl,One Arm Dumbbell Preacher Curl,0.8,no
+1544,barbell wide stance stiff leg deadlift,Wide_Stance_Stiff_Legs,Wide Stance Stiff Legs,0.8,no
+1663,dumbbell one arm hammer preacher curl,One_Arm_Dumbbell_Preacher_Curl,One Arm Dumbbell Preacher Curl,0.8,no
+1672,dumbbell one arm zottman preacher curl,One_Arm_Dumbbell_Preacher_Curl,One Arm Dumbbell Preacher Curl,0.8,no
+2470,dumbbell lying on floor rear delt raise,Lying_Rear_Delt_Raise,Lying Rear Delt Raise,0.8,no
+3333,dumbbell one arm wide grip bench press,One_Arm_Dumbbell_Bench_Press,One Arm Dumbbell Bench Press,0.8,no
+4343,dumbbell one arm triceps extension,One_Arm_Pronated_Dumbbell_Triceps_Extension,One Arm Pronated Dumbbell Triceps Extension,0.8,no
+4794,single leg jumping glute bridge,Single_Leg_Glute_Bridge,Single Leg Glute Bridge,0.8,no
+4948,cable kneeling one arm lat pulldown,One_Arm_Lat_Pulldown,One Arm Lat Pulldown,0.8,no
+0036,barbell decline wide-grip press,Wide-Grip_Decline_Barbell_Bench_Press,Wide-Grip Decline Barbell Bench Press,0.75,no
+0087,barbell seated bradford rocky press,Bradford_Rocky_Presses,Bradford/Rocky Presses,0.75,no
+0108,barbell standing leg calf raise,Standing_Barbell_Calf_Raise,Standing Barbell Calf Raise,0.75,no
+0118,barbell reverse grip bent over row,Bent_Over_Barbell_Row,Bent Over Barbell Row,0.75,no
+0167,cable high row (kneeling),Kneeling_High_Pulley_Row,Kneeling High Pulley Row,0.75,no
+0215,cable seated rear lateral raise,Cable_Seated_Lateral_Raise,Cable Seated Lateral Raise,0.75,no
+0248,cambered bar lying row,Lying_Cambered_Barbell_Row,Lying Cambered Barbell Row,0.75,no
+0315,dumbbell incline biceps curl,Incline_Inner_Biceps_Curl,Incline Inner Biceps Curl,0.75,no
+0321,dumbbell incline hammer press,Hammer_Grip_Incline_DB_Bench_Press,Hammer Grip Incline DB Bench Press,0.75,no
+0335,dumbbell lateral to front raise,Side_Laterals_to_Front_Raise,Side Laterals to Front Raise,0.75,no
+0380,dumbbell rear lateral raise,Dumbbell_Lying_Rear_Lateral_Raise,Dumbbell Lying Rear Lateral Raise,0.75,no
+0386,dumbbell rotation reverse fly,Reverse_Flyes_With_External_Rotation,Reverse Flyes With External Rotation,0.75,no
+0395,dumbbell seated lateral raise v. 2,Seated_Side_Lateral_Raise,Seated Side Lateral Raise,0.75,no
+0396,dumbbell seated lateral raise,Seated_Side_Lateral_Raise,Seated Side Lateral Raise,0.75,no
+0475,hanging straight leg raise,Hanging_Leg_Raise,Hanging Leg Raise,0.75,no
+0569,leg curl (on stability ball),Ball_Leg_Curl,Ball Leg Curl,0.75,no
+0613,lying (side) quads stretch,On_Your_Side_Quad_Stretch,On Your Side Quad Stretch,0.75,no
+0726,single leg bridge,Single_Leg_Glute_Bridge,Single Leg Glute Bridge,0.75,no
+0773,smith standing leg calf raise,Standing_Calf_Raises,Standing Calf Raises,0.75,no
+11261,cable standing biceps curl (rope attachment) v. 3,Standing_Biceps_Cable_Curl,Standing Biceps Cable Curl,0.75,no
+1167,dynamic chest stretch (male),Dynamic_Chest_Stretch,Dynamic Chest Stretch,0.75,no
+1195,lever incline hammer chest press,Leverage_Incline_Chest_Press,Leverage Incline Chest Press,0.75,no
+1233,dumbbell incline alternate hammer curl,Alternate_Hammer_Curl,Alternate Hammer Curl,0.75,no
+1256,barbell reverse grip decline bench press,Decline_Barbell_Bench_Press,Decline Barbell Bench Press,0.75,no
+1257,barbell reverse grip incline bench press,Barbell_Incline_Bench_Press_-_Medium_Grip,Barbell Incline Bench Press - Medium Grip,0.75,no
+1303,medicine ball chest push from 3 point stance,Chest_Push_from_3_point_stance,Chest Push from 3 point stance,0.75,no
+1361,smith reverse grip bent over row,Smith_Machine_Bent_Over_Row,Smith Machine Bent Over Row,0.75,no
+1379,dumbbell seated calf raise,Dumbbell_Seated_One-Leg_Calf_Raise,Dumbbell Seated One-Leg Calf Raise,0.75,no
+1390,seated calf stretch (male),Seated_Calf_Stretch,Seated Calf Stretch,0.75,no
+1391,sled calf press on leg press,Calf_Press_On_The_Leg_Press_Machine,Calf Press On The Leg Press Machine,0.75,no
+1456,barbell standing close grip military press,Standing_Military_Press,Standing Military Press,0.75,no
+1457,barbell standing wide military press,Standing_Military_Press,Standing Military Press,0.75,no
+1586,lever seated one leg curl,Seated_Leg_Curl,Seated Leg Curl,0.75,no
+1590,lever lying single leg curl,Lying_Leg_Curls,Lying Leg Curls,0.75,no
+1646,dumbbell alternate hammer preacher curl,Alternate_Hammer_Curl,Alternate Hammer Curl,0.75,no
+1648,dumbbell alternate seated hammer curl,Alternate_Hammer_Curl,Alternate Hammer Curl,0.75,no
+1661,dumbbell lying supine biceps curl,Lying_Supine_Dumbbell_Curl,Lying Supine Dumbbell Curl,0.75,no
+1674,dumbbell prone incline hammer curl,Dumbbell_Prone_Incline_Curl,Dumbbell Prone Incline Curl,0.75,no
+1677,dumbbell seated bicep curl,Seated_Dumbbell_Inner_Biceps_Curl,Seated Dumbbell Inner Biceps Curl,0.75,no
+1726,cable rope lying on floor tricep extension,Cable_Lying_Triceps_Extension,Cable Lying Triceps Extension,0.75,no
+1764,hanging leg hip raise,Hanging_Leg_Raise,Hanging Leg Raise,0.75,no
+1795,reaching upper back stretch,Upper_Back_Stretch,Upper Back Stretch,0.75,no
+1888,standing achilles stretch,Standing_Soleus_And_Achilles_Stretch,Standing Soleus And Achilles Stretch,0.75,no
+2117,standing lateral side stretch,Standing_Lateral_Stretch,Standing Lateral Stretch,0.75,no
+2187,barbell reverse close-grip bench press,Close-Grip_Barbell_Bench_Press,Close-Grip Barbell Bench Press,0.75,no
+2292,dumbbell rear delt raise,Lying_Rear_Delt_Raise,Lying Rear Delt Raise,0.75,no
+2293,dumbbell standing zottman preacher curl,Zottman_Preacher_Curl,Zottman Preacher Curl,0.75,no
+2432,ez-bar close-grip bench press,Close-Grip_EZ-Bar_Press,Close-Grip EZ-Bar Press,0.75,no
+2469,exercise ball frog crunch,Exercise_Ball_Crunch,Exercise Ball Crunch,0.75,no
+2738,dumbbell lying triceps extension on floor,Lying_Dumbbell_Tricep_Extension,Lying Dumbbell Tricep Extension,0.75,no
+3195,lever lying two-one leg curl,Lying_Leg_Curls,Lying Leg Curls,0.75,no
+3563,cable one arm pulldown,One_Arm_Lat_Pulldown,One Arm Lat Pulldown,0.75,no
+3682,dumbbell incline alternate bicep curl,Alternate_Incline_Dumbbell_Curl,Alternate Incline Dumbbell Curl,0.75,no
+3721,barbell bent over wide grip row,Bent_Over_Barbell_Row,Bent Over Barbell Row,0.75,no
+3761,dumbbell seated alternate biceps curl,Dumbbell_Alternate_Bicep_Curl,Dumbbell Alternate Bicep Curl,0.75,no
+3764,dumbbell incline biceps curl v. 2,Incline_Inner_Biceps_Curl,Incline Inner Biceps Curl,0.75,no
+4456,glute ham raise v. 2,Natural_Glute_Ham_Raise,Natural Glute Ham Raise,0.75,no
+4851,barbell pin good morning,Good_Morning_off_Pins,Good Morning off Pins,0.75,no
+4893,kneeling half triceps extension,Kneeling_Cable_Triceps_Extension,Kneeling Cable Triceps Extension,0.75,no
+5010,barbell pause decline bench press,Decline_Barbell_Bench_Press,Decline Barbell Bench Press,0.75,no
+5011,barbell pause incline bench press,Barbell_Incline_Bench_Press_-_Medium_Grip,Barbell Incline Bench Press - Medium Grip,0.75,no
+5036,exercise ball leg curl,Ball_Leg_Curl,Ball Leg Curl,0.75,no
+5243,cable lying triceps extension (low),Cable_Lying_Triceps_Extension,Cable Lying Triceps Extension,0.75,no
+5853,barbell incline rear delt row,Barbell_Rear_Delt_Row,Barbell Rear Delt Row,0.75,no
+6147,dumbbell alternate hammer strict curl,Alternate_Hammer_Curl,Alternate Hammer Curl,0.75,no
+0419,dumbbell standing front raise above head,Standing_Dumbbell_Straight-Arm_Front_Delt_Raise_Above_Head,Standing Dumbbell Straight-Arm Front Delt Raise Above Head,0.714,no
+0029,barbell clean-grip front squat,Front_Barbell_Squat,Front Barbell Squat,0.667,no
+0039,barbell front chest squat,Front_Barbell_Squat,Front Barbell Squat,0.667,no
+0052,barbell jm bench press,JM_Press,JM Press,0.667,no
+0053,barbell jump squat,Weighted_Jump_Squat,Weighted Jump Squat,0.667,no
+0056,barbell lying close-grip triceps extension,Lying_Close-Grip_Barbell_Triceps_Extension_Behind_The_Head,Lying Close-Grip Barbell Triceps Extension Behind The Head,0.667,no
+0059,barbell lying preacher curl,Preacher_Curl,Preacher Curl,0.667,no
+0081,barbell reverse preacher curl,Preacher_Curl,Preacher Curl,0.667,no
+0104,barbell standing back wrist curl,Standing_Palms-Up_Barbell_Behind_The_Back_Wrist_Curl,Standing Palms-Up Barbell Behind The Back Wrist Curl,0.667,no
+0110,barbell standing reverse grip curl,Reverse_Barbell_Curl,Reverse Barbell Curl,0.667,no
+0121,barbell upright row v. 3,Upright_Barbell_Row,Upright Barbell Row,0.667,no
+0122,barbell wide bench press,Barbell_Bench_Press_-_Medium_Grip,Barbell Bench Press - Medium Grip,0.667,no
+0123,barbell wide-grip upright row,Upright_Barbell_Row,Upright Barbell Row,0.667,no
+0124,barbell wide squat,Wide_Stance_Barbell_Squat,Wide Stance Barbell Squat,0.667,no
+0145,butt bridge,Butt_Lift_Bridge,Butt Lift (Bridge),0.667,no
+0148,cable alternate shoulder press,Cable_Shoulder_Press,Cable Shoulder Press,0.667,no
+0163,cable front seated row,Seated_Cable_Rows,Seated Cable Rows,0.667,no
+0164,cable front shoulder raise,Front_Cable_Raise,Front Cable Raise,0.667,no
+0178,cable lateral raise,Cable_Seated_Lateral_Raise,Cable Seated Lateral Raise,0.667,no
+0180,cable low seated row,Seated_Cable_Rows,Seated Cable Rows,0.667,no
+0181,cable lying close grip curl,Lying_Cable_Curl,Lying Cable Curl,0.667,no
+0182,cable lying close-grip curl,Lying_Cable_Curl,Lying Cable Curl,0.667,no
+0209,cable reverse preacher curl,Cable_Preacher_Curl,Cable Preacher Curl,0.667,no
+0210,cable reverse wrist curl,Cable_Wrist_Curl,Cable Wrist Curl,0.667,no
+0218,cable seated wide-grip row,Seated_Cable_Rows,Seated Cable Rows,0.667,no
+0242,cable tuck reverse crunch,Cable_Reverse_Crunch,Cable Reverse Crunch,0.667,no
+0256,elbow arm circles,Arm_Circles,Arm Circles,0.667,no
+0257,circles knee stretch,Knee_Circles,Knee Circles,0.667,no
+0259,close-grip push-up,Close-Grip_Push-Up_off_of_a_Dumbbell,Close-Grip Push-Up off of a Dumbbell,0.667,no
+0274,crunch floor,Oblique_Crunches_-_On_The_Floor,Oblique Crunches - On The Floor,0.667,no
+0275,crunch floor v. 2,Oblique_Crunches_-_On_The_Floor,Oblique Crunches - On The Floor,0.667,no
+0290,dumbbell bench seated press,Seated_Dumbbell_Press,Seated Dumbbell Press,0.667,no
+0307,dumbbell decline twist fly,Decline_Dumbbell_Flyes,Decline Dumbbell Flyes,0.667,no
+0324,dumbbell incline palm-in press,Incline_Dumbbell_Press,Incline Dumbbell Press,0.667,no
+0325,dumbbell incline raise,Dumbbell_Incline_Shoulder_Raise,Dumbbell Incline Shoulder Raise,0.667,no
+0331,dumbbell incline twisted flyes,Incline_Dumbbell_Flyes,Incline Dumbbell Flyes,0.667,no
+0345,dumbbell lying one arm rear lateral raise,Dumbbell_Lying_Rear_Lateral_Raise,Dumbbell Lying Rear Lateral Raise,0.667,no
+0362,dumbbell one arm triceps extension (on bench),One_Arm_Pronated_Dumbbell_Triceps_Extension,One Arm Pronated Dumbbell Triceps Extension,0.667,no
+0365,dumbbell over bench neutral wrist curl,Palms-Down_Dumbbell_Wrist_Curl_Over_A_Bench,Palms-Down Dumbbell Wrist Curl Over A Bench,0.667,no
+0368,dumbbell over bench revers wrist curl,Palms-Down_Dumbbell_Wrist_Curl_Over_A_Bench,Palms-Down Dumbbell Wrist Curl Over A Bench,0.667,no
+0370,dumbbell peacher hammer curl,Hammer_Curls,Hammer Curls,0.667,no
+0372,dumbbell preacher curl,Preacher_Hammer_Dumbbell_Curl,Preacher Hammer Dumbbell Curl,0.667,no
+0382,dumbbell revers grip biceps curl,Dumbbell_Bicep_Curl,Dumbbell Bicep Curl,0.667,no
+0388,dumbbell seated alternate press,Seated_Dumbbell_Press,Seated Dumbbell Press,0.667,no
+0392,dumbbell seated front raise,Front_Dumbbell_Raise,Front Dumbbell Raise,0.667,no
+0402,dumbbell seated preacher curl,Seated_Dumbbell_Curl,Seated Dumbbell Curl,0.667,no
+0416,dumbbell standing biceps curl,Dumbbell_Bicep_Curl,Dumbbell Bicep Curl,0.667,no
+0426,dumbbell standing overhead press,Standing_Dumbbell_Press,Standing Dumbbell Press,0.667,no
+0427,dumbbell standing palms in press,Standing_Dumbbell_Press,Standing Dumbbell Press,0.667,no
+0437,dumbbell upright row,Dumbbell_One-Arm_Upright_Row,Dumbbell One-Arm Upright Row,0.667,no
+0446,ez barbell close-grip curl,Close-Grip_EZ-Bar_Curl_with_Band,Close-Grip EZ-Bar Curl with Band,0.667,no
+0451,ez barbell reverse grip curl,Reverse_Barbell_Preacher_Curls,Reverse Barbell Preacher Curls,0.667,no
+0467,gorilla chin,Gorilla_Chin_Crunch,Gorilla Chin/Crunch,0.667,no
+0488,hyperextension (on bench),Hyperextensions_With_No_Hyperextension_Bench,Hyperextensions With No Hyperextension Bench,0.667,no
+0498,inverted row with straps,Inverted_Row,Inverted Row,0.667,no
+0513,jump squat v. 2,Freehand_Jump_Squat,Freehand Jump Squat,0.667,no
+0533,kettlebell front squat,Front_Squats_With_Two_Kettlebells,Front Squats With Two Kettlebells,0.667,no
+0602,lever seated reverse fly,Reverse_Machine_Flyes,Reverse Machine Flyes,0.667,no
+0622,lying scissor kick,Scissor_Kick,Scissor Kick,0.667,no
+0643,overhead triceps stretch,Overhead_Triceps,Overhead Triceps,0.667,no
+0670,rear pull-up,Wide-Grip_Rear_Pull-Up,Wide-Grip Rear Pull-Up,0.667,no
+0743,sled hack squat,Hack_Squat,Hack Squat,0.667,no
+0744,sled lying squat,Lying_Machine_Squat,Lying Machine Squat,0.667,no
+0746,smith back shrug,Smith_Machine_Behind_the_Back_Shrug,Smith Machine Behind the Back Shrug,0.667,no
+0753,smith decline bench press,Decline_Smith_Press,Decline Smith Press,0.667,no
+0754,smith decline reverse-grip press,Decline_Smith_Press,Decline Smith Press,0.667,no
+0765,smith seated shoulder press,Leverage_Shoulder_Press,Leverage Shoulder Press,0.667,no
+0789,standing hamstring stretch,Hamstring_Stretch,Hamstring Stretch,0.667,no
+0793,band standing lateral raise,Lateral_Raise_-_With_Bands,Lateral Raise - With Bands,0.667,no
+0807,suspended reverse crunch,Reverse_Crunch,Reverse Crunch,0.667,no
+0815,triceps dips floor,Dips_-_Triceps_Version,Dips - Triceps Version,0.667,no
+0816,triceps press,Body_Tricep_Press,Body Tricep Press,0.667,no
+0830,weighted bench dip,Bench_Dips,Bench Dips,0.667,no
+0878,barbell full squat (with rack),Barbell_Full_Squat,Barbell Full Squat,0.667,no
+0955,leg to side,Side_Leg_Raises,Side Leg Raises,0.667,no
+0977,band front lateral raise,Lateral_Raise_-_With_Bands,Lateral Raise - With Bands,0.667,no
+0980,band bent-over hip extension,Hip_Extension_with_Bands,Hip Extension with Bands,0.667,no
+10168,bodyweight box squat,Bodyweight_Squat,Bodyweight Squat,0.667,no
+1029,lever parallel chest press,Leverage_Chest_Press,Leverage Chest Press,0.667,no
+1032,lever alternate biceps curl,Machine_Bicep_Curl,Machine Bicep Curl,0.667,no
+1048,dumbbell lying one arm rear lateral raise v. 2,Dumbbell_Lying_Rear_Lateral_Raise,Dumbbell Lying Rear Lateral Raise,0.667,no
+1050,smith calf raise (with block),Smith_Machine_Calf_Raise,Smith Machine Calf Raise,0.667,no
+1056,lying glute stretch,Lying_Glute,Lying Glute,0.667,no
+10560,barbell bench press catch,Barbell_Bench_Press_-_Medium_Grip,Barbell Bench Press - Medium Grip,0.667,no
+10914,bodyweight quarter squat,Bodyweight_Squat,Bodyweight Squat,0.667,no
+10987,dumbbell jump box,Dumbbell_Seated_Box_Jump,Dumbbell Seated Box Jump,0.667,no
+11014,dumbbell underhand front raise,Front_Dumbbell_Raise,Front Dumbbell Raise,0.667,no
+1202,cable horizontal pallof press,Pallof_Press,Pallof Press,0.667,no
+1213,cable vertical pallof press,Pallof_Press,Pallof Press,0.667,no
+1224,smith standing shoulder press,Leverage_Shoulder_Press,Leverage Shoulder Press,0.667,no
+1253,lever donkey calf raise,Smith_Machine_Calf_Raise,Smith Machine Calf Raise,0.667,no
+1255,barbell decline pullover,Wide-Grip_Decline_Barbell_Pullover,Wide-Grip Decline Barbell Pullover,0.667,no
+1301,machine inner chest press,Leverage_Chest_Press,Leverage Chest Press,0.667,no
+1304,medicine ball chest push multiple response,Chest_Push_multiple_response,Chest Push (multiple response),0.667,no
+1305,medicine ball chest push single response,Chest_Push_single_response,Chest Push (single response),0.667,no
+1308,smith wide grip bench press,Machine_Bench_Press,Machine Bench Press,0.667,no
+1312,medicine ball chest push with run release,Chest_Push_with_Run_Release,Chest Push with Run Release,0.667,no
+1320,cable rope crossover seated row,Seated_Cable_Rows,Seated Cable Rows,0.667,no
+1321,cable rope elevated seated row,Seated_Cable_Rows,Seated Cable Rows,0.667,no
+1329,dumbbell palm rotational bent over row,Bent_Over_Two-Dumbbell_Row_With_Palms_In,Bent Over Two-Dumbbell Row With Palms In,0.667,no
+1338,exercise ball hug,Hug_A_Ball,Hug A Ball,0.667,no
+1383,hack calf raise,Smith_Machine_Calf_Raise,Smith Machine Calf Raise,0.667,no
+1399,bench dip on floor,Bench_Dips,Bench Dips,0.667,no
+1404,back stretch,Dynamic_Back_Stretch,Dynamic Back Stretch,0.667,no
+1406,hamstring lying stretch,Hamstring_Stretch,Hamstring Stretch,0.667,no
+1424,seated glute stretch,Seated_Glute,Seated Glute,0.667,no
+1446,barbell zercher squat hold,Zercher_Squats,Zercher Squats,0.667,no
+1454,lever seated shoulder press,Leverage_Shoulder_Press,Leverage Shoulder Press,0.667,no
+1492,triceps dip stretch,Dips_-_Triceps_Version,Dips - Triceps Version,0.667,no
+1505,band calf raise v. 3,Calf_Raises_-_With_Bands,Calf Raises - With Bands,0.667,no
+1509,barbell bench squat (with chains),Barbell_Squat_To_A_Bench,Barbell Squat To A Bench,0.667,no
+1545,barbell full zercher squat,Barbell_Full_Squat,Barbell Full Squat,0.667,no
+1546,bodyweight wall squat,Bodyweight_Squat,Bodyweight Squat,0.667,no
+1571,lever one leg extension,Leg_Extensions,Leg Extensions,0.667,no
+1575,sled 45° narrow stance leg press,Narrow_Stance_Leg_Press,Narrow Stance Leg Press,0.667,no
+1615,lever hammer grip preacher curl,Machine_Preacher_Curls,Machine Preacher Curls,0.667,no
+1616,lever reverse grip preacher curl,Machine_Preacher_Curls,Machine Preacher Curls,0.667,no
+1624,dumbbell reverse bench press,Dumbbell_Bench_Press,Dumbbell Bench Press,0.667,no
+1634,cable lying bicep curl,Lying_Cable_Curl,Lying Cable Curl,0.667,no
+1639,cable rope hammer preacher curl,Cable_Hammer_Curls_-_Rope_Attachment,Cable Hammer Curls - Rope Attachment,0.667,no
+1643,cable seated overhead curl,Overhead_Cable_Curl,Overhead Cable Curl,0.667,no
+1654,dumbbell biceps curl reverse,Dumbbell_Bicep_Curl,Dumbbell Bicep Curl,0.667,no
+1655,dumbbell biceps curl squat,Dumbbell_Bicep_Curl,Dumbbell Bicep Curl,0.667,no
+1658,dumbbell lunge with bicep curl,Dumbbell_Bicep_Curl,Dumbbell Bicep Curl,0.667,no
+1678,dumbbell seated hammer curl,Hammer_Curls,Hammer Curls,0.667,no
+1743,dumbbell twisting bench press,Dumbbell_Bench_Press,Dumbbell Bench Press,0.667,no
+1752,smith machine incline tricep extension,Machine_Triceps_Extension,Machine Triceps Extension,0.667,no
+1753,three bench dip,Bench_Dips,Bench Dips,0.667,no
+1755,weighted tricep dips,Dips_-_Triceps_Version,Dips - Triceps Version,0.667,no
+1851,incline push press,Push_Press,Push Press,0.667,no
+1971,reverse shoulder stretch,Shoulder_Stretch,Shoulder Stretch,0.667,no
+1982,rotation shoulder stretch,Shoulder_Stretch,Shoulder Stretch,0.667,no
+2130,weighted decline crunch,Decline_Crunch,Decline Crunch,0.667,no
+2144,cable seated chest press,Cable_Chest_Press,Cable Chest Press,0.667,no
+2151,resistance band external rotation,External_Rotation_with_Band,External Rotation with Band,0.667,no
+2198,lever triceps extension v. 3,Machine_Triceps_Extension,Machine Triceps Extension,0.667,no
+2249,cable triceps pushdown (v bar),Triceps_Pushdown,Triceps Pushdown,0.667,no
+2267,lever seated leg press,Leg_Press,Leg Press,0.667,no
+2277,lever chest press v. 4,Leverage_Chest_Press,Leverage Chest Press,0.667,no
+2287,lever alternate leg press,Leg_Press,Leg Press,0.667,no
+2290,dumbbell bulgarian split squat,Split_Squat_with_Dumbbells,Split Squat with Dumbbells,0.667,no
+2298,inverted row on bench,Inverted_Row,Inverted Row,0.667,no
+2312,lying elbow to knee,Elbow_to_Knee,Elbow to Knee,0.667,no
+2318,lever shoulder press v. 3,Leverage_Shoulder_Press,Leverage Shoulder Press,0.667,no
+2335,lever seated calf press,Calf_Press,Calf Press,0.667,no
+2396,cable lying biceps curl v. 2,Lying_Cable_Curl,Lying Cable Curl,0.667,no
+2413,barbell wide grip drag curl,Drag_Curl,Drag Curl,0.667,no
+2425,resistance band calf raise,Calf_Raises_-_With_Bands,Calf Raises - With Bands,0.667,no
+2485,dumbbell hammer curl v. 3,Hammer_Curls,Hammer Curls,0.667,no
+2511,dumbbell reverse grip incline row,Dumbbell_Incline_Row,Dumbbell Incline Row,0.667,no
+2616,cable lateral pulldown with v-bar,V-Bar_Pulldown,V-Bar Pulldown,0.667,no
+2661,cable seated row with v bar,Seated_Cable_Rows,Seated Cable Rows,0.667,no
+2705,dumbbell lying pronation on floor,Dumbbell_Lying_Pronation,Dumbbell Lying Pronation,0.667,no
+2706,dumbbell lying supination on floor,Dumbbell_Lying_Supination,Dumbbell Lying Supination,0.667,no
+2749,lever assisted leg press,Leg_Press,Leg Press,0.667,no
+2810,barbell split squat v. 2,Barbell_Side_Split_Squat,Barbell Side Split Squat,0.667,no
+2951,lever horizontal leg press,Leg_Press,Leg Press,0.667,no
+2993,kettlebell goblet squat mobility,Goblet_Squat,Goblet Squat,0.667,no
+3030,barbell split squat,Barbell_Side_Split_Squat,Barbell Side Split Squat,0.667,no
+3187,kettlebell goblet squat jump,Goblet_Squat,Goblet Squat,0.667,no
+3193,glute-ham raise,Floor_Glute-Ham_Raise,Floor Glute-Ham Raise,0.667,no
+3233,cable seated supine grip row,Seated_Cable_Rows,Seated Cable Rows,0.667,no
+3310,barbell weighted bench press,Barbell_Bench_Press_-_Medium_Grip,Barbell Bench Press - Medium Grip,0.667,no
+3352,cable kneeling pull through,Pull_Through,Pull Through,0.667,no
+3357,cable seated on floor row with rope,Seated_Cable_Rows,Seated Cable Rows,0.667,no
+3385,lever seated leg press v. 2,Leg_Press,Leg Press,0.667,no
+3386,lever seated leg extension v. 2,Leg_Extensions,Leg Extensions,0.667,no
+3412,lying glute squeeze,Lying_Glute,Lying Glute,0.667,no
+3428,dumbbell front raise v. 3,Front_Dumbbell_Raise,Front Dumbbell Raise,0.667,no
+3440,split jump to box,Split_Jump,Split Jump,0.667,no
+3468,front hamstring stretch,Hamstring_Stretch,Hamstring Stretch,0.667,no
+3516,shoulder backbend stretch,Shoulder_Stretch,Shoulder Stretch,0.667,no
+3535,bodyweight pulse squat,Bodyweight_Squat,Bodyweight Squat,0.667,no
+3545,dumbbell incline alternate press,Incline_Dumbbell_Press,Incline Dumbbell Press,0.667,no
+3581,lunge with leg lift,Leg_Lift,Leg Lift,0.667,no
+3681,dumbbell squeeze bench press,Dumbbell_Bench_Press,Dumbbell Bench Press,0.667,no
+3687,dumbbell drag bicep curl,Dumbbell_Bicep_Curl,Dumbbell Bicep Curl,0.667,no
+3691,dumbbell goblet split squat,Split_Squat_with_Dumbbells,Split Squat with Dumbbells,0.667,no
+3731,barbell sumo romanian deadlift,Romanian_Deadlift,Romanian Deadlift,0.667,no
+3758,lever standing chest press,Leverage_Chest_Press,Leverage Chest Press,0.667,no
+3785,incline push-up (on box),Incline_Push-Up,Incline Push-Up,0.667,no
+3873,barbell hip thrust with resistance band,Barbell_Hip_Thrust,Barbell Hip Thrust,0.667,no
+3890,hanging knees to elbows,Elbow_to_Knee,Elbow to Knee,0.667,no
+3917,barbell reverse grip floor press,Floor_Press,Floor Press,0.667,no
+3920,cable triceps pushdown on floor,Triceps_Pushdown,Triceps Pushdown,0.667,no
+3972,dumbbell alternate shoulder press,Dumbbell_Shoulder_Press,Dumbbell Shoulder Press,0.667,no
+3999,standing air bike,Air_Bike,Air Bike,0.667,no
+4010,cable kneeling shoulder press,Cable_Shoulder_Press,Cable Shoulder Press,0.667,no
+4034,band standing hip extension,Hip_Extension_with_Bands,Hip Extension with Bands,0.667,no
+4044,single leg glute bridge with knee to chest,Single_Leg_Glute_Bridge,Single Leg Glute Bridge,0.667,no
+4048,dumbbell ipsilateral split squat,Split_Squat_with_Dumbbells,Split Squat with Dumbbells,0.667,no
+4061,barbell banded bench squat,Barbell_Squat_To_A_Bench,Barbell Squat To A Bench,0.667,no
+4067,dumbbell alternate arnold press,Arnold_Dumbbell_Press,Arnold Dumbbell Press,0.667,no
+4069,barbell bench press with 2 board,Barbell_Bench_Press_-_Medium_Grip,Barbell Bench Press - Medium Grip,0.667,no
+4070,barbell bench press with 1 board,Barbell_Bench_Press_-_Medium_Grip,Barbell Bench Press - Medium Grip,0.667,no
+4108,dumbbell standing arnold press,Arnold_Dumbbell_Press,Arnold Dumbbell Press,0.667,no
+4110,dumbbell seated zottman curl,Seated_Dumbbell_Curl,Seated Dumbbell Curl,0.667,no
+4127,weighted dead bug,Dead_Bug,Dead Bug,0.667,no
+4173,barbell banded romanian deadlift,Romanian_Deadlift,Romanian Deadlift,0.667,no
+4183,dumbbell seated cuban press,Cuban_Press,Cuban Press,0.667,no
+4184,dumbbell banded bench press,Dumbbell_Bench_Press,Dumbbell Bench Press,0.667,no
+4213,lever banded chest press,Leverage_Chest_Press,Leverage Chest Press,0.667,no
+4224,cable lying pallof press,Pallof_Press,Pallof Press,0.667,no
+4227,cable lying front raise,Front_Cable_Raise,Front Cable Raise,0.667,no
+4237,dumbbell seated close grip press,Seated_Dumbbell_Press,Seated Dumbbell Press,0.667,no
+4278,circles knee stretch v. 2,Knee_Circles,Knee Circles,0.667,no
+4294,bodyweight overhead squat,Bodyweight_Squat,Bodyweight Squat,0.667,no
+4330,reverse crunch kick,Reverse_Crunch,Reverse Crunch,0.667,no
+4341,dumbbell alternate front raise,Front_Dumbbell_Raise,Front Dumbbell Raise,0.667,no
+4350,cable lying regular grip curl,Lying_Cable_Curl,Lying Cable Curl,0.667,no
+4352,bench dip on floor v. 2,Bench_Dips,Bench Dips,0.667,no
+4355,cable triceps pushdown (v bar) v. 2,Triceps_Pushdown,Triceps Pushdown,0.667,no
+4356,cable horizontal pallof press v. 2,Pallof_Press,Pallof Press,0.667,no
+4360,bench dip with legs on bench,Bench_Dips,Bench Dips,0.667,no
+4414,barbell bench press with band suspended kettlebell,Barbell_Bench_Press_-_Medium_Grip,Barbell Bench Press - Medium Grip,0.667,no
+4448,barbell resistance band hip thrust,Barbell_Hip_Thrust,Barbell Hip Thrust,0.667,no
+4542,kettlebell clean and jerk,One-Arm_Kettlebell_Clean_and_Jerk,One-Arm Kettlebell Clean and Jerk,0.667,no
+4544,band incline bench press,Bench_Press_-_With_Bands,Bench Press - With Bands,0.667,no
+4554,seated glute stretch v. 2,Seated_Glute,Seated Glute,0.667,no
+4558,child to cobra pose,Childs_Pose,Child's Pose,0.667,no
+4568,resistance band pull apart,Band_Pull_Apart,Band Pull Apart,0.667,no
+4580,cat cow stretch,Cat_Stretch,Cat Stretch,0.667,no
+4672,elbows back stretch,Elbows_Back,Elbows Back,0.667,no
+4731,dumbbell bridge bench press,Dumbbell_Bench_Press,Dumbbell Bench Press,0.667,no
+4745,dumbbell kneeling arnold press,Arnold_Dumbbell_Press,Arnold Dumbbell Press,0.667,no
+4752,dumbbell side bench squat,Dumbbell_Squat_To_A_Bench,Dumbbell Squat To A Bench,0.667,no
+4769,inverted row slide,Inverted_Row,Inverted Row,0.667,no
+4770,inverted wide row,Inverted_Row,Inverted Row,0.667,no
+4778,reverse crunch v. 3,Reverse_Crunch,Reverse Crunch,0.667,no
+4791,single leg glute bridge (arms on chest),Single_Leg_Glute_Bridge,Single Leg Glute Bridge,0.667,no
+4835,dumbbell rotational grip bench press,Dumbbell_Bench_Press,Dumbbell Bench Press,0.667,no
+4848,barbell pin front squat,Front_Barbell_Squat,Front Barbell Squat,0.667,no
+4862,barbell standing snatch grip shrug,Snatch_Shrug,Snatch Shrug,0.667,no
+4961,dumbbell prone triceps kickback,Tricep_Dumbbell_Kickback,Tricep Dumbbell Kickback,0.667,no
+5013,barbell pause bench press,Barbell_Bench_Press_-_Medium_Grip,Barbell Bench Press - Medium Grip,0.667,no
+5028,dumbbell goblet split squat v. 2,Split_Squat_with_Dumbbells,Split Squat with Dumbbells,0.667,no
+5067,dumbbell incline squeeze press,Incline_Dumbbell_Press,Incline Dumbbell Press,0.667,no
+5088,cable shoulder internal rotation,Cable_Internal_Rotation,Cable Internal Rotation,0.667,no
+5110,triceps dip floor,Dips_-_Triceps_Version,Dips - Triceps Version,0.667,no
+5130,triceps dip floor v. 2,Dips_-_Triceps_Version,Dips - Triceps Version,0.667,no
+5144,medicine ball chest pass against wall,Medicine_Ball_Chest_Pass,Medicine Ball Chest Pass,0.667,no
+5167,single leg glute bridge with external rotation,Single_Leg_Glute_Bridge,Single Leg Glute Bridge,0.667,no
+5198,single straight leg glute bridge hold,Single_Leg_Glute_Bridge,Single Leg Glute Bridge,0.667,no
+5201,dumbbell waiter biceps curl,Dumbbell_Bicep_Curl,Dumbbell Bicep Curl,0.667,no
+5261,dumbbell incline shoulders press,Dumbbell_Shoulder_Press,Dumbbell Shoulder Press,0.667,no
+5274,lying tuck crunch,Tuck_Crunch,Tuck Crunch,0.667,no
+5297,cable kneeling preacher curl,Cable_Preacher_Curl,Cable Preacher Curl,0.667,no
+5328,barbell standing shoulders press,Barbell_Shoulder_Press,Barbell Shoulder Press,0.667,no
+5401,stick shoulders stretch,Shoulder_Stretch,Shoulder Stretch,0.667,no
+5451,barbell kas glute bridge,Barbell_Glute_Bridge,Barbell Glute Bridge,0.667,no
+5496,kettlebell elevated goblet squat,Goblet_Squat,Goblet Squat,0.667,no
+5517,supinated grip inverted row,Inverted_Row,Inverted Row,0.667,no
+5583,lever ab coaster crunch,Ab_Crunch_Machine,Ab Crunch Machine,0.667,no
+5609,cable standing face pull,Face_Pull,Face Pull,0.667,no
+5632,barbell shoulder grip upright row,Upright_Barbell_Row,Upright Barbell Row,0.667,no
+5656,cable standing face pull (with rope),Face_Pull,Face Pull,0.667,no
+5658,cable seated face pull (with rope),Face_Pull,Face Pull,0.667,no
+5671,bodyweight single leg kas glute bridge,Single_Leg_Glute_Bridge,Single Leg Glute Bridge,0.667,no
+5698,dumbbell walking calf raise,Calf_Raise_On_A_Dumbbell,Calf Raise On A Dumbbell,0.667,no
+5814,cable low chest press,Cable_Chest_Press,Cable Chest Press,0.667,no
+5816,dumbbell one arm side lying bench press,One_Arm_Dumbbell_Bench_Press,One Arm Dumbbell Bench Press,0.667,no
+6140,dumbbell seated external rotation,External_Rotation,External Rotation,0.667,no
+6149,dumbbell seated drag curl,Seated_Dumbbell_Curl,Seated Dumbbell Curl,0.667,no
+6162,dumbbell incline low fly,Incline_Dumbbell_Flyes,Incline Dumbbell Flyes,0.667,no
+6218,dumbbell incline twist press,Incline_Dumbbell_Press,Incline Dumbbell Press,0.667,no
+6328,dumbbell low split squat,Split_Squat_with_Dumbbells,Split Squat with Dumbbells,0.667,no
+6360,cable standing wrist curl,Cable_Wrist_Curl,Cable Wrist Curl,0.667,no
+6406,ez barbell preacher curl,Reverse_Barbell_Preacher_Curls,Reverse Barbell Preacher Curls,0.667,no
+6523,lever linear hack squat,Hack_Squat,Hack Squat,0.667,no
+6541,bodyweight bench squat,Bodyweight_Squat,Bodyweight Squat,0.667,no
+6600,bodyweight supported squat,Bodyweight_Squat,Bodyweight Squat,0.667,no
+7176,lever seated calf press v. 2,Calf_Press,Calf Press,0.667,no
+7548,kettlebell swing to goblet squat,Goblet_Squat,Goblet Squat,0.667,no
+7591,cable lying face pull,Face_Pull,Face Pull,0.667,no
+7620,barbell banded bench press,Barbell_Bench_Press_-_Medium_Grip,Barbell Bench Press - Medium Grip,0.667,no
+7839,dead bug v. 3,Dead_Bug,Dead Bug,0.667,no
+7864,lever overhead triceps extension,Machine_Triceps_Extension,Machine Triceps Extension,0.667,no
+7879,dumbbell incline triceps kickback,Tricep_Dumbbell_Kickback,Tricep Dumbbell Kickback,0.667,no
+7880,dumbbell kneeling triceps kickback,Tricep_Dumbbell_Kickback,Tricep Dumbbell Kickback,0.667,no
+8188,standing ankle circles v. 2,Ankle_Circles,Ankle Circles,0.667,no
+8375,lever angled leg press,Leg_Press,Leg Press,0.667,no
+0422,dumbbell standing one arm curl (over incline bench),Standing_One-Arm_Dumbbell_Curl_Over_Incline_Bench,Standing One-Arm Dumbbell Curl Over Incline Bench,0.625,no
+1680,dumbbell standing one arm curl over incline bench,Standing_One-Arm_Dumbbell_Curl_Over_Incline_Bench,Standing One-Arm Dumbbell Curl Over Incline Bench,0.625,no
+0064,barbell one arm bent over row,Bent_Over_Barbell_Row,Bent Over Barbell Row,0.6,no
+0086,barbell seated behind head military press,Seated_Barbell_Military_Press,Seated Barbell Military Press,0.6,no
+0092,barbell seated overhead triceps extension,Standing_Overhead_Barbell_Triceps_Extension,Standing Overhead Barbell Triceps Extension,0.6,no
+0326,dumbbell incline rear lateral raise,Dumbbell_Lying_Rear_Lateral_Raise,Dumbbell Lying Rear Lateral Raise,0.6,no
+0342,dumbbell lying one arm press v. 2,One_Arm_Dumbbell_Bench_Press,One Arm Dumbbell Bench Press,0.6,no
+0343,dumbbell lying one arm press,One_Arm_Dumbbell_Bench_Press,One Arm Dumbbell Bench Press,0.6,no
+0397,dumbbell seated neutral wrist curl,Seated_Dumbbell_Palms-Down_Wrist_Curl,Seated Dumbbell Palms-Down Wrist Curl,0.6,no
+0421,dumbbell standing one arm concentration curl,Standing_Concentration_Curl,Standing Concentration Curl,0.6,no
+0425,dumbbell standing one arm reverse curl,Standing_Dumbbell_Reverse_Curl,Standing Dumbbell Reverse Curl,0.6,no
+0474,hanging straight leg hip raise,Hanging_Leg_Raise,Hanging Leg Raise,0.6,no
+0570,leg pull in flat bench,Flat_Bench_Leg_Pull-In,Flat Bench Leg Pull-In,0.6,no
+0589,lever one arm bent over row,Bent_Over_Barbell_Row,Bent Over Barbell Row,0.6,no
+0690,seated lower back stretch,Chair_Lower_Back_Stretch,Chair Lower Back Stretch,0.6,no
+0693,seated straight leg calf stretch,Seated_Calf_Stretch,Seated Calf Stretch,0.6,no
+10462,seated hamstring stretch on a chair,Seated_Floor_Hamstring_Stretch,Seated Floor Hamstring Stretch,0.6,no
+10549,elevated single leg bridge,Single_Leg_Glute_Bridge,Single Leg Glute Bridge,0.6,no
+10669,lever stack seated incline chest press,Leverage_Incline_Chest_Press,Leverage Incline Chest Press,0.6,no
+10922,standing back achilles stretch,Standing_Soleus_And_Achilles_Stretch,Standing Soleus And Achilles Stretch,0.6,no
+11436,cable standing neutral grip overhead triceps extension,Cable_Rope_Overhead_Triceps_Extension,Cable Rope Overhead Triceps Extension,0.6,no
+11567,lever lying leg curl to reverse hyperextension,Lying_Leg_Curls,Lying Leg Curls,0.6,no
+1163,lying leg raise,Flat_Bench_Lying_Leg_Raise,Flat Bench Lying Leg Raise,0.6,no
+1165,barbell standing military press (without rack),Standing_Military_Press,Standing Military Press,0.6,no
+1173,barbell incline wide reverse grip bench press,Barbell_Incline_Bench_Press_-_Medium_Grip,Barbell Incline Bench Press - Medium Grip,0.6,no
+11762,smith bent over row (chest supported),Smith_Machine_Bent_Over_Row,Smith Machine Bent Over Row,0.6,no
+1178,dumbbell standing single leg calf raise,Standing_Dumbbell_Calf_Raise,Standing Dumbbell Calf Raise,0.6,no
+1216,lever seated one leg calf raise,Seated_Calf_Raise,Seated Calf Raise,0.6,no
+1228,dumbbell standing inner biceps curl,Incline_Inner_Biceps_Curl,Incline Inner Biceps Curl,0.6,no
+1272,chest stretch with exercise ball,Chest_Stretch_on_Stability_Ball,Chest Stretch on Stability Ball,0.6,no
+1281,dumbbell incline one arm press,One_Arm_Dumbbell_Bench_Press,One Arm Dumbbell Bench Press,0.6,no
+1285,dumbbell one arm bench fly,One_Arm_Dumbbell_Bench_Press,One Arm Dumbbell Bench Press,0.6,no
+1328,dumbbell lying rear delt row,Lying_Rear_Delt_Raise,Lying Rear Delt Raise,0.6,no
+1353,medicine ball catch and overhead throw,Catch_and_Overhead_Throw,Catch and Overhead Throw,0.6,no
+1392,sled one leg calf press on leg press,Calf_Press_On_The_Leg_Press_Machine,Calf Press On The Leg Press Machine,0.6,no
+1395,smith seated one leg calf raise,Seated_Calf_Raise,Seated Calf Raise,0.6,no
+1398,standing calves calf stretch,Standing_Gastrocnemius_Calf_Stretch,Standing Gastrocnemius Calf Stretch,0.6,no
+1512,all fours squad stretch,All_Fours_Quad_Stretch,All Fours Quad Stretch,0.6,no
+1606,cable reverse grip triceps pushdown (sz bar),Reverse_Grip_Triceps_Pushdown,Reverse Grip Triceps Pushdown,0.6,no
+1622,dumbbell one arm reverse grip press,One_Arm_Dumbbell_Bench_Press,One Arm Dumbbell Bench Press,0.6,no
+1623,dumbbell palms in incline bench press,Hammer_Grip_Incline_DB_Bench_Press,Hammer Grip Incline DB Bench Press,0.6,no
+1665,dumbbell one arm prone curl,One_Arm_Dumbbell_Preacher_Curl,One Arm Dumbbell Preacher Curl,0.6,no
+1670,dumbbell one arm standing curl,One_Arm_Dumbbell_Preacher_Curl,One Arm Dumbbell Preacher Curl,0.6,no
+1722,cable high pulley overhead tricep extension,Cable_Rope_Overhead_Triceps_Extension,Cable Rope Overhead Triceps Extension,0.6,no
+1723,cable one arm tricep pushdown,Cable_One_Arm_Tricep_Extension,Cable One Arm Tricep Extension,0.6,no
+1724,cable rope high pulley overhead tricep extension,Cable_Rope_Overhead_Triceps_Extension,Cable Rope Overhead Triceps Extension,0.6,no
+1750,medicine ball supine chest throw,Supine_Chest_Throw,Supine Chest Throw,0.6,no
+1794,reach forward upper back stretch,Upper_Back_Stretch,Upper Back Stretch,0.6,no
+1845,decline bent leg reverse crunch,Decline_Reverse_Crunch,Decline Reverse Crunch,0.6,no
+2188,dumbbell seated triceps extension,Seated_Bent-Over_One-Arm_Dumbbell_Triceps_Extension,Seated Bent-Over One-Arm Dumbbell Triceps Extension,0.6,no
+2189,dumbbells seated triceps extension,Seated_Bent-Over_One-Arm_Dumbbell_Triceps_Extension,Seated Bent-Over One-Arm Dumbbell Triceps Extension,0.6,no
+2321,dumbbell standing inner biceps curl v. 2,Incline_Inner_Biceps_Curl,Incline Inner Biceps Curl,0.6,no
+2403,dumbbell alternate biceps curl (with arm blaster),Dumbbell_Alternate_Bicep_Curl,Dumbbell Alternate Bicep Curl,0.6,no
+2405,cable triceps pushdown (v-bar) (with arm blaster),Triceps_Pushdown_-_V-Bar_Attachment,Triceps Pushdown - V-Bar Attachment,0.6,no
+2659,lever incline chest press (plate loaded),Leverage_Incline_Chest_Press,Leverage Incline Chest Press,0.6,no
+2666,lever seated calf raise (plate loaded) v. 2,Seated_Calf_Raise,Seated Calf Raise,0.6,no
+2890,front plank to push up,Push_Up_to_Side_Plank,Push Up to Side Plank,0.6,no
+3084,dumbbell single arm preacher curl,One_Arm_Dumbbell_Preacher_Curl,One Arm Dumbbell Preacher Curl,0.6,no
+3560,dumbbell standing alternate hammer curl and press,Alternate_Hammer_Curl,Alternate Hammer Curl,0.6,no
+3645,single leg bridge with outstretched leg,Single_Leg_Glute_Bridge,Single Leg Glute Bridge,0.6,no
+3713,dumbbell standing single leg calf raise v. 2,Standing_Dumbbell_Calf_Raise,Standing Dumbbell Calf Raise,0.6,no
+3799,dumbbell bent over reverse row,Bent_Over_Two-Dumbbell_Row,Bent Over Two-Dumbbell Row,0.6,no
+3922,side push up with towel,Push_Up_to_Side_Plank,Push Up to Side Plank,0.6,no
+3945,smith single arm bent over row,Smith_Machine_Bent_Over_Row,Smith Machine Bent Over Row,0.6,no
+3980,dumbbell incline front raise with chest support,Front_Incline_Dumbbell_Raise,Front Incline Dumbbell Raise,0.6,no
+3992,barbell bent over wide row plus,Bent_Over_Barbell_Row,Bent Over Barbell Row,0.6,no
+4104,trap bar bent over row,Bent_Over_Barbell_Row,Bent Over Barbell Row,0.6,no
+4115,cable overhead tricep extension straight bar,Cable_Rope_Overhead_Triceps_Extension,Cable Rope Overhead Triceps Extension,0.6,no
+4238,dumbbell seated lateral to front raise,Seated_Side_Lateral_Raise,Seated Side Lateral Raise,0.6,no
+4344,barbell incline triceps extension skull crusher,Incline_Barbell_Triceps_Extension,Incline Barbell Triceps Extension,0.6,no
+4743,dumbbell incline biceps curl v. 3,Incline_Inner_Biceps_Curl,Incline Inner Biceps Curl,0.6,no
+4749,dumbbell rdl and bent over row,Bent_Over_Two-Dumbbell_Row,Bent Over Two-Dumbbell Row,0.6,no
+4808,lying leg raise v. 2,Flat_Bench_Lying_Leg_Raise,Flat Bench Lying Leg Raise,0.6,no
+4857,barbell behind the back push press,Push_Press_-_Behind_the_Neck,Push Press - Behind the Neck,0.6,no
+4890,glute ham raise with extended arms,Glute_Ham_Raise,Glute Ham Raise,0.6,no
+4958,cable overhead single arm triceps extension (rope attachment),Cable_Rope_Overhead_Triceps_Extension,Cable Rope Overhead Triceps Extension,0.6,no
+5232,dumbbell deadlift bent over row,Bent_Over_Two-Dumbbell_Row,Bent Over Two-Dumbbell Row,0.6,no
+5316,smith bent over narrow pronated grip row,Smith_Machine_Bent_Over_Row,Smith Machine Bent Over Row,0.6,no
+5528,cable standing crossover overhead tricep extension,Cable_Rope_Overhead_Triceps_Extension,Cable Rope Overhead Triceps Extension,0.6,no
+5911,safety bar good morning,Hanging_Bar_Good_Morning,Hanging Bar Good Morning,0.6,no
+6136,dumbbell bent over scapula row,Bent_Over_Two-Dumbbell_Row,Bent Over Two-Dumbbell Row,0.6,no
+6513,lever bent over row (with chest support),Smith_Machine_Bent_Over_Row,Smith Machine Bent Over Row,0.6,no
+7310,seated hamstring stretch with chair,Seated_Floor_Hamstring_Stretch,Seated Floor Hamstring Stretch,0.6,no
+7418,staggered leg glute bridge,Single_Leg_Glute_Bridge,Single Leg Glute Bridge,0.6,no
+7419,straight leg glute bridge,Single_Leg_Glute_Bridge,Single Leg Glute Bridge,0.6,no
+7449,dumbbell standing front and lateral raise,Side_Laterals_to_Front_Raise,Side Laterals to Front Raise,0.6,no
+7892,dumbbell seated triceps extension v. 2,Seated_Bent-Over_One-Arm_Dumbbell_Triceps_Extension,Seated Bent-Over One-Arm Dumbbell Triceps Extension,0.6,no
+8604,lever seated leg curl (plate loaded),Seated_Leg_Curl,Seated Leg Curl,0.6,no
+9933,dumbbell seated alternating lateral raise,Seated_Side_Lateral_Raise,Seated Side Lateral Raise,0.6,no
+0367,dumbbell over bench one arm wrist curl,Palms-Down_Dumbbell_Wrist_Curl_Over_A_Bench,Palms-Down Dumbbell Wrist Curl Over A Bench,0.571,no
+0531,kettlebell extended range one arm press on floor,Extended_Range_One-Arm_Kettlebell_Floor_Press,Extended Range One-Arm Kettlebell Floor Press,0.571,no
+1411,barbell palms down wrist curl over a bench,Palms-Down_Wrist_Curl_Over_A_Bench,Palms-Down Wrist Curl Over A Bench,0.571,no
+1412,barbell palms up wrist curl over a bench,Palms-Down_Wrist_Curl_Over_A_Bench,Palms-Down Wrist Curl Over A Bench,0.571,no
+1720,barbell lying back of the head tricep extension,Lying_Close-Grip_Barbell_Triceps_Extension_Behind_The_Head,Lying Close-Grip Barbell Triceps Extension Behind The Head,0.571,no
+1727,cable standing reverse grip one arm overhead tricep extension,Cable_One_Arm_Tricep_Extension,Cable One Arm Tricep Extension,0.571,no
+3353,cable one arm high pulley overhead tricep extension,Cable_One_Arm_Tricep_Extension,Cable One Arm Tricep Extension,0.571,no
+3616,sled 45 degrees narrow stance leg press,Narrow_Stance_Leg_Press,Narrow Stance Leg Press,0.571,no
+4054,dumbbell one arm triceps extension on stability ball,One_Arm_Pronated_Dumbbell_Triceps_Extension,One Arm Pronated Dumbbell Triceps Extension,0.571,no
+4908,dumbbell over bench reverse wrist curl with mat,Palms-Down_Dumbbell_Wrist_Curl_Over_A_Bench,Palms-Down Dumbbell Wrist Curl Over A Bench,0.571,no
+6001,single straight leg glute bridge hold (left),Single_Leg_Glute_Bridge,Single Leg Glute Bridge,0.571,no
+0055,barbell lying close-grip press,Close-Grip_Barbell_Bench_Press,Close-Grip Barbell Bench Press,0.5,no
+0061,barbell lying triceps extension,Incline_Barbell_Triceps_Extension,Incline Barbell Triceps Extension,0.5,no
+0073,barbell pullover,Bent-Arm_Barbell_Pullover,Bent-Arm Barbell Pullover,0.5,no
+0075,barbell rear delt raise,Barbell_Rear_Delt_Row,Barbell Rear Delt Row,0.5,no
+0083,barbell rollerout from bench,Barbell_Rollout_from_Bench,Barbell Rollout from Bench,0.5,no
+0102,barbell squat (on knees),Barbell_Squat,Barbell Squat,0.5,no
+0106,barbell standing close grip curl,Close-Grip_Standing_Barbell_Curl,Close-Grip Standing Barbell Curl,0.5,no
+0125,barbell wrist curl v. 2,Seated_Palm-Up_Barbell_Wrist_Curl,Seated Palm-Up Barbell Wrist Curl,0.5,no
+0126,barbell wrist curl,Seated_Palm-Up_Barbell_Wrist_Curl,Seated Palm-Up Barbell Wrist Curl,0.5,no
+0129,bench dip (knees bent),Bench_Dips,Bench Dips,0.5,no
+0134,bent side knee push up,Push_Up_to_Side_Plank,Push Up to Side Plank,0.5,no
+0149,cable alternate triceps extension,Cable_Incline_Triceps_Extension,Cable Incline Triceps Extension,0.5,no
+0159,cable decline seated wide-grip row,Seated_Cable_Rows,Seated Cable Rows,0.5,no
+0160,cable floor seated wide-grip row,Seated_Cable_Rows,Seated Cable Rows,0.5,no
+0169,cable incline bench press,Incline_Cable_Chest_Press,Incline Cable Chest Press,0.5,no
+0170,cable incline fly (on stability ball),Incline_Cable_Flye,Incline Cable Flye,0.5,no
+0175,cable kneeling crunch,Cable_Crunch,Cable Crunch,0.5,no
+0198,cable pulldown,Rope_Straight-Arm_Pulldown,Rope Straight-Arm Pulldown,0.5,no
+0200,cable pushdown (with rope attachment),Triceps_Pushdown,Triceps Pushdown,0.5,no
+0203,cable rear delt row (with rope),Cable_Rear_Delt_Fly,Cable Rear Delt Fly,0.5,no
+0216,cable seated shoulder internal rotation,Cable_Internal_Rotation,Cable Internal Rotation,0.5,no
+0224,cable standing back wrist curl,Cable_Wrist_Curl,Cable Wrist Curl,0.5,no
+0229,cable standing inner curl,Standing_Biceps_Cable_Curl,Standing Biceps Cable Curl,0.5,no
+0235,cable standing shoulder external rotation,External_Rotation_with_Cable,External Rotation with Cable,0.5,no
+0239,cable straight back seated row,Seated_Cable_Rows,Seated Cable Rows,0.5,no
+0268,crunch (leg raise),Hanging_Leg_Raise,Hanging Leg Raise,0.5,no
+0271,crunch (on stability ball),Exercise_Ball_Crunch,Exercise Ball Crunch,0.5,no
+0282,decline sit-up,Sit-Up,Sit-Up,0.5,no
+0303,dumbbell decline hammer press,Decline_Dumbbell_Bench_Press,Decline Dumbbell Bench Press,0.5,no
+0304,dumbbell decline shrug v. 2,Dumbbell_Shrug,Dumbbell Shrug,0.5,no
+0305,dumbbell decline shrug,Dumbbell_Shrug,Dumbbell Shrug,0.5,no
+0323,dumbbell incline one arm lateral raise,One-Arm_Incline_Lateral_Raise,One-Arm Incline Lateral Raise,0.5,no
+0329,dumbbell incline shrug,Dumbbell_Shrug,Dumbbell Shrug,0.5,no
+0330,dumbbell incline triceps extension,Decline_Dumbbell_Triceps_Extension,Decline Dumbbell Triceps Extension,0.5,no
+0333,dumbbell kickback,Tricep_Dumbbell_Kickback,Tricep Dumbbell Kickback,0.5,no
+0357,dumbbell one arm press (on stability ball),One_Arm_Dumbbell_Bench_Press,One Arm Dumbbell Bench Press,0.5,no
+0360,dumbbell one arm shoulder press v. 2,Dumbbell_Shoulder_Press,Dumbbell Shoulder Press,0.5,no
+0361,dumbbell one arm shoulder press,Dumbbell_Shoulder_Press,Dumbbell Shoulder Press,0.5,no
+0366,dumbbell over bench one arm neutral wrist curl,Palms-Down_Dumbbell_Wrist_Curl_Over_A_Bench,Palms-Down Dumbbell Wrist Curl Over A Bench,0.5,no
+0371,dumbbell plyo squat,Dumbbell_Squat,Dumbbell Squat,0.5,no
+0373,dumbbell pronate-grip triceps extension,Decline_Dumbbell_Triceps_Extension,Decline Dumbbell Triceps Extension,0.5,no
+0379,dumbbell rear lateral raise (support head),Dumbbell_Lying_Rear_Lateral_Raise,Dumbbell Lying Rear Lateral Raise,0.5,no
+0384,dumbbell reverse preacher curl,Preacher_Hammer_Dumbbell_Curl,Preacher Hammer Dumbbell Curl,0.5,no
+0387,dumbbell seated alternate front raise,Front_Dumbbell_Raise,Front Dumbbell Raise,0.5,no
+0390,dumbbell seated biceps curl (on stability ball),Seated_Dumbbell_Inner_Biceps_Curl,Seated Dumbbell Inner Biceps Curl,0.5,no
+0400,dumbbell seated one leg calf raise,Dumbbell_Seated_One-Leg_Calf_Raise,Dumbbell Seated One-Leg Calf Raise,0.5,no
+0401,dumbbell seated palms up wrist curl,Seated_Dumbbell_Palms-Down_Wrist_Curl,Seated Dumbbell Palms-Down Wrist Curl,0.5,no
+0403,dumbbell seated revers grip concentration curl,Concentration_Curls,Concentration Curls,0.5,no
+0404,dumbbell seated shoulder press (parallel grip),Dumbbell_Shoulder_Press,Dumbbell Shoulder Press,0.5,no
+0409,dumbbell single leg calf raise,Calf_Raise_On_A_Dumbbell,Calf Raise On A Dumbbell,0.5,no
+0410,dumbbell single leg split squat,Split_Squat_with_Dumbbells,Split Squat with Dumbbells,0.5,no
+0414,dumbbell standing alternate overhead press,Standing_Dumbbell_Press,Standing Dumbbell Press,0.5,no
+0423,dumbbell standing one arm extension,One_Arm_Pronated_Dumbbell_Triceps_Extension,One Arm Pronated Dumbbell Triceps Extension,0.5,no
+0428,dumbbell standing preacher curl,Preacher_Hammer_Dumbbell_Curl,Preacher Hammer Dumbbell Curl,0.5,no
+0447,ez barbell curl,EZ-Bar_Curl,EZ-Bar Curl,0.5,no
+0463,front plank,Plank,Plank,0.5,no
+0469,groin crunch,Crunches,Crunches,0.5,no
+0487,hip raise crunch,Bent-Knee_Hip_Raise,Bent-Knee Hip Raise,0.5,no
+0539,kettlebell one arm military press to the side,One-Arm_Kettlebell_Military_Press_To_The_Side,One-Arm Kettlebell Military Press To The Side,0.5,no
+0559,knee to chest stretch,One_Knee_To_Chest,One Knee To Chest,0.5,no
+0580,lever gripless shrug,Leverage_Shrug,Leverage Shrug,0.5,no
+0582,lever kneeling leg curl,Lying_Leg_Curls,Lying Leg Curls,0.5,no
+0590,lever one arm shoulder press,Leverage_Shoulder_Press,Leverage Shoulder Press,0.5,no
+0601,lever seated reverse fly (parallel grip),Reverse_Machine_Flyes,Reverse Machine Flyes,0.5,no
+0627,mixed grip chin-up,Chin-Up,Chin-Up,0.5,no
+0634,negative crunch,Crunches,Crunches,0.5,no
+0637,olympic barbell triceps extension,Incline_Barbell_Triceps_Extension,Incline Barbell Triceps Extension,0.5,no
+0640,one arm slam (with medicine ball),One-Arm_Medicine_Ball_Slam,One-Arm Medicine Ball Slam,0.5,no
+0647,plyo sit squat (wall),Sit_Squats,Sit Squats,0.5,no
+0650,pull-in (on stability ball),Exercise_Ball_Pull-In,Exercise Ball Pull-In,0.5,no
+0658,push-up (wall) v. 2,Pushups,Pushups,0.5,no
+0659,push-up (wall),Pushups,Pushups,0.5,no
+0674,reverse grip pull-up,Pullups,Pullups,0.5,no
+0689,seated leg raise,Hanging_Leg_Raise,Hanging Leg Raise,0.5,no
+0692,seated single leg hamstring stretch,Seated_Floor_Hamstring_Stretch,Seated Floor Hamstring Stretch,0.5,no
+0727,single leg calf raise (on a dumbbell),Calf_Raise_On_A_Dumbbell,Calf Raise On A Dumbbell,0.5,no
+0738,sled 45° calf press,Calf_Press,Calf Press,0.5,no
+0741,sled closer hack squat,Hack_Squat,Hack Squat,0.5,no
+0758,smith incline reverse-grip press,Leverage_Incline_Chest_Press,Leverage Incline Chest Press,0.5,no
+0774,smith standing military press,Machine_Shoulder_Military_Press,Machine Shoulder (Military) Press,0.5,no
+0791,standing hip abduction,Standing_Hip_Circles,Standing Hip Circles,0.5,no
+0803,superman push-up,Pushups,Pushups,0.5,no
+0806,suspended push-up,Pushups,Pushups,0.5,no
+0812,triceps dip (bench leg),Bench_Dips,Bench Dips,0.5,no
+0813,triceps dip (between benches),Dips_-_Triceps_Version,Dips - Triceps Version,0.5,no
+0832,weighted crunch,Crunches,Crunches,0.5,no
+0841,weighted pull-up,Pullups,Pullups,0.5,no
+0863,dumbbell lying external shoulder rotation,External_Rotation,External Rotation,0.5,no
+0864,dumbbell upright shoulder external rotation,External_Rotation,External Rotation,0.5,no
+0921,band standing external shoulder rotation,External_Rotation_with_Band,External Rotation with Band,0.5,no
+0924,band standing internal shoulder rotation,Internal_Rotation_with_Band,Internal Rotation with Band,0.5,no
+0935,band upright shoulder external rotation,External_Rotation_with_Band,External Rotation with Band,0.5,no
+0999,band single leg calf raise,Calf_Raises_-_With_Bands,Calf Raises - With Bands,0.5,no
+1003,band squat row,Squats_-_With_Bands,Squats - With Bands,0.5,no
+10092,barbell core squat,Barbell_Squat,Barbell Squat,0.5,no
+10118,medicine ball overhead slam circle,One-Arm_Medicine_Ball_Slam,One-Arm Medicine Ball Slam,0.5,no
+1027,assisted single leg press,Leg_Press,Leg Press,0.5,no
+1028,assisted standing triceps dip,Dips_-_Triceps_Version,Dips - Triceps Version,0.5,no
+10326,plank jump in squat,Freehand_Jump_Squat,Freehand Jump Squat,0.5,no
+10330,dumbbell powell raise,Dumbbell_Raise,Dumbbell Raise,0.5,no
+10345,superman pulse,Superman,Superman,0.5,no
+1039,lever full squat,Smith_Machine_Squat,Smith Machine Squat,0.5,no
+1045,barbell seated military press (inside squat cage),Seated_Barbell_Military_Press,Seated Barbell Military Press,0.5,no
+10558,medicine ball sit up slam,One-Arm_Medicine_Ball_Slam,One-Arm Medicine Ball Slam,0.5,no
+10559,dumbbell full front raise catch,Front_Dumbbell_Raise,Front Dumbbell Raise,0.5,no
+10592,half kneeling hamstrings stretch,Hamstring_Stretch,Hamstring Stretch,0.5,no
+1061,barbell one leg hip thrust,Barbell_Hip_Thrust,Barbell Hip Thrust,0.5,no
+10657,pilates machine lying calf raise,Smith_Machine_Calf_Raise,Smith Machine Calf Raise,0.5,no
+10671,lever stack seated chest press,Leverage_Chest_Press,Leverage Chest Press,0.5,no
+10673,kettlebell squat,Goblet_Squat,Goblet Squat,0.5,no
+10763,lever seated single leg curl (plate loaded),Seated_Leg_Curl,Seated Leg Curl,0.5,no
+10858,dumbbell lu raise,Dumbbell_Raise,Dumbbell Raise,0.5,no
+10906,bodyweight split squat hold,Bodyweight_Squat,Bodyweight Squat,0.5,no
+11060,cable face pull with external rotation,External_Rotation_with_Cable,External Rotation with Cable,0.5,no
+11274,cable standing alternating diagonal chest press v. 3,Standing_Cable_Chest_Press,Standing Cable Chest Press,0.5,no
+11277,cable standing front raise v. 3,Front_Cable_Raise,Front Cable Raise,0.5,no
+11303,smith bench squat,Smith_Machine_Squat,Smith Machine Squat,0.5,no
+11570,resistance band standing hip extension,Hip_Extension_with_Bands,Hip Extension with Bands,0.5,no
+1169,seated groin stretch,Groin_and_Back_Stretch,Groin and Back Stretch,0.5,no
+11764,cable standing single arm supinated grip chest press,Standing_Cable_Chest_Press,Standing Cable Chest Press,0.5,no
+1181,lying straight leg raise v. 2,Flat_Bench_Lying_Leg_Raise,Flat Bench Lying Leg Raise,0.5,no
+1197,squat,Bodyweight_Squat,Bodyweight Squat,0.5,no
+1211,cable twisting standing one arm chest press,Standing_Cable_Chest_Press,Standing Cable Chest Press,0.5,no
+1220,lever calf raise (bench press machine),Calf_Press,Calf Press,0.5,no
+1223,underhand grip inverted back row,Inverted_Row,Inverted Row,0.5,no
+1232,lever seated squat,Smith_Machine_Squat,Smith Machine Squat,0.5,no
+1238,cable seated row (bent bar),Seated_Cable_Rows,Seated Cable Rows,0.5,no
+1242,crunch (on bosu ball),Exercise_Ball_Crunch,Exercise Ball Crunch,0.5,no
+1245,lying leg raise and hold,Flat_Bench_Lying_Leg_Raise,Flat Bench Lying Leg Raise,0.5,no
+1258,barbell wide reverse grip bench press,Barbell_Bench_Press_-_Medium_Grip,Barbell Bench Press - Medium Grip,0.5,no
+1276,dumbbell decline one arm fly,Decline_Dumbbell_Flyes,Decline Dumbbell Flyes,0.5,no
+1278,dumbbell incline fly on exercise ball,Incline_Dumbbell_Flyes,Incline Dumbbell Flyes,0.5,no
+1279,dumbbell incline one arm fly,Incline_Dumbbell_Flyes,Incline Dumbbell Flyes,0.5,no
+1283,dumbbell incline press on exercise ball,Incline_Dumbbell_Press,Incline Dumbbell Press,0.5,no
+1287,dumbbell one arm decline chest press,One_Arm_Dumbbell_Bench_Press,One Arm Dumbbell Bench Press,0.5,no
+1289,dumbbell one arm incline chest press,One_Arm_Dumbbell_Bench_Press,One Arm Dumbbell Bench Press,0.5,no
+1290,dumbbell one arm press on exercise ball,One_Arm_Dumbbell_Bench_Press,One Arm Dumbbell Bench Press,0.5,no
+1309,smith wide grip decline bench press,Decline_Smith_Press,Decline Smith Press,0.5,no
+1325,cable wide grip rear pulldown behind neck,Wide-Grip_Pulldown_Behind_The_Neck,Wide-Grip Pulldown Behind The Neck,0.5,no
+1327,close grip chin-up,Chin-Up,Chin-Up,0.5,no
+1349,lever reverse t-bar row,Lying_T-Bar_Row,Lying T-Bar Row,0.5,no
+1351,lever t-bar reverse grip row,Lying_T-Bar_Row,Lying T-Bar Row,0.5,no
+1367,wide grip rear pull-up,Wide-Grip_Rear_Pull-Up,Wide-Grip Rear Pull-Up,0.5,no
+1370,barbell floor calf raise,Barbell_Seated_Calf_Raise,Barbell Seated Calf Raise,0.5,no
+1385,lever seated squat calf raise on leg press machine,Calf_Press_On_The_Leg_Press_Machine,Calf Press On The Leg Press Machine,0.5,no
+1405,back pec stretch,Dynamic_Back_Stretch,Dynamic Back Stretch,0.5,no
+1413,cable reverse one arm curl,Reverse_Cable_Curl,Reverse Cable Curl,0.5,no
+1429,wide grip pull-up,Pullups,Pullups,0.5,no
+1439,lever gripless shrug v. 2,Leverage_Shrug,Leverage Shrug,0.5,no
+1441,dumbbell over bench one arm reverse wrist curl,Palms-Down_Dumbbell_Wrist_Curl_Over_A_Bench,Palms-Down Dumbbell Wrist Curl Over A Bench,0.5,no
+1451,lever seated dip,Dip_Machine,Dip Machine,0.5,no
+1461,barbell full squat (back pov),Barbell_Full_Squat,Barbell Full Squat,0.5,no
+1462,barbell full squat (side pov),Barbell_Full_Squat,Barbell Full Squat,0.5,no
+1478,jack plank,Plank,Plank,0.5,no
+1488,shoulder stretch behind the back,Shoulder_Stretch,Shoulder Stretch,0.5,no
+1499,band behind neck shoulder press,Shoulder_Press_-_With_Bands,Shoulder Press - With Bands,0.5,no
+1514,barbell quarter squat,Barbell_Squat,Barbell Squat,0.5,no
+1550,dumbbell bench one leg squat,Dumbbell_Squat_To_A_Bench,Dumbbell Squat To A Bench,0.5,no
+1552,dumbbell jumping squat,Dumbbell_Squat,Dumbbell Squat,0.5,no
+1558,dumbbell wall squat,Dumbbell_Squat,Dumbbell Squat,0.5,no
+1576,leg up hamstring stretch,Hamstring_Stretch,Hamstring Stretch,0.5,no
+1583,sled reverse hack squat,Hack_Squat,Hack Squat,0.5,no
+1594,smith frankenstein squat,Smith_Machine_Squat,Smith Machine Squat,0.5,no
+1595,smith front squat,Smith_Machine_Squat,Smith Machine Squat,0.5,no
+1596,smith squat to bench,Smith_Machine_Squat,Smith Machine Squat,0.5,no
+1598,smith zercher squat,Smith_Machine_Squat,Smith Machine Squat,0.5,no
+1605,cable triceps pushdown (sz bar),Triceps_Pushdown,Triceps Pushdown,0.5,no
+1609,cable one arm side triceps pushdown,Cable_One_Arm_Tricep_Extension,Cable One Arm Tricep Extension,0.5,no
+1610,barbell behind back finger curl,Finger_Curls,Finger Curls,0.5,no
+1617,dumbbell decline one arm hammer press,One_Arm_Dumbbell_Bench_Press,One Arm Dumbbell Bench Press,0.5,no
+1618,dumbbell incline hammer press on exercise ball,Hammer_Grip_Incline_DB_Bench_Press,Hammer Grip Incline DB Bench Press,0.5,no
+1619,dumbbell incline one arm hammer press,Hammer_Grip_Incline_DB_Bench_Press,Hammer Grip Incline DB Bench Press,0.5,no
+1627,ez barbell close grip preacher curl,Reverse_Barbell_Preacher_Curls,Reverse Barbell Preacher Curls,0.5,no
+1633,cable one arm preacher curl,Cable_Preacher_Curl,Cable Preacher Curl,0.5,no
+1637,cable overhead curl on exercise ball,Overhead_Cable_Curl,Overhead Cable Curl,0.5,no
+1638,cable pulldown bicep curl,Standing_Biceps_Cable_Curl,Standing Biceps Cable Curl,0.5,no
+1647,dumbbell alternate preacher curl,Alternate_Hammer_Curl,Alternate Hammer Curl,0.5,no
+1653,dumbbell bicep curl with stork stance,Dumbbell_Bicep_Curl,Dumbbell Bicep Curl,0.5,no
+1659,dumbbell hammer curl on exercise ball,Hammer_Curls,Hammer Curls,0.5,no
+1662,dumbbell lying wide curl,Lying_Supine_Dumbbell_Curl,Lying Supine Dumbbell Curl,0.5,no
+1666,dumbbell one arm prone hammer curl,One_Arm_Dumbbell_Preacher_Curl,One Arm Dumbbell Preacher Curl,0.5,no
+1667,dumbbell one arm reverse spider curl,One_Arm_Dumbbell_Preacher_Curl,One Arm Dumbbell Preacher Curl,0.5,no
+1669,dumbbell one arm seated hammer curl,One_Arm_Dumbbell_Preacher_Curl,One Arm Dumbbell Preacher Curl,0.5,no
+1671,dumbbell one arm standing hammer curl,One_Arm_Dumbbell_Preacher_Curl,One Arm Dumbbell Preacher Curl,0.5,no
+1675,dumbbell reverse spider curl,Standing_Dumbbell_Reverse_Curl,Standing Dumbbell Reverse Curl,0.5,no
+1676,dumbbell seated alternate hammer curl on exercise ball,Alternate_Hammer_Curl,Alternate Hammer Curl,0.5,no
+1709,assisted lying glutes stretch,Lying_Glute,Lying Glute,0.5,no
+1729,dumbbell lying alternate extension,Lying_Dumbbell_Tricep_Extension,Lying Dumbbell Tricep Extension,0.5,no
+1735,dumbbell lying single extension,Lying_Dumbbell_Tricep_Extension,Lying Dumbbell Tricep Extension,0.5,no
+1738,dumbbell seated reverse grip one arm overhead tricep extension,One_Arm_Pronated_Dumbbell_Triceps_Extension,One Arm Pronated Dumbbell Triceps Extension,0.5,no
+1739,dumbbell standing alternating tricep kickback,Tricep_Dumbbell_Kickback,Tricep Dumbbell Kickback,0.5,no
+1740,dumbbell standing bent over one arm triceps extension,One_Arm_Pronated_Dumbbell_Triceps_Extension,One Arm Pronated Dumbbell Triceps Extension,0.5,no
+1742,dumbbell tricep kickback with stork stance,Tricep_Dumbbell_Kickback,Tricep Dumbbell Kickback,0.5,no
+1754,weighted three bench dips,Bench_Dips,Bench Dips,0.5,no
+1758,assisted sit-up,Sit-Up,Sit-Up,0.5,no
+1760,dumbbell goblet squat,Dumbbell_Squat,Dumbbell Squat,0.5,no
+1763,shoulder grip pull-up,Pullups,Pullups,0.5,no
+1782,reverse chest stretch,Dynamic_Chest_Stretch,Dynamic Chest Stretch,0.5,no
+1785,kneeling chest stretch,Dynamic_Chest_Stretch,Dynamic Chest Stretch,0.5,no
+1792,wrap around shoulder stretch,Shoulder_Stretch,Shoulder Stretch,0.5,no
+1793,cross over shoulder stretch,Shoulder_Stretch,Shoulder Stretch,0.5,no
+1815,forearm pronator stretch,Kneeling_Forearm_Stretch,Kneeling Forearm Stretch,0.5,no
+1828,reaching down triceps stretch,Triceps_Stretch,Triceps Stretch,0.5,no
+1829,triceps stretch against wall,Triceps_Stretch,Triceps Stretch,0.5,no
+1872,lever preacher curl (plate loaded),Machine_Preacher_Curls,Machine Preacher Curls,0.5,no
+1873,lever leg extension (plate loaded),Leg_Extensions,Leg Extensions,0.5,no
+1885,standing toe up achilles stretch,Standing_Soleus_And_Achilles_Stretch,Standing Soleus And Achilles Stretch,0.5,no
+1887,standing heel back achilles stretch,Standing_Soleus_And_Achilles_Stretch,Standing Soleus And Achilles Stretch,0.5,no
+1924,standing toe up calf stretch,Standing_Gastrocnemius_Calf_Stretch,Standing Gastrocnemius Calf Stretch,0.5,no
+1952,assisted one leg extension,Leg_Extensions,Leg Extensions,0.5,no
+1970,standing upright shoulders stretch,Shoulder_Stretch,Shoulder Stretch,0.5,no
+1972,sitting shoulders stretch on bench,Shoulder_Stretch,Shoulder Stretch,0.5,no
+1974,standing reverse shoulder stretch,Shoulder_Stretch,Shoulder Stretch,0.5,no
+1980,across chest shoulder stretch,Shoulder_Stretch,Shoulder Stretch,0.5,no
+1981,bent arm shoulder stretch,Shoulder_Stretch,Shoulder Stretch,0.5,no
+1983,reaching up shoulder stretch,Shoulder_Stretch,Shoulder Stretch,0.5,no
+1990,external shoulder rotation stretch,Shoulder_Stretch,Shoulder Stretch,0.5,no
+1991,internal shoulder rotation stretch,Shoulder_Stretch,Shoulder Stretch,0.5,no
+1992,sled full hack squat,Hack_Squat,Hack Squat,0.5,no
+2113,standing lower trunk lateral flexor stretch,Standing_Lateral_Stretch,Standing Lateral Stretch,0.5,no
+2119,standing side stretch,Standing_Lateral_Stretch,Standing Lateral Stretch,0.5,no
+2234,dumbbell standing lateral raise,Side_Lateral_Raise,Side Lateral Raise,0.5,no
+2300,inverted row bent knees,Inverted_Row,Inverted Row,0.5,no
+2317,dumbbell seated bent arm lateral raise,Seated_Side_Lateral_Raise,Seated Side Lateral Raise,0.5,no
+2324,cable straight legs pull through (with rope),Pull_Through,Pull Through,0.5,no
+2330,cable lat pulldown full range of motion,Full_Range-Of-Motion_Lat_Pulldown,Full Range-Of-Motion Lat Pulldown,0.5,no
+2334,sled lying calf press,Calf_Press,Calf Press,0.5,no
+2343,bent over row back (form check),Bent_Over_Barbell_Row,Bent Over Barbell Row,0.5,no
+2393,dumbbell one arm bent over row,Bent_Over_Two-Dumbbell_Row,Bent Over Two-Dumbbell Row,0.5,no
+2398,close-grip push-up (on knees),Close-Grip_Push-Up_off_of_a_Dumbbell,Close-Grip Push-Up off of a Dumbbell,0.5,no
+2401,dumbbell biceps curl (with arm blaster),Dumbbell_Bicep_Curl,Dumbbell Bicep Curl,0.5,no
+2402,dumbbell hammer curls (with arm blaster),Hammer_Curls,Hammer Curls,0.5,no
+2406,cable reverse grip triceps pushdown (sz-bar) (with arm blaster),Reverse_Grip_Triceps_Pushdown,Reverse Grip Triceps Pushdown,0.5,no
+2414,barbell standing concentration curl,Close-Grip_Standing_Barbell_Curl,Close-Grip Standing Barbell Curl,0.5,no
+2429,frog crunch,Crunches,Crunches,0.5,no
+2471,glute bridge two legs on floor,Single_Leg_Glute_Bridge,Single Leg Glute Bridge,0.5,no
+2473,glute bridge one leg on bench,Single_Leg_Glute_Bridge,Single Leg Glute Bridge,0.5,no
+2509,barbell reverse grip incline row,Reverse_Grip_Bent-Over_Rows,Reverse Grip Bent-Over Rows,0.5,no
+2544,cable wide grip rear pulldown behind neck v. 2,Wide-Grip_Pulldown_Behind_The_Neck,Wide-Grip Pulldown Behind The Neck,0.5,no
+2611,lever horizontal one leg press,Leg_Press,Leg Press,0.5,no
+2660,lever preacher curl (plate loaded) v. 2,Machine_Preacher_Curls,Machine Preacher Curls,0.5,no
+2689,cable one arm front raise,Front_Cable_Raise,Front Cable Raise,0.5,no
+2803,dumbbell supported squat,Dumbbell_Squat,Dumbbell Squat,0.5,no
+2804,dumbbell supported squat v. 2,Dumbbell_Squat,Dumbbell Squat,0.5,no
+2809,barbell split squat v. 3,Barbell_Side_Split_Squat,Barbell Side Split Squat,0.5,no
+2862,scissors,Scissor_Kick,Scissor Kick,0.5,no
+2900,ez barbell standing preacher curl,Reverse_Barbell_Preacher_Curls,Reverse Barbell Preacher Curls,0.5,no
+2901,power sled biceps curl,Machine_Bicep_Curl,Machine Bicep Curl,0.5,no
+2928,barbell overhead shrug,Barbell_Shrug,Barbell Shrug,0.5,no
+2950,lever belt squat,Smith_Machine_Squat,Smith Machine Squat,0.5,no
+2962,lever seated hammer grip shoulder press,Leverage_Shoulder_Press,Leverage Shoulder Press,0.5,no
+2964,barbell glute bridge (hands on bar),Barbell_Glute_Bridge,Barbell Glute Bridge,0.5,no
+2966,dumbbell front squat,Dumbbell_Squat,Dumbbell Squat,0.5,no
+2996,band single arm shoulder press,Shoulder_Press_-_With_Bands,Shoulder Press - With Bands,0.5,no
+2998,seated ankle stretch,Seated_Calf_Stretch,Seated Calf Stretch,0.5,no
+3019,bench pull-ups,Pullups,Pullups,0.5,no
+3040,cable bar high pulley overhead tricep extension,Cable_Rope_Overhead_Triceps_Extension,Cable Rope Overhead Triceps Extension,0.5,no
+3122,resistance band seated shoulder press,Shoulder_Press_-_With_Bands,Shoulder Press - With Bands,0.5,no
+3145,push-up plus,Pushups,Pushups,0.5,no
+3185,barbell bench press (with hanging band technique),Barbell_Bench_Press_-_Medium_Grip,Barbell Bench Press - Medium Grip,0.5,no
+3201,quarter sit-up,Sit-Up,Sit-Up,0.5,no
+3234,hyght dumbbell fly,Dumbbell_Flyes,Dumbbell Flyes,0.5,no
+3238,kneeling plank,Plank,Plank,0.5,no
+3263,lying full leg raise,Flat_Bench_Lying_Leg_Raise,Flat Bench Lying Leg Raise,0.5,no
+3268,lying leg raise to side,Flat_Bench_Lying_Leg_Raise,Flat Bench Lying Leg Raise,0.5,no
+3281,smith full squat,Smith_Machine_Squat,Smith Machine Squat,0.5,no
+3302,handstand,Handstand_Push-Ups,Handstand Push-Ups,0.5,no
+3309,barbell weighted front chest squat,Front_Barbell_Squat,Front Barbell Squat,0.5,no
+3311,barbell front squat (from blocks),Front_Barbell_Squat,Front Barbell Squat,0.5,no
+3381,inverted row under table,Inverted_Row,Inverted Row,0.5,no
+3388,inverted row between chairs,Inverted_Row,Inverted Row,0.5,no
+3435,single leg hip bridge (straight leg),Single_Leg_Glute_Bridge,Single Leg Glute Bridge,0.5,no
+3484,elbow to knee sit up,Elbow_to_Knee,Elbow to Knee,0.5,no
+3530,barbell banded squat,Barbell_Squat,Barbell Squat,0.5,no
+3543,bodyweight drop jump squat,Bodyweight_Squat,Bodyweight Squat,0.5,no
+3547,dumbbell seated biceps curl to shoulder press,Seated_Dumbbell_Inner_Biceps_Curl,Seated Dumbbell Inner Biceps Curl,0.5,no
+3583,single leg bridge with hip flexion,Single_Leg_Glute_Bridge,Single Leg Glute Bridge,0.5,no
+3587,weighted single leg lift,Leg_Lift,Leg Lift,0.5,no
+3622,v up,Bottoms_Up,Bottoms Up,0.5,no
+3630,standing hamstrings and back stretch,Hamstring_Stretch,Hamstring Stretch,0.5,no
+3654,barbell lying row on rack,Lying_Cambered_Barbell_Row,Lying Cambered Barbell Row,0.5,no
+3662,pike-to-cobra push-up,Pushups,Pushups,0.5,no
+3693,dumbbell bench supported external rotation,External_Rotation,External Rotation,0.5,no
+3694,dumbbell incline alternate reverse fly,Reverse_Flyes,Reverse Flyes,0.5,no
+3704,double jump squat,Freehand_Jump_Squat,Freehand Jump Squat,0.5,no
+3706,squat tuck jump,Freehand_Jump_Squat,Freehand Jump Squat,0.5,no
+3709,dumbbell overhead squat,Dumbbell_Squat,Dumbbell Squat,0.5,no
+3749,inverted row with bed sheet,Inverted_Row,Inverted Row,0.5,no
+3768,lever seated horizontal leg press,Leg_Press,Leg Press,0.5,no
+3838,crunch (on bench),Crunches,Crunches,0.5,no
+3856,resistance band smith squat,Smith_Machine_Squat,Smith Machine Squat,0.5,no
+3857,resistance band cable squat,Squats_-_With_Bands,Squats - With Bands,0.5,no
+3863,bulgarian jump squat,Freehand_Jump_Squat,Freehand Jump Squat,0.5,no
+3865,sprinter crunch,Crunches,Crunches,0.5,no
+3871,barbell front chest squat with resistance band,Front_Barbell_Squat,Front Barbell Squat,0.5,no
+3879,dumbbell poliquin lateral raise,Side_Lateral_Raise,Side Lateral Raise,0.5,no
+3880,cable leaning lateral raise,Cable_Seated_Lateral_Raise,Cable Seated Lateral Raise,0.5,no
+3911,dumbbell low fly,Dumbbell_Flyes,Dumbbell Flyes,0.5,no
+3913,dumbbell one arm front raise,Front_Dumbbell_Raise,Front Dumbbell Raise,0.5,no
+3914,cable rear delt row,Cable_Rear_Delt_Fly,Cable Rear Delt Fly,0.5,no
+3930,plank jack,Plank,Plank,0.5,no
+3939,band overhead triceps extension,Speed_Band_Overhead_Triceps,Speed Band Overhead Triceps,0.5,no
+3943,cable seated rear delt fly with chest support,Cable_Rear_Delt_Fly,Cable Rear Delt Fly,0.5,no
+3973,dumbbell single leg calf raise v. 2,Calf_Raise_On_A_Dumbbell,Calf Raise On A Dumbbell,0.5,no
+3991,barbell bent over wide alternate row plus,Bent_Over_Barbell_Row,Bent Over Barbell Row,0.5,no
+4014,cable standing front raise variation,Front_Cable_Raise,Front Cable Raise,0.5,no
+4016,barbell seated shrug,Barbell_Shrug,Barbell Shrug,0.5,no
+4035,band bent over hip extension,Hip_Extension_with_Bands,Hip Extension with Bands,0.5,no
+4055,dumbbell seated lateral raise on stability ball,Seated_Side_Lateral_Raise,Seated Side Lateral Raise,0.5,no
+4065,dumbbell standing alternate arnold press,Arnold_Dumbbell_Press,Arnold Dumbbell Press,0.5,no
+4068,barbell bench press with 3 board,Barbell_Bench_Press_-_Medium_Grip,Barbell Bench Press - Medium Grip,0.5,no
+4091,twist superman,Superman,Superman,0.5,no
+4097,reverse crunch to dead bug,Dead_Bug,Dead Bug,0.5,no
+4100,sled wide hack squat,Hack_Squat,Hack Squat,0.5,no
+4118,prisoner jump squat,Freehand_Jump_Squat,Freehand Jump Squat,0.5,no
+4119,power sled triceps extension,Machine_Triceps_Extension,Machine Triceps Extension,0.5,no
+4123,kettlebell single front squat,Front_Squats_With_Two_Kettlebells,Front Squats With Two Kettlebells,0.5,no
+4135,band split squat,Squats_-_With_Bands,Squats - With Bands,0.5,no
+4139,band overhead triceps extension v. 2,Speed_Band_Overhead_Triceps,Speed Band Overhead Triceps,0.5,no
+4149,dumbbell floor fly,Dumbbell_Flyes,Dumbbell Flyes,0.5,no
+4153,one side archer push up,Push_Up_to_Side_Plank,Push Up to Side Plank,0.5,no
+4163,cable one arm wrist curl,Cable_Wrist_Curl,Cable Wrist Curl,0.5,no
+4170,bear plank,Plank,Plank,0.5,no
+4191,dumbbell partials lateral raise,Side_Lateral_Raise,Side Lateral Raise,0.5,no
+4193,cable half kneeling pallof press,Pallof_Press,Pallof Press,0.5,no
+4194,cable half kneeling external rotation,External_Rotation_with_Cable,External Rotation with Cable,0.5,no
+4197,cable pallof press with glute bridge,Pallof_Press,Pallof Press,0.5,no
+4201,barbell bench press against chains,Barbell_Bench_Press_-_Medium_Grip,Barbell Bench Press - Medium Grip,0.5,no
+4218,safety bar front squat,Front_Barbell_Squat,Front Barbell Squat,0.5,no
+4226,cable lying shrug,Cable_Shrugs,Cable Shrugs,0.5,no
+4236,dumbbell incline two front raise with chest support,Front_Incline_Dumbbell_Raise,Front Incline Dumbbell Raise,0.5,no
+4252,weighted crunch v. 2,Crunches,Crunches,0.5,no
+4299,quadriceps lying stretch,Lying_Prone_Quadriceps,Lying Prone Quadriceps,0.5,no
+4327,sled vertical leg press,Leg_Press,Leg Press,0.5,no
+4332,crunch hold,Crunches,Crunches,0.5,no
+4333,bench reverse crunch circle,Reverse_Crunch,Reverse Crunch,0.5,no
+4338,barbell spider curl,Barbell_Curl,Barbell Curl,0.5,no
+4339,barbell pullover v. 2,Bent-Arm_Barbell_Pullover,Bent-Arm Barbell Pullover,0.5,no
+4342,dumbbell twisted fly,Dumbbell_Flyes,Dumbbell Flyes,0.5,no
+4349,barbell single leg squat,One_Leg_Barbell_Squat,One Leg Barbell Squat,0.5,no
+4397,barbell front rack split squat,Front_Barbell_Squat,Front Barbell Squat,0.5,no
+4398,resistance band squat,Squats_-_With_Bands,Squats - With Bands,0.5,no
+4419,lying leg raise (modified),Flat_Bench_Lying_Leg_Raise,Flat Bench Lying Leg Raise,0.5,no
+4443,dumbbell assisted bulgarian split squat,Split_Squat_with_Dumbbells,Split Squat with Dumbbells,0.5,no
+4561,bodyweight elevated heel squat,Bodyweight_Squat,Bodyweight Squat,0.5,no
+4562,dumbbell cossack squats,Dumbbell_Squat,Dumbbell Squat,0.5,no
+4563,dumbbell squat hold calf raise,Calf_Raise_On_A_Dumbbell,Calf Raise On A Dumbbell,0.5,no
+4630,side to side leg swings,Side_Leg_Raises,Side Leg Raises,0.5,no
+4653,standing single leg high knee to butt kick (with support),Single_Leg_Butt_Kick,Single Leg Butt Kick,0.5,no
+4667,bodyweight overhead triceps extension,Overhead_Triceps,Overhead Triceps,0.5,no
+4679,band split squat v. 2,Squats_-_With_Bands,Squats - With Bands,0.5,no
+4690,leg over knee glute bridge,Single_Leg_Glute_Bridge,Single Leg Glute Bridge,0.5,no
+4702,alternating superman,Superman,Superman,0.5,no
+4715,alternating superman v. 2,Superman,Superman,0.5,no
+4721,bar biceps curl,Close-Grip_EZ_Bar_Curl,Close-Grip EZ Bar Curl,0.5,no
+4722,bodyweight kneeling sissy squat,Bodyweight_Squat,Bodyweight Squat,0.5,no
+4723,bodyweight standing sissy squat,Bodyweight_Squat,Bodyweight Squat,0.5,no
+4730,dumbbell bent over single arm row v. 2,Bent_Over_Two-Dumbbell_Row,Bent Over Two-Dumbbell Row,0.5,no
+4732,dumbbell cossack squat v. 2,Dumbbell_Squat,Dumbbell Squat,0.5,no
+4744,dumbbell incline head supported row,Dumbbell_Incline_Row,Dumbbell Incline Row,0.5,no
+4754,dumbbell side squat,Dumbbell_Squat,Dumbbell Squat,0.5,no
+4771,jump split with hands on hip,Split_Jump,Split Jump,0.5,no
+4825,superman chest stretch,Dynamic_Chest_Stretch,Dynamic Chest Stretch,0.5,no
+4826,alternate leg raise,Hanging_Leg_Raise,Hanging Leg Raise,0.5,no
+4837,dumbbell single arm bent over row,Bent_Over_Two-Dumbbell_Row,Bent Over Two-Dumbbell Row,0.5,no
+4838,cable unilateral bicep curl,Standing_Biceps_Cable_Curl,Standing Biceps Cable Curl,0.5,no
+4840,straight leg dead bug,Dead_Bug,Dead Bug,0.5,no
+4850,barbell single leg good morning,Good_Morning,Good Morning,0.5,no
+4852,dumbbell alternate lateral raise,Side_Lateral_Raise,Side Lateral Raise,0.5,no
+4856,barbell pin close grip bench press,Pin_Presses,Pin Presses,0.5,no
+4886,lying flat hip raise,Flat_Bench_Lying_Leg_Raise,Flat Bench Lying Leg Raise,0.5,no
+4899,lever bent over wide row (plate loaded),Smith_Machine_Bent_Over_Row,Smith Machine Bent Over Row,0.5,no
+4917,high bar inverted row,Inverted_Row,Inverted Row,0.5,no
+4929,lying calf stretch,Seated_Calf_Stretch,Seated Calf Stretch,0.5,no
+4933,standing leg circle,Standing_Hip_Circles,Standing Hip Circles,0.5,no
+4934,reverse plank v. 2,Plank,Plank,0.5,no
+4957,lying lat pulldown,Wide-Grip_Lat_Pulldown,Wide-Grip Lat Pulldown,0.5,no
+4960,cable high triceps extension,Cable_Incline_Triceps_Extension,Cable Incline Triceps Extension,0.5,no
+4973,dumbbell incline biceps curl (70 degrees),Incline_Inner_Biceps_Curl,Incline Inner Biceps Curl,0.5,no
+4974,inverted row slide on floor,Inverted_Row,Inverted Row,0.5,no
+4975,lying leg raise v. 3,Flat_Bench_Lying_Leg_Raise,Flat Bench Lying Leg Raise,0.5,no
+4992,opposite crunch,Crunches,Crunches,0.5,no
+5001,dumbbell seated external shoulder rotation,External_Rotation,External Rotation,0.5,no
+5017,pause squat,Barbell_Squat,Barbell Squat,0.5,no
+5033,cable single arm triceps pushdown (rope attachment),Triceps_Pushdown,Triceps Pushdown,0.5,no
+5049,superman w,Superman,Superman,0.5,no
+5097,dumbbell single arm alternate decline bench press,Decline_Dumbbell_Bench_Press,Decline Dumbbell Bench Press,0.5,no
+5120,cable kickback v. 2,One-Legged_Cable_Kickback,One-Legged Cable Kickback,0.5,no
+5159,plank on hands,Plank,Plank,0.5,no
+5161,medicine ball throw squat with wall,Backward_Medicine_Ball_Throw,Backward Medicine Ball Throw,0.5,no
+5205,resistance band overhead shoulder press,Shoulder_Press_-_With_Bands,Shoulder Press - With Bands,0.5,no
+5223,smith wide shrug,Leverage_Shrug,Leverage Shrug,0.5,no
+5224,barbell wide shrug,Barbell_Shrug,Barbell Shrug,0.5,no
+5225,smith back wide shrug,Smith_Machine_Behind_the_Back_Shrug,Smith Machine Behind the Back Shrug,0.5,no
+5226,barbell back wide shrug,Barbell_Shrug_Behind_The_Back,Barbell Shrug Behind The Back,0.5,no
+5299,lever preacher curl (turned torso),Machine_Preacher_Curls,Machine Preacher Curls,0.5,no
+5330,dumbbell pullover v. 2,Bent-Arm_Dumbbell_Pullover,Bent-Arm Dumbbell Pullover,0.5,no
+5449,dumbbell standing drag curl v. 2,Standing_Concentration_Curl,Standing Concentration Curl,0.5,no
+5472,lying bent legs raise,Flat_Bench_Lying_Leg_Raise,Flat Bench Lying Leg Raise,0.5,no
+5476,barbell staggered stance hip thrust,Barbell_Hip_Thrust,Barbell Hip Thrust,0.5,no
+5630,bodyweight narrow stance squat,Bodyweight_Squat,Bodyweight Squat,0.5,no
+5659,barbell anderson squat,Barbell_Squat,Barbell Squat,0.5,no
+5661,dumbbell bent over row with chest support,Bent_Over_Two-Dumbbell_Row,Bent Over Two-Dumbbell Row,0.5,no
+5662,barbell power shrug,Barbell_Shrug,Barbell Shrug,0.5,no
+5668,barbell standing shoulder pin press,Barbell_Shoulder_Press,Barbell Shoulder Press,0.5,no
+5669,barbell strict curl,Barbell_Curl,Barbell Curl,0.5,no
+5696,cheat curl,Barbell_Curl,Barbell Curl,0.5,no
+5701,barbell pin squat,Barbell_Squat,Barbell Squat,0.5,no
+5703,cable incline biceps curl,Standing_Biceps_Cable_Curl,Standing Biceps Cable Curl,0.5,no
+5741,cable kneeling crunch v. 2,Cable_Crunch,Cable Crunch,0.5,no
+5784,lever reverse vertical hack squat,Hack_Squat,Hack Squat,0.5,no
+5873,ez barbell lying triceps extension,Lying_Triceps_Press,Lying Triceps Press,0.5,no
+5916,cable seated high pulley overhead tricep extension,Cable_Rope_Overhead_Triceps_Extension,Cable Rope Overhead Triceps Extension,0.5,no
+6000,single leg bridge with outstretched leg (left),Single_Leg_Glute_Bridge,Single Leg Glute Bridge,0.5,no
+6013,front leg kick,Front_Leg_Raises,Front Leg Raises,0.5,no
+6032,cable low seated row with v bar,Seated_Cable_Rows,Seated Cable Rows,0.5,no
+6092,spider plank,Plank,Plank,0.5,no
+6103,jackknife,Jackknife_Sit-Up,Jackknife Sit-Up,0.5,no
+6142,dumbbell seated reverse arnold press,Arnold_Dumbbell_Press,Arnold Dumbbell Press,0.5,no
+6146,dumbbell bent over row against wall,Bent_Over_Two-Dumbbell_Row,Bent Over Two-Dumbbell Row,0.5,no
+6150,dumbbell seated double concentration curl,Concentration_Curls,Concentration Curls,0.5,no
+6211,bicycle crunch,Crunches,Crunches,0.5,no
+6262,barbell standing wrist curl,Standing_Palms-Up_Barbell_Behind_The_Back_Wrist_Curl,Standing Palms-Up Barbell Behind The Back Wrist Curl,0.5,no
+6327,bodyweight low split squat,Bodyweight_Squat,Bodyweight Squat,0.5,no
+6329,barbell low split squat,Barbell_Side_Split_Squat,Barbell Side Split Squat,0.5,no
+6336,bodyweight slow to explosive squats,Bodyweight_Squat,Bodyweight Squat,0.5,no
+6354,lever outdoor seated leg press,Leg_Press,Leg Press,0.5,no
+6355,lever outdoor seated chest press,Leverage_Chest_Press,Leverage Chest Press,0.5,no
+6363,cable standing wrist reverse curl,Cable_Wrist_Curl,Cable Wrist Curl,0.5,no
+6367,cable standing back wrist curl v. 2,Cable_Wrist_Curl,Cable Wrist Curl,0.5,no
+6441,resistance band standing external rotation,External_Rotation_with_Band,External Rotation with Band,0.5,no
+6514,lever bent over neutral grip row (with chest support),Smith_Machine_Bent_Over_Row,Smith Machine Bent Over Row,0.5,no
+6516,lever bent over wide grip row (with chest support),Smith_Machine_Bent_Over_Row,Smith Machine Bent Over Row,0.5,no
+6584,barbell feet flat bench press,Barbell_Bench_Press_-_Medium_Grip,Barbell Bench Press - Medium Grip,0.5,no
+6755,cable kneeling shoulder external rotation,External_Rotation_with_Cable,External Rotation with Cable,0.5,no
+6756,cable kneeling shoulder internal rotation,Cable_Internal_Rotation,Cable Internal Rotation,0.5,no
+6763,seated forearms stretch,Kneeling_Forearm_Stretch,Kneeling Forearm Stretch,0.5,no
+6813,barbell bench press (side pov),Barbell_Bench_Press_-_Medium_Grip,Barbell Bench Press - Medium Grip,0.5,no
+7107,lever seated single leg press v. 2,Leg_Press,Leg Press,0.5,no
+7108,lever seated leg extension v. 3,Leg_Extensions,Leg Extensions,0.5,no
+7177,lever seated single calf press,Calf_Press,Calf Press,0.5,no
+7251,hanging front lever raise,Hanging_Leg_Raise,Hanging Leg Raise,0.5,no
+7252,dumbbell incline powell raise,Dumbbell_Incline_Shoulder_Raise,Dumbbell Incline Shoulder Raise,0.5,no
+7327,lever leg extension (inward toes),Leg_Extensions,Leg Extensions,0.5,no
+7389,wall plank,Plank,Plank,0.5,no
+7549,dumbbell goblet bulgarian split squat,Split_Squat_with_Dumbbells,Split Squat with Dumbbells,0.5,no
+7552,barbell zercher bulgarian split squat,Zercher_Squats,Zercher Squats,0.5,no
+7553,doorway chest stretch,Dynamic_Chest_Stretch,Dynamic Chest Stretch,0.5,no
+7560,bodyweight single leg squat,Bodyweight_Squat,Bodyweight Squat,0.5,no
+7566,dumbbell hack squat,Dumbbell_Squat,Dumbbell Squat,0.5,no
+7577,bodyweight heel elevated squat,Bodyweight_Squat,Bodyweight Squat,0.5,no
+7583,cable neutral grip lat pulldown,Wide-Grip_Lat_Pulldown,Wide-Grip Lat Pulldown,0.5,no
+7592,cable incline rear delt fly with back support,Cable_Rear_Delt_Fly,Cable Rear Delt Fly,0.5,no
+7621,barbell pin bench press conventional grip,Barbell_Bench_Press_-_Medium_Grip,Barbell Bench Press - Medium Grip,0.5,no
+7743,cable half kneeling face pull,Face_Pull,Face Pull,0.5,no
+7744,cable standing supinated face pull (with rope),Face_Pull,Face Pull,0.5,no
+8141,cable standing crossover,Cable_Crossover,Cable Crossover,0.5,no
+8162,deep lunge to hamstring stretch,Hamstring_Stretch,Hamstring Stretch,0.5,no
+8364,resistance band overhead shoulder press v. 2,Shoulder_Press_-_With_Bands,Shoulder Press - With Bands,0.5,no
+8502,dumbbell kneeling opposite shoulder press,Dumbbell_Shoulder_Press,Dumbbell Shoulder Press,0.5,no
+8610,chinese plank,Plank,Plank,0.5,no
+8613,dumbbell preacher swing curl,Preacher_Hammer_Dumbbell_Curl,Preacher Hammer Dumbbell Curl,0.5,no
+8615,seated alternate dynamic chest stretch on a chair,Dynamic_Chest_Stretch,Dynamic Chest Stretch,0.5,no
+8660,sled side leg press,Leg_Press,Leg Press,0.5,no
+9042,smith elevated split squat,Smith_Single-Leg_Split_Squat,Smith Single-Leg Split Squat,0.5,no
+9049,incline hip raise,Bent-Knee_Hip_Raise,Bent-Knee Hip Raise,0.5,no
+9385,smith jm bench press,Smith_Machine_Close-Grip_Bench_Press,Smith Machine Close-Grip Bench Press,0.5,no
+9387,lever angled single leg press,Leg_Press,Leg Press,0.5,no
+9694,barbell half kneeling shoulders press,Barbell_Shoulder_Press,Barbell Shoulder Press,0.5,no
+9702,bodyweight pulse goblet squat,Bodyweight_Squat,Bodyweight Squat,0.5,no
+9705,cable lying floor front raise,Front_Cable_Raise,Front Cable Raise,0.5,no
+9819,hanging knee raise,Hanging_Leg_Raise,Hanging Leg Raise,0.5,no
+9929,leverage single leg squat on hack squat machine,Hack_Squat,Hack Squat,0.5,no

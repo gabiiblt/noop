@@ -104,3 +104,63 @@ NOOP contains no WHOOP proprietary code, binaries, firmware, logos, or assets, a
 performs no DRM circumvention. It operates only with the user's own device and data.
 NOOP is **not a medical device**; all metrics (HR, HRV, recovery, strain, sleep,
 SpO₂, temperature) are approximations and not clinically validated.
+
+## Strength training: exercise catalogue and training logic
+
+- **openGym** (`DuarteSantos8/openGym`) by Duarte Santos. The exercise names, body parts, equipment,
+  muscles, descriptions, instructions and French translations in
+  `StrandiOS/Resources/ExerciseCatalogue/ExerciseCatalogue.sqlite` come from openGym's catalogue, and
+  training logic ported from openGym is marked at the top of each ported file. openGym is public under
+  the AGPL-3.0; this reuse rests instead on a written authorization dated 2026-11-25 in which Duarte
+  Santos grants Gabriel Bolatoglu the MIT licence below, for use in Noop. **openGym's exercise images and
+  animations are not used**: they belong to Gym visual and are not covered by that authorization.
+
+  ```
+  Copyright (c) 2026 Duarte Santos
+
+  Permission is hereby granted, free of charge, to Gabriel Bolatoglu, obtaining a copy of this
+  software and associated documentation files (the "Software"), to deal in the Software
+  without restriction, including without limitation the rights to use, copy, modify, merge,
+  publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons
+  to whom the Software is furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in all copies or
+  substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+  INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+  PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+  HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF
+  CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
+  OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+  ```
+
+- **ExerciseDB v1** by AscendAPI, through **`hasaneyldrm/exercises-dataset`**. Catalogue rows with
+  `textSource = 'exercisedb'` keep names, muscles and instructions from that dataset, under the MIT
+  licence:
+
+  ```
+  MIT License
+
+  Copyright (c) 2026 Hasan Emir Yıldırım
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy of this software
+  and associated documentation and data files (the "Software"), to deal in the Software without
+  restriction, including without limitation the rights to use, copy, modify, merge, publish,
+  distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the
+  Software is furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in all copies or
+  substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
+  BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+  NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+  DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+  ```
+
+- **`yuhonas/free-exercise-db`**, released into the public domain (Unlicense). Every exercise still
+  in `StrandiOS/Resources/ExerciseCatalogue/ExerciseImages/` comes from it, downsampled to WebP. Matches
+  are listed in `Tools/exercise_catalogue/image_matches.csv`; the build is
+  `Tools/exercise_catalogue/build_catalogue.py`.
