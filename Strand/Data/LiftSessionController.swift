@@ -616,7 +616,9 @@ final class LiftSessionController: ObservableObject {
     static func setCountChanges(plan: [LiftPlanItem], program items: [LiftProgramItemRow]) -> [SetCountChange] {
         let byId = Dictionary(items.map { ($0.id, $0) }, uniquingKeysWith: { first, _ in first })
         return plan.compactMap { line in
-            guard let id = line.programItemId, let row = byId[id] else { return nil }
+            // A rule owns its line's set count (triple progression adds sets by itself), so a count the rule
+            // chose is never offered back to the program as the person's own change.
+            guard line.rule == nil, let id = line.programItemId, let row = byId[id] else { return nil }
             let saved = max(1, row.targetSets ?? 1)
             guard saved != line.targetSets else { return nil }
             return SetCountChange(itemId: id, exercise: line.exercise, from: saved, to: line.targetSets)
@@ -643,7 +645,10 @@ final class LiftSessionController: ObservableObject {
             heaviest[id] = set
         }
         return items.map { row in
-            guard let top = heaviest[row.id] else { return row }
+            // A line with a progression rule is left as the person wrote it: the rule derives each session's
+            // target from the history, so rewriting the line's weight and reps from the heaviest set would
+            // look like an edited plan next time and restart the rule every session.
+            guard row.progression == nil, let top = heaviest[row.id] else { return row }
             var edited = row
             if let weight = top.weightKg { edited.targetWeightKg = weight }
             if let reps = top.reps {

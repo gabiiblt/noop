@@ -1,4 +1,5 @@
 import Foundation
+import StrandAnalytics
 import WhoopStore
 
 // The session state machine: the heart of the Lift Log.
@@ -25,6 +26,21 @@ struct LiftSlot: Hashable {
     var setIndex: Int
 }
 
+/// What a progression rule decided for a line, and the stamp the session saves with its sets.
+///
+/// Present only on a line whose program line has a rule. The line's own numbers (`targetWeightKg`,
+/// `targetRepsLow`, `targetSets`) are already the rule's, so everything that reads them needs no change;
+/// this carries what they cannot: each set's own rep aim, the reason, and the plan the session was built from.
+struct LiftPlanRule: Equatable {
+    /// The plan the session is stamped with (`liftSet.planJSON`).
+    var stamp: LiftPlanStamp
+    /// Each set's own rep aim, in set order. Triple progression asks the added set for fewer reps than the base
+    /// sets; nil when every set has the same aim (`LiftPlanItem.targetRepsLow`).
+    var rowReps: [Int]?
+    /// Why the line's numbers are what they are. Nil for a line the rule left alone.
+    var why: LiftProgressionWhy?
+}
+
 /// One planned exercise line, flattened from a program for the session to run.
 struct LiftPlanItem: Equatable {
     var exercise: String
@@ -48,6 +64,8 @@ struct LiftPlanItem: Equatable {
     /// Added while the session ran (`LiftSessionEngine.addExercise`), so the program has no line for it
     /// yet; finishing offers to add one.
     var addedInSession: Bool
+    /// The progression rule behind this line's numbers, when its program line has one.
+    var rule: LiftPlanRule?
 
     /// Rest used when a program line does not specify one. Two minutes sits in the middle of the
     /// range the hypertrophy literature uses for compound work, and is only a starting value: what
@@ -65,7 +83,8 @@ struct LiftPlanItem: Equatable {
          targetWeightKg: Double? = nil,
          note: String? = nil,
          programItemId: String? = nil,
-         addedInSession: Bool = false) {
+         addedInSession: Bool = false,
+         rule: LiftPlanRule? = nil) {
         self.exercise = exercise
         self.primaryMuscle = primaryMuscle
         self.secondaryMuscles = secondaryMuscles
@@ -78,6 +97,27 @@ struct LiftPlanItem: Equatable {
         self.note = note
         self.programItemId = programItemId
         self.addedInSession = addedInSession
+        self.rule = rule
+    }
+
+    /// The reps one set was asked for: its own aim under a rule that gives each set one, else the line's reps.
+    func aimReps(forSet setIndex: Int) -> Int? {
+        if let rows = rule?.rowReps, setIndex >= 1, setIndex <= rows.count { return rows[setIndex - 1] }
+        return targetRepsLow
+    }
+
+    /// This line with a progression rule's prescription applied: its weight, reps and set count become the
+    /// rule's, and the rule rides along for the stamp and the reason. A field the rule has no opinion on keeps
+    /// what the program said.
+    func applying(_ prescription: LiftPrescription, stamp: LiftPlanStamp) -> LiftPlanItem {
+        var out = self
+        if let w = prescription.weightKg, w > 0 { out.targetWeightKg = w }
+        if let r = prescription.reps, r > 0 { out.targetRepsLow = r }
+        if let s = prescription.sets, s > 0 { out.targetSets = max(1, s) }
+        var rows = prescription.rowReps
+        if rows?.count != out.targetSets { rows = nil }
+        out.rule = LiftPlanRule(stamp: stamp, rowReps: rows, why: prescription.why)
+        return out
     }
 }
 
@@ -298,9 +338,13 @@ struct LiftSessionEngine: Equatable {
         let previous = previousSetInSession(for: slot).map { values(of: $0.slot, lastSession: lastSession) }
         let last = lastSession[slot.setIndex]
         let item = planItem(for: slot)
+        // A rule's numbers are the target, not a guess: its weight beats last session's (a deload is LIGHTER
+        // than last time), and its rep aim beats the previous set's (the added set of a triple aims lower).
+        // What was actually typed on the previous set still comes first for the weight.
+        let ruled = item?.rule != nil
         return LiftSetCarry(
-            weightKg: previous?.weightKg ?? last?.weightKg ?? item?.targetWeightKg,
-            reps: previous?.reps ?? last?.reps ?? item?.targetRepsLow)
+            weightKg: previous?.weightKg ?? (ruled ? item?.targetWeightKg : nil) ?? last?.weightKg ?? item?.targetWeightKg,
+            reps: (ruled ? item?.aimReps(forSet: slot.setIndex) : nil) ?? previous?.reps ?? last?.reps ?? item?.targetRepsLow)
     }
 
     /// What a slot counts as: each number typed into it, else its grey number.

@@ -1,4 +1,5 @@
 import Foundation
+import StrandAnalytics
 import WhoopStore
 
 // Crash-safety for an in-flight gym session.
@@ -77,6 +78,15 @@ enum LiftSessionPersistence {
             /// True for a line added during the session. Absent from a snapshot written before lines
             /// could be added, which decodes to nil: a line from the program.
             var addedInSession: Bool?
+            /// The progression rule behind the line's numbers. Absent from a snapshot written before rules
+            /// existed, or for a line with none: a plain line.
+            var rule: RuleBox?
+        }
+
+        struct RuleBox: Codable, Equatable {
+            var stamp: LiftPlanStamp
+            var rowReps: [Int]?
+            var why: LiftProgressionWhy?
         }
 
         /// The stage as a flat, forward-compatible record rather than an encoded enum: a persisted
@@ -169,7 +179,8 @@ enum LiftSessionPersistence {
                                   note: $0.note,
                                   programItemId: $0.programItemId,
                                   // Written only when true, so a session nobody added to encodes as before.
-                                  addedInSession: $0.addedInSession ? true : nil)
+                                  addedInSession: $0.addedInSession ? true : nil,
+                                  rule: $0.rule.map { Snapshot.RuleBox(stamp: $0.stamp, rowReps: $0.rowReps, why: $0.why) })
             },
             stage: box(engine.stage),
             sets: engine.sets.map {
@@ -239,7 +250,8 @@ enum LiftSessionPersistence {
                          targetWeightKg: $0.targetWeightKg,
                          note: $0.note,
                          programItemId: $0.programItemId,
-                         addedInSession: $0.addedInSession ?? false)
+                         addedInSession: $0.addedInSession ?? false,
+                         rule: $0.rule.map { LiftPlanRule(stamp: $0.stamp, rowReps: $0.rowReps, why: $0.why) })
         }
         let sets = s.sets.map {
             LiftRecordedSet(exerciseIndex: $0.exerciseIndex, setIndex: $0.setIndex,

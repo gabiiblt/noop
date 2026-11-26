@@ -1,5 +1,6 @@
 import SwiftUI
 import StrandDesign
+import StrandAnalytics
 import WhoopStore
 
 // The workout sheet: every exercise and every set of the session, on one scrollable page.
@@ -204,6 +205,14 @@ struct LiftSessionView: View {
                                                 secondaries: item.secondaryMuscles))
                         .font(StrandFont.caption)
                         .foregroundStyle(StrandPalette.textTertiary)
+                }
+                // Why today's numbers are what they are, when a progression rule chose them.
+                if let why = item.rule?.why, let line = LiftProgressionCopy.text(why, system: unitSystem) {
+                    Text(line)
+                        .font(StrandFont.footnote)
+                        .foregroundStyle(StrandPalette.textSecondary)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .accessibilityLabel(String(localized: "Why this target: \(line)"))
                 }
                 if let note = item.note, !note.isEmpty {
                     Text(note)
@@ -941,7 +950,13 @@ struct LiftSessionView: View {
                 setType: s.extras.setType, parts: s.extras.parts, isFailure: s.extras.isFailure,
                 rir: s.extras.rir, side: s.extras.side,
                 durationSec: s.extras.durationSec, distanceM: s.extras.distanceM,
-                catalogueId: catalogueIds[item?.exercise ?? ""])
+                catalogueId: catalogueIds[item?.exercise ?? ""],
+                // What this set was asked for, and the plan the session was built from, stamped as they were
+                // so the next target can tell an edited plan from one that progressed. Only a line with a
+                // rule is stamped: every other set saves exactly what it always did.
+                targetReps: item?.rule == nil ? nil : item?.aimReps(forSet: s.slot.setIndex),
+                targetWeightKg: item?.rule == nil ? nil : item?.targetWeightKg,
+                plan: item?.rule?.stamp)
         }
         _ = try? await store.upsertLiftSets(rows)
         await writeProgram(store: store, plan: engine.plan, sets: finished)

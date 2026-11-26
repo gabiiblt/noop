@@ -200,12 +200,21 @@ struct LiftLogView: View {
         let items = (try? await store.liftProgramItems(programId: program.id)) ?? []
         guard !items.isEmpty else { return }
         let vocabulary = (try? await store.liftExercises(deviceId: repo.deviceId)) ?? []
+        // What a line's rule needs: the history of its exercise, and when each session happened.
+        let hasRule = items.contains { LiftProgressionStore.policy(of: $0) != nil }
+        let history = hasRule
+            ? ((try? await store.liftSetsBefore(deviceId: repo.deviceId, startTs: Int(Date().timeIntervalSince1970) + 1)) ?? [])
+            : []
+        let starts = hasRule
+            ? Dictionary(((try? await store.liftSessions(deviceId: repo.deviceId, fromTs: 0, toTs: Int.max)) ?? [])
+                .map { ($0.id, $0.startTs) }, uniquingKeysWith: { first, _ in first })
+            : [:]
 
         let plan = items.map { item -> LiftPlanItem in
             // The classification comes from the exercise vocabulary, which is the one place that owns
             // it — the program line deliberately stores no muscle of its own to drift from.
             let known = vocabulary.first { $0.name == item.exercise }
-            return LiftPlanItem(exercise: item.exercise,
+            let line = LiftPlanItem(exercise: item.exercise,
                                 primaryMuscle: known?.primaryMuscle,
                                 secondaryMuscles: known?.secondaryMuscles ?? [],
                                 targetSets: item.targetSets,
@@ -218,6 +227,13 @@ struct LiftLogView: View {
                                 // Carried so a set added or dropped mid-session can be written back
                                 // onto the line it came from, and be there next time.
                                 programItemId: item.id)
+            // A line with a progression rule runs on the rule's target for today, derived from what this
+            // exercise did before (by name, or by the library exercise the name is linked to).
+            let sets = history.filter { $0.exercise == item.exercise || (item.catalogueId != nil && $0.catalogueId == item.catalogueId) }
+            guard let prescription = LiftProgressionStore.prescription(for: item, lineSets: sets, sessionStarts: starts) else {
+                return line
+            }
+            return line.applying(prescription, stamp: LiftProgressionStore.stamp(for: item))
         }
         // Refuse to start a second session over a running one: two live sessions would both claim
         // the strap gesture and both write the in-flight snapshot.

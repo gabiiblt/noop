@@ -1,5 +1,6 @@
 import SwiftUI
 import StrandDesign
+import StrandAnalytics
 import WhoopStore
 
 // Edit ONE exercise line of a program: which exercise, and the targets for it.
@@ -33,6 +34,12 @@ struct LiftProgramItemSheet: View {
     @State private var restText: String = ""
     @State private var maxRpeText: String = ""
     @State private var note: String = ""
+    /// The progression rule driving this line's next target, or nil for none, with its settings as typed.
+    @State private var progression: LiftProgressionPolicy?
+    @State private var repsHighText: String = ""
+    @State private var setsMaxText: String = ""
+    @State private var stepText: String = ""
+    @State private var deloadText: String = ""
 
     /// The user's own exercise vocabulary, for suggestions and for adopting a known classification.
     @State private var vocabulary: [LiftExerciseRow] = []
@@ -53,7 +60,7 @@ struct LiftProgramItemSheet: View {
     }
 
     @FocusState private var focused: Field?
-    private enum Field: Hashable { case exercise, sets, reps, weight, rest, maxRpe, note }
+    private enum Field: Hashable { case exercise, sets, reps, weight, rest, maxRpe, note, repsHigh, setsMax, step, deload }
 
     private var trimmedExercise: String {
         exercise.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -65,7 +72,15 @@ struct LiftProgramItemSheet: View {
     private var maxRpeInvalid: Bool {
         !maxRpeText.trimmingCharacters(in: .whitespaces).isEmpty && maxRpe == nil
     }
-    private var canSave: Bool { !trimmedExercise.isEmpty && !maxRpeInvalid }
+    private var canSave: Bool { !trimmedExercise.isEmpty && !maxRpeInvalid && !deloadInvalid }
+
+    /// The deload factor as typed, when it is one: 50 to 95 percent. A blank field takes the default (90).
+    private var deloadPercent: Double? {
+        LiftFormat.number(deloadText).flatMap { (50...95).contains($0) ? $0 : nil }
+    }
+    private var deloadInvalid: Bool {
+        !deloadText.trimmingCharacters(in: .whitespaces).isEmpty && deloadPercent == nil
+    }
 
     private var suggestions: [LiftExerciseRow] {
         LiftExerciseVocabulary.suggestions(vocabulary, matching: exercise)
@@ -80,6 +95,7 @@ struct LiftProgramItemSheet: View {
                 exerciseSection
                 LiftMusclePicker(primary: $primary, secondaries: $secondaries)
                 targetsSection
+                progressionSection
                 noteSection
                 footer
             }
@@ -230,6 +246,72 @@ struct LiftProgramItemSheet: View {
         }
     }
 
+    // MARK: - Progression
+
+    /// The rule that sets this line's next target from what you did last time. Off by default: a line with no
+    /// rule behaves exactly as it always has.
+    private var progressionSection: some View {
+        VStack(alignment: .leading, spacing: NoopMetrics.gap) {
+            SectionHeader("Progression", overline: "Next target")
+            NoopCard {
+                VStack(alignment: .leading, spacing: 14) {
+                    Picker("Progression", selection: $progression) {
+                        Text("None").tag(LiftProgressionPolicy?.none)
+                        ForEach(LiftProgressionStore.pickable, id: \.self) { rule in
+                            Text(LiftProgressionCopy.name(rule)).tag(LiftProgressionPolicy?.some(rule))
+                        }
+                    }
+                    .pickerStyle(.menu)
+                    Text(LiftProgressionCopy.summary(progression ?? .off))
+                        .font(StrandFont.footnote)
+                        .foregroundStyle(StrandPalette.textSecondary)
+                        .fixedSize(horizontal: false, vertical: true)
+                    if let rule = progression {
+                        if rule != .linear {
+                            HStack(spacing: NoopMetrics.gap) {
+                                field("Top of the range (reps)") {
+                                    numberInput("12", text: $repsHighText, field: .repsHigh)
+                                }
+                                if rule == .triple {
+                                    field("Most sets") {
+                                        numberInput("5", text: $setsMaxText, field: .setsMax)
+                                    }
+                                } else {
+                                    Color.clear.frame(maxWidth: .infinity, maxHeight: 0)
+                                }
+                            }
+                            Text("Without a top, the range is the 2 reps below your reps.")
+                                .font(StrandFont.footnote)
+                                .foregroundStyle(StrandPalette.textTertiary)
+                                .fixedSize(horizontal: false, vertical: true)
+                        }
+                        HStack(spacing: NoopMetrics.gap) {
+                            field(stepLabel) {
+                                numberInput("2.5", text: $stepText, field: .step)
+                            }
+                            field("Deload to (% of the weight)") {
+                                numberInput("90", text: $deloadText, field: .deload)
+                            }
+                        }
+                        if deloadInvalid {
+                            Text("The deload must be between 50 and 95 percent.")
+                                .font(StrandFont.footnote)
+                                .foregroundStyle(StrandPalette.statusWarning)
+                        }
+                        Text("A line with a rule is not rewritten after a session: its target comes from your history, with the reason shown in the session.")
+                            .font(StrandFont.footnote)
+                            .foregroundStyle(StrandPalette.textTertiary)
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
+                }
+            }
+        }
+    }
+
+    private var stepLabel: LocalizedStringKey {
+        unitSystem == .imperial ? "Weight step (lb)" : "Weight step (kg)"
+    }
+
     private var noteSection: some View {
         VStack(alignment: .leading, spacing: NoopMetrics.gap) {
             SectionHeader("Technique note", overline: "In your words")
@@ -325,6 +407,11 @@ struct LiftProgramItemSheet: View {
             restText = item.restSec.map(String.init) ?? ""
             maxRpeText = item.targetRpe.map { LiftFormat.trim($0) } ?? ""
             note = item.note ?? ""
+            progression = LiftProgressionStore.policy(of: item)
+            repsHighText = item.targetRepsHigh.map(String.init) ?? ""
+            setsMaxText = item.targetSetsMax.map(String.init) ?? ""
+            stepText = item.incrementKg.map { LiftFormat.trim(LiftFormat.display(fromKilograms: $0, system: unitSystem)) } ?? ""
+            deloadText = item.deloadFactor.map { LiftFormat.trim($0 * 100) } ?? ""
         }
         guard let store = await repo.storeHandle() else { return }
         vocabulary = (try? await store.liftExercises(deviceId: repo.deviceId)) ?? []
@@ -334,6 +421,26 @@ struct LiftProgramItemSheet: View {
             primary = known.primaryMuscle
             secondaries = Set(known.secondaryMuscles)
         }
+    }
+
+    /// The top of the rep range, only for a rule that works through one and only when it is above the bottom.
+    private var rangeTop: Int? {
+        guard let rule = progression, rule != .linear,
+              let top = Int(repsHighText.trimmingCharacters(in: .whitespaces)),
+              let low = Int(repsText.trimmingCharacters(in: .whitespaces)), top > low else { return nil }
+        return top
+    }
+
+    /// Triple progression's ceiling, only when it is above the line's sets.
+    private var setsMaxValue: Int? {
+        guard let most = Int(setsMaxText.trimmingCharacters(in: .whitespaces)),
+              let sets = Int(setsText.trimmingCharacters(in: .whitespaces)), most > sets else { return nil }
+        return most
+    }
+
+    /// The weight step in kilograms, when one was typed.
+    private var stepKg: Double? {
+        LiftFormat.number(stepText).flatMap { $0 > 0 ? LiftFormat.kilograms(fromDisplay: $0, system: unitSystem) : nil }
     }
 
     private func save() async {
@@ -369,9 +476,10 @@ struct LiftProgramItemSheet: View {
             ord: item?.ord ?? 0,
             exercise: name,
             targetSets: Int(setsText.trimmingCharacters(in: .whitespaces)),
-            // ONE rep count: `targetRepsHigh` stays nil, a schema column the editor no longer fills.
+            // ONE rep count, unless a double or triple rule needs a range: then the top of the range is
+            // `targetRepsHigh` (only when it is above the bottom); otherwise it stays nil.
             targetRepsLow: Int(repsText.trimmingCharacters(in: .whitespaces)),
-            targetRepsHigh: nil,
+            targetRepsHigh: rangeTop,
             targetRpe: maxRpe,
             targetWeightKg: LiftFormat.number(weightText).map {
                 LiftFormat.kilograms(fromDisplay: $0, system: unitSystem)
@@ -379,7 +487,11 @@ struct LiftProgramItemSheet: View {
             restSec: Int(restText.trimmingCharacters(in: .whitespaces)),
             note: trimmedNote.isEmpty ? nil : trimmedNote,
             // A library pick links the line; an edited line keeps the link it had while the name is unchanged.
-            catalogueId: picked?.id ?? (name == item?.exercise ? item?.catalogueId : nil)
+            catalogueId: picked?.id ?? (name == item?.exercise ? item?.catalogueId : nil),
+            progression: progression?.rawValue,
+            targetSetsMax: progression == .triple ? setsMaxValue : nil,
+            incrementKg: progression == nil ? nil : stepKg,
+            deloadFactor: progression == nil ? nil : deloadPercent.map { $0 / 100 }
         ))
         dismiss()
     }

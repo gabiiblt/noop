@@ -309,21 +309,14 @@ struct LiftProgramEditorSheet: View {
         _ = try? await store.upsertLiftPrograms([row])
 
         // `ord` is the array index: reordering the list is all it takes to reorder the program.
-        let ordered = items.enumerated().map { index, item in
-            LiftProgramItemRow(
-                id: item.id,
-                deviceId: repo.deviceId,
-                programId: id,
-                ord: index,
-                exercise: item.exercise,
-                targetSets: item.targetSets,
-                targetRepsLow: item.targetRepsLow,
-                targetRepsHigh: item.targetRepsHigh,
-                targetRpe: item.targetRpe,
-                targetWeightKg: item.targetWeightKg,
-                restSec: item.restSec,
-                note: item.note
-            )
+        // A copy of each line with its place changed, not a rebuild: rebuilding field by field dropped every
+        // column added since (the catalogue link, the progression rule) each time a program was saved.
+        let ordered = items.enumerated().map { index, item -> LiftProgramItemRow in
+            var line = item
+            line.deviceId = repo.deviceId
+            line.programId = id
+            line.ord = index
+            return line
         }
         _ = try? await store.replaceLiftProgramItems(programId: id, items: ordered)
 

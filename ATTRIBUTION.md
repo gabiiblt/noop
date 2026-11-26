@@ -117,7 +117,8 @@ SpO₂, temperature) are approximations and not clinically validated.
 
   Ported so far: the set model (`LiftSetDetail.swift`, `LiftSetExtras.swift`) and the progression rules,
   linear, double, triple and time, with the reason for each target (`LiftProgression.swift`, checked
-  against openGym's own `progression.js` by `Tools/lift_progression_oracle`).
+  against openGym's own `progression.js` by `Tools/lift_progression_oracle`), their storage and the
+  wording of each reason (`LiftProgressionStore.swift`, `LiftProgressionCopy.swift`).
 
   ```
   Copyright (c) 2026 Duarte Santos

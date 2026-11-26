@@ -128,10 +128,14 @@ To do:
 2. Progression rules per program or exercise: linear, double, triple progression, time, with the reason shown
    for each target, and an automatic deload after a stall.
    Done: the pure engine (`LiftProgression`, StrandAnalytics), 56 scenarios checked against openGym's own
-   `progression.js` (`Tools/lift_progression_oracle`). Still to do: store the rule (a column on `liftProgramItem`
-   plus the target each session was built with, which triple progression needs for its per-set aims), the
-   migration with tests, both push registries, an MCP read tool, then the picker and the reason line in the UI.
-   Not ported yet: Greyskull, steady, undulating, density, ladder, owned dumbbells, assistance machines.
+   `progression.js` (`Tools/lift_progression_oracle`); v50 storage (rule on `liftProgramItem`, the target and plan
+   stamp on each `liftSet`), push on both sides, MCP (`get_progression_rules`, targets on `get_lift_sessions`);
+   the adapter (`LiftProgressionStore`); the rule picker on a program line; the session starting from the rule's
+   target, stamping its sets, and showing the reason under the exercise. A line with a rule is not rewritten
+   from the heaviest set after a session.
+   Not done: a rule for timed holds (a program line has no seconds field), bodyweight climbs (no flag on a line),
+   Greyskull, steady, undulating, density, ladder, owned dumbbells, assistance machines. A tap to apply or
+   ignore a suggestion, and showing the rule in the program's line summary.
 3. Plate calculator per gym: plates, bars, dumbbells and machine stacks per gym, and the plates to load.
 4. Supersets, and a backup exercise that swaps in when a machine is taken (keeps the slot's sets and reps).
 5. Body map: volume per muscle, muscles still recovering, muscles left untrained (MuscleMap geometry, MIT).

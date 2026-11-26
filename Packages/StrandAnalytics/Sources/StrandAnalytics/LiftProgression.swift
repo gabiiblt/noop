@@ -61,7 +61,7 @@ public enum LiftProgressionKind: String, Codable, Sendable {
 
 /// Why a target is what it is. A case per openGym template, so a screen localises each one with its
 /// own string instead of assembling English. Weights are kilograms; the screen converts at the edge.
-public enum LiftProgressionWhy: Equatable, Sendable {
+public enum LiftProgressionWhy: Equatable, Codable, Sendable {
     case baseline
     case planChanged
     case timeUp(byS: Int)
@@ -297,7 +297,7 @@ public struct LiftPrescription: Equatable, Sendable {
     public var target1RM: Double?
     public var deloadFactor: Double?
 
-    init(policy: LiftProgressionPolicy, kind: LiftProgressionKind, weightKg: Double? = nil, reps: Int? = nil,
+    public init(policy: LiftProgressionPolicy, kind: LiftProgressionKind, weightKg: Double? = nil, reps: Int? = nil,
          sets: Int? = nil, sec: Int? = nil, rowReps: [Int]? = nil, why: LiftProgressionWhy? = nil,
          target1RM: Double? = nil, deloadFactor: Double? = nil) {
         self.policy = policy
