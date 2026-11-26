@@ -109,17 +109,20 @@ _STREAMS = [
        "markerKey:text, category:text, day:text, takenAt:int, value:real, valueText:text, unit:text, "
        "source:text, note:text, referenceText:text", "snapshot", phase="ext"),
     _s("liftExercise", "id:text!", "name:text, primaryMuscle:text, secondaryMuscles:text, createdAt:int, "
-       "lastUsedTs:int", "snapshot", phase="ext"),
+       "lastUsedTs:int, catalogueId:text, equipment:text", "snapshot", phase="ext"),
     _s("liftProgram", "id:text!", "name:text, note:text, createdAt:int, updatedAt:int, archived:int",
        "snapshot", phase="ext"),
     _s("liftProgramItem", "id:text!",
        "programId:text, ord:int, exercise:text, targetSets:int, targetRepsLow:int, targetRepsHigh:int, "
-       "targetRpe:real, targetWeightKg:real, restSec:int, note:text", "snapshot", phase="ext"),
+       "targetRpe:real, targetWeightKg:real, restSec:int, note:text, catalogueId:text", "snapshot", phase="ext"),
     _s("liftSession", "id:text!", "startTs:int, endTs:int, sport:text, programId:text, programName:text, "
        "sessionRpe:real, note:text", "snapshot", phase="ext"),
     _s("liftSet", "id:text!",
        "sessionId:text, ord:int, exercise:text, primaryMuscle:text, secondaryMuscles:text, setIndex:int, "
-       "weightKg:real, reps:int, rpe:real, isWarmup:int, startTs:int, endTs:int, restSec:int, note:text",
+       "weightKg:real, reps:int, rpe:real, isWarmup:int, startTs:int, endTs:int, restSec:int, note:text, "
+       # v49 (iOS training redesign): set type and its parts, failure, RIR, side, time/distance, catalogue link.
+       "setType:text, dropsJSON:text, isFailure:int, rir:real, side:text, durationSec:int, distanceM:real, "
+       "catalogueId:text",
        "snapshot", phase="ext"),
 ]
 

@@ -26,6 +26,17 @@ A stream or member of this extension is never sent under `1.0`; a receiver rejec
    replace-window stream as consecutive half-open windows (e.g. 90 days each), then continues with
    the rolling 14-day window. A receiver accepts any non-empty half-open window.
 
+## Growing a stream
+
+A data member may be added to an existing stream without a new protocol version, as long as it is
+nullable. Both directions stay compatible: a receiver ignores members it does not know, and a member a
+sender omits is stored as NULL. A receiver that knows the member adds the column to a table created by an
+older release when it starts (`Store._add_missing_columns`). Keys never change.
+
+Added this way (v49 of the iOS store, the training redesign): `liftSet.setType`, `.dropsJSON`,
+`.isFailure`, `.rir`, `.side`, `.durationSec`, `.distanceM`, `.catalogueId`; `liftExercise.catalogueId`,
+`.equipment`; `liftProgramItem.catalogueId`.
+
 ## Never exported
 
 `coachMessage`, `device`, `cursors`, `rawBatch`, local `synced` columns, and the retired

@@ -1153,6 +1153,39 @@ extension WhoopStore {
                 t.primaryKey(["deviceId", "ts", "sequence"])
             }
         }
+        // v49 (iOS only, the training redesign): what a set was, beyond weight x reps, and which catalogue
+        // exercise a name stands for. Additive and nullable, so every row written before reads exactly as it
+        // did: a NULL `setType` is a straight set, a NULL `catalogueId` a name the user typed themselves.
+        //   • `setType` 'dropset' | 'restpause' (NULL = straight). `dropsJSON` holds the extra parts:
+        //     weight drops for a drop set (volume ON TOP of the main set), or the bursts a rest-pause set's
+        //     `reps` breaks down into (NOT extra volume). Same model as openGym's set row.
+        //   • `isFailure` the set was taken to failure; `rir` reps in reserve, the other way users rate
+        //     effort; `side` 'left' | 'right' for single-limb work logged per side.
+        //   • `durationSec` / `distanceM` for timed holds and carries, where reps mean nothing.
+        //   • `catalogueId` links a set, a remembered exercise or a program line to the bundled catalogue
+        //     (`ExerciseCatalogue`): its picture, instructions and muscles. Ids there are permanent.
+        // No Room twin: the Android app is not part of this redesign (schema oracle: `ios-only-training`).
+        migrator.registerMigration("v49-lift-training-detail") { db in
+            try db.alter(table: "liftSet") { t in
+                t.add(column: "setType", .text)
+                t.add(column: "dropsJSON", .text)
+                t.add(column: "isFailure", .integer).notNull().defaults(to: 0)
+                t.add(column: "rir", .double)
+                t.add(column: "side", .text)
+                t.add(column: "durationSec", .integer)
+                t.add(column: "distanceM", .double)
+                t.add(column: "catalogueId", .text)
+            }
+            try db.alter(table: "liftExercise") { t in
+                t.add(column: "catalogueId", .text)
+                t.add(column: "equipment", .text)
+            }
+            try db.alter(table: "liftProgramItem") { t in
+                t.add(column: "catalogueId", .text)
+            }
+            // No index on `catalogueId`: the schema oracle has no way to mark an index iOS-only, and a
+            // personal set history is small enough that a scan is cheaper than a parity exception.
+        }
         return migrator
     }
 }

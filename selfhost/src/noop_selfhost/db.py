@@ -77,11 +77,23 @@ class Store:
         self.conn.executescript(_SCHEMA)
         for s in REGISTRY.values():
             self.conn.execute(_table_sql(s))
+            self._add_missing_columns(s)
             if s.delivery == "append" and s.key[0].name == "ts":
                 self.conn.execute(f"CREATE INDEX IF NOT EXISTS idx_{s.name}_ts ON {_q(s.name)} (\"ts\")")
         with self.lock:
             if self.conn.execute("SELECT 1 FROM meta WHERE k='receiver_state_id'").fetchone() is None:
                 self.conn.execute("INSERT INTO meta VALUES ('receiver_state_id', ?)", (str(uuid.uuid4()),))
+
+    def _add_missing_columns(self, s: Stream) -> None:
+        """A receiver upgraded after the registry grew keeps its existing tables: add the new data columns.
+
+        `CREATE TABLE IF NOT EXISTS` never changes a table that is already there, so without this an upsert
+        naming a newer column would fail on every deployed database. Only data columns can be added (keys
+        never change), and they are added nullable, which is what SQLite's ADD COLUMN allows anyway."""
+        have = {r[1] for r in self.conn.execute(f"PRAGMA table_info({_q(s.name)})")}
+        for c in s.all_data:
+            if c.name not in have:
+                self.conn.execute(f"ALTER TABLE {_q(s.name)} ADD COLUMN {_q(c.name)} {_SQL_TYPE[c.type]}")
 
     @contextmanager
     def transaction(self) -> Iterator[sqlite3.Connection]:

@@ -36,6 +36,10 @@ public struct LiftExerciseRow: Equatable, Codable, Sendable {
     public var createdAt: Int
     /// Unix seconds; most-recently-used floats to the top of the picker. Nil until first used.
     public var lastUsedTs: Int?
+    /// The bundled catalogue exercise this name stands for (v49), or nil for a name the user made up.
+    public var catalogueId: String?
+    /// The catalogue's equipment word, copied when the exercise was picked from the catalogue (v49).
+    public var equipment: String?
 
     public init(
         id: String,
@@ -44,7 +48,9 @@ public struct LiftExerciseRow: Equatable, Codable, Sendable {
         primaryMuscle: LiftMuscle?,
         secondaryMuscles: [LiftMuscle] = [],
         createdAt: Int,
-        lastUsedTs: Int?
+        lastUsedTs: Int?,
+        catalogueId: String? = nil,
+        equipment: String? = nil
     ) {
         self.id = id
         self.deviceId = deviceId
@@ -54,6 +60,8 @@ public struct LiftExerciseRow: Equatable, Codable, Sendable {
             LiftMuscle.encodeList(secondaryMuscles, excluding: primaryMuscle))
         self.createdAt = createdAt
         self.lastUsedTs = lastUsedTs
+        self.catalogueId = catalogueId
+        self.equipment = equipment
     }
 
     static func decode(_ row: Row) -> LiftExerciseRow {
@@ -64,7 +72,9 @@ public struct LiftExerciseRow: Equatable, Codable, Sendable {
             primaryMuscle: LiftMuscle(rawValue: row["primaryMuscle"] ?? ""),
             secondaryMuscles: LiftMuscle.decodeList(row["secondaryMuscles"]),
             createdAt: row["createdAt"],
-            lastUsedTs: row["lastUsedTs"]
+            lastUsedTs: row["lastUsedTs"],
+            catalogueId: row["catalogueId"],
+            equipment: row["equipment"]
         )
     }
 }
@@ -136,6 +146,8 @@ public struct LiftProgramItemRow: Equatable, Codable, Sendable {
     public var restSec: Int?
     /// The user's own technique cue, stored and shown back verbatim.
     public var note: String?
+    /// The bundled catalogue exercise this line was picked from (v49), or nil for a typed name.
+    public var catalogueId: String?
 
     public init(
         id: String,
@@ -149,7 +161,8 @@ public struct LiftProgramItemRow: Equatable, Codable, Sendable {
         targetRpe: Double?,
         targetWeightKg: Double?,
         restSec: Int?,
-        note: String?
+        note: String?,
+        catalogueId: String? = nil
     ) {
         self.id = id
         self.deviceId = deviceId
@@ -163,6 +176,7 @@ public struct LiftProgramItemRow: Equatable, Codable, Sendable {
         self.targetWeightKg = targetWeightKg
         self.restSec = restSec
         self.note = note
+        self.catalogueId = catalogueId
     }
 
     static func decode(_ row: Row) -> LiftProgramItemRow {
@@ -178,7 +192,8 @@ public struct LiftProgramItemRow: Equatable, Codable, Sendable {
             targetRpe: row["targetRpe"],
             targetWeightKg: row["targetWeightKg"],
             restSec: row["restSec"],
-            note: row["note"]
+            note: row["note"],
+            catalogueId: row["catalogueId"]
         )
     }
 }
@@ -266,6 +281,23 @@ public struct LiftSetRow: Equatable, Codable, Sendable {
     /// Rest ACTUALLY taken after this set, seconds — not the target from the program.
     public var restSec: Int?
     public var note: String?
+    // v49 — see `LiftSetDetail.swift` for the model.
+    /// Straight, drop set or rest-pause.
+    public var setType: LiftSetType
+    /// A drop set's weight drops, or the bursts a rest-pause set's `reps` break down into.
+    public var parts: [LiftSetPart]
+    /// Taken to failure.
+    public var isFailure: Bool
+    /// Reps in reserve, the alternative to RPE some lifters rate with.
+    public var rir: Double?
+    /// Left or right for single-limb work logged per side; nil for both.
+    public var side: LiftSide?
+    /// Seconds, for a timed hold or a cardio interval.
+    public var durationSec: Int?
+    /// Metres, for a carry or a sled.
+    public var distanceM: Double?
+    /// The bundled catalogue exercise, when the exercise was picked from it.
+    public var catalogueId: String?
 
     public init(
         id: String,
@@ -283,7 +315,15 @@ public struct LiftSetRow: Equatable, Codable, Sendable {
         startTs: Int?,
         endTs: Int?,
         restSec: Int?,
-        note: String?
+        note: String?,
+        setType: LiftSetType = .straight,
+        parts: [LiftSetPart] = [],
+        isFailure: Bool = false,
+        rir: Double? = nil,
+        side: LiftSide? = nil,
+        durationSec: Int? = nil,
+        distanceM: Double? = nil,
+        catalogueId: String? = nil
     ) {
         self.id = id
         self.deviceId = deviceId
@@ -302,13 +342,29 @@ public struct LiftSetRow: Equatable, Codable, Sendable {
         self.endTs = endTs
         self.restSec = restSec
         self.note = note
+        self.setType = setType
+        self.parts = setType == .straight ? [] : parts
+        self.isFailure = isFailure
+        self.rir = rir
+        self.side = side
+        self.durationSec = durationSec
+        self.distanceM = distanceM
+        self.catalogueId = catalogueId
     }
 
     /// Volume for this set: weight x reps, in kilograms. Nil unless BOTH are present, and zero for a
-    /// warmup — a transparent arithmetic figure, never a physiological claim.
+    /// warmup — a transparent arithmetic figure, never a physiological claim. A drop set adds each drop's
+    /// weight x reps on top (the drops are extra work); a rest-pause set does not (its `reps` is already
+    /// the total of its bursts).
     public var volumeKg: Double? {
         guard !isWarmup, let weightKg, let reps else { return nil }
-        return weightKg * Double(reps)
+        return weightKg * Double(reps) + dropVolumeKg
+    }
+
+    /// Weight x reps of a drop set's drops; zero for every other set.
+    public var dropVolumeKg: Double {
+        guard setType == .dropset else { return 0 }
+        return parts.reduce(0) { $0 + ($1.weightKg ?? 0) * Double(max(0, $1.reps)) }
     }
 
     static func decode(_ row: Row) -> LiftSetRow {
@@ -328,8 +384,55 @@ public struct LiftSetRow: Equatable, Codable, Sendable {
             startTs: row["startTs"],
             endTs: row["endTs"],
             restSec: row["restSec"],
-            note: row["note"]
+            note: row["note"],
+            setType: LiftSetType(stored: row["setType"]),
+            parts: LiftSetPart.decode(row["dropsJSON"]),
+            isFailure: (row["isFailure"] as Int? ?? 0) != 0,
+            rir: row["rir"],
+            side: (row["side"] as String?).flatMap(LiftSide.init(rawValue:)),
+            durationSec: row["durationSec"],
+            distanceM: row["distanceM"],
+            catalogueId: row["catalogueId"]
         )
+    }
+}
+
+extension LiftSetRow {
+    private enum LegacyKeys: String, CodingKey {
+        case id, deviceId, sessionId, ord, exercise, primaryMuscle, secondaryMuscles, setIndex, weightKg
+        case reps, rpe, isWarmup, startTs, endTs, restSec, note
+        case setType, parts, isFailure, rir, side, durationSec, distanceM, catalogueId
+    }
+
+    /// Decodes rows saved before v49 too (an in-progress session persisted by an older build has none
+    /// of the newer keys), defaulting each missing one exactly as the memberwise initializer does.
+    public init(from decoder: Decoder) throws {
+        let c = try decoder.container(keyedBy: LegacyKeys.self)
+        self.init(
+            id: try c.decode(String.self, forKey: .id),
+            deviceId: try c.decode(String.self, forKey: .deviceId),
+            sessionId: try c.decode(String.self, forKey: .sessionId),
+            ord: try c.decode(Int.self, forKey: .ord),
+            exercise: try c.decode(String.self, forKey: .exercise),
+            primaryMuscle: try c.decodeIfPresent(LiftMuscle.self, forKey: .primaryMuscle),
+            secondaryMuscles: try c.decodeIfPresent([LiftMuscle].self, forKey: .secondaryMuscles) ?? [],
+            setIndex: try c.decode(Int.self, forKey: .setIndex),
+            weightKg: try c.decodeIfPresent(Double.self, forKey: .weightKg),
+            reps: try c.decodeIfPresent(Int.self, forKey: .reps),
+            rpe: try c.decodeIfPresent(Double.self, forKey: .rpe),
+            isWarmup: try c.decode(Bool.self, forKey: .isWarmup),
+            startTs: try c.decodeIfPresent(Int.self, forKey: .startTs),
+            endTs: try c.decodeIfPresent(Int.self, forKey: .endTs),
+            restSec: try c.decodeIfPresent(Int.self, forKey: .restSec),
+            note: try c.decodeIfPresent(String.self, forKey: .note),
+            setType: try c.decodeIfPresent(LiftSetType.self, forKey: .setType) ?? .straight,
+            parts: try c.decodeIfPresent([LiftSetPart].self, forKey: .parts) ?? [],
+            isFailure: try c.decodeIfPresent(Bool.self, forKey: .isFailure) ?? false,
+            rir: try c.decodeIfPresent(Double.self, forKey: .rir),
+            side: try c.decodeIfPresent(LiftSide.self, forKey: .side),
+            durationSec: try c.decodeIfPresent(Int.self, forKey: .durationSec),
+            distanceM: try c.decodeIfPresent(Double.self, forKey: .distanceM),
+            catalogueId: try c.decodeIfPresent(String.self, forKey: .catalogueId))
     }
 }
 
@@ -399,17 +502,21 @@ extension WhoopStore {
                 }
                 try db.execute(sql: """
                     INSERT INTO liftExercise
-                        (id, deviceId, name, primaryMuscle, secondaryMuscles, createdAt, lastUsedTs)
-                    VALUES (?, ?, ?, ?, ?, ?, ?)
+                        (id, deviceId, name, primaryMuscle, secondaryMuscles, createdAt, lastUsedTs,
+                         catalogueId, equipment)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
                     ON CONFLICT(deviceId, name) DO UPDATE SET
                         primaryMuscle = COALESCE(excluded.primaryMuscle, primaryMuscle),
                         secondaryMuscles = COALESCE(excluded.secondaryMuscles, secondaryMuscles),
-                        lastUsedTs = MAX(COALESCE(excluded.lastUsedTs, 0), COALESCE(lastUsedTs, 0))
+                        lastUsedTs = MAX(COALESCE(excluded.lastUsedTs, 0), COALESCE(lastUsedTs, 0)),
+                        catalogueId = COALESCE(excluded.catalogueId, catalogueId),
+                        equipment = COALESCE(excluded.equipment, equipment)
                     """, arguments: [
                         r.id, r.deviceId, r.name,
                         r.primaryMuscle?.rawValue,
                         LiftMuscle.encodeList(r.secondaryMuscles, excluding: r.primaryMuscle),
                         r.createdAt, r.lastUsedTs,
+                        r.catalogueId, r.equipment,
                     ])
                 n += db.changesCount
             }
@@ -510,12 +617,12 @@ extension WhoopStore {
                 try db.execute(sql: """
                     INSERT INTO liftProgramItem
                         (id, deviceId, programId, ord, exercise, targetSets,
-                         targetRepsLow, targetRepsHigh, targetRpe, targetWeightKg, restSec, note)
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                         targetRepsLow, targetRepsHigh, targetRpe, targetWeightKg, restSec, note, catalogueId)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                     """, arguments: [
                         r.id, r.deviceId, r.programId, r.ord, r.exercise, r.targetSets,
                         r.targetRepsLow, r.targetRepsHigh, r.targetRpe, r.targetWeightKg,
-                        r.restSec, r.note,
+                        r.restSec, r.note, r.catalogueId,
                     ])
                 n += db.changesCount
             }
@@ -617,8 +724,9 @@ extension WhoopStore {
                 try db.execute(sql: """
                     INSERT INTO liftSet
                         (id, deviceId, sessionId, ord, exercise, primaryMuscle, secondaryMuscles,
-                         setIndex, weightKg, reps, rpe, isWarmup, startTs, endTs, restSec, note)
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                         setIndex, weightKg, reps, rpe, isWarmup, startTs, endTs, restSec, note,
+                         setType, dropsJSON, isFailure, rir, side, durationSec, distanceM, catalogueId)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                     ON CONFLICT(id) DO UPDATE SET
                         ord = excluded.ord,
                         exercise = excluded.exercise,
@@ -632,13 +740,23 @@ extension WhoopStore {
                         startTs = excluded.startTs,
                         endTs = excluded.endTs,
                         restSec = excluded.restSec,
-                        note = excluded.note
+                        note = excluded.note,
+                        setType = excluded.setType,
+                        dropsJSON = excluded.dropsJSON,
+                        isFailure = excluded.isFailure,
+                        rir = excluded.rir,
+                        side = excluded.side,
+                        durationSec = excluded.durationSec,
+                        distanceM = excluded.distanceM,
+                        catalogueId = excluded.catalogueId
                     """, arguments: [
                         r.id, r.deviceId, r.sessionId, r.ord, r.exercise,
                         r.primaryMuscle?.rawValue,
                         LiftMuscle.encodeList(r.secondaryMuscles, excluding: r.primaryMuscle),
                         r.setIndex, r.weightKg, r.reps, r.rpe, r.isWarmup,
                         r.startTs, r.endTs, r.restSec, r.note,
+                        r.setType.storedValue, LiftSetPart.encode(r.parts), r.isFailure, r.rir,
+                        r.side?.rawValue, r.durationSec, r.distanceM, r.catalogueId,
                     ])
                 n += db.changesCount
             }

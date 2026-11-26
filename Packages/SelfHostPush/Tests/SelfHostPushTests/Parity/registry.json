@@ -1028,6 +1028,16 @@
      "name": "lastUsedTs",
      "type": "int",
      "nullable": true
+    },
+    {
+     "name": "catalogueId",
+     "type": "text",
+     "nullable": true
+    },
+    {
+     "name": "equipment",
+     "type": "text",
+     "nullable": true
     }
    ],
    "extData": []
@@ -1133,6 +1143,11 @@
     },
     {
      "name": "note",
+     "type": "text",
+     "nullable": true
+    },
+    {
+     "name": "catalogueId",
      "type": "text",
      "nullable": true
     }
@@ -1270,6 +1285,46 @@
     },
     {
      "name": "note",
+     "type": "text",
+     "nullable": true
+    },
+    {
+     "name": "setType",
+     "type": "text",
+     "nullable": true
+    },
+    {
+     "name": "dropsJSON",
+     "type": "text",
+     "nullable": true
+    },
+    {
+     "name": "isFailure",
+     "type": "int",
+     "nullable": true
+    },
+    {
+     "name": "rir",
+     "type": "real",
+     "nullable": true
+    },
+    {
+     "name": "side",
+     "type": "text",
+     "nullable": true
+    },
+    {
+     "name": "durationSec",
+     "type": "int",
+     "nullable": true
+    },
+    {
+     "name": "distanceM",
+     "type": "real",
+     "nullable": true
+    },
+    {
+     "name": "catalogueId",
      "type": "text",
      "nullable": true
     }
