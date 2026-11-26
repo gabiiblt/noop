@@ -115,6 +115,10 @@ SpO₂, temperature) are approximations and not clinically validated.
   Santos grants Gabriel Bolatoglu the MIT licence below, for use in Noop. **openGym's exercise images and
   animations are not used**: they belong to Gym visual and are not covered by that authorization.
 
+  Ported so far: the set model (`LiftSetDetail.swift`, `LiftSetExtras.swift`) and the progression rules,
+  linear, double, triple and time, with the reason for each target (`LiftProgression.swift`, checked
+  against openGym's own `progression.js` by `Tools/lift_progression_oracle`).
+
   ```
   Copyright (c) 2026 Duarte Santos
 

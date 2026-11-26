@@ -127,6 +127,11 @@ Not yet on Android, which has no v49 set model; the Swift side leads until the R
 To do:
 2. Progression rules per program or exercise: linear, double, triple progression, time, with the reason shown
    for each target, and an automatic deload after a stall.
+   Done: the pure engine (`LiftProgression`, StrandAnalytics), 56 scenarios checked against openGym's own
+   `progression.js` (`Tools/lift_progression_oracle`). Still to do: store the rule (a column on `liftProgramItem`
+   plus the target each session was built with, which triple progression needs for its per-set aims), the
+   migration with tests, both push registries, an MCP read tool, then the picker and the reason line in the UI.
+   Not ported yet: Greyskull, steady, undulating, density, ladder, owned dumbbells, assistance machines.
 3. Plate calculator per gym: plates, bars, dumbbells and machine stacks per gym, and the plates to load.
 4. Supersets, and a backup exercise that swaps in when a machine is taken (keeps the slot's sets and reps).
 5. Body map: volume per muscle, muscles still recovering, muscles left untrained (MuscleMap geometry, MIT).
