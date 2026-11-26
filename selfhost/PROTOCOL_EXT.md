@@ -43,6 +43,11 @@ or `time`), `.targetSetsMax`, `.incrementKg`, `.deloadFactor`; `liftSet.targetRe
 `{"progression", "sets", "repsLow", "repsHigh", "setsMax", "weightKg", "sec"}` (keys sorted, absent when
 unset). A set with no stamp has NULL there.
 
+v51 (a gym's equipment): `liftSession.gymId`, and a new snapshot stream `liftGym` (key `id`): `name`, `unit`
+(`kg` or `lb`, the unit every inventory number is in), `platesJSON` (`[{"pairs","size"}]`, heaviest first),
+`barsJSON` (`{"<equipment>": kg}`), `dumbbellsJSON` (`[weight]`), `stacksJSON` (`{"<exercise>": [weight]}`),
+`createdAt`, `lastUsedTs`. A JSON member is NULL when empty.
+
 ## Never exported
 
 `coachMessage`, `device`, `cursors`, `rawBatch`, local `synced` columns, and the retired

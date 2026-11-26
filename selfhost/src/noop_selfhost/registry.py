@@ -118,7 +118,7 @@ _STREAMS = [
        # v50 (iOS training redesign): the progression rule on the line.
        "progression:text, targetSetsMax:int, incrementKg:real, deloadFactor:real", "snapshot", phase="ext"),
     _s("liftSession", "id:text!", "startTs:int, endTs:int, sport:text, programId:text, programName:text, "
-       "sessionRpe:real, note:text", "snapshot", phase="ext"),
+       "sessionRpe:real, note:text, gymId:text", "snapshot", phase="ext"),
     _s("liftSet", "id:text!",
        "sessionId:text, ord:int, exercise:text, primaryMuscle:text, secondaryMuscles:text, setIndex:int, "
        "weightKg:real, reps:int, rpe:real, isWarmup:int, startTs:int, endTs:int, restSec:int, note:text, "
@@ -128,6 +128,9 @@ _STREAMS = [
        # v50: the target this set was built from, and the plan stamp (JSON) of its session.
        "targetReps:int, targetWeightKg:real, planJSON:text",
        "snapshot", phase="ext"),
+    # v51 (iOS training redesign): a gym's equipment, and the session's gymId above.
+    _s("liftGym", "id:text!", "name:text, unit:text, platesJSON:text, barsJSON:text, dumbbellsJSON:text, "
+       "stacksJSON:text, createdAt:int, lastUsedTs:int", "snapshot", phase="ext"),
 ]
 
 REGISTRY: dict[str, Stream] = {s.name: s for s in _STREAMS}

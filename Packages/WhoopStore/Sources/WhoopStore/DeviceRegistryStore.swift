@@ -171,6 +171,8 @@ public struct DeviceRegistryStore: Sendable {
         // privacy defect this list exists to close, and one the deviceId-column guard test could not
         // catch for a child table keyed only by its parent.
         "liftExercise", "liftProgram", "liftProgramItem", "liftSession", "liftSet",
+        // v51-lift-gym: a gym's equipment is deviceId-keyed like the rest of the strength log.
+        "liftGym",
     ]
 
     /// Permanently delete every recorded sample/derived row belonging to one device, across all

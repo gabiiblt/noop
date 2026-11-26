@@ -454,12 +454,47 @@ def lift_sessions(conn: sqlite3.Connection, start: int, end: int, with_sets: boo
                 "program": s["programName"], "session_rpe": s["sessionRpe"], "exercises": _summary(rows)}
         vols = [e["volume_kg"] for e in item["exercises"] if e["volume_kg"]]
         item["volume_kg"] = round(sum(vols), 1) if vols else None
+        if s["gymId"]:
+            gym = conn.execute("SELECT name FROM liftGym WHERE id=?", (s["gymId"],)).fetchone()
+            item["gym"] = gym[0] if gym else None      # None when the gym was deleted since
         if with_sets:
             item["sets"] = [_set_out(r) for r in rows if r["reps"] != 0]
         out.append(item)
     res = {"start": _t(start), "end": _t(end), "count": len(out), "sessions": out}
     if not out:
         res["note"] = "No Lift Log session in this range (or not uploaded yet: check get_sync_status)."
+    return res
+
+
+def gyms(conn: sqlite3.Connection) -> dict:
+    """Each gym's equipment (v51): plates (pairs per size), bars, dumbbells and machine stacks, in the gym's own unit.
+    A gym with no plates listed uses the standard set for its unit on the phone."""
+    import json
+
+    def load(raw, kind):
+        try:
+            value = json.loads(raw) if raw else None
+        except (ValueError, TypeError):
+            return None
+        return value if isinstance(value, kind) else None
+
+    rows = conn.execute("SELECT * FROM liftGym ORDER BY COALESCE(lastUsedTs, 0) DESC, createdAt DESC LIMIT ?",
+                        (MAX_ROWS,)).fetchall()
+    out = []
+    for r in rows:
+        gym = {"id": r["id"], "name": r["name"], "unit": r["unit"] or "kg",
+               "last_used": _t(r["lastUsedTs"]) if r["lastUsedTs"] else None}
+        plates = load(r["platesJSON"], list)
+        gym["plates"] = [{"size": p.get("size"), "pairs": p.get("pairs")} for p in plates if isinstance(p, dict)] if plates else None
+        gym["bars"] = load(r["barsJSON"], dict)
+        gym["dumbbells"] = load(r["dumbbellsJSON"], list)
+        gym["stacks"] = load(r["stacksJSON"], dict)
+        sessions = conn.execute("SELECT COUNT(*) FROM liftSession WHERE gymId=?", (r["id"],)).fetchone()[0]
+        gym["sessions"] = sessions
+        out.append(gym)
+    res = {"count": len(out), "gyms": out}
+    if not out:
+        res["note"] = "No gym has been set up (or not uploaded yet: check get_sync_status)."
     return res
 
 

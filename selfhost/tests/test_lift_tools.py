@@ -78,3 +78,32 @@ def test_progression_rules_say_so_when_there_are_none(tmp_path):
     store = Store(str(tmp_path / "x.sqlite"))
     out = q.progression_rules(Store.connect_ro(store.path))
     assert out["count"] == 0 and "note" in out
+
+
+def test_gyms_list_each_inventory_and_count_their_sessions(tmp_path):
+    store = Store(str(tmp_path / "x.sqlite"))
+    store.upsert_rows(REGISTRY["liftGym"], "s", "d", [
+        ({"id": "g1"}, {"name": "Home", "unit": "kg", "createdAt": 1, "lastUsedTs": 5000,
+                        "platesJSON": '[{"pairs":2,"size":20},{"pairs":1,"size":5}]',
+                        "barsJSON": '{"barbell":15}', "dumbbellsJSON": "[5,10]",
+                        "stacksJSON": '{"Leg curl":[5,11.3]}'}),
+        ({"id": "g2"}, {"name": "Bare", "unit": "lb", "createdAt": 2, "platesJSON": "{nope"})], "1.100")
+    store.upsert_rows(REGISTRY["liftSession"], "s", "d", [
+        ({"id": "a"}, {"startTs": 1000, "endTs": 4000, "programName": "Push", "gymId": "g1"}),
+        ({"id": "b"}, {"startTs": 9000, "endTs": 9500, "gymId": "deleted"})], "1.100")
+    out = q.gyms(Store.connect_ro(store.path))
+    home = out["gyms"][0]
+    assert home["name"] == "Home" and home["sessions"] == 1
+    assert home["plates"] == [{"size": 20, "pairs": 2}, {"size": 5, "pairs": 1}]
+    assert home["bars"] == {"barbell": 15} and home["dumbbells"] == [5, 10] and home["stacks"] == {"Leg curl": [5, 11.3]}
+    bare = out["gyms"][1]
+    assert bare["unit"] == "lb" and bare["plates"] is None, "malformed inventory reads as none"
+    sessions = q.lift_sessions(Store.connect_ro(store.path), 0, 50000)["sessions"]
+    assert sessions[0]["gym"] == "Home"
+    assert sessions[1]["gym"] is None, "a deleted gym names nothing"
+
+
+def test_gyms_say_so_when_there_are_none(tmp_path):
+    store = Store(str(tmp_path / "x.sqlite"))
+    out = q.gyms(Store.connect_ro(store.path))
+    assert out["count"] == 0 and "note" in out

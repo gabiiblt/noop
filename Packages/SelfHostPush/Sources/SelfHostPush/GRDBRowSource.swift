@@ -9,7 +9,7 @@ public final class GRDBRowSource: RowSource {
 
     /// Small tables whose `deviceId` values enumerate the device scopes (a `SELECT DISTINCT` over a
     /// multi-million-row sample table would scan it end to end).
-    private static let discoveryTables = ["device", "dailyMetric", "sleepSession", "workout", "journal", "metricSeries", "appleDaily", "appleStepHour", "liveSession", "scoreInputProvenance", "labMarker", "liftExercise", "liftProgram", "liftProgramItem", "liftSession", "liftSet", "ouraRaw"]
+    private static let discoveryTables = ["device", "dailyMetric", "sleepSession", "workout", "journal", "metricSeries", "appleDaily", "appleStepHour", "liveSession", "scoreInputProvenance", "labMarker", "liftExercise", "liftProgram", "liftProgramItem", "liftSession", "liftSet", "liftGym", "ouraRaw"]
 
     public init(databasePath: String) throws {
         var config = Configuration()

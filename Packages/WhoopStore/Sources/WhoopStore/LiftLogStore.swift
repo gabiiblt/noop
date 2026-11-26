@@ -238,6 +238,8 @@ public struct LiftSessionRow: Equatable, Codable, Sendable {
     /// duration, so the rating has to be computable. Nil when the user skipped rating the session.
     public var sessionRpe: Double?
     public var note: String?
+    /// The gym this session was done at (v51), or nil when none was chosen. Names nothing once the gym is deleted.
+    public var gymId: String?
 
     public init(
         id: String,
@@ -248,7 +250,8 @@ public struct LiftSessionRow: Equatable, Codable, Sendable {
         programId: String?,
         programName: String?,
         sessionRpe: Double?,
-        note: String?
+        note: String?,
+        gymId: String? = nil
     ) {
         self.id = id
         self.deviceId = deviceId
@@ -259,6 +262,7 @@ public struct LiftSessionRow: Equatable, Codable, Sendable {
         self.programName = programName
         self.sessionRpe = sessionRpe
         self.note = note
+        self.gymId = gymId
     }
 
     static func decode(_ row: Row) -> LiftSessionRow {
@@ -271,7 +275,8 @@ public struct LiftSessionRow: Equatable, Codable, Sendable {
             programId: row["programId"],
             programName: row["programName"],
             sessionRpe: row["sessionRpe"],
-            note: row["note"]
+            note: row["note"],
+            gymId: row["gymId"]
         )
     }
 }
@@ -699,17 +704,18 @@ extension WhoopStore {
                 try db.execute(sql: """
                     INSERT INTO liftSession
                         (id, deviceId, startTs, endTs, sport, programId, programName,
-                         sessionRpe, note)
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                         sessionRpe, note, gymId)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                     ON CONFLICT(deviceId, startTs, sport) DO UPDATE SET
                         endTs = excluded.endTs,
                         programId = excluded.programId,
                         programName = excluded.programName,
                         sessionRpe = excluded.sessionRpe,
-                        note = excluded.note
+                        note = excluded.note,
+                        gymId = excluded.gymId
                     """, arguments: [
                         r.id, r.deviceId, r.startTs, r.endTs, r.sport,
-                        r.programId, r.programName, r.sessionRpe, r.note,
+                        r.programId, r.programName, r.sessionRpe, r.note, r.gymId,
                     ])
                 n += db.changesCount
             }

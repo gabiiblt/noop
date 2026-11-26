@@ -1221,6 +1221,11 @@
      "name": "note",
      "type": "text",
      "nullable": true
+    },
+    {
+     "name": "gymId",
+     "type": "text",
+     "nullable": true
     }
    ],
    "extData": []
@@ -1361,6 +1366,62 @@
     {
      "name": "planJSON",
      "type": "text",
+     "nullable": true
+    }
+   ],
+   "extData": []
+  },
+  {
+   "name": "liftGym",
+   "phase": "ext",
+   "delivery": "snapshot",
+   "selector": null,
+   "key": [
+    {
+     "name": "id",
+     "type": "text",
+     "nullable": false
+    }
+   ],
+   "data": [
+    {
+     "name": "name",
+     "type": "text",
+     "nullable": true
+    },
+    {
+     "name": "unit",
+     "type": "text",
+     "nullable": true
+    },
+    {
+     "name": "platesJSON",
+     "type": "text",
+     "nullable": true
+    },
+    {
+     "name": "barsJSON",
+     "type": "text",
+     "nullable": true
+    },
+    {
+     "name": "dumbbellsJSON",
+     "type": "text",
+     "nullable": true
+    },
+    {
+     "name": "stacksJSON",
+     "type": "text",
+     "nullable": true
+    },
+    {
+     "name": "createdAt",
+     "type": "int",
+     "nullable": true
+    },
+    {
+     "name": "lastUsedTs",
+     "type": "int",
      "nullable": true
     }
    ],

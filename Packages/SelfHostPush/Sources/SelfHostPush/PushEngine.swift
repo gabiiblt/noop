@@ -49,7 +49,7 @@ public final class PushEngine {
         "battery": 6, "event": 7, "spo2Sample": 8, "skinTempSample": 9, "respSample": 10, "gravitySample": 11,
         "appleDaily": 20, "metricSeries": 21, "scoreInputProvenance": 22, "liveSession": 23,
         "labMarker": 24, "liftExercise": 25, "liftProgram": 26, "liftProgramItem": 27, "liftSession": 28,
-        "liftSet": 29, "ouraRaw": 30,
+        "liftSet": 29, "ouraRaw": 30, "liftGym": 31,
         "stepSample": 40, "ppgHrSample": 41, "sleepStateSample": 42, "appleStepHour": 43,
         "v18AuxSample": 90, "ppgWaveformSample": 91, "ecgWaveformSample": 92,
     ]

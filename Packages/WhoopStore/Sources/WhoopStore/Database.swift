@@ -1210,6 +1210,30 @@ extension WhoopStore {
                 t.add(column: "planJSON", .text)
             }
         }
+        // v51 (iOS only, the training redesign): a gym's equipment, and which gym a session was done at.
+        //   • liftGym: one row per place a person trains. `unit` is 'kg' or 'lb', the unit every inventory number is in.
+        //     `platesJSON` the pairs owned per size, `barsJSON` the bar weight per equipment type, `dumbbellsJSON` the
+        //     dumbbells owned, `stacksJSON` a machine's own weight stack by exercise name. Each is NULL when empty.
+        //   • liftSession gains `gymId`, nullable: every session written before v51 was done at no known gym.
+        // No Room twin (schema oracle: `ios-only-training`).
+        migrator.registerMigration("v51-lift-gym") { db in
+            try db.create(table: "liftGym", options: [.ifNotExists]) { t in
+                t.column("id", .text).primaryKey()
+                t.column("deviceId", .text).notNull()
+                t.column("name", .text).notNull()
+                t.column("unit", .text).notNull().defaults(to: "kg")
+                t.column("platesJSON", .text)
+                t.column("barsJSON", .text)
+                t.column("dumbbellsJSON", .text)
+                t.column("stacksJSON", .text)
+                t.column("createdAt", .integer).notNull()
+                t.column("lastUsedTs", .integer)
+            }
+            try db.create(index: "idx_liftGym_device", on: "liftGym", columns: ["deviceId"], options: [.ifNotExists])
+            try db.alter(table: "liftSession") { t in
+                t.add(column: "gymId", .text)
+            }
+        }
         return migrator
     }
 }
