@@ -41,6 +41,23 @@ public struct FrostedCardSurface: View {
 
     public var body: some View {
         let op = max(0.0, min(1.0, Double(cardOpacityPercent) / 100.0))
+        #if os(iOS)
+        // iOS 26: every card is Liquid Glass (see NoopGlass.swift). The "Card transparency" setting keeps
+        // working by fading the glass itself, so a lowered slider still lets more of the screen through.
+        if #available(iOS 26.0, *) {
+            Color.clear
+                .noopGlass(RoundedRectangle(cornerRadius: cornerRadius, style: .continuous),
+                           tint: tint?.opacity(washStrength))
+                .opacity(op)
+        } else {
+            panel(op)
+        }
+        #else
+        panel(op)
+        #endif
+    }
+
+    private func panel(_ op: Double) -> some View {
         NoopPanelSurface(
             tint: tint?.opacity(washStrength),
             cornerRadius: cornerRadius,

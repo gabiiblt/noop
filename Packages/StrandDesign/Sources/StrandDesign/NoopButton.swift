@@ -95,6 +95,22 @@ private struct NoopButtonBackground: View {
 
     var body: some View {
         let shape = RoundedRectangle(cornerRadius: NoopButtonMetrics.cornerRadius, style: .continuous)
+        #if os(iOS)
+        // iOS 26: the button is Liquid Glass. A filled kind (primary, destructive) keeps its colour as the
+        // glass tint at full strength, so the one main action still reads as the main action; the quiet kinds
+        // (secondary, tertiary) are clear glass.
+        if #available(iOS 26.0, *) {
+            Color.clear
+                .glassEffect(Glass.regular.tint(appearance.fill).interactive(), in: shape)
+        } else {
+            flat(shape)
+        }
+        #else
+        flat(shape)
+        #endif
+    }
+
+    private func flat(_ shape: RoundedRectangle) -> some View {
         ZStack {
             if appearance.usesPanelSurface {
                 NoopPanelSurface(cornerRadius: NoopButtonMetrics.cornerRadius)

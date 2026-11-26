@@ -88,9 +88,8 @@ struct LiftSessionBar: View {
                 .padding(.leading, 12)
                 .padding(.trailing, 8)
                 .padding(.vertical, 10)
-                .background(.ultraThinMaterial, in: Capsule())
-                .overlay(Capsule().stroke(tint(engine).opacity(0.35), lineWidth: 1))
                 .contentShape(Capsule())
+                .noopGlass(Capsule(), tint: tint(engine), interactive: true)
             }
             .buttonStyle(.plain)
             .accessibilityLabel("Open the running session")

@@ -97,7 +97,7 @@ struct LiftSessionView: View {
         #else
         .frame(width: 560, height: 800)
         #endif
-        .background(StrandPalette.surfaceBase)
+        .background(NoopGlassBackdrop(tint: StrandPalette.effortColor).ignoresSafeArea())
         .keyboardDoneToolbar($focused)
         .dismissesKeyboardOnTap($focused)
         // Re-read whenever the session's exercises change, so an exercise added mid-session that was
@@ -184,26 +184,51 @@ struct LiftSessionView: View {
     }
 
     private func header(_ engine: LiftSessionEngine) -> some View {
-        VStack(alignment: .leading, spacing: 4) {
-            Text(session.programName ?? String(localized: "Session"))
-                .font(StrandFont.title1)
+        VStack(alignment: .leading, spacing: NoopMetrics.space2) {
+            Text((session.programName ?? String(localized: "Session")).uppercased())
+                .font(StrandFont.rounded(30, weight: .black))
                 .foregroundStyle(StrandPalette.textPrimary)
+                .lineLimit(2)
+                .minimumScaleFactor(0.6)
+            progressSegments(engine)
             Text(String(localized: "\(engine.completedWorkingSets) of \(engine.plannedWorkingSets) sets done"))
-                .font(StrandFont.caption)
+                .font(StrandFont.captionNumber)
                 .foregroundStyle(StrandPalette.textSecondary)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
     }
 
+    /// One segment per exercise, filled by the share of its sets that are done: where you are in the session,
+    /// readable from the bench.
+    private func progressSegments(_ engine: LiftSessionEngine) -> some View {
+        HStack(spacing: NoopMetrics.space1) {
+            ForEach(Array(engine.plan.indices), id: \.self) { index in
+                let slots = engine.slots(forExercise: index)
+                let done = slots.filter { engine.recordedSet(for: $0) != nil }.count
+                let share = slots.isEmpty ? 0 : Double(done) / Double(slots.count)
+                GeometryReader { geo in
+                    ZStack(alignment: .leading) {
+                        Capsule().fill(StrandPalette.textTertiary.opacity(0.25))
+                        Capsule().fill(StrandPalette.effortColor)
+                            .frame(width: geo.size.width * share)
+                    }
+                }
+                .frame(height: 5)
+            }
+        }
+        .accessibilityHidden(true)
+    }
+
     // MARK: - One exercise, with all its sets
 
     private func exerciseCard(_ engine: LiftSessionEngine, index: Int, item: LiftPlanItem) -> some View {
-        NoopCard {
+        let isCurrent = engine.currentSlot?.exerciseIndex == index
+        return NoopGlassCard(tint: isCurrent ? StrandPalette.statusPositive : nil) {
             VStack(alignment: .leading, spacing: NoopMetrics.rowSpacing) {
                 HStack(alignment: .top) {
                     VStack(alignment: .leading, spacing: 2) {
                         Text(item.exercise)
-                            .font(StrandFont.headline)
+                            .font(StrandFont.title2)
                             .foregroundStyle(StrandPalette.textPrimary)
                         Text(LiftMuscleSummary.line(primary: item.primaryMuscle,
                                                     secondaries: item.secondaryMuscles))
@@ -399,10 +424,10 @@ struct LiftSessionView: View {
                     .lineLimit(2)
             }
         }
-        .padding(.vertical, 6)
+        .padding(.vertical, 8)
         .padding(.horizontal, 8)
         .background(rowBackground(isWorking: isWorking, done: recorded != nil),
-                    in: RoundedRectangle(cornerRadius: 8, style: .continuous))
+                    in: RoundedRectangle(cornerRadius: NoopMetrics.space3, style: .continuous))
     }
 
     /// What goes on the bar for this set's weight at the session's gym, or nil when there is no gym, the exercise
@@ -431,11 +456,14 @@ struct LiftSessionView: View {
                 toggleWarmup(slot)
             } label: {
                 Text(isWarmup(slot) ? String(localized: "W") : "\(slot.setIndex)")
-                    .font(StrandFont.captionNumber)
+                    .font(StrandFont.captionNumber.weight(.bold))
                     .foregroundStyle(isWarmup(slot)
                                      ? StrandPalette.metricAmber
                                      : (isWorking ? StrandPalette.textPrimary
                                                   : StrandPalette.textSecondary))
+                    .frame(width: 26, height: 26)
+                    .background((isWarmup(slot) ? StrandPalette.metricAmber : StrandPalette.textTertiary).opacity(0.18),
+                                in: Circle())
                     .frame(width: Self.setColumnWidth, alignment: .center)
                     .contentShape(Rectangle())
             }
@@ -472,11 +500,12 @@ struct LiftSessionView: View {
             Button {
                 if recorded == nil { session.start(slot) } else { session.start(slot) }
             } label: {
-                Image(systemName: recorded == nil ? "circle" : "checkmark.circle.fill")
-                    .font(.system(size: 20, weight: .semibold))
-                    .foregroundStyle(recorded == nil
-                                     ? StrandPalette.textTertiary
-                                     : StrandPalette.statusPositive)
+                Image(systemName: "checkmark")
+                    .font(.system(size: 13, weight: .heavy))
+                    .foregroundStyle(recorded == nil ? StrandPalette.textTertiary : StrandPalette.goldDeepText)
+                    .frame(width: 28, height: 28)
+                    .background(recorded == nil ? StrandPalette.textTertiary.opacity(0.18) : StrandPalette.statusPositive,
+                                in: RoundedRectangle(cornerRadius: 8, style: .continuous))
             }
             .buttonStyle(.plain)
             .frame(width: Self.tickColumnWidth)
@@ -526,8 +555,8 @@ struct LiftSessionView: View {
     /// is over, and what is running is the gap after it. The rest is drawn as its own band between
     /// the two set rows instead — see `restBand`.
     private func rowBackground(isWorking: Bool, done: Bool) -> Color {
-        if isWorking { return StrandPalette.statusPositive.opacity(0.20) }
-        if done { return StrandPalette.surfaceRaised.opacity(0.5) }
+        if isWorking { return StrandPalette.statusPositive.opacity(0.24) }
+        if done { return StrandPalette.statusPositive.opacity(0.08) }
         return .clear
     }
 
@@ -548,13 +577,13 @@ struct LiftSessionView: View {
     /// control bar is pinned to the bottom and this is where your eyes already are — and once the
     /// sheet is scrolled to a later exercise, the band is the only thing that says which rest.
     private func restBand(_ engine: LiftSessionEngine) -> some View {
-        VStack(alignment: .leading, spacing: 6) {
-            HStack(spacing: 8) {
+        VStack(alignment: .leading, spacing: NoopMetrics.space2) {
+            HStack(alignment: .firstTextBaseline, spacing: 8) {
                 Text("Rest period").strandOverline()
                     .foregroundStyle(StrandPalette.metricAmber)
                 Spacer(minLength: 0)
                 LiftRunningClock { engine.restRemaining(now: $0) ?? 0 }
-                    .font(StrandFont.captionNumber)
+                    .font(StrandFont.rounded(34, weight: .heavy))
                     .foregroundStyle(StrandPalette.metricAmber)
             }
             .lineLimit(1)
@@ -579,24 +608,25 @@ struct LiftSessionView: View {
                     .lineLimit(2)
             }
         }
-        .padding(.horizontal, 10)
-        .padding(.vertical, 7)
+        .padding(.horizontal, NoopMetrics.space3)
+        .padding(.vertical, NoopMetrics.space3)
         .frame(maxWidth: .infinity)
-        .background(StrandPalette.metricAmber.opacity(0.22),
-                    in: RoundedRectangle(cornerRadius: 6, style: .continuous))
-        .padding(.horizontal, 8)
+        .noopGlass(RoundedRectangle(cornerRadius: NoopMetrics.glassTileRadius, style: .continuous),
+                   tint: StrandPalette.metricAmber)
+        .padding(.horizontal, 4)
     }
 
     private func restButton(verbatim text: String, label: LocalizedStringKey, action: @escaping () -> Void) -> some View {
         Button(action: action) {
             Text(verbatim: text)
-                .font(StrandFont.captionNumber)
+                .font(StrandFont.captionNumber.weight(.bold))
                 .foregroundStyle(StrandPalette.metricAmber)
-                .padding(.horizontal, 8)
-                .padding(.vertical, 2)
-                .overlay(RoundedRectangle(cornerRadius: 5, style: .continuous).stroke(StrandPalette.metricAmber.opacity(0.6)))
+                .padding(.horizontal, NoopMetrics.space3)
+                .padding(.vertical, 6)
+                .contentShape(Capsule())
         }
         .buttonStyle(.plain)
+        .noopGlass(Capsule(), interactive: true)
         .accessibilityLabel(label)
     }
 
@@ -749,29 +779,46 @@ struct LiftSessionView: View {
                 .accessibilityLabel("Undo")
             }
 
-            HStack(spacing: NoopMetrics.rowSpacing) {
-                Button { session.advance() } label: {
-                    Text(actionLabel(engine)).frame(maxWidth: .infinity)
-                }
-                .buttonStyle(.noopPrimary)
+            NoopGlassGroup {
+                HStack(spacing: NoopMetrics.rowSpacing) {
+                    Button { session.advance() } label: {
+                        Text(actionLabel(engine))
+                            .font(StrandFont.headline)
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, NoopMetrics.space1)
+                    }
+                    .noopGlassButton(prominent: true, tint: actionTint(engine))
+                    .controlSize(.large)
 
-                Button {
-                    unfinishedChoice = nil
-                    programChoice = nil
-                    setCountChanges = []
-                    showingFinish = true
-                } label: {
-                    Text("Finish")
+                    Button {
+                        unfinishedChoice = nil
+                        programChoice = nil
+                        setCountChanges = []
+                        showingFinish = true
+                    } label: {
+                        Text("Finish")
+                            .font(StrandFont.headline)
+                            .padding(.vertical, NoopMetrics.space1)
+                    }
+                    .noopGlassButton()
+                    .controlSize(.large)
                 }
-                .buttonStyle(NoopButtonStyle(.secondary))
             }
         }
         .padding(.horizontal, NoopMetrics.screenPadding)
-        .padding(.top, 10)
-        .padding(.bottom, 14)
-        .background(.ultraThinMaterial)
-        .overlay(alignment: .top) {
-            Rectangle().fill(StrandPalette.textTertiary.opacity(0.15)).frame(height: 0.5)
+        .padding(.top, NoopMetrics.space3)
+        .padding(.bottom, NoopMetrics.space3)
+        .noopGlass(RoundedRectangle(cornerRadius: NoopMetrics.glassCardRadius, style: .continuous))
+        .padding(.horizontal, NoopMetrics.space2)
+    }
+
+    /// The main button's colour follows the stage it moves on from: green while a set is worked, amber while
+    /// resting, the effort colour otherwise.
+    private func actionTint(_ engine: LiftSessionEngine) -> Color {
+        switch engine.stage {
+        case .working: return StrandPalette.statusPositive
+        case .resting: return StrandPalette.metricAmber
+        case .warmup, .finished: return StrandPalette.effortColor
         }
     }
 

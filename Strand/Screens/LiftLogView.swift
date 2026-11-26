@@ -21,6 +21,8 @@ struct LiftLogView: View {
 
     /// Saved programs, most-recently-touched first. Loaded off the store on appear/refresh.
     @State private var programs: [LiftProgramRow] = []
+    /// How many exercise lines each program has, by program id.
+    @State private var itemCounts: [String: Int] = [:]
     @State private var loaded = false
 
     /// The program being created or edited (nil = the editor is closed).
@@ -30,6 +32,8 @@ struct LiftLogView: View {
     @EnvironmentObject private var session: LiftSessionController
     /// Recent finished sessions, newest first.
     @State private var history: [LiftSessionRow] = []
+    /// Finished sessions since the start of this calendar week, for the week strip.
+    @State private var weekSessions: [LiftSessionRow] = []
     /// This week's fractional sets per muscle.
     @State private var weekCounts: [LiftMuscle: Double] = [:]
     /// The session whose detail sheet is open.
@@ -54,13 +58,17 @@ struct LiftLogView: View {
         ScreenScaffold(
             title: "Lift Log",
             subtitle: "Build a program once, then tap through it at the gym. Kept on \(Platform.deviceNounPhrase).",
-            onRefresh: { await load() }
+            onRefresh: { await load() },
+            topBackground: AnyView(NoopGlassBackdrop(tint: StrandPalette.effortColor))
         ) {
             VStack(alignment: .leading, spacing: NoopMetrics.sectionGap) {
-                headerCard
+                weekStrip
+                heroCard
+                toolsGrid
                 programsSection
                 weekSection
                 historySection
+                effortNote
             }
         }
         // Also on a saved session: the session sheet lives above this screen and cannot tell it
@@ -94,52 +102,199 @@ struct LiftLogView: View {
         }
     }
 
-    // MARK: - Header
+    // MARK: - This week, day by day
 
-    private var headerCard: some View {
-        NoopCard(tint: StrandPalette.effortColor) {
-            VStack(alignment: .leading, spacing: NoopMetrics.gap) {
-                HStack(spacing: NoopMetrics.rowSpacing) {
-                    Image(systemName: "dumbbell.fill")
-                        .font(.system(size: 16, weight: .semibold))
-                        .foregroundStyle(StrandPalette.effortColor)
-                        .frame(width: 30, height: 30)
-                        .background(StrandPalette.effortColor.opacity(0.14),
-                                    in: RoundedRectangle(cornerRadius: 9, style: .continuous))
-                        .accessibilityHidden(true)
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text("Your log book")
-                            .font(StrandFont.headline)
-                            .foregroundStyle(StrandPalette.textPrimary)
-                        Text("Programs, sessions and per-set history")
-                            .font(StrandFont.caption)
-                            .foregroundStyle(StrandPalette.textSecondary)
+    /// The seven days of this week as dots, filled on a day with a finished session, ringed on today. The count
+    /// and the time beside it are read from the same sessions, so the strip and its numbers cannot disagree.
+    private var weekStrip: some View {
+        let calendar = Calendar.current
+        let weekStart = calendar.dateInterval(of: .weekOfYear, for: Date())?.start ?? calendar.startOfDay(for: Date())
+        let days = (0..<7).compactMap { calendar.date(byAdding: .day, value: $0, to: weekStart) }
+        let minutes = weekSessions.reduce(0) { $0 + max(0, (($1.endTs ?? $1.startTs) - $1.startTs) / 60) }
+
+        return NoopGlassCard {
+            VStack(alignment: .leading, spacing: NoopMetrics.space3) {
+                HStack(alignment: .firstTextBaseline) {
+                    Text("This week").strandOverline()
+                    Spacer(minLength: 8)
+                    Text(String(localized: "\(weekSessions.count) sessions · \(minutes) min"))
+                        .font(StrandFont.captionNumber)
+                        .foregroundStyle(StrandPalette.textSecondary)
+                }
+                HStack(spacing: 0) {
+                    ForEach(days, id: \.self) { day in
+                        let trained = weekSessions.contains {
+                            calendar.isDate(Date(timeIntervalSince1970: TimeInterval($0.startTs)), inSameDayAs: day)
+                        }
+                        dayDot(day, trained: trained, today: calendar.isDateInToday(day))
+                            .frame(maxWidth: .infinity)
                     }
-                    Spacer(minLength: 0)
-                }
-                Text("Lifting adds volume and set counts. It never changes your Effort, which stays measured from heart rate.")
-                    .font(StrandFont.footnote)
-                    .foregroundStyle(StrandPalette.textSecondary)
-                    .fixedSize(horizontal: false, vertical: true)
-                if ExerciseLibrary.shared != nil {
-                    NoopButton("Exercise library", systemImage: "books.vertical.fill", kind: .secondary) {
-                        browsingLibrary = true
-                    }
-                }
-                NoopButton("Rotation", systemImage: "arrow.triangle.2.circlepath", kind: .secondary) {
-                    showingRotation = true
-                }
-                NoopButton("Muscle map", systemImage: "figure.arms.open", kind: .secondary) {
-                    showingMuscleMap = true
-                }
-                NoopButton("Strength balance", systemImage: "scale.3d", kind: .secondary) {
-                    showingBalance = true
-                }
-                NoopButton("Gyms and plates", systemImage: "scalemass.fill", kind: .secondary) {
-                    showingGyms = true
                 }
             }
         }
+    }
+
+    private func dayDot(_ day: Date, trained: Bool, today: Bool) -> some View {
+        VStack(spacing: NoopMetrics.space1) {
+            ZStack {
+                Circle()
+                    .fill(trained ? StrandPalette.effortColor : StrandPalette.surfaceInset.opacity(0.6))
+                if today && !trained {
+                    Circle().strokeBorder(StrandPalette.effortColor, lineWidth: 2)
+                }
+                if trained {
+                    Image(systemName: "checkmark")
+                        .font(.system(size: 13, weight: .heavy))
+                        .foregroundStyle(StrandPalette.goldDeepText)
+                }
+            }
+            .frame(width: 34, height: 34)
+            Text(day.formatted(.dateTime.weekday(.narrow)))
+                .font(StrandFont.caption.weight(today ? .bold : .regular))
+                .foregroundStyle(today ? StrandPalette.textPrimary : StrandPalette.textTertiary)
+        }
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(trained
+                            ? String(localized: "\(day.formatted(.dateTime.weekday(.wide))): trained")
+                            : day.formatted(.dateTime.weekday(.wide)))
+    }
+
+    // MARK: - The hero: what to do now
+
+    /// The one program to start now: the running session first, then what the rotation has up next, then the
+    /// program touched most recently.
+    @ViewBuilder private var heroCard: some View {
+        if session.isActive {
+            heroShell(overline: "Workout in progress",
+                      title: session.programName ?? String(localized: "Session"),
+                      caption: nil,
+                      action: "Resume", systemImage: "play.fill") { session.isPresented = true }
+        } else if let next = rotationNext,
+                  let program = programs.first(where: { $0.id == next.step.programId }) {
+            heroShell(overline: next.isDue ? "Up next" : "Rest day",
+                      title: program.name,
+                      caption: [exerciseCount(program), rotationCaption(next)].compactMap { $0 }.joined(separator: " · "),
+                      action: next.isDue ? "Start" : "Start anyway", systemImage: "play.fill") {
+                Task { await start(program) }
+            }
+        } else if let program = programs.first {
+            heroShell(overline: "Start a workout",
+                      title: program.name,
+                      caption: exerciseCount(program),
+                      action: "Start", systemImage: "play.fill") {
+                Task { await start(program) }
+            }
+        } else if loaded {
+            heroShell(overline: "Start a workout",
+                      title: String(localized: "No programs yet"),
+                      caption: String(localized: "A program is a name and an ordered list of exercises with your targets — working sets, reps, weight, rest and your own technique note."),
+                      action: "New program", systemImage: "plus") {
+                editing = ProgramEditTarget(id: "new", program: nil)
+            }
+        }
+    }
+
+    private func heroShell(overline: LocalizedStringKey, title: String, caption: String?,
+                           action: LocalizedStringKey, systemImage: String,
+                           perform: @escaping () -> Void) -> some View {
+        NoopGlassCard(tint: StrandPalette.effortColor, padding: NoopMetrics.space5) {
+            VStack(alignment: .leading, spacing: NoopMetrics.space3) {
+                Text(overline).strandOverline()
+                Text(title.uppercased())
+                    .font(StrandFont.rounded(34, weight: .black))
+                    .foregroundStyle(StrandPalette.textPrimary)
+                    .lineLimit(2)
+                    .minimumScaleFactor(0.6)
+                if let caption, !caption.isEmpty {
+                    Text(caption)
+                        .font(StrandFont.subhead)
+                        .foregroundStyle(StrandPalette.textSecondary)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+                Button(action: perform) {
+                    Label(action, systemImage: systemImage)
+                        .font(StrandFont.headline)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, NoopMetrics.space1)
+                }
+                .noopGlassButton(prominent: true, tint: StrandPalette.effortColor)
+                .controlSize(.large)
+                .padding(.top, NoopMetrics.space1)
+            }
+        }
+    }
+
+    private func exerciseCount(_ program: LiftProgramRow) -> String? {
+        guard let count = itemCounts[program.id], count > 0 else { return nil }
+        return String(localized: "\(count) exercises")
+    }
+
+    // MARK: - Tools
+
+    private struct Tool: Identifiable {
+        let id: String
+        let title: LocalizedStringKey
+        let systemImage: String
+        let tint: Color
+        let open: () -> Void
+    }
+
+    private var tools: [Tool] {
+        var list: [Tool] = []
+        if ExerciseLibrary.shared != nil {
+            list.append(Tool(id: "library", title: "Exercise library", systemImage: "books.vertical.fill",
+                             tint: StrandPalette.accent) { browsingLibrary = true })
+        }
+        list.append(Tool(id: "rotation", title: "Rotation", systemImage: "arrow.triangle.2.circlepath",
+                         tint: StrandPalette.effortColor) { showingRotation = true })
+        list.append(Tool(id: "map", title: "Muscle map", systemImage: "figure.arms.open",
+                         tint: StrandPalette.metricRose) { showingMuscleMap = true })
+        list.append(Tool(id: "balance", title: "Strength balance", systemImage: "scale.3d",
+                         tint: StrandPalette.metricPurple) { showingBalance = true })
+        list.append(Tool(id: "gyms", title: "Gyms and plates", systemImage: "scalemass.fill",
+                         tint: StrandPalette.metricAmber) { showingGyms = true })
+        list.append(Tool(id: "import", title: "Import", systemImage: "tablecells",
+                         tint: StrandPalette.metricCyan) { importing = true })
+        return list
+    }
+
+    private var toolsGrid: some View {
+        VStack(alignment: .leading, spacing: NoopMetrics.gap) {
+            SectionHeader("Tools")
+            NoopGlassGroup {
+                LazyVGrid(columns: [GridItem(.flexible(), spacing: NoopMetrics.gap),
+                                    GridItem(.flexible(), spacing: NoopMetrics.gap)],
+                          spacing: NoopMetrics.gap) {
+                    ForEach(tools) { tool in toolTile(tool) }
+                }
+            }
+        }
+    }
+
+    private func toolTile(_ tool: Tool) -> some View {
+        Button(action: tool.open) {
+            HStack(spacing: NoopMetrics.space3) {
+                Image(systemName: tool.systemImage)
+                    .font(.system(size: 15, weight: .semibold))
+                    .foregroundStyle(tool.tint)
+                    .frame(width: 34, height: 34)
+                    .background(tool.tint.opacity(0.18), in: Circle())
+                    .accessibilityHidden(true)
+                Text(tool.title)
+                    .font(StrandFont.subhead.weight(.semibold))
+                    .foregroundStyle(StrandPalette.textPrimary)
+                    .lineLimit(2)
+                    .minimumScaleFactor(0.85)
+                    .multilineTextAlignment(.leading)
+                Spacer(minLength: 0)
+            }
+            .padding(NoopMetrics.space3)
+            .frame(maxWidth: .infinity, minHeight: 64, alignment: .leading)
+            .contentShape(RoundedRectangle(cornerRadius: NoopMetrics.glassTileRadius, style: .continuous))
+        }
+        .buttonStyle(.plain)
+        .noopGlass(RoundedRectangle(cornerRadius: NoopMetrics.glassTileRadius, style: .continuous),
+                   interactive: true)
     }
 
     // MARK: - Programs
@@ -148,54 +303,28 @@ struct LiftLogView: View {
         VStack(alignment: .leading, spacing: NoopMetrics.gap) {
             SectionHeader("Programs", overline: "Saved")
 
-            if let next = rotationNext { rotationCard(next) }
-
             if !loaded {
                 ComingSoon(what: "Reading your programs…", symbol: "dumbbell")
-            } else if programs.isEmpty {
-                emptyState
             } else {
                 ForEach(programs, id: \.id) { program in
                     programRow(program)
                 }
             }
 
-            HStack(spacing: NoopMetrics.rowSpacing) {
-                Button {
-                    editing = ProgramEditTarget(id: "new", program: nil)
-                } label: {
-                    Label("New program", systemImage: "plus")
-                }
-                .buttonStyle(NoopButtonStyle(.secondary))
-
-                // Filling a dozen exercise lines by hand on a phone is the most tedious thing in the
-                // feature; a spreadsheet on a computer does it in a couple of minutes.
-                Button {
-                    importing = true
-                } label: {
-                    Label("Import", systemImage: "tablecells")
-                }
-                .buttonStyle(NoopButtonStyle(.secondary))
-            }
-        }
-    }
-
-    private var emptyState: some View {
-        NoopCard {
-            VStack(alignment: .leading, spacing: 8) {
-                Text("No programs yet")
+            Button {
+                editing = ProgramEditTarget(id: "new", program: nil)
+            } label: {
+                Label("New program", systemImage: "plus")
                     .font(StrandFont.headline)
-                    .foregroundStyle(StrandPalette.textPrimary)
-                Text("A program is a name and an ordered list of exercises with your targets — working sets, reps, weight, rest and your own technique note.")
-                    .font(StrandFont.footnote)
-                    .foregroundStyle(StrandPalette.textSecondary)
-                    .fixedSize(horizontal: false, vertical: true)
+                    .frame(maxWidth: .infinity)
             }
+            .noopGlassButton()
+            .controlSize(.large)
         }
     }
 
     private func programRow(_ program: LiftProgramRow) -> some View {
-        NoopCard {
+        NoopGlassCard {
             HStack(spacing: NoopMetrics.gap) {
                 Button {
                     editing = ProgramEditTarget(id: program.id, program: program)
@@ -204,11 +333,16 @@ struct LiftLogView: View {
                         Text(program.name)
                             .font(StrandFont.headline)
                             .foregroundStyle(StrandPalette.textPrimary)
+                        if let count = exerciseCount(program) {
+                            Text(count)
+                                .font(StrandFont.caption)
+                                .foregroundStyle(StrandPalette.effortColor)
+                        }
                         if let note = program.note, !note.isEmpty {
                             Text(note)
                                 .font(StrandFont.caption)
                                 .foregroundStyle(StrandPalette.textSecondary)
-                                .lineLimit(3)
+                                .lineLimit(2)
                         }
                         Text("Tap to edit")
                             .font(StrandFont.footnote)
@@ -219,10 +353,13 @@ struct LiftLogView: View {
                 }
                 .buttonStyle(.plain)
 
-                Button(session.isActive ? "Running" : "Start") { Task { await start(program) } }
-                    .buttonStyle(.noopPrimary)
-                    .frame(maxWidth: 110)
-                    .accessibilityLabel("Start this program")
+                Button { Task { await start(program) } } label: {
+                    Image(systemName: session.isActive ? "waveform" : "play.fill")
+                        .font(.system(size: 16, weight: .bold))
+                        .frame(width: 28, height: 28)
+                }
+                .noopGlassButton(prominent: true, tint: StrandPalette.effortColor)
+                .accessibilityLabel(session.isActive ? "Running" : "Start this program")
             }
         }
     }
@@ -298,15 +435,13 @@ struct LiftLogView: View {
         let ordered = LiftMuscle.ordered.filter { (weekCounts[$0] ?? 0) > 0 }
         return VStack(alignment: .leading, spacing: NoopMetrics.gap) {
             SectionHeader("Sets per muscle", overline: "Last 7 days · estimated")
-            if ordered.isEmpty {
-                NoopCard {
+            NoopGlassCard {
+                if ordered.isEmpty {
                     Text("Once you've logged a session, this shows how many sets each muscle got this week, against what the research associates with growth.")
                         .font(StrandFont.footnote)
                         .foregroundStyle(StrandPalette.textSecondary)
                         .fixedSize(horizontal: false, vertical: true)
-                }
-            } else {
-                NoopCard {
+                } else {
                     VStack(alignment: .leading, spacing: NoopMetrics.rowSpacing) {
                         ForEach(ordered, id: \.self) { muscle in
                             muscleBar(muscle, sets: weekCounts[muscle] ?? 0)
@@ -391,7 +526,7 @@ struct LiftLogView: View {
         VStack(alignment: .leading, spacing: NoopMetrics.gap) {
             SectionHeader("Sessions", overline: "Recent")
             if history.isEmpty {
-                NoopCard {
+                NoopGlassCard {
                     Text("Finished sessions land here, with every set you logged.")
                         .font(StrandFont.footnote)
                         .foregroundStyle(StrandPalette.textSecondary)
@@ -410,14 +545,29 @@ struct LiftLogView: View {
     }
 
     private func historyRow(_ session: LiftSessionRow) -> some View {
-        NoopCard {
+        let date = Date(timeIntervalSince1970: TimeInterval(session.startTs))
+        let minutes = max(0, ((session.endTs ?? session.startTs) - session.startTs) / 60)
+        return NoopGlassCard(padding: NoopMetrics.space3, interactive: true) {
             HStack(spacing: NoopMetrics.gap) {
+                // A calendar leaf: the day big, the month small, so a scroll down the list reads by date.
+                VStack(spacing: 0) {
+                    Text(date.formatted(.dateTime.month(.abbreviated)).uppercased())
+                        .font(StrandFont.overline)
+                        .foregroundStyle(StrandPalette.effortColor)
+                    Text(date.formatted(.dateTime.day()))
+                        .font(StrandFont.rounded(22, weight: .bold))
+                        .foregroundStyle(StrandPalette.textPrimary)
+                }
+                .frame(width: 48, height: 48)
+                .background(StrandPalette.effortColor.opacity(0.14),
+                            in: RoundedRectangle(cornerRadius: NoopMetrics.space3, style: .continuous))
+                .accessibilityHidden(true)
+
                 VStack(alignment: .leading, spacing: 3) {
                     Text(session.programName ?? String(localized: "Session"))
                         .font(StrandFont.headline)
                         .foregroundStyle(StrandPalette.textPrimary)
-                    Text(Date(timeIntervalSince1970: TimeInterval(session.startTs))
-                            .formatted(date: .abbreviated, time: .shortened))
+                    Text(String(localized: "\(date.formatted(date: .abbreviated, time: .shortened)) · \(minutes) min"))
                         .font(StrandFont.caption)
                         .foregroundStyle(StrandPalette.textSecondary)
                 }
@@ -430,11 +580,25 @@ struct LiftLogView: View {
         }
     }
 
+    // MARK: - Effort
+
+    private var effortNote: some View {
+        Text("Lifting adds volume and set counts. It never changes your Effort, which stays measured from heart rate.")
+            .font(StrandFont.footnote)
+            .foregroundStyle(StrandPalette.textTertiary)
+            .fixedSize(horizontal: false, vertical: true)
+    }
+
     // MARK: - Load
 
     private func load() async {
         guard let store = await repo.storeHandle() else { return }
         programs = (try? await store.liftPrograms(deviceId: repo.deviceId)) ?? []
+        var counts: [String: Int] = [:]
+        for program in programs {
+            counts[program.id] = ((try? await store.liftProgramItems(programId: program.id)) ?? []).count
+        }
+        itemCounts = counts
 
         let now = Int(Date().timeIntervalSince1970)
         history = ((try? await store.liftSessions(deviceId: repo.deviceId,
@@ -442,6 +606,9 @@ struct LiftLogView: View {
                                                   toTs: now)) ?? [])
             .filter { $0.endTs != nil }                 // an abandoned session is not history
             .sorted { $0.startTs > $1.startTs }
+        let weekStart = Int((Calendar.current.dateInterval(of: .weekOfYear, for: Date())?.start
+                             ?? Calendar.current.startOfDay(for: Date())).timeIntervalSince1970)
+        weekSessions = history.filter { $0.startTs >= weekStart }
         weekCounts = (try? await store.liftSetCounts(deviceId: repo.deviceId,
                                                       fromTs: now - 7 * 86_400,
                                                       toTs: now).fractional) ?? [:]
@@ -453,36 +620,6 @@ struct LiftLogView: View {
     }
 
     // MARK: - The rotation
-
-    /// "Up next" at the top of the programs: the next session in the cycle, or a rest day.
-    private func rotationCard(_ next: LiftRotationNext) -> some View {
-        NoopCard(tint: next.isDue ? StrandPalette.effortColor : nil) {
-            VStack(alignment: .leading, spacing: NoopMetrics.rowSpacing) {
-                HStack(alignment: .firstTextBaseline) {
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text(next.isDue ? "Up next" : "Rest day")
-                            .strandOverline()
-                        Text(next.step.name)
-                            .font(StrandFont.headline)
-                            .foregroundStyle(StrandPalette.textPrimary)
-                        Text(rotationCaption(next))
-                            .font(StrandFont.footnote)
-                            .foregroundStyle(StrandPalette.textSecondary)
-                    }
-                    Spacer(minLength: 8)
-                    Button("Rotation") { showingRotation = true }
-                        .buttonStyle(.plain)
-                        .font(StrandFont.body)
-                        .foregroundStyle(StrandPalette.accent)
-                }
-                if let program = programs.first(where: { $0.id == next.step.programId }) {
-                    Button(session.isActive ? "Running" : (next.isDue ? "Start" : "Start anyway")) { Task { await start(program) } }
-                        .buttonStyle(.noopPrimary)
-                        .frame(maxWidth: 160)
-                }
-            }
-        }
-    }
 
     private func rotationCaption(_ next: LiftRotationNext) -> String {
         switch next.state {
