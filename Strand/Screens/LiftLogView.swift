@@ -34,6 +34,8 @@ struct LiftLogView: View {
     @State private var weekCounts: [LiftMuscle: Double] = [:]
     /// The session whose detail sheet is open.
     @State private var viewing: SessionDetailTarget?
+    /// The exercise library sheet (iOS, where the catalogue ships).
+    @State private var browsingLibrary = false
 
     @AppStorage(UnitPrefs.systemKey) private var unitSystemRaw = UnitSystem.metric.rawValue
     private var unitSystem: UnitSystem { UnitSystem(rawValue: unitSystemRaw) ?? .metric }
@@ -65,6 +67,9 @@ struct LiftLogView: View {
         .sheet(item: $viewing) { target in
             LiftSessionDetailSheet(session: target.session) { await load() }
         }
+        .sheet(isPresented: $browsingLibrary) {
+            ExerciseLibraryView()
+        }
     }
 
     // MARK: - Header
@@ -94,6 +99,11 @@ struct LiftLogView: View {
                     .font(StrandFont.footnote)
                     .foregroundStyle(StrandPalette.textSecondary)
                     .fixedSize(horizontal: false, vertical: true)
+                if ExerciseLibrary.shared != nil {
+                    NoopButton("Exercise library", systemImage: "books.vertical.fill", kind: .secondary) {
+                        browsingLibrary = true
+                    }
+                }
             }
         }
     }

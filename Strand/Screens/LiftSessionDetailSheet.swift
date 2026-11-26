@@ -35,6 +35,18 @@ struct LiftSessionDetailSheet: View {
     @State private var editing = false
     /// Session RPE as stored now. The edit sheet can correct it, and the session load must follow.
     @State private var sessionRpe: Double?
+    /// Personal records each set earned, by set id (`LiftRecords`).
+    @State private var records: [String: [LiftRecordKind]] = [:]
+    /// The library entry behind each exercise name, when it came from the library.
+    @State private var catalogueByName: [String: CatalogueExercise] = [:]
+    /// The exercise whose own page is open.
+    @State private var openExercise: ExerciseSheetTarget?
+
+    struct ExerciseSheetTarget: Identifiable {
+        let name: String
+        let catalogue: CatalogueExercise?
+        var id: String { name }
+    }
 
     @AppStorage(UnitPrefs.systemKey) private var unitSystemRaw = UnitSystem.metric.rawValue
     private var unitSystem: UnitSystem { UnitSystem(rawValue: unitSystemRaw) ?? .metric }
@@ -69,6 +81,11 @@ struct LiftSessionDetailSheet: View {
         #endif
         .background(StrandPalette.surfaceBase)
         .task { await load() }
+        .sheet(item: $openExercise) { target in
+            NavigationStack {
+                ExerciseDetailView(name: target.name, catalogue: target.catalogue)
+            }
+        }
         .sheet(isPresented: $editing) {
             LiftSessionEditSheet(session: storedSession, sets: sets) {
                 await load()
@@ -155,6 +172,12 @@ struct LiftSessionDetailSheet: View {
                 tile(String(localized: "Effort"),
                      workout?.strain.map { LiftFormat.trim($0) } ?? "—",
                      String(localized: "measured from heart rate"))
+
+                if !records.isEmpty {
+                    tile(String(localized: "Records"),
+                         "\(records.count)",
+                         String(localized: "sets that beat your best"))
+                }
             }
         }
     }
@@ -224,11 +247,29 @@ struct LiftSessionDetailSheet: View {
 
     private func exerciseCard(_ summary: LiftMetrics.ExerciseSummary) -> some View {
         let rows = performed.filter { $0.exercise == summary.exercise }.sorted { $0.ord < $1.ord }
+        let entry = catalogueByName[summary.exercise]
         return NoopCard {
             VStack(alignment: .leading, spacing: NoopMetrics.rowSpacing) {
-                Text(summary.exercise)
-                    .font(StrandFont.headline)
-                    .foregroundStyle(StrandPalette.textPrimary)
+                Button {
+                    openExercise = ExerciseSheetTarget(name: summary.exercise, catalogue: entry)
+                } label: {
+                    HStack(spacing: NoopMetrics.rowSpacing) {
+                        if let entry {
+                            ExerciseImageView(url: ExerciseLibrary.imageURL(entry), maxPixel: 132)
+                                .frame(width: 44, height: 44)
+                        }
+                        Text(summary.exercise)
+                            .font(StrandFont.headline)
+                            .foregroundStyle(StrandPalette.textPrimary)
+                            .multilineTextAlignment(.leading)
+                        Spacer(minLength: 0)
+                        Image(systemName: "chevron.right")
+                            .font(.system(size: 12, weight: .semibold))
+                            .foregroundStyle(StrandPalette.textTertiary)
+                    }
+                    .contentShape(Rectangle())
+                }
+                .buttonStyle(.plain)
                 if let first = rows.first {
                     Text(LiftMuscleSummary.line(primary: first.primaryMuscle,
                                                 secondaries: first.secondaryMuscles))
@@ -293,6 +334,9 @@ struct LiftSessionDetailSheet: View {
                 Text(LiftFormat.duration(rest))
                     .font(StrandFont.caption)
                     .foregroundStyle(StrandPalette.textTertiary)
+            }
+            if let kinds = records[row.id] {
+                LiftRecordBadge(kinds: kinds)
             }
         }
     }
@@ -455,6 +499,23 @@ struct LiftSessionDetailSheet: View {
             if let v = LiftMetrics.volumeLoadKg(before) { previous[name] = v }
         }
         previousVolume = previous
+
+        // Records: each set against every earlier session and the sets before it in this one.
+        let history = (try? await store.liftSetsBefore(deviceId: repo.deviceId, startTs: session.startTs)) ?? []
+        records = LiftRecords.sessionRecords(performed, history: history)
+
+        // Library entries, by the set's own link or the name's link in the vocabulary.
+        if let catalogue = ExerciseLibrary.shared {
+            let vocabularyIds = LiftExerciseVocabulary.catalogueIds(
+                (try? await store.liftExercises(deviceId: repo.deviceId)) ?? [])
+            var idByName: [String: String] = [:]
+            for set in performed {
+                if let id = set.catalogueId ?? vocabularyIds[set.exercise] { idByName[set.exercise] = id }
+            }
+            let entries = (try? catalogue.exercises(ids: Array(Set(idByName.values)))) ?? []
+            let byId = Dictionary(entries.map { ($0.id, $0) }, uniquingKeysWith: { a, _ in a })
+            catalogueByName = idByName.compactMapValues { byId[$0] }
+        }
         loaded = true
     }
 }

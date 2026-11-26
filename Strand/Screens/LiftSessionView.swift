@@ -846,6 +846,10 @@ struct LiftSessionView: View {
         // `ord` is COMPLETION order, which with out-of-order work is not the plan's order — and it
         // is the order that actually happened, which is what a session should read back as. Sets
         // completed at finish without being started come last.
+        // Library exercises are linked by name in the vocabulary; each set carries that link so its
+        // picture, steps and records follow it even if the name is changed later.
+        let catalogueIds = LiftExerciseVocabulary.catalogueIds(
+            (try? await store.liftExercises(deviceId: repo.deviceId)) ?? [])
         let rows = finished.enumerated().map { ord, s -> LiftSetRow in
             let item = engine.planItem(for: s.slot)
             return LiftSetRow(
@@ -857,7 +861,8 @@ struct LiftSessionView: View {
                 secondaryMuscles: item?.secondaryMuscles ?? [],
                 setIndex: s.slot.setIndex, weightKg: s.weightKg, reps: s.reps, rpe: s.rpe,
                 isWarmup: s.isWarmup, startTs: s.startTs, endTs: s.endTs,
-                restSec: s.restSec, note: nil)
+                restSec: s.restSec, note: nil,
+                catalogueId: catalogueIds[item?.exercise ?? ""])
         }
         _ = try? await store.upsertLiftSets(rows)
         await writeProgram(store: store, plan: engine.plan, sets: finished)

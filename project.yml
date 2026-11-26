@@ -233,6 +233,14 @@ targets:
         excludes:
           - "Resources/Info.plist"
           - "Resources/NOOP.entitlements"
+          # Added below as ONE folder reference, so the app bundle keeps `ExerciseCatalogue/` with its
+          # `ExerciseImages/` subfolder instead of flattening hundreds of stills into the bundle root.
+          - "Resources/ExerciseCatalogue"
+      # The bundled exercise catalogue (SQLite + public-domain stills), read by `ExerciseLibrary`.
+      # Rebuilt by Tools/exercise_catalogue/build_catalogue.py; sources and licences in ATTRIBUTION.md.
+      - path: StrandiOS/Resources/ExerciseCatalogue
+        type: folder
+        buildPhase: resources
       - path: StrandiOSShared
     # Same tracked wrapper as the macOS target (Strand/Oura/ is shared, not per-platform).
     configFiles:
