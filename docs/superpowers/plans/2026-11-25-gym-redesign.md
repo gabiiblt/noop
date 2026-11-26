@@ -119,10 +119,12 @@ Each item is a port of openGym's code under the MIT authorization, with its orig
 reference values from openGym's own functions run under vitest. Every stored field joins the push and the MCP.
 
 Done: catalogue (text, French, muscles, equipment, images from free-exercise-db), personal records per set,
-progress per exercise, set model (drop set, rest-pause, failure, RIR, side, time, distance) in the store and push.
+progress per exercise, set model (drop set, rest-pause, failure, RIR, side, time, distance) in the store and push,
+and its logging UI in the live session (`LiftSetDetailSheet`, opened from the ellipsis on each set row; the value
+is `LiftSetExtras`, held for a set not yet performed, kept across a relaunch, written to `liftSet` on Save).
+Not yet on Android, which has no v49 set model; the Swift side leads until the Room twin lands.
 
 To do:
-1. Logging UI for the set model: set type, drops and bursts, failure, RIR, per side, timed and distance sets.
 2. Progression rules per program or exercise: linear, double, triple progression, time, with the reason shown
    for each target, and an automatic deload after a stall.
 3. Plate calculator per gym: plates, bars, dumbbells and machine stacks per gym, and the plates to load.

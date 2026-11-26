@@ -94,6 +94,9 @@ struct LiftRecordedSet: Equatable {
     /// Rest actually taken after this set. Nil while the rest is still running, or when the user
     /// moved on without resting.
     var restSec: Int?
+    /// What the set was beyond weight, reps and RPE: its shape, drops or bursts, failure, reps in
+    /// reserve, side, time and distance. Empty for a plain set, which is what `advance` records.
+    var extras = LiftSetExtras()
 
     var slot: LiftSlot { LiftSlot(exerciseIndex: exerciseIndex, setIndex: setIndex) }
 }
@@ -378,6 +381,14 @@ struct LiftSessionEngine: Equatable {
         sets[i].reps = reps
         sets[i].rpe = rpe
         sets[i].isWarmup = isWarmup
+    }
+
+    /// Set what a set was beyond its numbers (`LiftSetExtras`). Editing only, like `updateSet`: a set
+    /// that was not performed is not created by describing it. Stored normalised, so a screen cannot
+    /// persist a drop with no reps or an RIR outside 0...10.
+    mutating func updateExtras(_ slot: LiftSlot, _ extras: LiftSetExtras) {
+        guard let i = sets.firstIndex(where: { $0.slot == slot }) else { return }
+        sets[i].extras = extras.normalized()
     }
 
     // MARK: - Changing how many sets a line holds

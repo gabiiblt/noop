@@ -35,6 +35,16 @@ enum LiftSessionPersistence {
         /// as absent and the session resumes with nothing pending, which is exactly right.
         var pendingValues: [PendingValue]?
         var pendingWarmups: [SlotBox]?
+        /// Set detail (type, drops, failure, RIR, side, time, distance) chosen for sets that have not
+        /// happened yet. Optional for the same reason as the two above: an older snapshot decodes as
+        /// absent and resumes with nothing pending.
+        var pendingExtras: [PendingExtra]?
+
+        struct PendingExtra: Codable, Equatable {
+            var exerciseIndex: Int
+            var setIndex: Int
+            var extras: LiftSetExtras
+        }
 
         struct PendingValue: Codable, Equatable {
             var exerciseIndex: Int
@@ -89,6 +99,8 @@ enum LiftSessionPersistence {
             var startTs: Int
             var endTs: Int
             var restSec: Int?
+            /// Absent from a snapshot written before set detail existed: a plain set.
+            var extras: LiftSetExtras?
         }
     }
 
@@ -138,7 +150,8 @@ enum LiftSessionPersistence {
                          programId: String?,
                          programName: String?,
                          pendingValues: [LiftSlot: LiftSessionController.PendingSetValues],
-                         pendingWarmups: Set<LiftSlot>) -> Snapshot {
+                         pendingWarmups: Set<LiftSlot>,
+                         pendingExtras: [LiftSlot: LiftSetExtras] = [:]) -> Snapshot {
         Snapshot(
             startSec: engine.startTs,
             programId: programId,
@@ -163,7 +176,10 @@ enum LiftSessionPersistence {
                 Snapshot.RecordedSet(exerciseIndex: $0.exerciseIndex, setIndex: $0.setIndex,
                                      weightKg: $0.weightKg, reps: $0.reps, rpe: $0.rpe,
                                      isWarmup: $0.isWarmup, startTs: $0.startTs, endTs: $0.endTs,
-                                     restSec: $0.restSec)
+                                     restSec: $0.restSec,
+                                     // Written only when something is set, so a session with no detail
+                                     // encodes exactly as before.
+                                     extras: $0.extras.isEmpty ? nil : $0.extras)
             },
             stageStartedAt: engine.stageStartedAt,
             // Sorted so the encoded snapshot is stable: a dictionary and a set have no order, and an
@@ -176,7 +192,20 @@ enum LiftSessionPersistence {
                 },
             pendingWarmups: pendingWarmups
                 .sorted { ($0.exerciseIndex, $0.setIndex) < ($1.exerciseIndex, $1.setIndex) }
-                .map { Snapshot.SlotBox(exerciseIndex: $0.exerciseIndex, setIndex: $0.setIndex) })
+                .map { Snapshot.SlotBox(exerciseIndex: $0.exerciseIndex, setIndex: $0.setIndex) },
+            pendingExtras: pendingExtras.isEmpty ? nil : pendingExtras
+                .sorted { ($0.key.exerciseIndex, $0.key.setIndex) < ($1.key.exerciseIndex, $1.key.setIndex) }
+                .map { Snapshot.PendingExtra(exerciseIndex: $0.key.exerciseIndex, setIndex: $0.key.setIndex,
+                                             extras: $0.value) })
+    }
+
+    /// The set detail chosen in advance, back as the controller holds it.
+    static func pendingExtras(from s: Snapshot) -> [LiftSlot: LiftSetExtras] {
+        var out: [LiftSlot: LiftSetExtras] = [:]
+        for p in s.pendingExtras ?? [] {
+            out[LiftSlot(exerciseIndex: p.exerciseIndex, setIndex: p.setIndex)] = p.extras.normalized()
+        }
+        return out
     }
 
     /// The numbers typed in advance, back as the controller holds them.
@@ -216,7 +245,8 @@ enum LiftSessionPersistence {
             LiftRecordedSet(exerciseIndex: $0.exerciseIndex, setIndex: $0.setIndex,
                             weightKg: $0.weightKg, reps: $0.reps, rpe: $0.rpe,
                             isWarmup: $0.isWarmup, startTs: $0.startTs, endTs: $0.endTs,
-                            restSec: $0.restSec)
+                            restSec: $0.restSec,
+                            extras: ($0.extras ?? LiftSetExtras()).normalized())
         }
         return LiftSessionEngine(restoring: plan, startTs: s.startSec,
                                  stage: unbox(s.stage), sets: sets, stageStartedAt: s.stageStartedAt)

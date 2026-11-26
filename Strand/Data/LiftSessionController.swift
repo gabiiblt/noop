@@ -74,6 +74,10 @@ final class LiftSessionController: ObservableObject {
     /// number the user typed for this set is better evidence than the one the sheet guessed for it.
     @Published private(set) var pendingValues: [LiftSlot: PendingSetValues] = [:]
 
+    /// Set detail (shape, drops, failure, RIR, side, time, distance) chosen for a set BEFORE it is
+    /// performed, held and applied exactly the way `pendingValues` is — editing must never append a set.
+    @Published private(set) var pendingExtras: [LiftSlot: LiftSetExtras] = [:]
+
     /// What a user typed into a set that has not happened yet. All optional: a row where only the
     /// weight was typed keeps carrying its reps.
     struct PendingSetValues: Equatable {
@@ -166,6 +170,7 @@ final class LiftSessionController: ObservableObject {
         // to prevent, whether it is lost to a blur or to a relaunch.
         pendingValues = LiftSessionPersistence.pendingValues(from: snapshot)
         pendingWarmups = LiftSessionPersistence.pendingWarmups(from: snapshot)
+        pendingExtras = LiftSessionPersistence.pendingExtras(from: snapshot)
         // Suppress the warning for a rest that is ALREADY inside its final seconds. Without this,
         // reopening a session mid-rest greets the user with three buzzes for a rest they have been
         // watching count down all along.
@@ -200,6 +205,7 @@ final class LiftSessionController: ObservableObject {
         lastStrapStepAt = nil
         pendingWarmups = []
         pendingValues = [:]
+        pendingExtras = [:]
         isPresented = false
         setStrapHandler(nil)
     }
@@ -407,12 +413,15 @@ final class LiftSessionController: ObservableObject {
         guard let engine, let last = engine.sets.last else { return }
         let typed = pendingValues.removeValue(forKey: last.slot)
         let warmup = last.isWarmup || pendingWarmups.contains(last.slot)
-        guard typed != nil || warmup != last.isWarmup else { return }
-        self.engine?.updateSet(last.slot,
-                               weightKg: typed?.weightKg ?? last.weightKg,
-                               reps: typed?.reps ?? last.reps,
-                               rpe: typed?.rpe ?? last.rpe,
-                               isWarmup: warmup)
+        let extras = pendingExtras.removeValue(forKey: last.slot)
+        if typed != nil || warmup != last.isWarmup {
+            self.engine?.updateSet(last.slot,
+                                   weightKg: typed?.weightKg ?? last.weightKg,
+                                   reps: typed?.reps ?? last.reps,
+                                   rpe: typed?.rpe ?? last.rpe,
+                                   isWarmup: warmup)
+        }
+        if let extras { self.engine?.updateExtras(last.slot, extras) }
     }
 
     /// Begin a specific set — the out-of-order path, for when a machine is occupied.
@@ -462,6 +471,7 @@ final class LiftSessionController: ObservableObject {
         // back would return them silently, from input the user gave a set they then removed.
         pendingWarmups.remove(dropped)
         pendingValues.removeValue(forKey: dropped)
+        pendingExtras.removeValue(forKey: dropped)
         persist()
         return true
     }
@@ -484,6 +494,26 @@ final class LiftSessionController: ObservableObject {
             else { pendingValues[slot] = values }
         }
         persist()
+    }
+
+    /// Set what a set was beyond its numbers — any set, at any time, like `updateSet`. A performed set is
+    /// edited in the engine; one not yet performed holds it in `pendingExtras` until it is. An empty
+    /// value clears the entry, so a set put back to plain leaves nothing behind.
+    func setExtras(_ slot: LiftSlot, _ extras: LiftSetExtras) {
+        let clean = extras.normalized()
+        if engine?.recordedSet(for: slot) != nil {
+            engine?.updateExtras(slot, clean)
+        } else if engine?.planItem(for: slot) != nil {
+            if clean.isEmpty { pendingExtras.removeValue(forKey: slot) }
+            else { pendingExtras[slot] = clean }
+        }
+        persist()
+    }
+
+    /// What a slot carries beyond its numbers: what it recorded, or what was chosen for it in advance.
+    func extras(for slot: LiftSlot) -> LiftSetExtras {
+        if let row = engine?.recordedSet(for: slot) { return row.extras }
+        return pendingExtras[slot] ?? LiftSetExtras()
     }
 
     /// What a slot is currently showing: what it recorded, or what was typed into it in advance.
@@ -522,6 +552,7 @@ final class LiftSessionController: ObservableObject {
         var startTs: Int?
         var endTs: Int?
         var restSec: Int?
+        var extras = LiftSetExtras()
     }
 
     /// The sets the session saves — every slot on the sheet.
@@ -544,7 +575,8 @@ final class LiftSessionController: ObservableObject {
             let shown = values(of: set.slot)
             return FinishedSet(slot: set.slot, weightKg: shown.weightKg, reps: shown.reps,
                                rpe: set.rpe ?? planned(set.slot), isWarmup: set.isWarmup,
-                               startTs: set.startTs, endTs: set.endTs, restSec: set.restSec)
+                               startTs: set.startTs, endTs: set.endTs, restSec: set.restSec,
+                               extras: set.extras)
         }
         for slot in engine.allSlots where !engine.isCompleted(slot) {
             let typed = pendingValues[slot]
@@ -554,7 +586,10 @@ final class LiftSessionController: ObservableObject {
                                    reps: completingUnfinished ? typed?.reps ?? grey.reps : 0,
                                    rpe: completingUnfinished ? typed?.rpe ?? planned(slot) : nil,
                                    isWarmup: pendingWarmups.contains(slot),
-                                   startTs: nil, endTs: nil, restSec: nil))
+                                   startTs: nil, endTs: nil, restSec: nil,
+                                   // Detail chosen in advance rides along with a set completed at finish;
+                                   // a discarded one (0 x 0) never carries any.
+                                   extras: completingUnfinished ? pendingExtras[slot] ?? LiftSetExtras() : LiftSetExtras()))
         }
         return out
     }
@@ -732,6 +767,7 @@ final class LiftSessionController: ObservableObject {
                                             programId: programId,
                                             programName: programName,
                                             pendingValues: pendingValues,
-                                            pendingWarmups: pendingWarmups))
+                                            pendingWarmups: pendingWarmups,
+                                            pendingExtras: pendingExtras))
     }
 }

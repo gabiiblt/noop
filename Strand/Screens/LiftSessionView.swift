@@ -29,6 +29,14 @@ struct LiftSessionView: View {
     let onFinished: () async -> Void
 
     @State private var showingFinish = false
+    /// The set whose detail sheet (shape, failure, RIR, side, time, distance) is open.
+    @State private var detailTarget: DetailTarget?
+
+    struct DetailTarget: Identifiable {
+        let slot: LiftSlot
+        let exercise: String
+        var id: LiftSlot { slot }
+    }
     @State private var confirmingDiscard = false
     @State private var sessionRpeText = ""
     @State private var saving = false
@@ -99,6 +107,12 @@ struct LiftSessionView: View {
             draft = draft.filter { $0.key == now }
         }
         .sheet(isPresented: $showingFinish) { finishSheet }
+        .sheet(item: $detailTarget) { target in
+            LiftSetDetailSheet(exercise: target.exercise, setIndex: target.slot.setIndex,
+                               extras: session.extras(for: target.slot), system: unitSystem) { extras in
+                session.setExtras(target.slot, extras)
+            }
+        }
     }
 
     // MARK: - The scrollable sheet
@@ -283,6 +297,9 @@ struct LiftSessionView: View {
     /// labels sit over the four things they name.
     private static let tickColumnWidth: CGFloat = 30
 
+    /// Width of the set-detail button column, mirrored by a clear spacer in the heading row.
+    private static let detailColumnWidth: CGFloat = 24
+
     private var columnHeadings: some View {
         HStack(spacing: 8) {
             Text("Set").strandOverline()
@@ -290,6 +307,7 @@ struct LiftSessionView: View {
             Text(weightHeading).strandOverline().frame(maxWidth: .infinity, alignment: .leading)
             Text("Reps").strandOverline().frame(maxWidth: .infinity, alignment: .leading)
             Text("RPE").strandOverline().frame(maxWidth: .infinity, alignment: .leading)
+            Color.clear.frame(width: Self.detailColumnWidth)
             Color.clear.frame(width: Self.tickColumnWidth)
         }
         .lineLimit(1)
@@ -306,7 +324,30 @@ struct LiftSessionView: View {
         let recorded = engine.recordedSet(for: slot)
         let isWorking = engine.stage == .working(slot)
 
-        return HStack(spacing: 8) {
+        let extras = session.extras(for: slot)
+        let summary = setDetailSummary(extras)
+
+        return VStack(alignment: .leading, spacing: 2) {
+            setRowControls(engine, slot: slot, recorded: recorded, isWorking: isWorking, extras: extras)
+            if let summary {
+                Text(summary)
+                    .font(StrandFont.caption)
+                    .foregroundStyle(StrandPalette.textTertiary)
+                    .padding(.leading, Self.setColumnWidth + 8)
+                    .lineLimit(2)
+            }
+        }
+        .padding(.vertical, 6)
+        .padding(.horizontal, 8)
+        .background(rowBackground(isWorking: isWorking, done: recorded != nil),
+                    in: RoundedRectangle(cornerRadius: 8, style: .continuous))
+    }
+
+    /// The number fields and buttons of one set row.
+    private func setRowControls(_ engine: LiftSessionEngine, slot: LiftSlot,
+                                recorded: LiftRecordedSet?, isWorking: Bool,
+                                extras: LiftSetExtras) -> some View {
+        HStack(spacing: 8) {
             // The set number IS the warm-up toggle. Warm-ups are excluded from volume and from the
             // per-muscle counts, so being unable to mark one silently inflates the single figure the
             // whole feature rests on — it has to be reachable in one tap, without leaving the row.
@@ -337,6 +378,19 @@ struct LiftSessionView: View {
                         text: rpeBinding(slot),
                         ghost: ghostRpe(engine, slot: slot))
 
+            // Set detail: shape, failure, RIR, side, time, distance. Filled when the set carries any,
+            // so a row that was changed never looks like one that was not.
+            Button {
+                detailTarget = DetailTarget(slot: slot, exercise: engine.planItem(for: slot)?.exercise ?? "")
+            } label: {
+                Image(systemName: extras.isEmpty ? "ellipsis.circle" : "ellipsis.circle.fill")
+                    .font(.system(size: 18, weight: .regular))
+                    .foregroundStyle(extras.isEmpty ? StrandPalette.textTertiary : StrandPalette.accent)
+            }
+            .buttonStyle(.plain)
+            .frame(width: Self.detailColumnWidth)
+            .accessibilityLabel(String(localized: "Set detail"))
+
             // The tick both REPORTS and ACTS: filled when the set is done, and tappable to start
             // this set when it is not — which is how you jump to a different exercise.
             Button {
@@ -354,10 +408,32 @@ struct LiftSessionView: View {
                                 ? String(localized: "Start this set")
                                 : String(localized: "Redo this set"))
         }
-        .padding(.vertical, 6)
-        .padding(.horizontal, 8)
-        .background(rowBackground(isWorking: isWorking, done: recorded != nil),
-                    in: RoundedRectangle(cornerRadius: 8, style: .continuous))
+    }
+
+    /// One line naming what a set carries beyond its numbers, or nil for a plain set.
+    private func setDetailSummary(_ extras: LiftSetExtras) -> String? {
+        guard !extras.isEmpty else { return nil }
+        var bits: [String] = []
+        switch extras.setType {
+        case .straight: break
+        case .dropset: bits.append(String(localized: "Drop set"))
+        case .restpause: bits.append(String(localized: "Rest-pause"))
+        }
+        if !extras.parts.isEmpty {
+            bits.append(extras.setType == .dropset
+                        ? String(localized: "\(extras.parts.count) drops")
+                        : String(localized: "\(extras.parts.count) bursts"))
+        }
+        if extras.isFailure { bits.append(String(localized: "Failure")) }
+        if let rir = extras.rir { bits.append(String(localized: "RIR \(LiftFormat.trim(rir))")) }
+        switch extras.side {
+        case .left: bits.append(String(localized: "Left"))
+        case .right: bits.append(String(localized: "Right"))
+        case nil: break
+        }
+        if let t = extras.durationSec { bits.append("\(t) s") }
+        if let d = extras.distanceM { bits.append("\(LiftFormat.trim(d)) m") }
+        return bits.joined(separator: " · ")
     }
 
     /// Warm-up state lives in the controller, so a mark survives the sheet being minimised and
@@ -862,6 +938,9 @@ struct LiftSessionView: View {
                 setIndex: s.slot.setIndex, weightKg: s.weightKg, reps: s.reps, rpe: s.rpe,
                 isWarmup: s.isWarmup, startTs: s.startTs, endTs: s.endTs,
                 restSec: s.restSec, note: nil,
+                setType: s.extras.setType, parts: s.extras.parts, isFailure: s.extras.isFailure,
+                rir: s.extras.rir, side: s.extras.side,
+                durationSec: s.extras.durationSec, distanceM: s.extras.distanceM,
                 catalogueId: catalogueIds[item?.exercise ?? ""])
         }
         _ = try? await store.upsertLiftSets(rows)
