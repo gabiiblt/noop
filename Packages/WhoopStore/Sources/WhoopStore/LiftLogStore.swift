@@ -91,6 +91,14 @@ public struct LiftProgramRow: Equatable, Codable, Sendable {
     public var updatedAt: Int
     /// Hidden from the picker but kept, so old sessions still resolve their program.
     public var archived: Bool
+    // v53 — the rotation (A, B, C) a person trains in instead of on weekdays.
+    /// Its place in the rotation, 0-based, or nil when it is not part of one.
+    public var rotationOrd: Int?
+    /// Days off after finishing this program before the next one in the rotation is due. Zero means the next day.
+    public var restDaysAfter: Int
+
+    /// The most rest days one program may carry: a bound against a stuck finger.
+    public static let maxRestDays = 14
 
     public init(
         id: String,
@@ -99,7 +107,9 @@ public struct LiftProgramRow: Equatable, Codable, Sendable {
         note: String?,
         createdAt: Int,
         updatedAt: Int,
-        archived: Bool
+        archived: Bool,
+        rotationOrd: Int? = nil,
+        restDaysAfter: Int = 0
     ) {
         self.id = id
         self.deviceId = deviceId
@@ -108,6 +118,8 @@ public struct LiftProgramRow: Equatable, Codable, Sendable {
         self.createdAt = createdAt
         self.updatedAt = updatedAt
         self.archived = archived
+        self.rotationOrd = rotationOrd.map { max(0, $0) }
+        self.restDaysAfter = min(LiftProgramRow.maxRestDays, max(0, restDaysAfter))
     }
 
     static func decode(_ row: Row) -> LiftProgramRow {
@@ -118,7 +130,9 @@ public struct LiftProgramRow: Equatable, Codable, Sendable {
             note: row["note"],
             createdAt: row["createdAt"],
             updatedAt: row["updatedAt"],
-            archived: row["archived"]
+            archived: row["archived"],
+            rotationOrd: row["rotationOrd"],
+            restDaysAfter: row["restDaysAfter"] ?? 0
         )
     }
 }
@@ -628,15 +642,18 @@ extension WhoopStore {
             for r in rows {
                 try db.execute(sql: """
                     INSERT INTO liftProgram
-                        (id, deviceId, name, note, createdAt, updatedAt, archived)
-                    VALUES (?, ?, ?, ?, ?, ?, ?)
+                        (id, deviceId, name, note, createdAt, updatedAt, archived, rotationOrd, restDaysAfter)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
                     ON CONFLICT(id) DO UPDATE SET
                         name = excluded.name,
                         note = excluded.note,
                         updatedAt = excluded.updatedAt,
-                        archived = excluded.archived
+                        archived = excluded.archived,
+                        rotationOrd = excluded.rotationOrd,
+                        restDaysAfter = excluded.restDaysAfter
                     """, arguments: [
                         r.id, r.deviceId, r.name, r.note, r.createdAt, r.updatedAt, r.archived,
+                        r.rotationOrd, r.restDaysAfter == 0 ? nil : r.restDaysAfter,
                     ])
                 n += db.changesCount
             }

@@ -123,6 +123,8 @@ SpO₂, temperature) are approximations and not clinically validated.
   by `Tools/lift_progression_oracle/gen_plates.mjs`.
   The muscle recovery model (`LiftRecovery.swift`, from openGym's `recovery.js`, `onerm.js` and `effort.js`) is checked by
   `gen_recovery.mjs` over 87 histories.
+  The rotation of programs (`LiftRotation.swift`) re-expresses openGym's rotation idea (next program follows the last one
+  trained) in Noop's own code, with no openGym source copied.
   The strength-balance engine and its three ratio tables (`LiftBalance.swift`, `LiftBalanceTemplates.swift`, from openGym's
   `structuralBalance.js` and `structuralBalanceTemplates.js`; the tables are Poliquin's, Thibaudeau's and ATG's as transcribed
   by openGym from https://anticulturista.substack.com/p/30-equilibrio-estructural-tu-proximo) are checked by `gen_balance.mjs`

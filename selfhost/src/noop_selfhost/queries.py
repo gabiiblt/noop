@@ -471,7 +471,39 @@ def lift_sessions(conn: sqlite3.Connection, start: int, end: int, with_sets: boo
     return res
 
 
-def programs(conn: sqlite3.Connection) -> dict:
+def _rotation(conn: sqlite3.Connection, programs, now: int):
+    """What is up next in the rotation (A, B, C), or None when no program is in one. The next program is the one after
+    the program of the LAST session that belongs to the rotation; it is due the day after that session plus the rest days
+    that program carries. Days are Europe/Paris days, like everything else here."""
+    from datetime import datetime
+    from .tz import PARIS
+    steps = sorted((p for p in programs if not p["archived"] and p["rotationOrd"] is not None),
+                   key=lambda p: (p["rotationOrd"], p["createdAt"], p["id"]))
+    if not steps:
+        return None
+    ids = [p["id"] for p in steps]
+    marks = ",".join("?" * len(ids))
+    last = conn.execute(f"SELECT programId, startTs FROM liftSession WHERE programId IN ({marks}) "
+                        "ORDER BY startTs DESC LIMIT 1", ids).fetchone()
+
+    def day(ts):
+        return datetime.fromtimestamp(ts, PARIS).date().toordinal()
+
+    if last is None:
+        return {"next": steps[0]["name"], "state": "not_started", "after": None}
+    at = ids.index(last["programId"])
+    done, upcoming = steps[at], steps[(at + 1) % len(steps)]
+    due = day(last["startTs"]) + 1 + (done["restDaysAfter"] or 0)
+    today = day(now)
+    out = {"next": upcoming["name"], "after": done["name"]}
+    if today >= due:
+        out.update(state="due", overdue_days=today - due)
+    else:
+        out.update(state="rest", days_left=due - today)
+    return out
+
+
+def programs(conn: sqlite3.Connection, now: int | None = None) -> dict:
     """Each program with its lines: targets, the progression rule, the superset a line belongs to (lines sharing a
     `superset` id are done as a round) and the backups that can take its place when its machine is taken."""
     import json
@@ -493,8 +525,15 @@ def programs(conn: sqlite3.Connection) -> dict:
             if isinstance(backups, list) and backups:
                 line["backups"] = [b for b in backups if isinstance(b, str)]
             lines.append(line)
-        out.append({"name": p["name"], "archived": bool(p["archived"]), "note": p["note"], "lines": lines})
+        item = {"name": p["name"], "archived": bool(p["archived"]), "note": p["note"], "lines": lines}
+        if p["rotationOrd"] is not None:
+            item["rotation_position"] = p["rotationOrd"] + 1
+            item["rest_days_after"] = p["restDaysAfter"] or 0
+        out.append(item)
     res = {"count": len(out), "programs": out}
+    rotation = _rotation(conn, rows, int(time.time()) if now is None else now)
+    if rotation:
+        res["rotation_next"] = rotation
     if not out:
         res["note"] = "No program (or not uploaded yet: check get_sync_status)."
     return res

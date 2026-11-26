@@ -117,7 +117,7 @@ public enum PushRegistry {
         stream("liftExercise", "id:text!",
                "name:text, primaryMuscle:text, secondaryMuscles:text, createdAt:int, lastUsedTs:int, catalogueId:text, equipment:text",
                .snapshot, phase: .ext),
-        stream("liftProgram", "id:text!", "name:text, note:text, createdAt:int, updatedAt:int, archived:int",
+        stream("liftProgram", "id:text!", "name:text, note:text, createdAt:int, updatedAt:int, archived:int, rotationOrd:int, restDaysAfter:int",
                .snapshot, phase: .ext),
         stream("liftProgramItem", "id:text!",
                "programId:text, ord:int, exercise:text, targetSets:int, targetRepsLow:int, targetRepsHigh:int, targetRpe:real, targetWeightKg:real, restSec:int, note:text, catalogueId:text, progression:text, targetSetsMax:int, incrementKg:real, deloadFactor:real, supersetGroup:text, backupsJSON:text", .snapshot, phase: .ext),

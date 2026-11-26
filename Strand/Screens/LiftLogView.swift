@@ -42,6 +42,9 @@ struct LiftLogView: View {
     @State private var showingMuscleMap = false
     /// Strength balance: lifts against each other and against body weight.
     @State private var showingBalance = false
+    /// The rotation sheet, and what is up next in it (nil when no program is in a rotation).
+    @State private var showingRotation = false
+    @State private var rotationNext: LiftRotationNext?
     @AppStorage(LiftGymsSheet.activeKey) private var activeGymId = ""
 
     @AppStorage(UnitPrefs.systemKey) private var unitSystemRaw = UnitSystem.metric.rawValue
@@ -86,6 +89,9 @@ struct LiftLogView: View {
         .sheet(isPresented: $showingBalance) {
             LiftBalanceSheet()
         }
+        .sheet(isPresented: $showingRotation) {
+            LiftRotationSheet { await load() }
+        }
     }
 
     // MARK: - Header
@@ -120,6 +126,9 @@ struct LiftLogView: View {
                         browsingLibrary = true
                     }
                 }
+                NoopButton("Rotation", systemImage: "arrow.triangle.2.circlepath", kind: .secondary) {
+                    showingRotation = true
+                }
                 NoopButton("Muscle map", systemImage: "figure.arms.open", kind: .secondary) {
                     showingMuscleMap = true
                 }
@@ -138,6 +147,8 @@ struct LiftLogView: View {
     private var programsSection: some View {
         VStack(alignment: .leading, spacing: NoopMetrics.gap) {
             SectionHeader("Programs", overline: "Saved")
+
+            if let next = rotationNext { rotationCard(next) }
 
             if !loaded {
                 ComingSoon(what: "Reading your programs…", symbol: "dumbbell")
@@ -434,7 +445,59 @@ struct LiftLogView: View {
         weekCounts = (try? await store.liftSetCounts(deviceId: repo.deviceId,
                                                       fromTs: now - 7 * 86_400,
                                                       toTs: now).fractional) ?? [:]
+        // What is up next in the rotation follows the last session of any of its programs, however old.
+        let all = (try? await store.liftSessions(deviceId: repo.deviceId, fromTs: 0, toTs: now + 86_400)) ?? []
+        rotationNext = LiftRotation.next(steps: LiftRotation.steps(programs), sessions: all,
+                                         today: LiftRotation.localDay(now))
         loaded = true
+    }
+
+    // MARK: - The rotation
+
+    /// "Up next" at the top of the programs: the next session in the cycle, or a rest day.
+    private func rotationCard(_ next: LiftRotationNext) -> some View {
+        NoopCard(tint: next.isDue ? StrandPalette.effortColor : nil) {
+            VStack(alignment: .leading, spacing: NoopMetrics.rowSpacing) {
+                HStack(alignment: .firstTextBaseline) {
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(next.isDue ? "Up next" : "Rest day")
+                            .strandOverline()
+                        Text(next.step.name)
+                            .font(StrandFont.headline)
+                            .foregroundStyle(StrandPalette.textPrimary)
+                        Text(rotationCaption(next))
+                            .font(StrandFont.footnote)
+                            .foregroundStyle(StrandPalette.textSecondary)
+                    }
+                    Spacer(minLength: 8)
+                    Button("Rotation") { showingRotation = true }
+                        .buttonStyle(.plain)
+                        .font(StrandFont.body)
+                        .foregroundStyle(StrandPalette.accent)
+                }
+                if let program = programs.first(where: { $0.id == next.step.programId }) {
+                    Button(session.isActive ? "Running" : (next.isDue ? "Start" : "Start anyway")) { Task { await start(program) } }
+                        .buttonStyle(.noopPrimary)
+                        .frame(maxWidth: 160)
+                }
+            }
+        }
+    }
+
+    private func rotationCaption(_ next: LiftRotationNext) -> String {
+        switch next.state {
+        case .notStarted:
+            return String(localized: "The first program of your rotation")
+        case .due(let overdue):
+            let after = next.after?.name ?? ""
+            return overdue == 0
+                ? String(localized: "Due today, after \(after)")
+                : String(localized: "Overdue by \(overdue) days, after \(after)")
+        case .rest(_, let left):
+            return left == 1
+                ? String(localized: "Due tomorrow")
+                : String(localized: "Due in \(left) days")
+        }
     }
 }
 

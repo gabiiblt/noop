@@ -1251,6 +1251,16 @@ extension WhoopStore {
                 t.add(column: "swappedFrom", .text)
             }
         }
+        // v53 (iOS only, the training redesign): a rotation of programs (A, B, C) as an alternative to weekdays.
+        //   liftProgram gains `rotationOrd` (the program's place in the rotation, 0-based; NULL = not in it) and
+        //   `restDaysAfter` (days off between finishing this program and the next one is due; NULL reads as 0).
+        // Additive and nullable. No Room twin (schema oracle: `ios-only-training`).
+        migrator.registerMigration("v53-lift-rotation") { db in
+            try db.alter(table: "liftProgram") { t in
+                t.add(column: "rotationOrd", .integer)
+                t.add(column: "restDaysAfter", .integer)
+            }
+        }
         return migrator
     }
 }

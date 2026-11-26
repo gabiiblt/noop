@@ -256,6 +256,14 @@ final class LiftSessionController: ObservableObject {
         persist()
     }
 
+    /// Shorten or lengthen the running rest (`LiftSessionEngine.adjustRest`). The timers follow the new end, and a
+    /// lengthened rest warns again before it ends, since the warning it already gave was for the old end.
+    func adjustRest(by seconds: Int) {
+        guard engine?.adjustRest(by: seconds, now: Self.unixNow) == true else { return }
+        warnedFor = nil
+        persist()
+    }
+
     /// Whether a strap double-tap `secondsSinceLastStep` after the last one the session acted on is a
     /// knock rather than a tap.
     ///

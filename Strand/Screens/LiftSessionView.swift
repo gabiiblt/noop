@@ -548,23 +548,71 @@ struct LiftSessionView: View {
     /// control bar is pinned to the bottom and this is where your eyes already are — and once the
     /// sheet is scrolled to a later exercise, the band is the only thing that says which rest.
     private func restBand(_ engine: LiftSessionEngine) -> some View {
-        HStack(spacing: 8) {
-            Text("Rest period").strandOverline()
-                .foregroundStyle(StrandPalette.metricAmber)
-            Spacer(minLength: 0)
-            LiftRunningClock { engine.restRemaining(now: $0) ?? 0 }
-                .font(StrandFont.captionNumber)
-                .foregroundStyle(StrandPalette.metricAmber)
+        VStack(alignment: .leading, spacing: 6) {
+            HStack(spacing: 8) {
+                Text("Rest period").strandOverline()
+                    .foregroundStyle(StrandPalette.metricAmber)
+                Spacer(minLength: 0)
+                LiftRunningClock { engine.restRemaining(now: $0) ?? 0 }
+                    .font(StrandFont.captionNumber)
+                    .foregroundStyle(StrandPalette.metricAmber)
+            }
+            .lineLimit(1)
+            .minimumScaleFactor(0.75)
+            .accessibilityElement(children: .combine)
+            // Shorter, longer, or on to the next set: the rest that was planned is not always the rest that is needed.
+            HStack(spacing: 14) {
+                restButton(verbatim: "−15 s", label: "Shorten the rest by 15 seconds") { session.adjustRest(by: -15) }
+                restButton(verbatim: "+15 s", label: "Lengthen the rest by 15 seconds") { session.adjustRest(by: 15) }
+                Spacer(minLength: 0)
+                Button { session.advance() } label: {
+                    Text("Skip rest")
+                        .font(StrandFont.caption)
+                        .foregroundStyle(StrandPalette.metricAmber)
+                }
+                .buttonStyle(.plain)
+            }
+            if let next = nextSetLine(engine) {
+                Text(next)
+                    .font(StrandFont.caption)
+                    .foregroundStyle(StrandPalette.textSecondary)
+                    .lineLimit(2)
+            }
         }
-        .lineLimit(1)
-        .minimumScaleFactor(0.75)
         .padding(.horizontal, 10)
         .padding(.vertical, 7)
         .frame(maxWidth: .infinity)
         .background(StrandPalette.metricAmber.opacity(0.22),
                     in: RoundedRectangle(cornerRadius: 6, style: .continuous))
         .padding(.horizontal, 8)
-        .accessibilityElement(children: .combine)
+    }
+
+    private func restButton(verbatim text: String, label: LocalizedStringKey, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            Text(verbatim: text)
+                .font(StrandFont.captionNumber)
+                .foregroundStyle(StrandPalette.metricAmber)
+                .padding(.horizontal, 8)
+                .padding(.vertical, 2)
+                .overlay(RoundedRectangle(cornerRadius: 5, style: .continuous).stroke(StrandPalette.metricAmber.opacity(0.6)))
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel(label)
+    }
+
+    /// The set this rest is for, in one line: "Next: Bench press, 80 kg × 8". The same next set the minimised bar and the
+    /// Lock Screen name, at the numbers the sheet shows for it.
+    private func nextSetLine(_ engine: LiftSessionEngine) -> String? {
+        guard let slot = engine.upcomingSlot, let item = engine.planItem(for: slot) else { return nil }
+        let values = session.values(of: slot)
+        var what = ""
+        if let kg = values.weightKg, kg > 0, let reps = values.reps, reps > 0 {
+            what = "\(LiftFormat.weight(kg, system: unitSystem)) × \(reps)"
+        } else if let reps = values.reps, reps > 0 {
+            what = String(localized: "\(reps) reps")
+        }
+        let line = [item.exercise, what].filter { !$0.isEmpty }.joined(separator: ", ")
+        return String(localized: "Next: \(line)")
     }
 
     private func numberField(slot: LiftSlot, field: FocusTarget,

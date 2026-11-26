@@ -110,8 +110,9 @@ _STREAMS = [
        "source:text, note:text, referenceText:text", "snapshot", phase="ext"),
     _s("liftExercise", "id:text!", "name:text, primaryMuscle:text, secondaryMuscles:text, createdAt:int, "
        "lastUsedTs:int, catalogueId:text, equipment:text", "snapshot", phase="ext"),
-    _s("liftProgram", "id:text!", "name:text, note:text, createdAt:int, updatedAt:int, archived:int",
-       "snapshot", phase="ext"),
+    _s("liftProgram", "id:text!", "name:text, note:text, createdAt:int, updatedAt:int, archived:int, "
+       # v53 (iOS training redesign): the program's place in a rotation (A, B, C) and the days off after it.
+       "rotationOrd:int, restDaysAfter:int", "snapshot", phase="ext"),
     _s("liftProgramItem", "id:text!",
        "programId:text, ord:int, exercise:text, targetSets:int, targetRepsLow:int, targetRepsHigh:int, "
        "targetRpe:real, targetWeightKg:real, restSec:int, note:text, catalogueId:text, "

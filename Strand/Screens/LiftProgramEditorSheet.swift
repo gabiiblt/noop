@@ -322,15 +322,14 @@ struct LiftProgramEditorSheet: View {
         let id = program?.id ?? UUID().uuidString
         let trimmedNote = note.trimmingCharacters(in: .whitespacesAndNewlines)
 
-        let row = LiftProgramRow(
-            id: id,
-            deviceId: repo.deviceId,
-            name: name.trimmingCharacters(in: .whitespacesAndNewlines),
-            note: trimmedNote.isEmpty ? nil : trimmedNote,
-            createdAt: program?.createdAt ?? now,
-            updatedAt: now,
-            archived: program?.archived ?? false
-        )
+        // A copy of the program being edited, not a rebuild: rebuilding dropped every column added since (the rotation's
+        // place and rest days) each time a program was saved.
+        var row = program ?? LiftProgramRow(id: id, deviceId: repo.deviceId, name: "", note: nil,
+                                            createdAt: now, updatedAt: now, archived: false)
+        row.deviceId = repo.deviceId
+        row.name = name.trimmingCharacters(in: .whitespacesAndNewlines)
+        row.note = trimmedNote.isEmpty ? nil : trimmedNote
+        row.updatedAt = now
         _ = try? await store.upsertLiftPrograms([row])
 
         // `ord` is the array index: reordering the list is all it takes to reorder the program.

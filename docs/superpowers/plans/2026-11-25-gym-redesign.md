@@ -172,7 +172,14 @@ To do:
    the anchor). Stated on screen: reference ratios, never a norm.
    Not done: choosing a different exercise for a role (the engine supports overrides, no picker), a per-side lift, pounds
    histories (NOOP stores kilograms), and a trend over time.
-7. A fuller rest timer, and a rotation of sessions (A, B, C) as an alternative to weekdays.
+7. (done) A fuller rest timer, and a rotation of sessions (A, B, C) as an alternative to weekdays.
+   Done: the rest timer adjusts by 15 s either way (clamped to the next 30 minutes, only while resting), skips, and
+   names the next set; a rotation of programs (v53: `liftProgram.rotationOrd`, `restDaysAfter`) where the next program
+   is the one after the last session trained in the rotation, due the day after plus its rest days, so skipping a week
+   leaves the same program next (`LiftRotation.swift`, 15 tests; own re-expression of openGym's rotation idea, no oracle).
+   Hub: an "Up next" card with Start, and a Rotation sheet to order, add, remove and set rest days. Pushed and exposed
+   by `get_programs` (`rotation_position`, `rest_days_after`, `rotation_next`).
+   Not done: weekday-based scheduling stays out; an optional per-session reminder for the next program.
 
 New stored data from these (gyms, progression rules, supersets, backups, rotation) gets its own tables or
 columns, a migration with tests, registry entries on both push sides, and MCP read tools.

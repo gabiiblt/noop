@@ -1079,6 +1079,16 @@
      "name": "archived",
      "type": "int",
      "nullable": true
+    },
+    {
+     "name": "rotationOrd",
+     "type": "int",
+     "nullable": true
+    },
+    {
+     "name": "restDaysAfter",
+     "type": "int",
+     "nullable": true
     }
    ],
    "extData": []

@@ -135,3 +135,46 @@ def test_sets_name_their_superset_and_what_they_were_swapped_from(tmp_path):
     sets = q.lift_sessions(Store.connect_ro(store.path), 0, 50000, with_sets=True)["sessions"][0]["sets"]
     hack = [s for s in sets if s["exercise"] == "Hack squat"][0]
     assert hack["superset"] == "g" and hack["swapped_from"] == "Leg press"
+
+
+def _rotation_store(tmp_path, with_session=True, rest=0):
+    store = Store(str(tmp_path / "x.sqlite"))
+    store.upsert_rows(REGISTRY["liftProgram"], "s", "d", [
+        ({"id": "a"}, {"name": "Push", "archived": 0, "createdAt": 1, "updatedAt": 1, "rotationOrd": 0, "restDaysAfter": rest}),
+        ({"id": "b"}, {"name": "Pull", "archived": 0, "createdAt": 2, "updatedAt": 2, "rotationOrd": 1}),
+        ({"id": "c"}, {"name": "Legs", "archived": 0, "createdAt": 3, "updatedAt": 3, "rotationOrd": 2}),
+        ({"id": "x"}, {"name": "Arms", "archived": 0, "createdAt": 4, "updatedAt": 4})], "1.100")
+    if with_session:
+        store.upsert_rows(REGISTRY["liftSession"], "s", "d", [
+            ({"id": "s1"}, {"startTs": 1_800_000_000, "endTs": 1_800_003_600, "programId": "a"})], "1.100")
+    return store
+
+
+def test_the_rotation_says_what_is_up_next(tmp_path):
+    store = _rotation_store(tmp_path)
+    day = 86400
+    out = q.programs(Store.connect_ro(store.path), 1_800_000_000 + 2 * day)
+    assert out["rotation_next"] == {"next": "Pull", "after": "Push", "state": "due", "overdue_days": 1}
+    pull = [p for p in out["programs"] if p["name"] == "Pull"][0]
+    assert pull["rotation_position"] == 2 and pull["rest_days_after"] == 0
+    arms = [p for p in out["programs"] if p["name"] == "Arms"][0]
+    assert "rotation_position" not in arms
+
+
+def test_rest_days_make_the_next_session_wait(tmp_path):
+    store = _rotation_store(tmp_path, rest=2)
+    out = q.programs(Store.connect_ro(store.path), 1_800_000_000 + 3600)
+    assert out["rotation_next"]["state"] == "rest" and out["rotation_next"]["days_left"] == 3
+
+
+def test_a_rotation_with_no_session_starts_at_the_first_program(tmp_path):
+    store = _rotation_store(tmp_path, with_session=False)
+    assert q.programs(Store.connect_ro(store.path), 1_800_000_000)["rotation_next"] == {
+        "next": "Push", "state": "not_started", "after": None}
+
+
+def test_no_rotation_no_rotation_next(tmp_path):
+    store = Store(str(tmp_path / "x.sqlite"))
+    store.upsert_rows(REGISTRY["liftProgram"], "s", "d", [
+        ({"id": "a"}, {"name": "Push", "archived": 0, "createdAt": 1, "updatedAt": 1})], "1.100")
+    assert "rotation_next" not in q.programs(Store.connect_ro(store.path), 1_800_000_000)

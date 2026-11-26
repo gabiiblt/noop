@@ -52,6 +52,9 @@ v52 (supersets and backups): `liftProgramItem.supersetGroup` (lines sharing it a
 (a JSON list of exercise names, at most five); `liftSet.supersetGroup` (the group the set was done in),
 `.swappedFrom` (the exercise the line was planned as, when a backup took its place that session).
 
+v53 (rotation): `liftProgram.rotationOrd` (the program's place in a rotation, 0-based; absent when it is not in one) and
+`.restDaysAfter` (days off after it before the next program is due).
+
 ## Never exported
 
 `coachMessage`, `device`, `cursors`, `rawBatch`, local `synced` columns, and the retired

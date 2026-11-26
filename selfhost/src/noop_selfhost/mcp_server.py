@@ -138,8 +138,10 @@ def create_server(db_path: str, apns: ApnsClient | None = None, clock=time.time,
     def get_programs() -> dict:
         """Each Lift Log program with its lines: sets, rep range, weight, rest, the progression rule, the superset a
         line belongs to (lines sharing a superset id are done as a round, one set of each in turn) and the backup
-        exercises that can take its place when its machine is taken."""
-        return run(q.programs)
+        exercises that can take its place when its machine is taken. Programs in a
+        rotation (A, B, C) carry their position and the rest days after them, and rotation_next says which is up next
+        and whether it is due or a rest day."""
+        return run(q.programs, int(clock()))
 
     @server.tool()
     def get_gyms() -> dict:

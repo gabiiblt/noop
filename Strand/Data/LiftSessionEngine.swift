@@ -369,6 +369,21 @@ struct LiftSessionEngine: Equatable {
         return max(0, endsAt - now)
     }
 
+    /// The longest a rest can be made: a bound against a stuck finger, not a recommendation.
+    static let maxRestSec = 30 * 60
+
+    /// Make the running rest shorter or longer by `seconds`: the rest that was planned is not always the rest that is
+    /// needed. Only a rest in progress moves, never to an end before `now` (a rest cut that far is simply over), and
+    /// never to more than `maxRestSec` from `now`. Returns whether it changed.
+    @discardableResult
+    mutating func adjustRest(by seconds: Int, now: Int) -> Bool {
+        guard case .resting(let slot, let endsAt) = stage else { return false }
+        let moved = min(now + LiftSessionEngine.maxRestSec, max(now, endsAt + seconds))
+        guard moved != endsAt else { return false }
+        stage = .resting(slot, endsAt: moved)
+        return true
+    }
+
     /// The nearest earlier set of this exercise already performed in THIS session. Nil for the first
     /// set, or when nothing before it has been done yet.
     func previousSetInSession(for slot: LiftSlot) -> LiftRecordedSet? {
