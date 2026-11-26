@@ -399,7 +399,27 @@ def _set_out(r) -> dict:
             out[name] = r[k]
     if r["isFailure"]:
         out["to_failure"] = True
+    # v50: what the set was asked for, and the plan its session was built from.
+    if r["targetReps"] is not None:
+        out["target_reps"] = r["targetReps"]
+    if r["targetWeightKg"] is not None:
+        out["target_weight_kg"] = r["targetWeightKg"]
+    plan = _plan(r["planJSON"])
+    if plan:
+        out["plan"] = plan
     return out
+
+
+def _plan(raw):
+    """The plan stamp stored on a set (JSON), or None when absent or malformed."""
+    if not raw:
+        return None
+    try:
+        import json
+        value = json.loads(raw)
+    except (ValueError, TypeError):
+        return None
+    return value if isinstance(value, dict) else None
 
 
 def _summary(rows) -> list[dict]:
@@ -440,6 +460,29 @@ def lift_sessions(conn: sqlite3.Connection, start: int, end: int, with_sets: boo
     res = {"start": _t(start), "end": _t(end), "count": len(out), "sessions": out}
     if not out:
         res["note"] = "No Lift Log session in this range (or not uploaded yet: check get_sync_status)."
+    return res
+
+
+def progression_rules(conn: sqlite3.Connection) -> dict:
+    """The progression rule on each program line that has one (v50): which rule drives the line's next target
+    and the plan it runs on. The next target itself is computed on the phone, which has the full history and
+    shows the reason; this is what an agent needs to explain or review the setup."""
+    rows = conn.execute(
+        "SELECT i.*, p.name AS programName, p.archived AS archived FROM liftProgramItem i "
+        "LEFT JOIN liftProgram p ON p.id = i.programId WHERE i.progression IS NOT NULL "
+        "ORDER BY p.name, i.ord LIMIT ?", (MAX_ROWS,)).fetchall()
+    lines = []
+    for r in rows:
+        line = {"program": r["programName"], "archived": bool(r["archived"]), "exercise": r["exercise"],
+                "rule": r["progression"], "sets": r["targetSets"], "reps_low": r["targetRepsLow"],
+                "reps_high": r["targetRepsHigh"], "weight_kg": r["targetWeightKg"]}
+        for k, name in (("targetSetsMax", "sets_max"), ("incrementKg", "increment"), ("deloadFactor", "deload_factor")):
+            if r[k] is not None:
+                line[name] = r[k]
+        lines.append(line)
+    res = {"count": len(lines), "lines": lines}
+    if not lines:
+        res["note"] = "No program line has a progression rule (or the program is not uploaded yet: check get_sync_status)."
     return res
 
 

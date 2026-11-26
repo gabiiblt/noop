@@ -120,12 +120,12 @@ public enum PushRegistry {
         stream("liftProgram", "id:text!", "name:text, note:text, createdAt:int, updatedAt:int, archived:int",
                .snapshot, phase: .ext),
         stream("liftProgramItem", "id:text!",
-               "programId:text, ord:int, exercise:text, targetSets:int, targetRepsLow:int, targetRepsHigh:int, targetRpe:real, targetWeightKg:real, restSec:int, note:text, catalogueId:text", .snapshot, phase: .ext),
+               "programId:text, ord:int, exercise:text, targetSets:int, targetRepsLow:int, targetRepsHigh:int, targetRpe:real, targetWeightKg:real, restSec:int, note:text, catalogueId:text, progression:text, targetSetsMax:int, incrementKg:real, deloadFactor:real", .snapshot, phase: .ext),
         stream("liftSession", "id:text!",
                "startTs:int, endTs:int, sport:text, programId:text, programName:text, sessionRpe:real, note:text",
                .snapshot, phase: .ext),
         stream("liftSet", "id:text!",
-               "sessionId:text, ord:int, exercise:text, primaryMuscle:text, secondaryMuscles:text, setIndex:int, weightKg:real, reps:int, rpe:real, isWarmup:int, startTs:int, endTs:int, restSec:int, note:text, setType:text, dropsJSON:text, isFailure:int, rir:real, side:text, durationSec:int, distanceM:real, catalogueId:text",
+               "sessionId:text, ord:int, exercise:text, primaryMuscle:text, secondaryMuscles:text, setIndex:int, weightKg:real, reps:int, rpe:real, isWarmup:int, startTs:int, endTs:int, restSec:int, note:text, setType:text, dropsJSON:text, isFailure:int, rir:real, side:text, durationSec:int, distanceM:real, catalogueId:text, targetReps:int, targetWeightKg:real, planJSON:text",
                .snapshot, phase: .ext),
     ]
 

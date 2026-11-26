@@ -25,8 +25,11 @@ def test_existing_table_gains_new_data_columns_and_keeps_rows(tmp_path):
     # And the new members are accepted end to end.
     store.upsert_rows(REGISTRY["liftSet"], "s", "d",
                       [({"id": "b"}, {"exercise": "Curl", "setType": "dropset", "dropsJSON": '[{"reps":6}]',
-                                      "isFailure": 1, "catalogueId": "0294"})], "1.100")
+                                      "isFailure": 1, "catalogueId": "0294",
+                                      "targetReps": 12, "planJSON": '{"sets":3}'})], "1.100")
     assert store.conn.execute("SELECT setType, catalogueId FROM liftSet WHERE id='b'").fetchone() == ("dropset", "0294")
+    # v50 members, on the same upgraded table.
+    assert store.conn.execute("SELECT targetReps, planJSON FROM liftSet WHERE id='b'").fetchone() == (12, '{"sets":3}')
 
 
 def test_reopening_is_idempotent(tmp_path):

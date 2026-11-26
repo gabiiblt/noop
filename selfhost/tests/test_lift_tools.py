@@ -41,3 +41,40 @@ def test_progress_follows_the_catalogue_link_across_a_rename(tmp_path):
 
 def test_e1rm_matches_the_app_rules():
     assert q.e1rm(100, 1) == 100 and q.e1rm(100, 13) is None and q.e1rm(0, 5) is None
+
+
+def test_sets_carry_their_target_and_plan(tmp_path):
+    store = Store(str(tmp_path / "x.sqlite")); seed(store)
+    plan = '{"progression":"triple","repsHigh":12,"repsLow":8,"sets":3,"setsMax":5,"weightKg":60}'
+    store.upsert_rows(REGISTRY["liftSet"], "s", "d", [
+        ({"id": "6"}, {"sessionId": "a", "ord": 4, "exercise": "Row", "setIndex": 1, "weightKg": 50, "reps": 12,
+                       "isWarmup": 0, "isFailure": 0, "targetReps": 12, "targetWeightKg": 50, "planJSON": plan}),
+        ({"id": "7"}, {"sessionId": "a", "ord": 5, "exercise": "Row", "setIndex": 2, "weightKg": 50, "reps": 9,
+                       "isWarmup": 0, "isFailure": 0, "planJSON": "{nope"})], "1.100")
+    sets = q.lift_sessions(Store.connect_ro(store.path), 0, 50000, with_sets=True)["sessions"][0]["sets"]
+    row = [s for s in sets if s["exercise"] == "Row"]
+    assert row[0]["target_reps"] == 12 and row[0]["target_weight_kg"] == 50
+    assert row[0]["plan"] == {"progression": "triple", "repsHigh": 12, "repsLow": 8, "sets": 3, "setsMax": 5, "weightKg": 60}
+    assert "plan" not in row[1] and "target_reps" not in row[1], "a malformed stamp reads as none, the set still reads"
+
+
+def test_progression_rules_list_only_lines_with_a_rule(tmp_path):
+    store = Store(str(tmp_path / "x.sqlite"))
+    store.upsert_rows(REGISTRY["liftProgram"], "s", "d", [
+        ({"id": "p"}, {"name": "Push", "archived": 0, "createdAt": 1, "updatedAt": 1})], "1.100")
+    store.upsert_rows(REGISTRY["liftProgramItem"], "s", "d", [
+        ({"id": "i1"}, {"programId": "p", "ord": 0, "exercise": "Bench", "targetSets": 3, "targetRepsLow": 8,
+                        "targetRepsHigh": 12, "targetWeightKg": 60, "progression": "triple", "targetSetsMax": 5,
+                        "incrementKg": 2.5, "deloadFactor": 0.9}),
+        ({"id": "i2"}, {"programId": "p", "ord": 1, "exercise": "Row", "targetSets": 3})], "1.100")
+    out = q.progression_rules(Store.connect_ro(store.path))
+    assert out["count"] == 1
+    assert out["lines"][0] == {"program": "Push", "archived": False, "exercise": "Bench", "rule": "triple",
+                               "sets": 3, "reps_low": 8, "reps_high": 12, "weight_kg": 60.0, "sets_max": 5,
+                               "increment": 2.5, "deload_factor": 0.9}
+
+
+def test_progression_rules_say_so_when_there_are_none(tmp_path):
+    store = Store(str(tmp_path / "x.sqlite"))
+    out = q.progression_rules(Store.connect_ro(store.path))
+    assert out["count"] == 0 and "note" in out

@@ -114,7 +114,9 @@ _STREAMS = [
        "snapshot", phase="ext"),
     _s("liftProgramItem", "id:text!",
        "programId:text, ord:int, exercise:text, targetSets:int, targetRepsLow:int, targetRepsHigh:int, "
-       "targetRpe:real, targetWeightKg:real, restSec:int, note:text, catalogueId:text", "snapshot", phase="ext"),
+       "targetRpe:real, targetWeightKg:real, restSec:int, note:text, catalogueId:text, "
+       # v50 (iOS training redesign): the progression rule on the line.
+       "progression:text, targetSetsMax:int, incrementKg:real, deloadFactor:real", "snapshot", phase="ext"),
     _s("liftSession", "id:text!", "startTs:int, endTs:int, sport:text, programId:text, programName:text, "
        "sessionRpe:real, note:text", "snapshot", phase="ext"),
     _s("liftSet", "id:text!",
@@ -122,7 +124,9 @@ _STREAMS = [
        "weightKg:real, reps:int, rpe:real, isWarmup:int, startTs:int, endTs:int, restSec:int, note:text, "
        # v49 (iOS training redesign): set type and its parts, failure, RIR, side, time/distance, catalogue link.
        "setType:text, dropsJSON:text, isFailure:int, rir:real, side:text, durationSec:int, distanceM:real, "
-       "catalogueId:text",
+       "catalogueId:text, "
+       # v50: the target this set was built from, and the plan stamp (JSON) of its session.
+       "targetReps:int, targetWeightKg:real, planJSON:text",
        "snapshot", phase="ext"),
 ]
 

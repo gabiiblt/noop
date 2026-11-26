@@ -37,6 +37,12 @@ Added this way (v49 of the iOS store, the training redesign): `liftSet.setType`,
 `.isFailure`, `.rir`, `.side`, `.durationSec`, `.distanceM`, `.catalogueId`; `liftExercise.catalogueId`,
 `.equipment`; `liftProgramItem.catalogueId`.
 
+Added the same way (v50, progression rules): `liftProgramItem.progression` (`linear`, `double`, `triple`
+or `time`), `.targetSetsMax`, `.incrementKg`, `.deloadFactor`; `liftSet.targetReps`, `.targetWeightKg`,
+`.planJSON`. `planJSON` is the plan a session was built from, stamped on every set of the exercise:
+`{"progression", "sets", "repsLow", "repsHigh", "setsMax", "weightKg", "sec"}` (keys sorted, absent when
+unset). A set with no stamp has NULL there.
+
 ## Never exported
 
 `coachMessage`, `device`, `cursors`, `rawBatch`, local `synced` columns, and the retired

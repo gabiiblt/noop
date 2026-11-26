@@ -1150,6 +1150,26 @@
      "name": "catalogueId",
      "type": "text",
      "nullable": true
+    },
+    {
+     "name": "progression",
+     "type": "text",
+     "nullable": true
+    },
+    {
+     "name": "targetSetsMax",
+     "type": "int",
+     "nullable": true
+    },
+    {
+     "name": "incrementKg",
+     "type": "real",
+     "nullable": true
+    },
+    {
+     "name": "deloadFactor",
+     "type": "real",
+     "nullable": true
     }
    ],
    "extData": []
@@ -1325,6 +1345,21 @@
     },
     {
      "name": "catalogueId",
+     "type": "text",
+     "nullable": true
+    },
+    {
+     "name": "targetReps",
+     "type": "int",
+     "nullable": true
+    },
+    {
+     "name": "targetWeightKg",
+     "type": "real",
+     "nullable": true
+    },
+    {
+     "name": "planJSON",
      "type": "text",
      "nullable": true
     }

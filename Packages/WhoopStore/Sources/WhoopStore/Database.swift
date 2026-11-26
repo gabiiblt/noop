@@ -1186,6 +1186,30 @@ extension WhoopStore {
             // No index on `catalogueId`: the schema oracle has no way to mark an index iOS-only, and a
             // personal set history is small enough that a scan is cheaper than a parity exception.
         }
+        // v50 (iOS only, the training redesign): progression rules, and the target a set was asked for.
+        //   • liftProgramItem gains the rule that drives the line's next target: `progression` 'linear' |
+        //     'double' | 'triple' | 'time' (NULL = none, so every existing line behaves as before),
+        //     `targetSetsMax` (triple progression's ceiling on sets), `incrementKg` (the load step, or
+        //     seconds for a hold) and `deloadFactor` (how far a deload backs off, 0.5...0.95).
+        //   • liftSet gains the target it was built from, stamped on every set of the exercise in a session
+        //     AS IT WAS, the way the muscle classification is: `targetReps` this set's own aim (triple
+        //     progression asks each set for its own reps), `targetWeightKg` the weight aimed at, and
+        //     `planJSON` the plan the session was built from (sets, rep range, set ceiling, weight), which is
+        //     the only way the next session can tell an edited plan from one that progressed.
+        // All additive and nullable. No Room twin (schema oracle: `ios-only-training`).
+        migrator.registerMigration("v50-lift-progression") { db in
+            try db.alter(table: "liftProgramItem") { t in
+                t.add(column: "progression", .text)
+                t.add(column: "targetSetsMax", .integer)
+                t.add(column: "incrementKg", .double)
+                t.add(column: "deloadFactor", .double)
+            }
+            try db.alter(table: "liftSet") { t in
+                t.add(column: "targetReps", .integer)
+                t.add(column: "targetWeightKg", .double)
+                t.add(column: "planJSON", .text)
+            }
+        }
         return migrator
     }
 }

@@ -148,6 +148,16 @@ public struct LiftProgramItemRow: Equatable, Codable, Sendable {
     public var note: String?
     /// The bundled catalogue exercise this line was picked from (v49), or nil for a typed name.
     public var catalogueId: String?
+    // v50 — see `LiftPlanStamp` for what a session stamps from these.
+    /// The rule that drives this line's next target: 'linear', 'double', 'triple' or 'time'. Nil is no rule,
+    /// which is what every line written before v50 has, so it behaves exactly as it did.
+    public var progression: String?
+    /// Triple progression's ceiling on sets; nil reads as the line's own set count.
+    public var targetSetsMax: Int?
+    /// The load step in kilograms (seconds for a hold); nil takes the default.
+    public var incrementKg: Double?
+    /// How far a deload backs off, 0.5...0.95; nil takes the default 0.9.
+    public var deloadFactor: Double?
 
     public init(
         id: String,
@@ -162,7 +172,11 @@ public struct LiftProgramItemRow: Equatable, Codable, Sendable {
         targetWeightKg: Double?,
         restSec: Int?,
         note: String?,
-        catalogueId: String? = nil
+        catalogueId: String? = nil,
+        progression: String? = nil,
+        targetSetsMax: Int? = nil,
+        incrementKg: Double? = nil,
+        deloadFactor: Double? = nil
     ) {
         self.id = id
         self.deviceId = deviceId
@@ -177,6 +191,10 @@ public struct LiftProgramItemRow: Equatable, Codable, Sendable {
         self.restSec = restSec
         self.note = note
         self.catalogueId = catalogueId
+        self.progression = progression
+        self.targetSetsMax = targetSetsMax
+        self.incrementKg = incrementKg
+        self.deloadFactor = deloadFactor
     }
 
     static func decode(_ row: Row) -> LiftProgramItemRow {
@@ -193,7 +211,11 @@ public struct LiftProgramItemRow: Equatable, Codable, Sendable {
             targetWeightKg: row["targetWeightKg"],
             restSec: row["restSec"],
             note: row["note"],
-            catalogueId: row["catalogueId"]
+            catalogueId: row["catalogueId"],
+            progression: row["progression"],
+            targetSetsMax: row["targetSetsMax"],
+            incrementKg: row["incrementKg"],
+            deloadFactor: row["deloadFactor"]
         )
     }
 }
@@ -298,6 +320,13 @@ public struct LiftSetRow: Equatable, Codable, Sendable {
     public var distanceM: Double?
     /// The bundled catalogue exercise, when the exercise was picked from it.
     public var catalogueId: String?
+    // v50 — the target this set was built from, stamped as it was (`LiftPlanStamp`).
+    /// What THIS set was asked for in reps. Triple progression asks each set for its own number.
+    public var targetReps: Int?
+    /// The weight aimed at, kilograms.
+    public var targetWeightKg: Double?
+    /// The plan the session was built from, the same on every set of the exercise in the session.
+    public var plan: LiftPlanStamp?
 
     public init(
         id: String,
@@ -323,7 +352,10 @@ public struct LiftSetRow: Equatable, Codable, Sendable {
         side: LiftSide? = nil,
         durationSec: Int? = nil,
         distanceM: Double? = nil,
-        catalogueId: String? = nil
+        catalogueId: String? = nil,
+        targetReps: Int? = nil,
+        targetWeightKg: Double? = nil,
+        plan: LiftPlanStamp? = nil
     ) {
         self.id = id
         self.deviceId = deviceId
@@ -350,6 +382,9 @@ public struct LiftSetRow: Equatable, Codable, Sendable {
         self.durationSec = durationSec
         self.distanceM = distanceM
         self.catalogueId = catalogueId
+        self.targetReps = targetReps
+        self.targetWeightKg = targetWeightKg
+        self.plan = plan
     }
 
     /// Volume for this set: weight x reps, in kilograms. Nil unless BOTH are present, and zero for a
@@ -392,7 +427,10 @@ public struct LiftSetRow: Equatable, Codable, Sendable {
             side: (row["side"] as String?).flatMap(LiftSide.init(rawValue:)),
             durationSec: row["durationSec"],
             distanceM: row["distanceM"],
-            catalogueId: row["catalogueId"]
+            catalogueId: row["catalogueId"],
+            targetReps: row["targetReps"],
+            targetWeightKg: row["targetWeightKg"],
+            plan: LiftPlanStamp.decode(row["planJSON"])
         )
     }
 }
@@ -402,6 +440,7 @@ extension LiftSetRow {
         case id, deviceId, sessionId, ord, exercise, primaryMuscle, secondaryMuscles, setIndex, weightKg
         case reps, rpe, isWarmup, startTs, endTs, restSec, note
         case setType, parts, isFailure, rir, side, durationSec, distanceM, catalogueId
+        case targetReps, targetWeightKg, plan
     }
 
     /// Decodes rows saved before v49 too (an in-progress session persisted by an older build has none
@@ -432,7 +471,10 @@ extension LiftSetRow {
             side: try c.decodeIfPresent(LiftSide.self, forKey: .side),
             durationSec: try c.decodeIfPresent(Int.self, forKey: .durationSec),
             distanceM: try c.decodeIfPresent(Double.self, forKey: .distanceM),
-            catalogueId: try c.decodeIfPresent(String.self, forKey: .catalogueId))
+            catalogueId: try c.decodeIfPresent(String.self, forKey: .catalogueId),
+            targetReps: try c.decodeIfPresent(Int.self, forKey: .targetReps),
+            targetWeightKg: try c.decodeIfPresent(Double.self, forKey: .targetWeightKg),
+            plan: try c.decodeIfPresent(LiftPlanStamp.self, forKey: .plan))
     }
 }
 
@@ -617,12 +659,14 @@ extension WhoopStore {
                 try db.execute(sql: """
                     INSERT INTO liftProgramItem
                         (id, deviceId, programId, ord, exercise, targetSets,
-                         targetRepsLow, targetRepsHigh, targetRpe, targetWeightKg, restSec, note, catalogueId)
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                         targetRepsLow, targetRepsHigh, targetRpe, targetWeightKg, restSec, note, catalogueId,
+                         progression, targetSetsMax, incrementKg, deloadFactor)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                     """, arguments: [
                         r.id, r.deviceId, r.programId, r.ord, r.exercise, r.targetSets,
                         r.targetRepsLow, r.targetRepsHigh, r.targetRpe, r.targetWeightKg,
                         r.restSec, r.note, r.catalogueId,
+                        r.progression, r.targetSetsMax, r.incrementKg, r.deloadFactor,
                     ])
                 n += db.changesCount
             }
@@ -771,8 +815,9 @@ extension WhoopStore {
                     INSERT INTO liftSet
                         (id, deviceId, sessionId, ord, exercise, primaryMuscle, secondaryMuscles,
                          setIndex, weightKg, reps, rpe, isWarmup, startTs, endTs, restSec, note,
-                         setType, dropsJSON, isFailure, rir, side, durationSec, distanceM, catalogueId)
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                         setType, dropsJSON, isFailure, rir, side, durationSec, distanceM, catalogueId,
+                         targetReps, targetWeightKg, planJSON)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                     ON CONFLICT(id) DO UPDATE SET
                         ord = excluded.ord,
                         exercise = excluded.exercise,
@@ -794,7 +839,10 @@ extension WhoopStore {
                         side = excluded.side,
                         durationSec = excluded.durationSec,
                         distanceM = excluded.distanceM,
-                        catalogueId = excluded.catalogueId
+                        catalogueId = excluded.catalogueId,
+                        targetReps = excluded.targetReps,
+                        targetWeightKg = excluded.targetWeightKg,
+                        planJSON = excluded.planJSON
                     """, arguments: [
                         r.id, r.deviceId, r.sessionId, r.ord, r.exercise,
                         r.primaryMuscle?.rawValue,
@@ -803,6 +851,7 @@ extension WhoopStore {
                         r.startTs, r.endTs, r.restSec, r.note,
                         r.setType.storedValue, LiftSetPart.encode(r.parts), r.isFailure, r.rir,
                         r.side?.rawValue, r.durationSec, r.distanceM, r.catalogueId,
+                        r.targetReps, r.targetWeightKg, LiftPlanStamp.encode(r.plan),
                     ])
                 n += db.changesCount
             }

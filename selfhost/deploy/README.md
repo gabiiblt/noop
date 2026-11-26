@@ -68,7 +68,7 @@ sudo -u noop /opt/noop-selfhost/venv/bin/noop-push-simulator --db /tmp/whoop-cop
 Same machine as the database. The agent's user needs read access to the database file
 (`sudo usermod -aG noop <agent-user>`; the directory is `0750 noop:noop`). Register
 `deploy/noop-mcp.example.json` in your agent's MCP configuration (stdio transport). The server is
-read-only, offers ten tools and no free-form SQL. For an agent running elsewhere you may instead run
+read-only, offers eleven tools and no free-form SQL. For an agent running elsewhere you may instead run
 `noop-mcp --db ... --http 127.0.0.1:8788` and publish it the same way with `tailscale serve`;
 that is not enabled by default.
 The HTTP server only accepts requests addressed to `127.0.0.1`/`localhost` (a DNS-rebinding guard), so
