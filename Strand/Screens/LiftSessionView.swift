@@ -950,7 +950,7 @@ struct LiftSessionView: View {
         #else
         .frame(width: 460, height: 420)
         #endif
-        .background(StrandPalette.surfaceBase)
+        .noopBackdrop(StrandPalette.effortColor)
         .keyboardDoneToolbar($focused)
         .task { await loadSetCountChanges() }
     }

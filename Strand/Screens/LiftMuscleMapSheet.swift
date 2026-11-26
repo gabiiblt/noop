@@ -168,7 +168,7 @@ struct LiftMuscleMapSheet: View {
         #else
         .frame(width: 560, height: 800)
         #endif
-        .background(StrandPalette.surfaceBase)
+        .noopBackdrop(StrandPalette.effortColor)
         .task { await load() }
     }
 

@@ -1,4 +1,5 @@
 import SwiftUI
+import StrandDesign
 
 // MARK: - TabRoute
 //
@@ -64,12 +65,12 @@ extension View {
                     HealthView()
                 }
             case .metricExplorer: MetricExplorerView()
-            case .workouts: WorkoutsView()
+            case .workouts: WorkoutsView().environment(\.noopBackdropTint, StrandPalette.effortColor)
             case .dataSources: DataSourcesView()
-            case .stress: StressView()
-            case .sleep: SleepView()
-            case .health: HealthView()
-            case .hydration: HydrationView()
+            case .stress: StressView().environment(\.noopBackdropTint, StrandPalette.stressColor)
+            case .sleep: SleepView().environment(\.noopBackdropTint, StrandPalette.sleepLight)
+            case .health: HealthView().environment(\.noopBackdropTint, StrandPalette.chargeColor)
+            case .hydration: HydrationView().environment(\.noopBackdropTint, StrandPalette.metricCyan)
             case .coupled: CoupledView()
             }
         }

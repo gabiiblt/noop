@@ -128,7 +128,7 @@ struct RootTabView: View {
         TabView(selection: nativeTabSelection) {
             tab(todayTabRoot, "Today", "square.grid.2x2", path: $tabPaths[0], scrollSignal: scrollTop[0]).tag(0)
             tab(TrendsView(), "Trends", "chart.line.uptrend.xyaxis", path: $tabPaths[1], scrollSignal: scrollTop[1]).tag(1)
-            tab(SleepView(), "Sleep", "bed.double", path: $tabPaths[2], scrollSignal: scrollTop[2]).tag(2)
+            tab(SleepView().environment(\.noopBackdropTint, StrandPalette.sleepLight), "Sleep", "bed.double", path: $tabPaths[2], scrollSignal: scrollTop[2]).tag(2)
             // K3: Coach promoted to a top-level tab (was behind the More list). The sparkles icon
             // matches the More-tab row and the macOS sidebar entry.
             // Conditional on the master switch. The tags stay LITERAL rather than being renumbered when

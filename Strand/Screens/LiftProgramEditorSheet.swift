@@ -61,7 +61,7 @@ struct LiftProgramEditorSheet: View {
         // ScrollView needs a definite height or every row collapses to the top.
         .frame(width: 520, height: 720)
         #endif
-        .background(StrandPalette.surfaceBase)
+        .noopBackdrop(StrandPalette.effortColor)
         .keyboardDoneToolbar($focused)
         .dismissesKeyboardOnTap($focused)
         .task { await loadIfNeeded() }

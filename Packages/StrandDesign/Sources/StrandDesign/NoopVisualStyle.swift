@@ -64,6 +64,13 @@ public struct NoopPanelSurface: View {
         // Scrolling stacks contain many panels. Layered translucent gradients and blurred shadows
         // multiply their compositing work, so iOS uses one theme-aware fill and a thin tinted rim.
         // This changes decorative depth only; card geometry and the design-system colors stay the same.
+        // iOS 26: the panel is Liquid Glass (NoopGlass.swift), so every surface built on it, in every screen,
+        // is glass without touching the screen.
+        if #available(iOS 26.0, *) {
+            Color.clear
+                .noopGlass(shape, tint: tint)
+                .opacity(surfaceOpacity)
+        } else {
         shape
             .fill(NoopVisualStyle.surface)
             .overlay(shape.strokeBorder(
@@ -71,6 +78,7 @@ public struct NoopPanelSurface: View {
                 lineWidth: 0.8
             ))
             .opacity(surfaceOpacity)
+        }
         #else
         shape
             .fill(

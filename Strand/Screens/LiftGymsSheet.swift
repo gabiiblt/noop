@@ -52,7 +52,7 @@ struct LiftGymsSheet: View {
         #else
         .frame(width: 520, height: 720)
         #endif
-        .background(StrandPalette.surfaceBase)
+        .noopBackdrop(StrandPalette.effortColor)
         .task { await load() }
         .sheet(item: $editing) { target in
             LiftGymEditSheet(gym: target.gym) { saved in
@@ -200,7 +200,7 @@ struct LiftGymEditSheet: View {
         #else
         .frame(width: 520, height: 720)
         #endif
-        .background(StrandPalette.surfaceBase)
+        .noopBackdrop(StrandPalette.effortColor)
         .keyboardDoneToolbar($focused)
         .dismissesKeyboardOnTap($focused)
         .onAppear(perform: load)
@@ -421,7 +421,7 @@ struct LiftPlateCalculatorSheet: View {
         #else
         .frame(width: 480, height: 560)
         #endif
-        .background(StrandPalette.surfaceBase)
+        .noopBackdrop(StrandPalette.effortColor)
         .keyboardDoneToolbar($focused)
         .dismissesKeyboardOnTap($focused)
     }

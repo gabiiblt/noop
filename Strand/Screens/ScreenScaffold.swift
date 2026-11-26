@@ -37,6 +37,8 @@ struct ScreenScaffold<Content: View, Trailing: View>: View {
     /// at-root re-tap of the active tab (#198 follow-up). Default 0 never changes, so macOS and every
     /// non-tab screen keep their exact prior scroll behaviour.
     @Environment(\.scrollToTopSignal) private var scrollToTopSignal
+    /// The colour the glass backdrop glows with, when a screen or sheet asked for one (`noopBackdrop`).
+    @Environment(\.noopBackdropTint) private var backdropTint
 
     var body: some View {
         ScrollViewReader { proxy in
@@ -75,7 +77,14 @@ struct ScreenScaffold<Content: View, Trailing: View>: View {
         // on the opaque canvas and stay fully legible (2026-06-23: cards were "losing the data").
         .background(alignment: .top) {
             ZStack(alignment: .top) {
+                #if os(iOS)
+                // Glass needs something to refract: the canvas with soft glows of the screen's colour (the
+                // accent unless the screen asked for another), drawn once, under the optional scene.
+                NoopGlassBackdrop(tint: backdropTint ?? StrandPalette.accent,
+                                  intensity: backdropTint == nil ? 0.6 : 1)
+                #else
                 StrandPalette.surfaceBase
+                #endif
                 topBackground
             }
             .ignoresSafeArea()

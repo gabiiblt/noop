@@ -151,10 +151,12 @@ public struct NoopGlassIconButton: View {
 public struct NoopGlassBackdrop: View {
     private let tint: Color
     private let secondary: Color
+    private let intensity: Double
 
-    public init(tint: Color, secondary: Color = StrandPalette.accent) {
+    public init(tint: Color, secondary: Color = StrandPalette.accent, intensity: Double = 1) {
         self.tint = tint
         self.secondary = secondary
+        self.intensity = intensity
     }
 
     public var body: some View {
@@ -162,15 +164,39 @@ public struct NoopGlassBackdrop: View {
             let w = geo.size.width
             ZStack {
                 StrandPalette.surfaceBase
-                RadialGradient(colors: [tint.opacity(0.55), tint.opacity(0)],
+                RadialGradient(colors: [tint.opacity(0.55 * intensity), tint.opacity(0)],
                                center: UnitPoint(x: 0.15, y: 0.02), startRadius: 0, endRadius: w * 0.95)
-                RadialGradient(colors: [secondary.opacity(0.30), secondary.opacity(0)],
+                RadialGradient(colors: [secondary.opacity(0.30 * intensity), secondary.opacity(0)],
                                center: UnitPoint(x: 0.95, y: 0.30), startRadius: 0, endRadius: w * 0.80)
-                RadialGradient(colors: [tint.opacity(0.22), tint.opacity(0)],
+                RadialGradient(colors: [tint.opacity(0.22 * intensity), tint.opacity(0)],
                                center: UnitPoint(x: 0.30, y: 0.85), startRadius: 0, endRadius: w * 0.90)
             }
         }
         .accessibilityHidden(true)
         .allowsHitTesting(false)
+    }
+}
+
+// MARK: - The backdrop a screen asks for
+
+private struct NoopBackdropTintKey: EnvironmentKey {
+    static let defaultValue: Color? = nil
+}
+
+public extension EnvironmentValues {
+    /// The domain colour a screen's glass backdrop glows with. Nil leaves the app's default (the accent).
+    var noopBackdropTint: Color? {
+        get { self[NoopBackdropTintKey.self] }
+        set { self[NoopBackdropTintKey.self] = newValue }
+    }
+}
+
+public extension View {
+    /// Put this view (a sheet, a pushed screen) on the glass backdrop in `tint`, and tell any `ScreenScaffold`
+    /// inside to draw the same one.
+    func noopBackdrop(_ tint: Color) -> some View {
+        self
+            .environment(\.noopBackdropTint, tint)
+            .background(NoopGlassBackdrop(tint: tint).ignoresSafeArea())
     }
 }

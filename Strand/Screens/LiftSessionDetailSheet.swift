@@ -79,7 +79,7 @@ struct LiftSessionDetailSheet: View {
         #else
         .frame(width: 560, height: 780)
         #endif
-        .background(StrandPalette.surfaceBase)
+        .noopBackdrop(StrandPalette.effortColor)
         .task { await load() }
         .sheet(item: $openExercise) { target in
             NavigationStack {

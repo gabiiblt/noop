@@ -78,7 +78,7 @@ struct LiftSessionEditSheet: View {
         #else
         .frame(width: 560, height: 780)
         #endif
-        .background(StrandPalette.surfaceBase)
+        .noopBackdrop(StrandPalette.effortColor)
         .keyboardDoneToolbar($focused)
         .dismissesKeyboardOnTap($focused)
         // A field holding 0 (a discarded set) empties when focused, so typing replaces the 0 instead of

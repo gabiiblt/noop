@@ -58,8 +58,7 @@ struct LiftLogView: View {
         ScreenScaffold(
             title: "Lift Log",
             subtitle: "Build a program once, then tap through it at the gym. Kept on \(Platform.deviceNounPhrase).",
-            onRefresh: { await load() },
-            topBackground: AnyView(NoopGlassBackdrop(tint: StrandPalette.effortColor))
+            onRefresh: { await load() }
         ) {
             VStack(alignment: .leading, spacing: NoopMetrics.sectionGap) {
                 weekStrip
@@ -71,6 +70,7 @@ struct LiftLogView: View {
                 effortNote
             }
         }
+        .environment(\.noopBackdropTint, StrandPalette.effortColor)
         // Also on a saved session: the session sheet lives above this screen and cannot tell it
         // directly, and a save does not always bump `refreshSeq`.
         .task(id: "\(repo.refreshSeq)-\(session.savedSessions)") { await load() }

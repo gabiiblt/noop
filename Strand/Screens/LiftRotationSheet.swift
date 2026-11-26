@@ -39,7 +39,7 @@ struct LiftRotationSheet: View {
         #else
         .frame(width: 520, height: 720)
         #endif
-        .background(StrandPalette.surfaceBase)
+        .noopBackdrop(StrandPalette.effortColor)
         .task { await load() }
     }
 

@@ -52,7 +52,7 @@ struct ExerciseLibraryView: View {
                 .padding(.horizontal, NoopMetrics.screenPadding)
                 .padding(.vertical, NoopMetrics.gap)
             }
-            .background(StrandPalette.surfaceBase)
+            .noopBackdrop(StrandPalette.effortColor)
             .navigationTitle(Text("Exercise library"))
             #if os(iOS)
             .navigationBarTitleDisplayMode(.inline)
@@ -181,7 +181,7 @@ struct ExerciseDetailView: View {
             .padding(.horizontal, NoopMetrics.screenPadding)
             .padding(.vertical, NoopMetrics.gap)
         }
-        .background(StrandPalette.surfaceBase)
+        .noopBackdrop(StrandPalette.effortColor)
         .navigationTitle(Text(verbatim: name))
         #if os(iOS)
         .navigationBarTitleDisplayMode(.inline)
