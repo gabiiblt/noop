@@ -137,6 +137,13 @@ To do:
    Greyskull, steady, undulating, density, ladder, owned dumbbells, assistance machines. A tap to apply or
    ignore a suggestion, and showing the rule in the program's line summary.
 3. Plate calculator per gym: plates, bars, dumbbells and machine stacks per gym, and the plates to load.
+   Done: the plate maths (`LiftPlates`, 464 stacks and 528 loads checked against openGym's own `plates.js`, `bar.js`
+   and `dumbbells.js`), v51 storage (`liftGym`, `liftSession.gymId`), push on both sides, MCP (`get_gyms`, a session
+   names its gym), the gyms sheet (add, edit, delete, choose the one in use), the plate calculator, and the plate
+   line under each set of a session (bar-loaded and sled exercises picked from the library).
+   Not done: editing a machine's weight stack (stored, no screen), using owned dumbbells and stacks in progression
+   (the engine takes no `owned` grid yet), a per-exercise choice of how it is loaded (only library exercises have
+   an equipment word), and a unit-aware warm-up ramp.
 4. Supersets, and a backup exercise that swaps in when a machine is taken (keeps the slot's sets and reps).
 5. Body map: volume per muscle, muscles still recovering, muscles left untrained (MuscleMap geometry, MIT).
 6. Strength balance ratios between lifts, and lifts as a percentage of body weight.

@@ -119,6 +119,8 @@ SpO₂, temperature) are approximations and not clinically validated.
   linear, double, triple and time, with the reason for each target (`LiftProgression.swift`, checked
   against openGym's own `progression.js` by `Tools/lift_progression_oracle`), their storage and the
   wording of each reason (`LiftProgressionStore.swift`, `LiftProgressionCopy.swift`).
+  The plate maths (`LiftPlates.swift`, from openGym's `plates.js`, `bar.js` and `dumbbells.js`) is checked the same way
+  by `Tools/lift_progression_oracle/gen_plates.mjs`.
 
   ```
   Copyright (c) 2026 Duarte Santos

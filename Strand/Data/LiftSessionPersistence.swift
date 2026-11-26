@@ -40,6 +40,8 @@ enum LiftSessionPersistence {
         /// happened yet. Optional for the same reason as the two above: an older snapshot decodes as
         /// absent and resumes with nothing pending.
         var pendingExtras: [PendingExtra]?
+        /// The gym the session is being done at. Absent from a snapshot written before gyms existed.
+        var gymId: String?
 
         struct PendingExtra: Codable, Equatable {
             var exerciseIndex: Int
@@ -81,6 +83,8 @@ enum LiftSessionPersistence {
             /// The progression rule behind the line's numbers. Absent from a snapshot written before rules
             /// existed, or for a line with none: a plain line.
             var rule: RuleBox?
+            /// The library exercise's equipment word. Absent from a snapshot written before gyms existed.
+            var equipment: String?
         }
 
         struct RuleBox: Codable, Equatable {
@@ -161,7 +165,8 @@ enum LiftSessionPersistence {
                          programName: String?,
                          pendingValues: [LiftSlot: LiftSessionController.PendingSetValues],
                          pendingWarmups: Set<LiftSlot>,
-                         pendingExtras: [LiftSlot: LiftSetExtras] = [:]) -> Snapshot {
+                         pendingExtras: [LiftSlot: LiftSetExtras] = [:],
+                         gymId: String? = nil) -> Snapshot {
         Snapshot(
             startSec: engine.startTs,
             programId: programId,
@@ -180,7 +185,8 @@ enum LiftSessionPersistence {
                                   programItemId: $0.programItemId,
                                   // Written only when true, so a session nobody added to encodes as before.
                                   addedInSession: $0.addedInSession ? true : nil,
-                                  rule: $0.rule.map { Snapshot.RuleBox(stamp: $0.stamp, rowReps: $0.rowReps, why: $0.why) })
+                                  rule: $0.rule.map { Snapshot.RuleBox(stamp: $0.stamp, rowReps: $0.rowReps, why: $0.why) },
+                                  equipment: $0.equipment)
             },
             stage: box(engine.stage),
             sets: engine.sets.map {
@@ -207,7 +213,8 @@ enum LiftSessionPersistence {
             pendingExtras: pendingExtras.isEmpty ? nil : pendingExtras
                 .sorted { ($0.key.exerciseIndex, $0.key.setIndex) < ($1.key.exerciseIndex, $1.key.setIndex) }
                 .map { Snapshot.PendingExtra(exerciseIndex: $0.key.exerciseIndex, setIndex: $0.key.setIndex,
-                                             extras: $0.value) })
+                                             extras: $0.value) },
+            gymId: gymId)
     }
 
     /// The set detail chosen in advance, back as the controller holds it.
@@ -251,7 +258,8 @@ enum LiftSessionPersistence {
                          note: $0.note,
                          programItemId: $0.programItemId,
                          addedInSession: $0.addedInSession ?? false,
-                         rule: $0.rule.map { LiftPlanRule(stamp: $0.stamp, rowReps: $0.rowReps, why: $0.why) })
+                         rule: $0.rule.map { LiftPlanRule(stamp: $0.stamp, rowReps: $0.rowReps, why: $0.why) },
+                         equipment: $0.equipment)
         }
         let sets = s.sets.map {
             LiftRecordedSet(exerciseIndex: $0.exerciseIndex, setIndex: $0.setIndex,

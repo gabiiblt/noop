@@ -27,6 +27,8 @@ final class LiftSessionController: ObservableObject {
     @Published private(set) var engine: LiftSessionEngine? { didSet { scheduleRestTimers() } }
     @Published private(set) var programId: String?
     @Published private(set) var programName: String?
+    /// The gym the session is being done at, or nil when none is chosen. Decides whose plates the plate lines use.
+    @Published private(set) var gymId: String?
     /// True while the full sheet is presented; false when minimised to the bottom bar.
     @Published var isPresented = false
 
@@ -132,11 +134,12 @@ final class LiftSessionController: ObservableObject {
 
     // MARK: - Lifecycle
 
-    func start(plan: [LiftPlanItem], programId: String?, programName: String?) {
+    func start(plan: [LiftPlanItem], programId: String?, programName: String?, gymId: String? = nil) {
         let stamp = Int(Date().timeIntervalSince1970)
         engine = LiftSessionEngine(plan: plan, startTs: stamp)
         self.programId = programId
         self.programName = programName
+        self.gymId = gymId
         warnedFor = nil
         isPresented = true
         claimStrap()
@@ -165,6 +168,7 @@ final class LiftSessionController: ObservableObject {
         engine = LiftSessionPersistence.engine(from: snapshot)
         programId = snapshot.programId
         programName = snapshot.programName
+        gymId = snapshot.gymId
         // Numbers typed for sets not yet performed, and warm-ups marked in advance, come back too:
         // they are intent the user already expressed, and losing them is the bug this pair exists
         // to prevent, whether it is lost to a blur or to a relaunch.
@@ -201,6 +205,7 @@ final class LiftSessionController: ObservableObject {
         engine = nil
         programId = nil
         programName = nil
+        gymId = nil
         warnedFor = nil
         lastStrapStepAt = nil
         pendingWarmups = []
@@ -773,6 +778,7 @@ final class LiftSessionController: ObservableObject {
                                             programName: programName,
                                             pendingValues: pendingValues,
                                             pendingWarmups: pendingWarmups,
-                                            pendingExtras: pendingExtras))
+                                            pendingExtras: pendingExtras,
+                                            gymId: gymId))
     }
 }

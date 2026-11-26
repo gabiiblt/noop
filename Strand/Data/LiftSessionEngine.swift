@@ -66,6 +66,9 @@ struct LiftPlanItem: Equatable {
     var addedInSession: Bool
     /// The progression rule behind this line's numbers, when its program line has one.
     var rule: LiftPlanRule?
+    /// The equipment word of the library exercise behind this line ('barbell', 'sled machine', ...), which decides
+    /// whether a gym's plates apply to it. Nil for a name the person typed, which gets no plate line.
+    var equipment: String?
 
     /// Rest used when a program line does not specify one. Two minutes sits in the middle of the
     /// range the hypertrophy literature uses for compound work, and is only a starting value: what
@@ -84,7 +87,8 @@ struct LiftPlanItem: Equatable {
          note: String? = nil,
          programItemId: String? = nil,
          addedInSession: Bool = false,
-         rule: LiftPlanRule? = nil) {
+         rule: LiftPlanRule? = nil,
+         equipment: String? = nil) {
         self.exercise = exercise
         self.primaryMuscle = primaryMuscle
         self.secondaryMuscles = secondaryMuscles
@@ -98,6 +102,7 @@ struct LiftPlanItem: Equatable {
         self.programItemId = programItemId
         self.addedInSession = addedInSession
         self.rule = rule
+        self.equipment = equipment
     }
 
     /// The reps one set was asked for: its own aim under a rule that gives each set one, else the line's reps.

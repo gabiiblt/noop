@@ -32,6 +32,8 @@ struct LiftSessionView: View {
     @State private var showingFinish = false
     /// The set whose detail sheet (shape, failure, RIR, side, time, distance) is open.
     @State private var detailTarget: DetailTarget?
+    /// The gym this session is done at, read once for the plate lines. Nil when none was chosen.
+    @State private var gym: LiftGymRow?
 
     struct DetailTarget: Identifiable {
         let slot: LiftSlot
@@ -101,6 +103,7 @@ struct LiftSessionView: View {
         // Re-read whenever the session's exercises change, so an exercise added mid-session that was
         // done before shows last time's numbers in grey, like every other line.
         .task(id: engine?.plan.map(\.exercise)) { await loadLastTime() }
+        .task(id: session.gymId) { await loadGym() }
         // Release a field's draft once the user leaves it, so the row returns to the canonical
         // formatting ("45.50" typed becomes "45.5"). The single-argument form on purpose: the
         // two-argument `onChange` is macOS 14+ and this file also builds for macOS 13.
@@ -345,11 +348,32 @@ struct LiftSessionView: View {
                     .padding(.leading, Self.setColumnWidth + 8)
                     .lineLimit(2)
             }
+            if let plates = plateLine(engine, slot: slot) {
+                Text(plates)
+                    .font(StrandFont.caption)
+                    .foregroundStyle(StrandPalette.textSecondary)
+                    .padding(.leading, Self.setColumnWidth + 8)
+                    .lineLimit(2)
+            }
         }
         .padding(.vertical, 6)
         .padding(.horizontal, 8)
         .background(rowBackground(isWorking: isWorking, done: recorded != nil),
                     in: RoundedRectangle(cornerRadius: 8, style: .continuous))
+    }
+
+    /// What goes on the bar for this set's weight at the session's gym, or nil when there is no gym, the exercise
+    /// takes no plates, or no weight is entered or carried. Display only: the logged weight is the total.
+    private func plateLine(_ engine: LiftSessionEngine, slot: LiftSlot) -> String? {
+        guard let gym, let item = engine.planItem(for: slot),
+              let kg = session.values(of: slot).weightKg, kg > 0,
+              let load = LiftGymLoading.load(gym: gym, equipment: item.equipment, weightKg: kg) else { return nil }
+        return LiftGymCopy.line(load)
+    }
+
+    private func loadGym() async {
+        guard let id = session.gymId, let store = await repo.storeHandle() else { gym = nil; return }
+        gym = ((try? await store.liftGyms(deviceId: repo.deviceId)) ?? []).first { $0.id == id }
     }
 
     /// The number fields and buttons of one set row.
@@ -925,7 +949,8 @@ struct LiftSessionView: View {
             // Snapshot the name: renaming or deleting the program never rewrites this session.
             programName: session.programName,
             sessionRpe: LiftFormat.number(sessionRpeText),
-            note: session.programName)
+            note: session.programName,
+            gymId: session.gymId)
         _ = try? await store.upsertLiftSessions([row])
 
         // `ord` is COMPLETION order, which with out-of-order work is not the plan's order — and it

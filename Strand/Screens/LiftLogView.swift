@@ -36,6 +36,9 @@ struct LiftLogView: View {
     @State private var viewing: SessionDetailTarget?
     /// The exercise library sheet (iOS, where the catalogue ships).
     @State private var browsingLibrary = false
+    /// The gyms sheet, and the gym a new session is done at (a preference: see `LiftGymsSheet`).
+    @State private var showingGyms = false
+    @AppStorage(LiftGymsSheet.activeKey) private var activeGymId = ""
 
     @AppStorage(UnitPrefs.systemKey) private var unitSystemRaw = UnitSystem.metric.rawValue
     private var unitSystem: UnitSystem { UnitSystem(rawValue: unitSystemRaw) ?? .metric }
@@ -70,6 +73,9 @@ struct LiftLogView: View {
         .sheet(isPresented: $browsingLibrary) {
             ExerciseLibraryView()
         }
+        .sheet(isPresented: $showingGyms) {
+            LiftGymsSheet()
+        }
     }
 
     // MARK: - Header
@@ -103,6 +109,9 @@ struct LiftLogView: View {
                     NoopButton("Exercise library", systemImage: "books.vertical.fill", kind: .secondary) {
                         browsingLibrary = true
                     }
+                }
+                NoopButton("Gyms and plates", systemImage: "scalemass.fill", kind: .secondary) {
+                    showingGyms = true
                 }
             }
         }
@@ -226,7 +235,9 @@ struct LiftLogView: View {
                                 note: item.note,
                                 // Carried so a set added or dropped mid-session can be written back
                                 // onto the line it came from, and be there next time.
-                                programItemId: item.id)
+                                programItemId: item.id,
+                                // Decides whether a gym's plates apply to this line.
+                                equipment: known?.equipment)
             // A line with a progression rule runs on the rule's target for today, derived from what this
             // exercise did before (by name, or by the library exercise the name is linked to).
             let sets = history.filter { $0.exercise == item.exercise || (item.catalogueId != nil && $0.catalogueId == item.catalogueId) }
@@ -241,7 +252,15 @@ struct LiftLogView: View {
             session.isPresented = true
             return
         }
-        session.start(plan: plan, programId: program.id, programName: program.name)
+        // The gym this session is done at: the one in use if it still exists, else the one used most recently.
+        // It is marked used now, so it is offered first next time.
+        let gyms = (try? await store.liftGyms(deviceId: repo.deviceId)) ?? []
+        let gym = gyms.first { $0.id == activeGymId } ?? gyms.first
+        if var used = gym {
+            used.lastUsedTs = Int(Date().timeIntervalSince1970)
+            _ = try? await store.upsertLiftGyms([used])
+        }
+        session.start(plan: plan, programId: program.id, programName: program.name, gymId: gym?.id)
     }
 
     // MARK: - This week, per muscle
