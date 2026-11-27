@@ -475,7 +475,7 @@ struct RhythmView: View {
                 Text("BEAT-TO-BEAT SCATTER").strandOverline()
                 ZStack {
                     ScenicHeroBackground(domain: .rest, starCount: 36)
-                        .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+                        .clipShape(RoundedRectangle(cornerRadius: NoopMetrics.radiusControl, style: .continuous))
                     PoincarePlot(points: allPoints)
                         .padding(8)
                 }

@@ -606,7 +606,7 @@ struct SettingsView: View {
     @ViewBuilder
     private func backgroundRecentThumb(thumb: Image?, mode: BackgroundFillMode, active: Bool,
                                        action: @escaping () -> Void) -> some View {
-        let shape = RoundedRectangle(cornerRadius: 10, style: .continuous)
+        let shape = RoundedRectangle(cornerRadius: NoopMetrics.radiusControl, style: .continuous)
         Button(action: action) {
             VStack(spacing: 3) {
                 Group {
@@ -1487,8 +1487,8 @@ struct SettingsView: View {
                     .foregroundStyle(StrandPalette.textPrimary)
                     .padding(.horizontal, NoopMetrics.space3)
                     .padding(.vertical, 9)
-                    .background(StrandPalette.surfaceInset, in: RoundedRectangle(cornerRadius: 10, style: .continuous))
-                    .overlay(RoundedRectangle(cornerRadius: 10, style: .continuous)
+                    .background(StrandPalette.surfaceInset, in: RoundedRectangle(cornerRadius: NoopMetrics.radiusControl, style: .continuous))
+                    .overlay(RoundedRectangle(cornerRadius: NoopMetrics.radiusControl, style: .continuous)
                         .strokeBorder(StrandPalette.hairline, lineWidth: 1))
                     .disableAutocorrection(true)
                     .accessibilityLabel("New strap name")
@@ -2563,9 +2563,9 @@ struct SettingsView: View {
                         .padding(12)
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .background(StrandPalette.surfaceInset,
-                                    in: RoundedRectangle(cornerRadius: 10, style: .continuous))
+                                    in: RoundedRectangle(cornerRadius: NoopMetrics.radiusControl, style: .continuous))
                         .overlay(
-                            RoundedRectangle(cornerRadius: 10, style: .continuous)
+                            RoundedRectangle(cornerRadius: NoopMetrics.radiusControl, style: .continuous)
                                 .stroke(StrandPalette.accent.opacity(0.3), lineWidth: 1)
                         )
                     }
@@ -2619,9 +2619,9 @@ struct SettingsView: View {
                 .padding(12)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .background(StrandPalette.surfaceInset,
-                            in: RoundedRectangle(cornerRadius: 10, style: .continuous))
+                            in: RoundedRectangle(cornerRadius: NoopMetrics.radiusControl, style: .continuous))
                 .overlay(
-                    RoundedRectangle(cornerRadius: 10, style: .continuous)
+                    RoundedRectangle(cornerRadius: NoopMetrics.radiusControl, style: .continuous)
                         .stroke(StrandPalette.statusWarning.opacity(0.25), lineWidth: 1)
                 )
 
@@ -2728,9 +2728,9 @@ struct SettingsView: View {
         .padding(12)
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(StrandPalette.surfaceInset,
-                    in: RoundedRectangle(cornerRadius: 10, style: .continuous))
+                    in: RoundedRectangle(cornerRadius: NoopMetrics.radiusControl, style: .continuous))
         .overlay(
-            RoundedRectangle(cornerRadius: 10, style: .continuous)
+            RoundedRectangle(cornerRadius: NoopMetrics.radiusControl, style: .continuous)
                 .stroke(StrandPalette.hairline, lineWidth: 1)
         )
     }
@@ -2918,7 +2918,7 @@ private struct DiagnosticsSheet: View {
                 .padding(16)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .background(StrandPalette.surfaceInset,
-                            in: RoundedRectangle(cornerRadius: 12, style: .continuous))
+                            in: RoundedRectangle(cornerRadius: NoopMetrics.radiusControl, style: .continuous))
                 .padding(20)
             }
             #if os(iOS)

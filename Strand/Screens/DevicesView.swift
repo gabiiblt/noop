@@ -130,8 +130,8 @@ private struct DevicesContent: View {
             Spacer(minLength: 0)
         }
         .padding(NoopMetrics.space3)
-        .background(NoopPanelSurface(cornerRadius: 18))
-        .overlay(RoundedRectangle(cornerRadius: 18, style: .continuous)
+        .background(NoopPanelSurface(cornerRadius: NoopMetrics.radiusCompact))
+        .overlay(RoundedRectangle(cornerRadius: NoopMetrics.radiusCompact, style: .continuous)
             .strokeBorder(StrandPalette.statusWarning.opacity(0.5), lineWidth: 1))
         .accessibilityElement(children: .combine)
         .accessibilityLabel("Reconnect help: \(guide)")

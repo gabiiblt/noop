@@ -751,7 +751,7 @@ private struct QuickActionSheet: View {
                     .font(.system(size: 17, weight: .semibold))
                     .foregroundStyle(tint)
                     .frame(width: 38, height: 38)
-                    .background(RoundedRectangle(cornerRadius: 11, style: .continuous).fill(StrandPalette.surfaceInset))
+                    .background(RoundedRectangle(cornerRadius: NoopMetrics.radiusControl, style: .continuous).fill(StrandPalette.surfaceInset))
                 Text(title)
                     .font(StrandFont.headline)
                     .foregroundStyle(StrandPalette.textPrimary)
@@ -762,7 +762,7 @@ private struct QuickActionSheet: View {
             }
             .padding(.vertical, 10)
             .padding(.horizontal, 12)
-            .background(NoopPanelSurface(cornerRadius: 14))
+            .background(NoopPanelSurface(cornerRadius: NoopMetrics.radiusCompact))
             .contentShape(Rectangle())
         }
         .buttonStyle(.plain)

@@ -344,11 +344,11 @@ public struct MenuBarContent: View {
             .frame(maxWidth: .infinity)
             .padding(.vertical, 8)
             .background(
-                RoundedRectangle(cornerRadius: 10, style: .continuous)
+                RoundedRectangle(cornerRadius: NoopMetrics.radiusControl, style: .continuous)
                     .fill(toneColor(tone).opacity(0.12))
             )
             .overlay(
-                RoundedRectangle(cornerRadius: 10, style: .continuous)
+                RoundedRectangle(cornerRadius: NoopMetrics.radiusControl, style: .continuous)
                     .stroke(toneColor(tone).opacity(0.26), lineWidth: 1)
             )
         }

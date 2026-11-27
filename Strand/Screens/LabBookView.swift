@@ -116,7 +116,7 @@ struct LabBookView: View {
                         .font(.system(size: 16, weight: .semibold))
                         .foregroundStyle(StrandPalette.metricCyan)
                         .frame(width: 30, height: 30)
-                        .background(StrandPalette.metricCyan.opacity(0.14), in: RoundedRectangle(cornerRadius: 9, style: .continuous))
+                        .background(StrandPalette.metricCyan.opacity(0.14), in: RoundedRectangle(cornerRadius: NoopMetrics.radiusChip, style: .continuous))
                         .accessibilityHidden(true)
                     VStack(alignment: .leading, spacing: 2) {
                         Text(countLine).font(StrandFont.headline).foregroundStyle(StrandPalette.textPrimary)
@@ -175,7 +175,7 @@ struct LabBookView: View {
                         .font(.system(size: 16, weight: .semibold))
                         .foregroundStyle(StrandPalette.metricAmber)
                         .frame(width: 30, height: 30)
-                        .background(StrandPalette.metricAmber.opacity(0.14), in: RoundedRectangle(cornerRadius: 9, style: .continuous))
+                        .background(StrandPalette.metricAmber.opacity(0.14), in: RoundedRectangle(cornerRadius: NoopMetrics.radiusChip, style: .continuous))
                         .accessibilityHidden(true)
                     Text("Import readings").font(StrandFont.headline).foregroundStyle(StrandPalette.textPrimary)
                     Spacer(minLength: 8)

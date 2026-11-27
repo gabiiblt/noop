@@ -301,7 +301,7 @@ struct InsightsView: View {
                         .font(.system(size: 16, weight: .semibold))
                         .foregroundStyle(StrandPalette.accent)
                         .frame(width: 30, height: 30)
-                        .background(StrandPalette.accent.opacity(0.14), in: RoundedRectangle(cornerRadius: 9, style: .continuous))
+                        .background(StrandPalette.accent.opacity(0.14), in: RoundedRectangle(cornerRadius: NoopMetrics.radiusChip, style: .continuous))
                         .accessibilityHidden(true)
                     VStack(alignment: .leading, spacing: 4) {
                         // WHOOP tappable-card title: UPPERCASE tracked white + trailing "›" chevron
@@ -720,7 +720,7 @@ struct InsightsView: View {
         }
         .padding(NoopMetrics.space3)
         .frame(maxWidth: .infinity, minHeight: 82, alignment: .topLeading)
-        .background(NoopPanelSurface(cornerRadius: 8))
+        .background(NoopPanelSurface(cornerRadius: NoopMetrics.radiusChip))
     }
 
     private func experimentMeasure(_ label: LocalizedStringKey,
@@ -745,7 +745,7 @@ struct InsightsView: View {
         }
         .padding(NoopMetrics.space3)
         .frame(maxWidth: .infinity, minHeight: 92, alignment: .topLeading)
-        .background(NoopPanelSurface(tint: tint, cornerRadius: 8))
+        .background(NoopPanelSurface(tint: tint, cornerRadius: NoopMetrics.radiusChip))
     }
 
     /// Behaviours the user actually has data for: distinct logged journal questions

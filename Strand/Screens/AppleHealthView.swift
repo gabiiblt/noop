@@ -377,7 +377,7 @@ struct AppleHealthView: View {
                         .font(.system(size: 16, weight: .semibold))
                         .foregroundStyle(StrandPalette.metricCyan)
                         .frame(width: 30, height: 30)
-                        .background(StrandPalette.metricCyan.opacity(0.14), in: RoundedRectangle(cornerRadius: 9, style: .continuous))
+                        .background(StrandPalette.metricCyan.opacity(0.14), in: RoundedRectangle(cornerRadius: NoopMetrics.radiusChip, style: .continuous))
                         .accessibilityHidden(true)
                     Text("Apple Health (Live)")
                         .font(StrandFont.headline)

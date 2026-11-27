@@ -126,7 +126,7 @@ struct AppleWatchAboutView: View {
                         .foregroundStyle(StrandPalette.accent)
                         .frame(width: 34, height: 34)
                         .background(StrandPalette.accent.opacity(0.14),
-                                    in: RoundedRectangle(cornerRadius: 10, style: .continuous))
+                                    in: RoundedRectangle(cornerRadius: NoopMetrics.radiusControl, style: .continuous))
                         .accessibilityHidden(true)
                     Text("Your Apple Watch as a device")
                         .font(StrandFont.headline)

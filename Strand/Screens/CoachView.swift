@@ -236,8 +236,8 @@ struct CoachView: View {
                             .foregroundStyle(StrandPalette.textPrimary)
                             .padding(.horizontal, 12)
                             .padding(.vertical, 9)
-                            .background(StrandPalette.surfaceInset, in: RoundedRectangle(cornerRadius: 10, style: .continuous))
-                            .overlay(RoundedRectangle(cornerRadius: 10, style: .continuous)
+                            .background(StrandPalette.surfaceInset, in: RoundedRectangle(cornerRadius: NoopMetrics.radiusControl, style: .continuous))
+                            .overlay(RoundedRectangle(cornerRadius: NoopMetrics.radiusControl, style: .continuous)
                                 .strokeBorder(StrandPalette.hairline, lineWidth: 1))
                             .disableAutocorrection(true)
                             .accessibilityLabel("Server URL")
@@ -278,8 +278,8 @@ struct CoachView: View {
                         .foregroundStyle(StrandPalette.textPrimary)
                         .padding(.horizontal, 12)
                         .padding(.vertical, 9)
-                        .background(StrandPalette.surfaceInset, in: RoundedRectangle(cornerRadius: 10, style: .continuous))
-                        .overlay(RoundedRectangle(cornerRadius: 10, style: .continuous)
+                        .background(StrandPalette.surfaceInset, in: RoundedRectangle(cornerRadius: NoopMetrics.radiusControl, style: .continuous))
+                        .overlay(RoundedRectangle(cornerRadius: NoopMetrics.radiusControl, style: .continuous)
                             .strokeBorder(StrandPalette.hairline, lineWidth: 1))
                         .onSubmit { coach.provider == .custom ? connectCustom() : saveKey() }
                         .accessibilityLabel("API key")
@@ -352,8 +352,8 @@ struct CoachView: View {
                         .foregroundStyle(StrandPalette.textPrimary)
                         .padding(.horizontal, 12)
                         .padding(.vertical, 9)
-                        .background(StrandPalette.surfaceInset, in: RoundedRectangle(cornerRadius: 10, style: .continuous))
-                        .overlay(RoundedRectangle(cornerRadius: 10, style: .continuous)
+                        .background(StrandPalette.surfaceInset, in: RoundedRectangle(cornerRadius: NoopMetrics.radiusControl, style: .continuous))
+                        .overlay(RoundedRectangle(cornerRadius: NoopMetrics.radiusControl, style: .continuous)
                             .strokeBorder(StrandPalette.hairline, lineWidth: 1))
                         .onSubmit(applyCustomModel)
                         .accessibilityLabel("Custom model id")
@@ -541,7 +541,7 @@ struct CoachView: View {
                     .multilineTextAlignment(.leading)
                     .padding(.horizontal, 14)
                     .padding(.vertical, 10)
-                    .background(StrandPalette.accent, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+                    .background(StrandPalette.accent, in: RoundedRectangle(cornerRadius: NoopMetrics.radiusCompact, style: .continuous))
                     .frame(maxWidth: 520, alignment: .trailing)
             }
             .accessibilityElement(children: .combine)
@@ -558,7 +558,7 @@ struct CoachView: View {
                     .fixedSize(horizontal: false, vertical: true)
                     .padding(.horizontal, 14)
                     .padding(.vertical, 11)
-                    .frostedCardSurface(tint: StrandPalette.chargeColor, cornerRadius: 16)
+                    .frostedCardSurface(tint: StrandPalette.chargeColor, cornerRadius: NoopMetrics.radiusCompact)
                     .frame(maxWidth: 560, alignment: .leading)
                     // K8: Copy / Share / Save context menu on assistant replies.
                     .contextMenu {
@@ -598,7 +598,7 @@ struct CoachView: View {
         }
         .padding(.horizontal, 14)
         .padding(.vertical, 11)
-        .frostedCardSurface(tint: StrandPalette.chargeColor, cornerRadius: 16)
+        .frostedCardSurface(tint: StrandPalette.chargeColor, cornerRadius: NoopMetrics.radiusCompact)
         .frame(maxWidth: 320, alignment: .leading)
         .accessibilityLabel("Coach is thinking")
     }
@@ -641,8 +641,8 @@ struct CoachView: View {
                     .foregroundStyle(StrandPalette.textPrimary)
                     .padding(.horizontal, 12)
                     .padding(.vertical, 9)
-                    .background(StrandPalette.surfaceInset, in: RoundedRectangle(cornerRadius: 10, style: .continuous))
-                    .overlay(RoundedRectangle(cornerRadius: 10, style: .continuous)
+                    .background(StrandPalette.surfaceInset, in: RoundedRectangle(cornerRadius: NoopMetrics.radiusControl, style: .continuous))
+                    .overlay(RoundedRectangle(cornerRadius: NoopMetrics.radiusControl, style: .continuous)
                         .strokeBorder(StrandPalette.hairline, lineWidth: 1))
                     .onSubmit(saveRepairedKey)
                     .accessibilityLabel(coach.keyRejected ? Text("Corrected API key") : Text("API key"))
@@ -765,8 +765,8 @@ struct CoachView: View {
                 .focused($composerFocused)
                 .padding(.horizontal, 12)
                 .padding(.vertical, 9)
-                .background(StrandPalette.surfaceInset, in: RoundedRectangle(cornerRadius: 12, style: .continuous))
-                .overlay(RoundedRectangle(cornerRadius: 12, style: .continuous)
+                .background(StrandPalette.surfaceInset, in: RoundedRectangle(cornerRadius: NoopMetrics.radiusControl, style: .continuous))
+                .overlay(RoundedRectangle(cornerRadius: NoopMetrics.radiusControl, style: .continuous)
                     .strokeBorder(composerFocused ? StrandPalette.focusRing : StrandPalette.hairline, lineWidth: 1))
                 .onSubmit { send(draft) }
                 .accessibilityLabel("Question")
@@ -793,15 +793,15 @@ struct CoachView: View {
                 .frame(width: 44, height: 38)
                 .foregroundStyle(StrandPalette.goldDeepText)
                 .background(StrandPalette.accent,
-                            in: RoundedRectangle(cornerRadius: 12, style: .continuous))
+                            in: RoundedRectangle(cornerRadius: NoopMetrics.radiusControl, style: .continuous))
             }
             .buttonStyle(.plain)
             .disabled(coach.sending || draft.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
             .accessibilityLabel("Send")
         }
         .padding(8)
-        .background(NoopPanelSurface(cornerRadius: 16))
-        .overlay(RoundedRectangle(cornerRadius: 16, style: .continuous)
+        .background(NoopPanelSurface(cornerRadius: NoopMetrics.radiusCompact))
+        .overlay(RoundedRectangle(cornerRadius: NoopMetrics.radiusCompact, style: .continuous)
             .strokeBorder(StrandPalette.hairline, lineWidth: 1))
     }
 
@@ -828,8 +828,8 @@ struct CoachView: View {
             }
             .frame(width: 36, height: 38)
             .background(StrandPalette.surfaceInset,
-                        in: RoundedRectangle(cornerRadius: 10, style: .continuous))
-            .overlay(RoundedRectangle(cornerRadius: 10, style: .continuous)
+                        in: RoundedRectangle(cornerRadius: NoopMetrics.radiusControl, style: .continuous))
+            .overlay(RoundedRectangle(cornerRadius: NoopMetrics.radiusControl, style: .continuous)
                 .strokeBorder(StrandPalette.hairline, lineWidth: 1))
         }
         .buttonStyle(.plain)

@@ -530,7 +530,7 @@ struct TrendsReportSheet: View {
                         .clipped()
                         .frame(maxWidth: .infinity, alignment: .center)
                         .overlay(
-                            RoundedRectangle(cornerRadius: 12, style: .continuous)
+                            RoundedRectangle(cornerRadius: NoopMetrics.radiusControl, style: .continuous)
                                 .strokeBorder(StrandPalette.hairline, lineWidth: 1)
                         )
                 }

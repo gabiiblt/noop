@@ -1334,7 +1334,7 @@ struct SleepView: View {
                 }
             }
             .frame(height: 34)
-            .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+            .clipShape(RoundedRectangle(cornerRadius: NoopMetrics.radiusChip, style: .continuous))
             .accessibilityElement(children: .ignore)
             .accessibilityLabel("Sleep stage breakdown: deep \(stageSharePercent(.deep, s)) percent, light \(stageSharePercent(.light, s)) percent, REM \(stageSharePercent(.rem, s)) percent, awake \(stageSharePercent(.awake, s)) percent")
             HStack(spacing: 16) {
@@ -1430,7 +1430,7 @@ struct SleepView: View {
         .padding(.vertical, 4)
         .padding(.horizontal, 6)
         .background(
-            RoundedRectangle(cornerRadius: 8, style: .continuous)
+            RoundedRectangle(cornerRadius: NoopMetrics.radiusChip, style: .continuous)
                 .fill(color.opacity(isSelected ? 0.14 : 0))
         )
         .opacity(othersSelected ? 0.55 : 1.0)
@@ -1660,11 +1660,11 @@ struct SleepView: View {
         .padding(.vertical, 8)
         .padding(.horizontal, 10)
         .background(
-            RoundedRectangle(cornerRadius: 10, style: .continuous)
+            RoundedRectangle(cornerRadius: NoopMetrics.radiusControl, style: .continuous)
                 .fill(StrandPalette.textPrimary.opacity(0.045))
         )
         .overlay(
-            RoundedRectangle(cornerRadius: 10, style: .continuous)
+            RoundedRectangle(cornerRadius: NoopMetrics.radiusControl, style: .continuous)
                 .stroke(isSelected ? StrandPalette.hairlineStrong : Color.clear, lineWidth: 1.5)
         )
         .contentShape(Rectangle())
@@ -2089,7 +2089,7 @@ struct SleepView: View {
             .font(StrandFont.footnote)
             .foregroundStyle(StrandPalette.textTertiary)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
-            .background(NoopPanelSurface(tint: StrandPalette.restColor, cornerRadius: 12))
+            .background(NoopPanelSurface(tint: StrandPalette.restColor, cornerRadius: NoopMetrics.radiusControl))
     }
 
     // MARK: - Formatting helpers

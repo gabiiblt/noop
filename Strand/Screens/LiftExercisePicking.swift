@@ -161,7 +161,7 @@ struct LiftMusclePicker: View {
                 .padding(.vertical, 6)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .background(
-                    RoundedRectangle(cornerRadius: 8, style: .continuous)
+                    RoundedRectangle(cornerRadius: NoopMetrics.radiusChip, style: .continuous)
                         .fill(on ? StrandPalette.gymAccent.opacity(0.14) : StrandPalette.surfaceRaised)
                 )
                 .contentShape(Rectangle())

@@ -852,7 +852,7 @@ struct TrendsView: View {
             .font(StrandFont.subhead)
             .foregroundStyle(StrandPalette.textTertiary)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
-            .background(NoopPanelSurface(cornerRadius: 12))
+            .background(NoopPanelSurface(cornerRadius: NoopMetrics.radiusControl))
     }
 }
 

@@ -458,7 +458,7 @@ struct MarkerEditorView: View {
 
     // MARK: - Small builders
 
-    private var inputShape: RoundedRectangle { RoundedRectangle(cornerRadius: 10, style: .continuous) }
+    private var inputShape: RoundedRectangle { RoundedRectangle(cornerRadius: NoopMetrics.radiusControl, style: .continuous) }
 
     private func field<Content: View>(_ label: String, @ViewBuilder _ content: () -> Content) -> some View {
         VStack(alignment: .leading, spacing: 6) {

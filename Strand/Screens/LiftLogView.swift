@@ -213,7 +213,7 @@ struct LiftLogView: View {
                         .font(.system(size: 18, weight: .semibold))
                         .foregroundStyle(StrandPalette.onGymAccent)
                         .frame(width: 44, height: 44)
-                        .background(StrandPalette.gymAccent, in: RoundedRectangle(cornerRadius: 11, style: .continuous))
+                        .background(StrandPalette.gymAccent, in: RoundedRectangle(cornerRadius: NoopMetrics.radiusControl, style: .continuous))
                         .accessibilityHidden(true)
                     VStack(alignment: .leading, spacing: 2) {
                         Text(info.label)
@@ -319,7 +319,7 @@ struct LiftLogView: View {
                                 .font(.system(size: 15, weight: .semibold))
                                 .foregroundStyle(StrandPalette.gymAccent)
                                 .frame(width: 30, height: 30)
-                                .background(StrandPalette.gymAccent.opacity(0.16), in: RoundedRectangle(cornerRadius: 8, style: .continuous))
+                                .background(StrandPalette.gymAccent.opacity(0.16), in: RoundedRectangle(cornerRadius: NoopMetrics.radiusChip, style: .continuous))
                             Text("New program")
                                 .font(StrandFont.body)
                                 .foregroundStyle(StrandPalette.gymAccent)

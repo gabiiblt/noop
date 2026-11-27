@@ -245,7 +245,7 @@ struct LiftProgramDetailSheet: View {
                 .foregroundStyle(StrandPalette.textPrimary)
                 .padding(.vertical, 2)
                 .background(number.isMultiple(of: 2) ? StrandPalette.surfaceRaised.opacity(0.5) : Color.clear,
-                            in: RoundedRectangle(cornerRadius: 12, style: .continuous))
+                            in: RoundedRectangle(cornerRadius: NoopMetrics.radiusControl, style: .continuous))
             }
         }
         .padding(.vertical, NoopMetrics.rowSpacing)

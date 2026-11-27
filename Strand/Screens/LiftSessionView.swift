@@ -264,7 +264,7 @@ struct LiftSessionView: View {
                         .padding(10)
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .background(StrandPalette.metricAmber.opacity(0.12),
-                                    in: RoundedRectangle(cornerRadius: 8, style: .continuous))
+                                    in: RoundedRectangle(cornerRadius: NoopMetrics.radiusChip, style: .continuous))
                 }
 
                 columnHeadings
@@ -281,7 +281,7 @@ struct LiftSessionView: View {
         .padding(NoopMetrics.gap)
         .gymCard()
         // The exercise being worked is the one bright element: an accent hairline, nothing else.
-        .overlay(RoundedRectangle(cornerRadius: 14, style: .continuous)
+        .overlay(RoundedRectangle(cornerRadius: NoopMetrics.radiusCompact, style: .continuous)
             .stroke(StrandPalette.gymAccent.opacity(isCurrent ? 0.7 : 0), lineWidth: 1.5))
         .id(index)
     }
@@ -430,7 +430,7 @@ struct LiftSessionView: View {
         .padding(.vertical, 8)
         .padding(.horizontal, 8)
         .background(rowBackground(isWorking: isWorking, done: recorded != nil),
-                    in: RoundedRectangle(cornerRadius: 12, style: .continuous))
+                    in: RoundedRectangle(cornerRadius: NoopMetrics.radiusControl, style: .continuous))
     }
 
     /// What goes on the bar for this set's weight at the session's gym, or nil when there is no gym, the exercise
@@ -466,7 +466,7 @@ struct LiftSessionView: View {
                                                   : StrandPalette.textSecondary))
                     .frame(width: 30, height: 30)
                     .background((isWarmup(slot) ? StrandPalette.metricAmber : StrandPalette.textTertiary).opacity(0.18),
-                                in: RoundedRectangle(cornerRadius: 8, style: .continuous))
+                                in: RoundedRectangle(cornerRadius: NoopMetrics.radiusChip, style: .continuous))
                     .frame(width: Self.setColumnWidth, alignment: .center)
                     .contentShape(Rectangle())
             }
@@ -658,8 +658,8 @@ struct LiftSessionView: View {
             .numericKeyboard()
             .focused($focused, equals: field)
             .frame(maxWidth: .infinity, minHeight: 40)
-            .background(StrandPalette.surfaceInset, in: RoundedRectangle(cornerRadius: 10, style: .continuous))
-            .overlay(RoundedRectangle(cornerRadius: 10, style: .continuous)
+            .background(StrandPalette.surfaceInset, in: RoundedRectangle(cornerRadius: NoopMetrics.radiusControl, style: .continuous))
+            .overlay(RoundedRectangle(cornerRadius: NoopMetrics.radiusControl, style: .continuous)
                 .stroke(StrandPalette.gymAccent, lineWidth: focused == field ? 1.5 : 0))
     }
 

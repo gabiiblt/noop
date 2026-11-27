@@ -221,7 +221,7 @@ struct WorkoutDetailView: View {
                     .foregroundStyle(StrandPalette.effortColor)
                     .frame(width: 44, height: 44)
                     .background(StrandPalette.effortColor.opacity(0.14),
-                                in: RoundedRectangle(cornerRadius: 12, style: .continuous))
+                                in: RoundedRectangle(cornerRadius: NoopMetrics.radiusControl, style: .continuous))
                     .accessibilityHidden(true)
                 VStack(alignment: .leading, spacing: 3) {
                     Text(WorkoutSource.displaySport(row.sport))
@@ -488,7 +488,7 @@ struct WorkoutDetailView: View {
                             }
                         }
                         .frame(height: 34)
-                        .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+                        .clipShape(RoundedRectangle(cornerRadius: NoopMetrics.radiusChip, style: .continuous))
                         .accessibilityElement(children: .ignore)
                         .accessibilityLabel(String(localized: "Heart-rate zone split: \((1...5).map { String(localized: "zone \($0) \(Int((z[$0 - 1] / total * 100).rounded())) percent") }.joined(separator: ", "))"))
                         Divider().overlay(StrandPalette.hairline)

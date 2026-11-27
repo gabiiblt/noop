@@ -76,7 +76,7 @@ struct RollingStepsAverageCard: View {
                     .foregroundStyle(StrandPalette.textTertiary)
             }
             .padding(14)
-            .background(NoopPanelSurface(tint: StrandPalette.metricCyan, cornerRadius: 20))
+            .background(NoopPanelSurface(tint: StrandPalette.metricCyan, cornerRadius: NoopMetrics.cardRadius))
         }
         .buttonStyle(.plain)
         .task(id: "\(day)|\(repo.refreshSeq)") {

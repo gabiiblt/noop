@@ -325,7 +325,7 @@ struct ManualWorkoutSheet: View {
                 .font(.system(size: 18, weight: .semibold))
                 .foregroundStyle(StrandPalette.effortColor)
                 .frame(width: 30, height: 30)
-                .background(StrandPalette.effortColor.opacity(0.14), in: RoundedRectangle(cornerRadius: 9, style: .continuous))
+                .background(StrandPalette.effortColor.opacity(0.14), in: RoundedRectangle(cornerRadius: NoopMetrics.radiusChip, style: .continuous))
                 .accessibilityHidden(true)
             VStack(alignment: .leading, spacing: 2) {
                 Text(editing == nil ? "Add Workout" : "Edit Workout")
@@ -391,7 +391,7 @@ struct ManualWorkoutSheet: View {
 
     // MARK: - Validation / build
 
-    private var inputShape: RoundedRectangle { RoundedRectangle(cornerRadius: 10, style: .continuous) }
+    private var inputShape: RoundedRectangle { RoundedRectangle(cornerRadius: NoopMetrics.radiusControl, style: .continuous) }
 
     /// Moving the START keeps the workout's LENGTH and carries the end with it, which is what correcting
     /// "this began an hour earlier" means. Computed from the old start before it is reassigned.

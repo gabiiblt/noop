@@ -85,8 +85,8 @@ struct NotificationSettingsView: View {
         }
         .padding(NoopMetrics.space3)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(NoopPanelSurface(tint: StrandPalette.accent, cornerRadius: 10))
-        .overlay(RoundedRectangle(cornerRadius: 10, style: .continuous)
+        .background(NoopPanelSurface(tint: StrandPalette.accent, cornerRadius: NoopMetrics.radiusControl))
+        .overlay(RoundedRectangle(cornerRadius: NoopMetrics.radiusControl, style: .continuous)
             .stroke(StrandPalette.accent.opacity(0.22), lineWidth: 1))
     }
 
@@ -160,7 +160,7 @@ struct NotificationSettingsView: View {
         .padding(.horizontal, 8)
         // An enabled app reads as a selected row: a soft accentMuted wash behind it.
         .background(enabled ? StrandPalette.accentMuted : .clear,
-                    in: RoundedRectangle(cornerRadius: 10, style: .continuous))
+                    in: RoundedRectangle(cornerRadius: NoopMetrics.radiusControl, style: .continuous))
     }
 
     private func appIcon(_ app: NotifApp) -> some View {
@@ -170,7 +170,7 @@ struct NotificationSettingsView: View {
                     .resizable()
                     .interpolation(.high)
             } else {
-                RoundedRectangle(cornerRadius: 8, style: .continuous)
+                RoundedRectangle(cornerRadius: NoopMetrics.radiusChip, style: .continuous)
                     .fill(StrandPalette.surfaceInset)
                     .overlay(Image(systemName: app.fallbackSymbol)
                         .foregroundStyle(StrandPalette.textSecondary))

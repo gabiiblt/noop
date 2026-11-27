@@ -143,7 +143,7 @@ struct CaffeineLogCard: View {
             }
             .padding(10)
             .background(StrandPalette.statusWarning.opacity(0.10),
-                        in: RoundedRectangle(cornerRadius: 10, style: .continuous))
+                        in: RoundedRectangle(cornerRadius: NoopMetrics.radiusControl, style: .continuous))
             .accessibilityElement(children: .combine)
         }
     }

@@ -689,7 +689,7 @@ struct LiquidTodayView: View {
             }
             .padding(.horizontal, 14)
             .padding(.vertical, 11)
-            .background(NoopPanelSurface(cornerRadius: 18, surfaceOpacity: cardOpacity))
+            .background(NoopPanelSurface(cornerRadius: NoopMetrics.radiusCompact, surfaceOpacity: cardOpacity))
         }
         .buttonStyle(LiquidPressStyle())
         .accessibilityLabel("Start a live session. Beta. Silent strap coaching against today's Charge.")
@@ -733,7 +733,7 @@ struct LiquidTodayView: View {
         }
         .padding(.vertical, NoopMetrics.space4)
         .padding(.horizontal, NoopMetrics.space3)
-        .background(NoopPanelSurface(cornerRadius: 26, elevated: true, surfaceOpacity: cardOpacity))
+        .background(NoopPanelSurface(cornerRadius: NoopMetrics.cardRadius, elevated: true, surfaceOpacity: cardOpacity))
     }
 
     // MARK: - Heart rate
@@ -922,7 +922,7 @@ struct LiquidTodayView: View {
                 .font(StrandFont.subhead)
                 .foregroundStyle(StrandPalette.textTertiary)
                 .frame(maxWidth: .infinity, minHeight: 60, alignment: .center)
-                .background(NoopPanelSurface(tint: StrandPalette.restColor, cornerRadius: 12))
+                .background(NoopPanelSurface(tint: StrandPalette.restColor, cornerRadius: NoopMetrics.radiusControl))
         }
     }
 
@@ -936,7 +936,7 @@ struct LiquidTodayView: View {
                 .font(StrandFont.subhead)
                 .foregroundStyle(StrandPalette.textTertiary)
                 .frame(maxWidth: .infinity, minHeight: 60, alignment: .center)
-                .background(NoopPanelSurface(tint: StrandPalette.restColor, cornerRadius: 12))
+                .background(NoopPanelSurface(tint: StrandPalette.restColor, cornerRadius: NoopMetrics.radiusControl))
         }
     }
 
@@ -950,7 +950,7 @@ struct LiquidTodayView: View {
                 .font(StrandFont.subhead)
                 .foregroundStyle(StrandPalette.textTertiary)
                 .frame(maxWidth: .infinity, minHeight: 60, alignment: .center)
-                .background(NoopPanelSurface(tint: StrandPalette.restColor, cornerRadius: 12))
+                .background(NoopPanelSurface(tint: StrandPalette.restColor, cornerRadius: NoopMetrics.radiusControl))
         }
     }
 
@@ -964,7 +964,7 @@ struct LiquidTodayView: View {
                 .font(StrandFont.subhead)
                 .foregroundStyle(StrandPalette.textTertiary)
                 .frame(maxWidth: .infinity, minHeight: 60, alignment: .center)
-                .background(NoopPanelSurface(tint: StrandPalette.restColor, cornerRadius: 12))
+                .background(NoopPanelSurface(tint: StrandPalette.restColor, cornerRadius: NoopMetrics.radiusControl))
         }
     }
 
@@ -978,7 +978,7 @@ struct LiquidTodayView: View {
                 .font(StrandFont.subhead)
                 .foregroundStyle(StrandPalette.textTertiary)
                 .frame(maxWidth: .infinity, minHeight: 60, alignment: .center)
-                .background(NoopPanelSurface(tint: StrandPalette.restColor, cornerRadius: 12))
+                .background(NoopPanelSurface(tint: StrandPalette.restColor, cornerRadius: NoopMetrics.radiusControl))
         }
     }
 
@@ -1145,7 +1145,7 @@ struct LiquidTodayView: View {
             }
             .padding(.horizontal, 14)
             .padding(.vertical, 11)
-        .background(NoopPanelSurface(tint: tint, cornerRadius: 20, surfaceOpacity: cardOpacity))
+        .background(NoopPanelSurface(tint: tint, cornerRadius: NoopMetrics.cardRadius, surfaceOpacity: cardOpacity))
     }
 
     // MARK: - Synthesis (greeting + readiness pills + one-liner)
@@ -1521,7 +1521,7 @@ struct LiquidTodayView: View {
         .padding(.vertical, 14)
         .frame(maxWidth: .infinity, alignment: .leading)
         .frame(minHeight: keyMetricsDetailed ? 154 : 116, alignment: .topLeading)
-        .background(NoopPanelSurface(tint: tint, cornerRadius: 18, surfaceOpacity: cardOpacity))
+        .background(NoopPanelSurface(tint: tint, cornerRadius: NoopMetrics.radiusCompact, surfaceOpacity: cardOpacity))
         // #430 parity: tap -> the metric's trend detail (the same Explore dossier its MetricRow pushes,
         // closure-based NavigationLink per #38). A metric with no catalog entry stays inert.
         return Group {
@@ -1621,7 +1621,7 @@ struct LiquidTodayView: View {
         content()
             .padding(16)
             .frame(maxWidth: .infinity, alignment: .leading)
-            .background(NoopPanelSurface(cornerRadius: 22, surfaceOpacity: cardOpacity))
+            .background(NoopPanelSurface(cornerRadius: NoopMetrics.cardRadius, surfaceOpacity: cardOpacity))
     }
 
     // MARK: - Data

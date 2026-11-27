@@ -184,7 +184,7 @@ struct LiftProgramEditorSheet: View {
                     .font(StrandFont.body)
                     .foregroundStyle(StrandPalette.textPrimary)
                     .padding(NoopMetrics.gap)
-                    .background(StrandPalette.surfaceRaised, in: RoundedRectangle(cornerRadius: 12, style: .continuous))
+                    .background(StrandPalette.surfaceRaised, in: RoundedRectangle(cornerRadius: NoopMetrics.radiusControl, style: .continuous))
                     .focused($focused, equals: .itemNote(item.id))
             }
 

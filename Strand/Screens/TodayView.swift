@@ -2222,7 +2222,7 @@ struct TodayView: View {
                                 .foregroundStyle(StrandPalette.textTertiary)
                         }
                         .padding(14)
-                        .background(NoopPanelSurface(cornerRadius: 14))
+                        .background(NoopPanelSurface(cornerRadius: NoopMetrics.radiusCompact))
                         .contentShape(Rectangle())
                     }
                     .buttonStyle(.plain)
@@ -2530,7 +2530,7 @@ struct TodayView: View {
                         .font(StrandFont.subhead)
                         .foregroundStyle(StrandPalette.textTertiary)
                         .frame(maxWidth: .infinity, minHeight: 60, alignment: .center)
-                        .background(NoopPanelSurface(tint: StrandPalette.restColor, cornerRadius: 12))
+                        .background(NoopPanelSurface(tint: StrandPalette.restColor, cornerRadius: NoopMetrics.radiusControl))
                 }
             }
         case .nightDetail:
@@ -2545,7 +2545,7 @@ struct TodayView: View {
                         .font(StrandFont.subhead)
                         .foregroundStyle(StrandPalette.textTertiary)
                         .frame(maxWidth: .infinity, minHeight: 60, alignment: .center)
-                        .background(NoopPanelSurface(tint: StrandPalette.restColor, cornerRadius: 12))
+                        .background(NoopPanelSurface(tint: StrandPalette.restColor, cornerRadius: NoopMetrics.radiusControl))
                 }
             }
         case .sleepDebt:
@@ -2560,7 +2560,7 @@ struct TodayView: View {
                         .font(StrandFont.subhead)
                         .foregroundStyle(StrandPalette.textTertiary)
                         .frame(maxWidth: .infinity, minHeight: 60, alignment: .center)
-                        .background(NoopPanelSurface(tint: StrandPalette.restColor, cornerRadius: 12))
+                        .background(NoopPanelSurface(tint: StrandPalette.restColor, cornerRadius: NoopMetrics.radiusControl))
                 }
             }
         case .stages:
@@ -2576,7 +2576,7 @@ struct TodayView: View {
                         .font(StrandFont.subhead)
                         .foregroundStyle(StrandPalette.textTertiary)
                         .frame(maxWidth: .infinity, minHeight: 60, alignment: .center)
-                        .background(NoopPanelSurface(tint: StrandPalette.restColor, cornerRadius: 12))
+                        .background(NoopPanelSurface(tint: StrandPalette.restColor, cornerRadius: NoopMetrics.radiusControl))
                 }
             }
         case .hoursVsNeeded:
@@ -2592,7 +2592,7 @@ struct TodayView: View {
                         .font(StrandFont.subhead)
                         .foregroundStyle(StrandPalette.textTertiary)
                         .frame(maxWidth: .infinity, minHeight: 60, alignment: .center)
-                        .background(NoopPanelSurface(tint: StrandPalette.restColor, cornerRadius: 12))
+                        .background(NoopPanelSurface(tint: StrandPalette.restColor, cornerRadius: NoopMetrics.radiusControl))
                 }
             }
         case .consistency:
@@ -2608,7 +2608,7 @@ struct TodayView: View {
                         .font(StrandFont.subhead)
                         .foregroundStyle(StrandPalette.textTertiary)
                         .frame(maxWidth: .infinity, minHeight: 60, alignment: .center)
-                        .background(NoopPanelSurface(tint: StrandPalette.restColor, cornerRadius: 12))
+                        .background(NoopPanelSurface(tint: StrandPalette.restColor, cornerRadius: NoopMetrics.radiusControl))
                 }
             }
         }
@@ -2825,7 +2825,7 @@ struct TodayView: View {
     private func pinnedCardRowBody(icon: String, tint: Color, title: String, subtitle: String,
                                    value: String) -> some View {
         HStack(spacing: 12) {
-            RoundedRectangle(cornerRadius: 9, style: .continuous)
+            RoundedRectangle(cornerRadius: NoopMetrics.radiusChip, style: .continuous)
                 .fill(tint.opacity(0.14))
                 .frame(width: 34, height: 34)
                 .overlay(Image(systemName: icon).font(.system(size: 15, weight: .semibold)).foregroundStyle(tint))

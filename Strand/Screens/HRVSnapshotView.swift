@@ -337,7 +337,7 @@ struct HRVSnapshotView: View {
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(12)
-        .background(NoopPanelSurface(tint: accent, cornerRadius: 10))
+        .background(NoopPanelSurface(tint: accent, cornerRadius: NoopMetrics.radiusControl))
     }
 
     // MARK: - Methodology

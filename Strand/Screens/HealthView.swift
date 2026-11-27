@@ -1588,7 +1588,7 @@ private struct HealthHubLinksSection: View {
                         .font(.system(size: 16, weight: .semibold))
                         .foregroundStyle(tint)
                         .frame(width: 30, height: 30)
-                        .background(tint.opacity(0.14), in: RoundedRectangle(cornerRadius: 9, style: .continuous))
+                        .background(tint.opacity(0.14), in: RoundedRectangle(cornerRadius: NoopMetrics.radiusChip, style: .continuous))
                         .accessibilityHidden(true)
                     VStack(alignment: .leading, spacing: 2) {
                         Text(title).font(StrandFont.headline).foregroundStyle(StrandPalette.textPrimary)

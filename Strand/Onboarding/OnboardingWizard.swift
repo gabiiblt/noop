@@ -345,7 +345,7 @@ private struct WhatItDoesStep: View {
             StrandCard {
                 HStack(spacing: 16) {
                     ZStack {
-                        RoundedRectangle(cornerRadius: 12, style: .continuous)
+                        RoundedRectangle(cornerRadius: NoopMetrics.radiusControl, style: .continuous)
                             .fill(slide.tint.opacity(0.14))
                             .frame(width: 46, height: 46)
                         Image(systemName: slide.icon)
@@ -399,7 +399,7 @@ private struct ExpectationsStep: View {
                     }
                     .padding(14)
                     .frame(maxWidth: 520, alignment: .leading)
-                    .background(NoopPanelSurface(cornerRadius: 14))
+                    .background(NoopPanelSurface(cornerRadius: NoopMetrics.radiusCompact))
                     .opacity(shown ? 1 : 0)
                     .offset(y: shown ? 0 : 8)
                     .animation(StrandMotion.gentle.delay(Double(index) * 0.08), value: shown)
@@ -442,7 +442,7 @@ private struct ExpectationsStep: View {
         }
         .padding(14)
         .frame(maxWidth: 520, alignment: .leading)
-        .background(NoopPanelSurface(cornerRadius: 14))
+        .background(NoopPanelSurface(cornerRadius: NoopMetrics.radiusCompact))
     }
 }
 
@@ -1268,7 +1268,7 @@ private struct InfoCard: View {
         StrandCard {
             HStack(alignment: .top, spacing: 14) {
                 ZStack {
-                    RoundedRectangle(cornerRadius: 11, style: .continuous)
+                    RoundedRectangle(cornerRadius: NoopMetrics.radiusControl, style: .continuous)
                         .fill(tint.opacity(0.14))
                         .frame(width: 40, height: 40)
                     Image(systemName: icon)
@@ -1394,7 +1394,7 @@ private struct PrimaryButtonStyle: ButtonStyle {
             .padding(.vertical, 14)
             .padding(.horizontal, 20)
             .background(
-                RoundedRectangle(cornerRadius: 14, style: .continuous)
+                RoundedRectangle(cornerRadius: NoopMetrics.radiusCompact, style: .continuous)
                     .fill(configuration.isPressed ? StrandPalette.accentHover : StrandPalette.accent)
             )
             .shadow(color: StrandPalette.accent.opacity(0.4), radius: 12, y: 4)
@@ -1410,9 +1410,9 @@ private struct SecondaryButtonStyle: ButtonStyle {
             .foregroundStyle(StrandPalette.textPrimary)
             .padding(.vertical, 11)
             .padding(.horizontal, 18)
-            .background(NoopPanelSurface(cornerRadius: 12))
+            .background(NoopPanelSurface(cornerRadius: NoopMetrics.radiusControl))
             .overlay(
-                RoundedRectangle(cornerRadius: 12, style: .continuous)
+                RoundedRectangle(cornerRadius: NoopMetrics.radiusControl, style: .continuous)
                     .stroke(configuration.isPressed ? StrandPalette.hairlineStrong : StrandPalette.hairline, lineWidth: 1)
             )
             .scaleEffect(configuration.isPressed ? 0.985 : 1)

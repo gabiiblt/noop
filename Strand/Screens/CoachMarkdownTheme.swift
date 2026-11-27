@@ -120,8 +120,8 @@ extension Theme {
                     .padding(10)
             }
             .background(StrandPalette.surfaceInset)
-            .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
-            .overlay(RoundedRectangle(cornerRadius: 8, style: .continuous)
+            .clipShape(RoundedRectangle(cornerRadius: NoopMetrics.radiusChip, style: .continuous))
+            .overlay(RoundedRectangle(cornerRadius: NoopMetrics.radiusChip, style: .continuous)
                 .strokeBorder(StrandPalette.hairline, lineWidth: 1))
             .markdownMargin(top: 4, bottom: 8)
         }

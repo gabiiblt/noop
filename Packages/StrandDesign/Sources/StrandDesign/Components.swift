@@ -7,6 +7,13 @@ import SwiftUI
 
 public enum NoopMetrics {
     public static let cardRadius: CGFloat = NoopVisualStyle.cardRadius
+    /// Radius scale: chip 8 / control 12 / compact 16 / card 22. Nothing between the steps.
+    /// Small badges, icon tiles and tags.
+    public static let radiusChip: CGFloat = 8
+    /// Inputs, buttons, inset cells and rows inside a card.
+    public static let radiusControl: CGFloat = 12
+    /// Secondary cards and tiles.
+    public static let radiusCompact: CGFloat = NoopVisualStyle.compactRadius
     public static let cardPadding: CGFloat = NoopVisualStyle.cardPadding
     public static let gap: CGFloat = NoopVisualStyle.itemGap
     public static let sectionGap: CGFloat = NoopVisualStyle.sectionGap

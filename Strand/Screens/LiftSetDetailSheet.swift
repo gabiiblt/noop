@@ -202,7 +202,7 @@ struct LiftSetDetailSheet: View {
         .padding(.vertical, 10)
         .padding(.horizontal, 12)
         .background(StrandPalette.surfaceInset,
-                    in: RoundedRectangle(cornerRadius: 10, style: .continuous))
+                    in: RoundedRectangle(cornerRadius: NoopMetrics.radiusControl, style: .continuous))
     }
 }
 

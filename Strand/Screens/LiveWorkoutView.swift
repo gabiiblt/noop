@@ -144,7 +144,7 @@ struct LiveWorkoutView: View {
             }
             .padding(.horizontal, NoopMetrics.space2)
             .padding(.vertical, NoopMetrics.space1)
-            .background(NoopPanelSurface(tint: StrandPalette.metricRose, cornerRadius: 14))
+            .background(NoopPanelSurface(tint: StrandPalette.metricRose, cornerRadius: NoopMetrics.radiusCompact))
             .clipShape(Capsule())
             Spacer(minLength: 0)
         }
@@ -257,11 +257,11 @@ struct LiveWorkoutView: View {
                 ForEach(1...5, id: \.self) { z in
                     let active = z == zone
                     let color = StrandPalette.hrZoneColor(z)
-                    RoundedRectangle(cornerRadius: 8, style: .continuous)
+                    RoundedRectangle(cornerRadius: NoopMetrics.radiusChip, style: .continuous)
                         .fill(active ? color : color.opacity(0.18))
                         .frame(height: active ? 44 : 34)
                         .overlay(
-                            RoundedRectangle(cornerRadius: 8, style: .continuous)
+                            RoundedRectangle(cornerRadius: NoopMetrics.radiusChip, style: .continuous)
                                 .strokeBorder(active ? color : StrandPalette.hairline, lineWidth: 1)
                         )
                         .overlay(

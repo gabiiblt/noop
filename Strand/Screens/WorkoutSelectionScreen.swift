@@ -219,7 +219,7 @@ struct WorkoutSelectionCard: View {
             HStack(alignment: .center, spacing: NoopMetrics.space4) {
                 WorkoutTypeIcon(workoutType: sport.name, size: 42, weight: .medium, color: accent)
                     .frame(width: 52, height: 52)
-                    .background(accent.opacity(0.12), in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+                    .background(accent.opacity(0.12), in: RoundedRectangle(cornerRadius: NoopMetrics.radiusCompact, style: .continuous))
 
                 VStack(alignment: .leading, spacing: NoopMetrics.space1) {
                     Text(sport.name)
@@ -244,9 +244,9 @@ struct WorkoutSelectionCard: View {
             .padding(.vertical, NoopMetrics.space5)
             .frame(maxWidth: .infinity, minHeight: 96, alignment: .leading)
             .background {
-                NoopPanelSurface(tint: accent, cornerRadius: 28, elevated: true)
+                NoopPanelSurface(tint: accent, cornerRadius: NoopMetrics.cardRadius, elevated: true)
             }
-            .contentShape(RoundedRectangle(cornerRadius: 28, style: .continuous))
+            .contentShape(RoundedRectangle(cornerRadius: NoopMetrics.cardRadius, style: .continuous))
         }
         .buttonStyle(LiquidPressStyle())
         .accessibilityElement(children: .ignore)

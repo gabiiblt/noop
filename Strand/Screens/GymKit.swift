@@ -150,9 +150,9 @@ struct GymNumberCell<F: Hashable>: View {
             .numericKeyboard()
             .focused(focus, equals: field)
             .frame(maxWidth: .infinity, minHeight: 44)
-            .background(StrandPalette.surfaceRaised, in: RoundedRectangle(cornerRadius: 12, style: .continuous))
+            .background(StrandPalette.surfaceRaised, in: RoundedRectangle(cornerRadius: NoopMetrics.radiusControl, style: .continuous))
             .overlay(
-                RoundedRectangle(cornerRadius: 12, style: .continuous)
+                RoundedRectangle(cornerRadius: NoopMetrics.radiusControl, style: .continuous)
                     .stroke(focus.wrappedValue == field ? StrandPalette.gymAccent : StrandPalette.hairline,
                             lineWidth: focus.wrappedValue == field ? 1.5 : 0.5)
             )
@@ -199,7 +199,7 @@ struct GymSetBadge: View {
             .font(StrandFont.rounded(17, weight: .bold))
             .foregroundStyle(StrandPalette.textPrimary)
             .frame(width: 44, height: 44)
-            .background(StrandPalette.surfaceRaised, in: RoundedRectangle(cornerRadius: 12, style: .continuous))
+            .background(StrandPalette.surfaceRaised, in: RoundedRectangle(cornerRadius: NoopMetrics.radiusControl, style: .continuous))
     }
 }
 
@@ -241,10 +241,10 @@ struct GymList<Content: View>: View {
 
     var body: some View {
         VStack(spacing: 0) { content() }
-            .background(StrandPalette.surfaceRaised, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
-            .overlay(RoundedRectangle(cornerRadius: 14, style: .continuous)
+            .background(StrandPalette.surfaceRaised, in: RoundedRectangle(cornerRadius: NoopMetrics.radiusCompact, style: .continuous))
+            .overlay(RoundedRectangle(cornerRadius: NoopMetrics.radiusCompact, style: .continuous)
                 .stroke(StrandPalette.hairline, lineWidth: 0.5))
-            .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+            .clipShape(RoundedRectangle(cornerRadius: NoopMetrics.radiusCompact, style: .continuous))
     }
 }
 
@@ -269,7 +269,7 @@ struct GymListRow: View {
                         .font(.system(size: 15, weight: .semibold))
                         .foregroundStyle(Color.white)
                         .frame(width: 30, height: 30)
-                        .background(tint, in: RoundedRectangle(cornerRadius: 8, style: .continuous))
+                        .background(tint, in: RoundedRectangle(cornerRadius: NoopMetrics.radiusChip, style: .continuous))
                         .accessibilityHidden(true)
                 }
                 VStack(alignment: .leading, spacing: 1) {
@@ -324,8 +324,8 @@ extension View {
     /// The flat card of openGym: the surface fill, a hairline, a 14 pt corner.
     func gymCard() -> some View {
         self
-            .background(StrandPalette.surfaceRaised, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
-            .overlay(RoundedRectangle(cornerRadius: 14, style: .continuous)
+            .background(StrandPalette.surfaceRaised, in: RoundedRectangle(cornerRadius: NoopMetrics.radiusCompact, style: .continuous))
+            .overlay(RoundedRectangle(cornerRadius: NoopMetrics.radiusCompact, style: .continuous)
                 .stroke(StrandPalette.hairline, lineWidth: 0.5))
     }
 }
@@ -340,7 +340,7 @@ struct GymCard<Content: View>: View {
             .padding(NoopMetrics.cardPadding)
             .frame(maxWidth: .infinity, alignment: .leading)
             .gymCard()
-            .overlay(RoundedRectangle(cornerRadius: 14, style: .continuous)
+            .overlay(RoundedRectangle(cornerRadius: NoopMetrics.radiusCompact, style: .continuous)
                 .stroke((tint ?? .clear).opacity(0.7), lineWidth: tint == nil ? 0 : 1.5))
     }
 }

@@ -151,7 +151,7 @@ struct AppleWatchSetupView: View {
                             .foregroundStyle(StrandPalette.accent)
                             .frame(width: 34, height: 34)
                             .background(StrandPalette.accent.opacity(0.14),
-                                        in: RoundedRectangle(cornerRadius: 10, style: .continuous))
+                                        in: RoundedRectangle(cornerRadius: NoopMetrics.radiusControl, style: .continuous))
                             .accessibilityHidden(true)
                         Text("Your watch, NOOP's brain")
                             .font(StrandFont.headline)
@@ -243,7 +243,7 @@ struct AppleWatchSetupView: View {
                         .foregroundStyle(StrandPalette.metricCyan)
                         .frame(width: 30, height: 30)
                         .background(StrandPalette.metricCyan.opacity(0.14),
-                                    in: RoundedRectangle(cornerRadius: 9, style: .continuous))
+                                    in: RoundedRectangle(cornerRadius: NoopMetrics.radiusChip, style: .continuous))
                         .accessibilityHidden(true)
                     Text("Connect Apple Health")
                         .font(StrandFont.headline)

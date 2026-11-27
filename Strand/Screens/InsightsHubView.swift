@@ -389,7 +389,7 @@ private struct DoseResponseCardView: View {
         }
         .padding(NoopMetrics.space3)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(NoopPanelSurface(cornerRadius: 8))
+        .background(NoopPanelSurface(cornerRadius: NoopMetrics.radiusChip))
     }
 
     private func signed(_ v: Double, suffix: String) -> String {

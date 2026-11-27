@@ -587,7 +587,7 @@ struct MetricExplorerView: View {
         NoopCard {
             HStack(spacing: 14) {
                 ZStack {
-                    RoundedRectangle(cornerRadius: 11, style: .continuous)
+                    RoundedRectangle(cornerRadius: NoopMetrics.radiusControl, style: .continuous)
                         .fill(StrandPalette.metricRose.opacity(0.16))
                     Image(systemName: "waveform.path.ecg")
                         .font(.system(size: 18, weight: .semibold))
@@ -662,7 +662,7 @@ private struct MetricRow: View {
     var body: some View {
         HStack(spacing: 14) {
             ZStack {
-                RoundedRectangle(cornerRadius: 9, style: .continuous)
+                RoundedRectangle(cornerRadius: NoopMetrics.radiusChip, style: .continuous)
                     .fill(StrandPalette.surfaceInset)
                 Image(systemName: metric.icon)
                     .font(.system(size: 15, weight: .medium))

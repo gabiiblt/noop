@@ -206,7 +206,7 @@ struct LiveView: View {
         content()
             .padding(16)
             .frame(maxWidth: .infinity, alignment: .leading)
-            .background(NoopPanelSurface(cornerRadius: 22, surfaceOpacity: cardOpacity))
+            .background(NoopPanelSurface(cornerRadius: NoopMetrics.cardRadius, surfaceOpacity: cardOpacity))
     }
 
     // MARK: - Console header
@@ -475,8 +475,8 @@ struct LiveView: View {
             Spacer(minLength: 0)
         }
         .padding(NoopMetrics.space3)
-        .background(NoopPanelSurface(cornerRadius: 18))
-        .overlay(RoundedRectangle(cornerRadius: 18, style: .continuous)
+        .background(NoopPanelSurface(cornerRadius: NoopMetrics.radiusCompact))
+        .overlay(RoundedRectangle(cornerRadius: NoopMetrics.radiusCompact, style: .continuous)
             .strokeBorder(StrandPalette.statusWarning.opacity(0.5), lineWidth: 1))
         .accessibilityElement(children: .combine)
         .accessibilityLabel("Reconnect help: \(guide)")
@@ -497,8 +497,8 @@ struct LiveView: View {
             Spacer(minLength: 0)
         }
         .padding(NoopMetrics.space3)
-        .background(NoopPanelSurface(cornerRadius: 18))
-        .overlay(RoundedRectangle(cornerRadius: 18, style: .continuous)
+        .background(NoopPanelSurface(cornerRadius: NoopMetrics.radiusCompact))
+        .overlay(RoundedRectangle(cornerRadius: NoopMetrics.radiusCompact, style: .continuous)
             .strokeBorder(StrandPalette.statusWarning.opacity(0.5), lineWidth: 1))
         .accessibilityElement(children: .combine)
         .accessibilityLabel("Pairing help: \(hint)")
@@ -534,8 +534,8 @@ struct LiveView: View {
             Spacer(minLength: 0)
         }
         .padding(NoopMetrics.space3)
-        .background(NoopPanelSurface(tint: StrandPalette.accent, cornerRadius: 18))
-        .overlay(RoundedRectangle(cornerRadius: 18, style: .continuous)
+        .background(NoopPanelSurface(tint: StrandPalette.accent, cornerRadius: NoopMetrics.radiusCompact))
+        .overlay(RoundedRectangle(cornerRadius: NoopMetrics.radiusCompact, style: .continuous)
             .strokeBorder(StrandPalette.accent.opacity(0.4), lineWidth: 1))
         .accessibilityElement(children: .combine)
         .accessibilityLabel("Standard HR mode, low bandwidth. \(detail)")
@@ -612,7 +612,7 @@ struct LiveView: View {
                 scanButton
             }
         }
-        .overlay(RoundedRectangle(cornerRadius: 22, style: .continuous)
+        .overlay(RoundedRectangle(cornerRadius: NoopMetrics.cardRadius, style: .continuous)
             .strokeBorder(StrandPalette.accent.opacity(0.30), lineWidth: 1))
     }
 
@@ -646,7 +646,7 @@ struct LiveView: View {
                     .accessibilityHidden(true)
             }
             .padding(NoopMetrics.space3)
-            .background(NoopPanelSurface(cornerRadius: 18))
+            .background(NoopPanelSurface(cornerRadius: NoopMetrics.radiusCompact))
             .contentShape(Rectangle())
         }
         .buttonStyle(LiquidPressStyle())
@@ -711,7 +711,7 @@ struct LiveView: View {
                 ringReconnectButton
             }
         }
-        .overlay(RoundedRectangle(cornerRadius: 22, style: .continuous)
+        .overlay(RoundedRectangle(cornerRadius: NoopMetrics.cardRadius, style: .continuous)
             .strokeBorder(StrandPalette.accent.opacity(0.30), lineWidth: 1))
     }
 
@@ -1060,7 +1060,7 @@ private struct LivePhysiology: View {
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(NoopMetrics.rowSpacing)
-        .background(NoopPanelSurface(cornerRadius: 14))
+        .background(NoopPanelSurface(cornerRadius: NoopMetrics.radiusCompact))
         .accessibilityElement(children: .combine)
         .accessibilityLabel("\(label): \(value)")
     }
@@ -1317,7 +1317,7 @@ private struct LiveLogCard: View {
         }
         .padding(16)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(NoopPanelSurface(cornerRadius: 22, surfaceOpacity: cardOpacity))
+        .background(NoopPanelSurface(cornerRadius: NoopMetrics.cardRadius, surfaceOpacity: cardOpacity))
     }
 
     /// The tail of the log, lazily.
@@ -1444,7 +1444,7 @@ private struct SignalTrustTile: View {
         .padding(14)
         .frame(minHeight: 112, alignment: .top)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(NoopPanelSurface(cornerRadius: 20, surfaceOpacity: cardOpacity))
+        .background(NoopPanelSurface(cornerRadius: NoopMetrics.cardRadius, surfaceOpacity: cardOpacity))
         .accessibilityElement(children: .combine)
         .accessibilityLabel("\(tile.title): \(tile.value). \(tile.detail)")
     }

@@ -1120,7 +1120,7 @@ private struct MultiTooltip: View {
             }
         }
         .padding(10)
-        .background(NoopPanelSurface(cornerRadius: 10, elevated: true))
+        .background(NoopPanelSurface(cornerRadius: NoopMetrics.radiusControl, elevated: true))
         .frame(width: tooltipWidth, alignment: .leading)
         .position(x: clampedX, y: tooltipHeight / 2 + 8)
         .allowsHitTesting(false)

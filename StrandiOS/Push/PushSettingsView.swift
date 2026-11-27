@@ -168,8 +168,8 @@ private struct PushFieldChrome: ViewModifier {
             .foregroundStyle(StrandPalette.textPrimary)
             .padding(.horizontal, 12)
             .padding(.vertical, 9)
-            .background(StrandPalette.surfaceInset, in: RoundedRectangle(cornerRadius: 10, style: .continuous))
-            .overlay(RoundedRectangle(cornerRadius: 10, style: .continuous)
+            .background(StrandPalette.surfaceInset, in: RoundedRectangle(cornerRadius: NoopMetrics.radiusControl, style: .continuous))
+            .overlay(RoundedRectangle(cornerRadius: NoopMetrics.radiusControl, style: .continuous)
                 .strokeBorder(StrandPalette.hairline, lineWidth: 1))
     }
 }

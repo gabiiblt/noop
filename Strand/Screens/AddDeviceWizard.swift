@@ -397,7 +397,7 @@ struct AddDeviceWizard: View {
             }
             .padding(16)
             .frame(maxWidth: .infinity, alignment: .leading)
-            .frostedCardSurface(cornerRadius: 14)
+            .frostedCardSurface(cornerRadius: NoopMetrics.radiusCompact)
         }
         .buttonStyle(.plain)
         .accessibilityLabel("\(title). \(subtitle)")
@@ -448,7 +448,7 @@ struct AddDeviceWizard: View {
                 }
                 .padding(16)
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .frostedCardSurface(cornerRadius: 14)
+                .frostedCardSurface(cornerRadius: NoopMetrics.radiusCompact)
 
                 Button {
                     startScan(for: type)
@@ -602,7 +602,7 @@ struct AddDeviceWizard: View {
             .padding(12)
             .frame(maxWidth: .infinity, alignment: .leading)
             .background(StrandPalette.statusCritical.opacity(0.10),
-                        in: RoundedRectangle(cornerRadius: 12, style: .continuous))
+                        in: RoundedRectangle(cornerRadius: NoopMetrics.radiusControl, style: .continuous))
         }
         .buttonStyle(.plain)
         .accessibilityLabel("I understand this disconnects the ring from Oura and that NOOP cannot undo it for me.")
@@ -669,7 +669,7 @@ struct AddDeviceWizard: View {
         .padding(12)
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(StrandPalette.statusWarning.opacity(0.10),
-                    in: RoundedRectangle(cornerRadius: 12, style: .continuous))
+                    in: RoundedRectangle(cornerRadius: NoopMetrics.radiusControl, style: .continuous))
 
         VStack(alignment: .leading, spacing: 12) {
             ForEach(Array(prepInstructions(.oura).enumerated()), id: \.offset) { _, line in
@@ -687,7 +687,7 @@ struct AddDeviceWizard: View {
         }
         .padding(16)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .frostedCardSurface(cornerRadius: 14)
+        .frostedCardSurface(cornerRadius: NoopMetrics.radiusCompact)
 
         Button {
             startScan(for: .oura)
@@ -722,7 +722,7 @@ struct AddDeviceWizard: View {
         .padding(12)
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(StrandPalette.statusWarning.opacity(0.10),
-                    in: RoundedRectangle(cornerRadius: 12, style: .continuous))
+                    in: RoundedRectangle(cornerRadius: NoopMetrics.radiusControl, style: .continuous))
 
         Text("Ring key (32 hex characters)").strandOverline()
         TextField("0123456789abcdef0123456789abcdef", text: $ouraKeyDraft)
@@ -735,7 +735,7 @@ struct AddDeviceWizard: View {
             #endif
             .padding(12)
             .background(StrandPalette.surfaceInset,
-                        in: RoundedRectangle(cornerRadius: 10, style: .continuous))
+                        in: RoundedRectangle(cornerRadius: NoopMetrics.radiusControl, style: .continuous))
             .accessibilityLabel("Ring key, 32 hexadecimal characters")
         if !ouraKeyDraft.isEmpty && ouraKeyBytes == nil {
             Text("That is not a 32-character hex key.")
@@ -832,7 +832,7 @@ struct AddDeviceWizard: View {
             }
             .padding(16)
             .frame(maxWidth: .infinity, alignment: .leading)
-            .frostedCardSurface(cornerRadius: 14)
+            .frostedCardSurface(cornerRadius: NoopMetrics.radiusCompact)
 
             Text("Name").strandOverline()
             TextField("Oura ring", text: $nameDraft)
@@ -841,7 +841,7 @@ struct AddDeviceWizard: View {
                 .foregroundStyle(StrandPalette.textPrimary)
                 .padding(12)
                 .background(StrandPalette.surfaceInset,
-                            in: RoundedRectangle(cornerRadius: 10, style: .continuous))
+                            in: RoundedRectangle(cornerRadius: NoopMetrics.radiusControl, style: .continuous))
                 .accessibilityLabel("Device name")
 
             if ouraAdvancedKeyMode {
@@ -873,7 +873,7 @@ struct AddDeviceWizard: View {
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 10)
                         .background(StrandPalette.statusCritical.opacity(0.16),
-                                    in: RoundedRectangle(cornerRadius: 12, style: .continuous))
+                                    in: RoundedRectangle(cornerRadius: NoopMetrics.radiusControl, style: .continuous))
                 }
                 .buttonStyle(.plain)
                 .accessibilityLabel("Take over this ring")
@@ -901,7 +901,7 @@ struct AddDeviceWizard: View {
         }
         .padding(20)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .frostedCardSurface(cornerRadius: 14)
+        .frostedCardSurface(cornerRadius: NoopMetrics.radiusCompact)
     }
 
     // MARK: Step 5 (Oura, failure) - honest dead-end, never a fabricated success
@@ -943,7 +943,7 @@ struct AddDeviceWizard: View {
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 6)
                         .background(StrandPalette.surfaceInset,
-                                    in: RoundedRectangle(cornerRadius: 12, style: .continuous))
+                                    in: RoundedRectangle(cornerRadius: NoopMetrics.radiusControl, style: .continuous))
                 }
                 .buttonStyle(.plain)
                 .accessibilityLabel("Use file import")
@@ -951,7 +951,7 @@ struct AddDeviceWizard: View {
         }
         .padding(16)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .frostedCardSurface(cornerRadius: 14)
+        .frostedCardSurface(cornerRadius: NoopMetrics.radiusCompact)
     }
 
     /// The per-generation capability checklist (section 3 of the onboarding UX spec). Each row is a (mark,
@@ -994,7 +994,7 @@ struct AddDeviceWizard: View {
         .padding(12)
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(StrandPalette.statusWarning.opacity(0.10),
-                    in: RoundedRectangle(cornerRadius: 12, style: .continuous))
+                    in: RoundedRectangle(cornerRadius: NoopMetrics.radiusControl, style: .continuous))
     }
 
     /// One "·"-free bullet line for the get/lose columns.
@@ -1125,7 +1125,7 @@ struct AddDeviceWizard: View {
             }
             .padding(14)
             .frame(maxWidth: .infinity, alignment: .leading)
-            .frostedCardSurface(cornerRadius: 12)
+            .frostedCardSurface(cornerRadius: NoopMetrics.radiusControl)
 
             Text("Name").strandOverline()
             TextField("Device name", text: $nameDraft)
@@ -1134,7 +1134,7 @@ struct AddDeviceWizard: View {
                 .foregroundStyle(StrandPalette.textPrimary)
                 .padding(12)
                 .background(StrandPalette.surfaceInset,
-                            in: RoundedRectangle(cornerRadius: 10, style: .continuous))
+                            in: RoundedRectangle(cornerRadius: NoopMetrics.radiusControl, style: .continuous))
                 .accessibilityLabel("Device name")
 
             Button("Add") { askMakeActive = true }
@@ -1422,7 +1422,7 @@ struct AddDeviceWizard: View {
         .padding(12)
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(StrandPalette.statusWarning.opacity(0.10),
-                    in: RoundedRectangle(cornerRadius: 12, style: .continuous))
+                    in: RoundedRectangle(cornerRadius: NoopMetrics.radiusControl, style: .continuous))
     }
 
     private var experimentalNote: some View {
@@ -1438,7 +1438,7 @@ struct AddDeviceWizard: View {
         .padding(12)
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(StrandPalette.statusWarning.opacity(0.10),
-                    in: RoundedRectangle(cornerRadius: 12, style: .continuous))
+                    in: RoundedRectangle(cornerRadius: NoopMetrics.radiusControl, style: .continuous))
     }
 
     /// A6 , the amber "one phone at a time" warning shown before a WHOOP scan. A failed pairing is most
@@ -1465,7 +1465,7 @@ struct AddDeviceWizard: View {
         .padding(12)
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(StrandPalette.statusWarning.opacity(0.10),
-                    in: RoundedRectangle(cornerRadius: 12, style: .continuous))
+                    in: RoundedRectangle(cornerRadius: NoopMetrics.radiusControl, style: .continuous))
         .accessibilityElement(children: .combine)
         .accessibilityLabel("Heads-up. Your WHOOP only talks to one phone at a time. Force-quit the official WHOOP app first, or pairing may fail.")
     }
@@ -1632,7 +1632,7 @@ private struct OuraPickList: View {
                 }
                 .padding(16)
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .frostedCardSurface(cornerRadius: 14)
+                .frostedCardSurface(cornerRadius: NoopMetrics.radiusCompact)
             } else if scanner.discovered.isEmpty {
                 VStack(alignment: .leading, spacing: 10) {
                     SearchingCard()
@@ -1697,7 +1697,7 @@ private struct SearchingCard: View {
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(20)
-        .frostedCardSurface(cornerRadius: 14)
+        .frostedCardSurface(cornerRadius: NoopMetrics.radiusCompact)
     }
 }
 
@@ -1725,7 +1725,7 @@ private struct DiscoveredRow: View {
             }
             .padding(14)
             .frame(maxWidth: .infinity, alignment: .leading)
-            .frostedCardSurface(cornerRadius: 12)
+            .frostedCardSurface(cornerRadius: NoopMetrics.radiusControl)
         }
         .buttonStyle(.plain)
         .accessibilityLabel("\(name), signal \(SignalBars.level(for: rssi)) of 4")

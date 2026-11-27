@@ -886,7 +886,7 @@ struct DataSourcesView: View {
         .padding(.top, 2)
         .padding(.horizontal, 10).padding(.vertical, 8)
         .background(DomainTheme.effort.color.opacity(0.08),
-                    in: RoundedRectangle(cornerRadius: 10, style: .continuous))
+                    in: RoundedRectangle(cornerRadius: NoopMetrics.radiusControl, style: .continuous))
     }
 
     private func generationRow(title: String, detail: String) -> some View {
@@ -967,7 +967,7 @@ struct DataSourcesView: View {
                         .font(.system(size: 16, weight: .semibold))
                         .foregroundStyle(tint)
                         .frame(width: 30, height: 30)
-                        .background(tint.opacity(0.14), in: RoundedRectangle(cornerRadius: 9, style: .continuous))
+                        .background(tint.opacity(0.14), in: RoundedRectangle(cornerRadius: NoopMetrics.radiusChip, style: .continuous))
                         .accessibilityHidden(true)
                     Text(title).font(StrandFont.headline).foregroundStyle(StrandPalette.textPrimary)
                     Spacer(minLength: 8)

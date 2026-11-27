@@ -100,7 +100,7 @@ struct AsleepDurationCard: View {
             .font(StrandFont.subhead)
             .foregroundStyle(StrandPalette.textTertiary)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
-            .background(NoopPanelSurface(tint: StrandPalette.restColor, cornerRadius: 12))
+            .background(NoopPanelSurface(tint: StrandPalette.restColor, cornerRadius: NoopMetrics.radiusControl))
     }
 
     /// Recent-half mean minus earlier-half mean (verbatim of `SleepView.durationTrendChange`). Direction
