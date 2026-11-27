@@ -221,7 +221,7 @@ struct LiftLogView: View {
                             .foregroundStyle(StrandPalette.gymAccent)
                             .textCase(.uppercase)
                         Text(info.title)
-                            .font(StrandFont.title3)
+                            .font(StrandFont.title2)
                             .foregroundStyle(StrandPalette.textPrimary)
                             .lineLimit(2)
                         if let sub = info.subtitle, !sub.isEmpty {
