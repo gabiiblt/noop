@@ -790,12 +790,13 @@ struct LiftSessionView: View {
                 HStack(spacing: NoopMetrics.rowSpacing) {
                     Button { session.advance() } label: {
                         Text(actionLabel(engine))
-                            .font(StrandFont.headline)
+                            .font(StrandFont.subhead.weight(.semibold))
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.85)
                             .frame(maxWidth: .infinity)
-                            .padding(.vertical, NoopMetrics.space1)
                     }
                     .noopGlassButton(prominent: true, tint: actionTint(engine))
-                    .controlSize(.large)
+                    .controlSize(.regular)
 
                     Button {
                         unfinishedChoice = nil
@@ -804,11 +805,10 @@ struct LiftSessionView: View {
                         showingFinish = true
                     } label: {
                         Text("Finish")
-                            .font(StrandFont.headline)
-                            .padding(.vertical, NoopMetrics.space1)
+                            .font(StrandFont.subhead.weight(.semibold))
                     }
                     .noopGlassButton()
-                    .controlSize(.large)
+                    .controlSize(.regular)
                 }
             }
         }

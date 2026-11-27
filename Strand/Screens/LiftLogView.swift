@@ -60,7 +60,6 @@ struct LiftLogView: View {
     var body: some View {
         ScreenScaffold(
             title: "Lift Log",
-            subtitle: "Build a program once, then tap through it at the gym. Kept on \(Platform.deviceNounPhrase).",
             onRefresh: { await load() }
         ) {
             VStack(alignment: .leading, spacing: NoopMetrics.sectionGap) {
@@ -68,9 +67,8 @@ struct LiftLogView: View {
                 weekStrip
                 programsSection
                 toolsSection
-                weekSection
+                if !weekCounts.values.allSatisfy({ $0 <= 0 }) { weekSection }
                 historySection
-                effortNote
             }
         }
         .environment(\.noopBackdropTint, StrandPalette.gymAccent)
@@ -197,7 +195,7 @@ struct LiftLogView: View {
                              tag: "Start", systemImage: "dumbbell.fill") { Task { await start(program) } }
         } else if loaded {
             return TodayInfo(label: "Start a workout", title: String(localized: "No programs yet"),
-                             subtitle: String(localized: "A program is a name and an ordered list of exercises with your targets — working sets, reps, weight, rest and your own technique note."),
+                             subtitle: nil,
                              tag: "New program", systemImage: "plus") {
                 editing = ProgramEditTarget(id: "new", program: nil)
             }
@@ -417,13 +415,6 @@ struct LiftLogView: View {
                         ForEach(ordered, id: \.self) { muscle in
                             muscleBar(muscle, sets: weekCounts[muscle] ?? 0)
                         }
-                        // The band is named and sourced, never phrased as a target NOOP sets for
-                        // anyone: this is not a medical device and does not prescribe.
-                        Text("Counted from the muscles you assigned each exercise: direct sets count once, indirect ones half. The tick is about 4 sets a week — below that, studies across GROUPS of people stop reliably detecting growth. It is a research reference, not a target for you, and above it gains continue with strongly diminishing returns and no clear ceiling, so the bar has no \"full\".")
-                            .font(StrandFont.footnote)
-                            .foregroundStyle(StrandPalette.textTertiary)
-                            .fixedSize(horizontal: false, vertical: true)
-                            .padding(.top, 2)
                     }
                 }
             }
@@ -538,15 +529,6 @@ struct LiftLogView: View {
                           title: session.programName ?? String(localized: "Session"),
                           subtitle: String(localized: "\(date.formatted(date: .abbreviated, time: .shortened)) · \(minutes) min"),
                           divider: divider)
-    }
-
-    // MARK: - Effort
-
-    private var effortNote: some View {
-        Text("Lifting adds volume and set counts. It never changes your Effort, which stays measured from heart rate.")
-            .font(StrandFont.footnote)
-            .foregroundStyle(StrandPalette.textTertiary)
-            .fixedSize(horizontal: false, vertical: true)
     }
 
     // MARK: - Load
