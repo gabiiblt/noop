@@ -35,16 +35,25 @@ struct LiftSessionExerciseSheet: View {
     private var canAdd: Bool { !trimmedExercise.isEmpty && !adding }
 
     var body: some View {
-        ScreenScaffold(title: "Add exercise",
-                       subtitle: "Pick one you have done before, search the library, or type a new name.") {
-            VStack(alignment: .leading, spacing: NoopMetrics.sectionGap) {
-                exerciseSection
-                LiftMusclePicker(primary: $primary, secondaries: $secondaries)
-                Text("It joins this session with one set, its weight and reps at 0 until you type what you lift. Finishing asks whether the program keeps it.")
-                    .font(StrandFont.footnote)
-                    .foregroundStyle(StrandPalette.textTertiary)
-                    .fixedSize(horizontal: false, vertical: true)
-                footer
+        VStack(spacing: 0) {
+            GymSheetBar(title: "Add exercise") {
+                GymBarButton(title: "Cancel") { dismiss() }
+            } trailing: {
+                GymBarButton(title: "Add to session", prominent: true, enabled: canAdd) {
+                    Task { await add() }
+                }
+            }
+            ScrollView {
+                VStack(alignment: .leading, spacing: NoopMetrics.sectionGap) {
+                    exerciseSection
+                    LiftMusclePicker(primary: $primary, secondaries: $secondaries)
+                    Text("It joins this session with one set, its weight and reps at 0 until you type what you lift. Finishing asks whether the program keeps it.")
+                        .font(StrandFont.footnote)
+                        .foregroundStyle(StrandPalette.textTertiary)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+                .padding(.horizontal, NoopMetrics.screenPadding)
+                .padding(.bottom, NoopMetrics.sectionGap)
             }
         }
         #if os(iOS)
@@ -78,8 +87,8 @@ struct LiftSessionExerciseSheet: View {
     private var exerciseSection: some View {
         let suggestions = LiftExerciseVocabulary.suggestions(vocabulary, matching: exercise, limit: 8)
         return VStack(alignment: .leading, spacing: NoopMetrics.gap) {
-            SectionHeader("Exercise", overline: "Movement")
-            NoopCard {
+            GymSectionTitle(title: "Exercise")
+            VStack(alignment: .leading, spacing: NoopMetrics.gap) {
                 VStack(alignment: .leading, spacing: NoopMetrics.gap) {
                     TextField("Incline dumbbell press", text: $exercise)
                         .textFieldStyle(.plain)
@@ -88,7 +97,7 @@ struct LiftSessionExerciseSheet: View {
                         .focused($focused, equals: .exercise)
                     if !suggestions.isEmpty {
                         VStack(alignment: .leading, spacing: 8) {
-                            Text("Used before").strandOverline()
+                            Text("Used before").font(StrandFont.footnote).foregroundStyle(StrandPalette.textSecondary)
                             ForEach(suggestions, id: \.id) { row in
                                 Button { adopt(row) } label: { LiftExerciseSuggestionLabel(row: row) }
                                     .buttonStyle(.plain)
@@ -101,22 +110,10 @@ struct LiftSessionExerciseSheet: View {
                         CatalogueExerciseRowLabel(exercise: picked, thumbnail: 40)
                     }
                 }
+                .padding(NoopMetrics.gap)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .gymCard()
             }
-        }
-    }
-
-    private var footer: some View {
-        HStack {
-            Button("Cancel") { dismiss() }
-                .buttonStyle(.plain)
-                .font(StrandFont.body)
-                .foregroundStyle(StrandPalette.textSecondary)
-            Spacer()
-            Button("Add to session") { Task { await add() } }
-                .buttonStyle(.noopPrimary)
-                .frame(maxWidth: 200)
-                .disabled(!canAdd)
-                .opacity(canAdd ? 1 : NoopButtonMetrics.disabledOpacity)
         }
     }
 

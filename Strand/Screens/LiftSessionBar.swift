@@ -11,7 +11,7 @@ import StrandDesign
 // It is deliberately a bar and not a badge: it has to show the one thing you need mid-workout
 // without opening anything, which is how long is left of your rest.
 //
-// COLOUR MATCHES THE SHEET so the two read as one thing: green while working, amber while resting.
+// COLOUR MATCHES THE SHEET so the two read as one thing: accent while working, amber while resting.
 
 struct LiftSessionBar: View {
     @EnvironmentObject var session: LiftSessionController
@@ -98,7 +98,7 @@ struct LiftSessionBar: View {
 
     private func tint(_ engine: LiftSessionEngine) -> Color {
         switch engine.stage {
-        case .working:  return StrandPalette.statusPositive
+        case .working:  return StrandPalette.gymAccent
         case .resting:  return StrandPalette.metricAmber
         default:        return StrandPalette.gymAccent
         }

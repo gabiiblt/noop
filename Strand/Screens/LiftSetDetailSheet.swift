@@ -31,16 +31,31 @@ struct LiftSetDetailSheet: View {
     }
 
     var body: some View {
-        ScreenScaffold(title: "Set detail",
-                       subtitle: "\(exercise) · set \(setIndex)") {
-            VStack(alignment: .leading, spacing: NoopMetrics.sectionGap) {
-                shapeCard
-                if form.setType != .straight { partsCard }
-                effortCard
-                measuresCard
-                footer
+        VStack(spacing: 0) {
+            GymSheetBar(title: "Set detail") {
+                GymBarButton(title: "Clear") { form = LiftSetExtrasForm() }
+            } trailing: {
+                GymBarButton(title: "Done", prominent: true) {
+                    onDone(form.extras(system: system))
+                    dismiss()
+                }
+            }
+            ScrollView {
+                VStack(alignment: .leading, spacing: NoopMetrics.gap) {
+                    Text(verbatim: "\(exercise) · \(setIndex)")
+                        .font(StrandFont.title2)
+                        .foregroundStyle(StrandPalette.textPrimary)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    shapeCard
+                    if form.setType != .straight { partsCard }
+                    effortCard
+                    measuresCard
+                }
+                .padding(.horizontal, NoopMetrics.screenPadding)
+                .padding(.bottom, NoopMetrics.sectionGap)
             }
         }
+        .noopBackdrop(StrandPalette.gymAccent)
         #if os(iOS)
         .presentationDragIndicator(.visible)
         #else
@@ -51,9 +66,9 @@ struct LiftSetDetailSheet: View {
     // MARK: - Shape
 
     private var shapeCard: some View {
-        NoopCard {
+        GymBlock {
             VStack(alignment: .leading, spacing: NoopMetrics.rowSpacing) {
-                Text("Type").strandOverline()
+                Text("Type").font(StrandFont.footnote).foregroundStyle(StrandPalette.textSecondary)
                 Picker("Type", selection: Binding(
                     get: { form.setType },
                     set: { form.switchType(to: $0) })) {
@@ -85,9 +100,9 @@ struct LiftSetDetailSheet: View {
     // MARK: - Drops and bursts
 
     private var partsCard: some View {
-        NoopCard {
+        GymBlock {
             VStack(alignment: .leading, spacing: NoopMetrics.rowSpacing) {
-                Text(form.setType == .dropset ? "Drops" : "Bursts").strandOverline()
+                Text(form.setType == .dropset ? "Drops" : "Bursts").font(StrandFont.footnote).foregroundStyle(StrandPalette.textSecondary)
                 ForEach($form.parts) { $part in
                     HStack(spacing: 8) {
                         if form.setType == .dropset {
@@ -112,7 +127,7 @@ struct LiftSetDetailSheet: View {
                     Label(form.setType == .dropset ? "Add a drop" : "Add a burst",
                           systemImage: "plus.circle")
                         .font(StrandFont.body)
-                        .foregroundStyle(StrandPalette.accent)
+                        .foregroundStyle(StrandPalette.gymAccent)
                 }
                 .buttonStyle(.plain)
                 .disabled(form.parts.count >= LiftSetExtras.maxParts)
@@ -128,11 +143,11 @@ struct LiftSetDetailSheet: View {
     // MARK: - Effort
 
     private var effortCard: some View {
-        NoopCard {
+        GymBlock {
             VStack(alignment: .leading, spacing: NoopMetrics.rowSpacing) {
-                Text("Effort").strandOverline()
+                Text("Effort").font(StrandFont.footnote).foregroundStyle(StrandPalette.textSecondary)
                 Toggle("Taken to failure", isOn: $form.isFailure)
-                    .tint(StrandPalette.accent)
+                    .tint(StrandPalette.gymAccent)
                 HStack {
                     Text("Reps in reserve")
                         .font(StrandFont.body)
@@ -152,9 +167,9 @@ struct LiftSetDetailSheet: View {
     // MARK: - Side, time, distance
 
     private var measuresCard: some View {
-        NoopCard {
+        GymBlock {
             VStack(alignment: .leading, spacing: NoopMetrics.rowSpacing) {
-                Text("Per side, time and distance").strandOverline()
+                Text("Per side, time and distance").font(StrandFont.footnote).foregroundStyle(StrandPalette.textSecondary)
                 Picker("Side", selection: $form.side) {
                     Text("Both").tag(LiftSide?.none)
                     Text("Left").tag(LiftSide?.some(.left))
@@ -167,23 +182,6 @@ struct LiftSetDetailSheet: View {
                     field("Distance", unit: "m", text: $form.distanceText)
                 }
             }
-        }
-    }
-
-    // MARK: - Footer
-
-    private var footer: some View {
-        HStack {
-            Button("Clear") { form = LiftSetExtrasForm() }
-                .buttonStyle(.plain)
-                .foregroundStyle(StrandPalette.textSecondary)
-            Spacer()
-            Button("Done") {
-                onDone(form.extras(system: system))
-                dismiss()
-            }
-            .buttonStyle(.borderedProminent)
-            .tint(StrandPalette.accent)
         }
     }
 
@@ -201,9 +199,21 @@ struct LiftSetDetailSheet: View {
                     .foregroundStyle(StrandPalette.textTertiary)
             }
         }
-        .padding(.vertical, 6)
-        .padding(.horizontal, 8)
+        .padding(.vertical, 10)
+        .padding(.horizontal, 12)
         .background(StrandPalette.surfaceInset,
-                    in: RoundedRectangle(cornerRadius: 8, style: .continuous))
+                    in: RoundedRectangle(cornerRadius: 10, style: .continuous))
+    }
+}
+
+/// The flat card of the gym sheets, padded like a grouped list.
+private struct GymBlock<Content: View>: View {
+    @ViewBuilder var content: () -> Content
+
+    var body: some View {
+        content()
+            .padding(NoopMetrics.gap)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .gymCard()
     }
 }
