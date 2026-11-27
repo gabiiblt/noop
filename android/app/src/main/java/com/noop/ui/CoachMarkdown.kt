@@ -195,7 +195,7 @@ private fun MarkdownTable(table: MdTable, color: Color) {
     Column(
         modifier = Modifier
             .padding(vertical = 2.dp)
-            .border(1.dp, Palette.hairline, RoundedCornerShape(8.dp)),
+            .border(1.dp, Palette.hairline, RoundedCornerShape(Metrics.radiusChip)),
     ) {
         MarkdownTableRow(table.header, columns, color, header = true)
         for (row in table.rows) {

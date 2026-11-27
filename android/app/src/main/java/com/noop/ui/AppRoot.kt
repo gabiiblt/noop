@@ -1049,7 +1049,7 @@ private fun MoreGroupHeader(title: String, expanded: Boolean, onToggle: () -> Un
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(8.dp))
+            .clip(RoundedCornerShape(Metrics.radiusChip))
             .clickable(onClick = onToggle)
             .semantics {
                 contentDescription = title
@@ -1235,7 +1235,7 @@ private fun BarSlot(
     val tint = if (active) Palette.accent else Palette.textSecondary
     Column(
         modifier = modifier
-            .clip(RoundedCornerShape(14.dp))
+            .clip(RoundedCornerShape(Metrics.radiusCompact))
             .clickable(
                 interactionSource = remember { MutableInteractionSource() },
                 indication = null,

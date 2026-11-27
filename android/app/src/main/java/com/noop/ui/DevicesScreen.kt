@@ -200,8 +200,8 @@ fun DevicesScreen(
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .background(Palette.surfaceRaised, RoundedCornerShape(12.dp))
-                        .border(1.dp, Palette.statusWarning.copy(alpha = 0.5f), RoundedCornerShape(12.dp))
+                        .background(Palette.surfaceRaised, RoundedCornerShape(Metrics.radiusControl))
+                        .border(1.dp, Palette.statusWarning.copy(alpha = 0.5f), RoundedCornerShape(Metrics.radiusControl))
                         .padding(12.dp),
                     verticalArrangement = Arrangement.spacedBy(3.dp),
                 ) {
@@ -1653,7 +1653,7 @@ private fun PickActiveDialog(
                         color = Palette.accent,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .clip(RoundedCornerShape(8.dp))
+                            .clip(RoundedCornerShape(Metrics.radiusChip))
                             .clickable { onPick(device) }
                             .padding(vertical = 10.dp),
                     )

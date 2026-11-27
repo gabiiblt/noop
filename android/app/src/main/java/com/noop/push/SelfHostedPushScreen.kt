@@ -1,5 +1,7 @@
 package com.noop.push
 
+import com.noop.ui.Metrics
+
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -354,7 +356,7 @@ private fun PushTextField(value: String, onValueChange: (String) -> Unit, label:
         visualTransformation = if (secret) PasswordVisualTransformation() else VisualTransformation.None,
         textStyle = NoopType.mono(13f),
         modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(14.dp),
+        shape = RoundedCornerShape(Metrics.radiusCompact),
         colors = OutlinedTextFieldDefaults.colors(
             focusedTextColor = Palette.textPrimary,
             unfocusedTextColor = Palette.textPrimary,

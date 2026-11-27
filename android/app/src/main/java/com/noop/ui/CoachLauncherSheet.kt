@@ -81,7 +81,7 @@ fun CoachLauncherSheet(
 
 @Composable
 private fun PromptRow(prompt: String, onClick: () -> Unit) {
-    val shape = RoundedCornerShape(12.dp)
+    val shape = RoundedCornerShape(Metrics.radiusControl)
     Text(
         prompt,
         style = NoopType.caption,

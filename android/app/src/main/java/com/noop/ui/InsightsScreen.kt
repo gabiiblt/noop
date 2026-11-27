@@ -556,7 +556,7 @@ private fun WhatMovesYouLink(onOpen: () -> Unit) {
             Box(
                 modifier = Modifier
                     .size(30.dp)
-                    .clip(RoundedCornerShape(9.dp))
+                    .clip(RoundedCornerShape(Metrics.radiusChip))
                     .background(Palette.accent.copy(alpha = 0.14f)),
                 contentAlignment = Alignment.Center,
             ) {
@@ -1187,9 +1187,9 @@ private fun ExperimentField(title: String, content: @Composable () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(8.dp))
+            .clip(RoundedCornerShape(Metrics.radiusChip))
             .background(Palette.surfaceInset)
-            .border(1.dp, Palette.hairline, RoundedCornerShape(8.dp))
+            .border(1.dp, Palette.hairline, RoundedCornerShape(Metrics.radiusChip))
             .padding(12.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
@@ -1210,9 +1210,9 @@ private fun ExperimentMeasure(
     Column(
         modifier = modifier
             .heightIn(min = 92.dp)
-            .clip(RoundedCornerShape(8.dp))
+            .clip(RoundedCornerShape(Metrics.radiusChip))
             .background(Palette.surfaceInset)
-            .border(1.dp, Palette.hairline, RoundedCornerShape(8.dp))
+            .border(1.dp, Palette.hairline, RoundedCornerShape(Metrics.radiusChip))
             .padding(12.dp),
         verticalArrangement = Arrangement.spacedBy(6.dp),
     ) {
@@ -1243,9 +1243,9 @@ private fun ExperimentBehaviourPicker(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .clip(RoundedCornerShape(6.dp))
+                .clip(RoundedCornerShape(Metrics.radiusChip))
                 .background(Palette.surfaceBase)
-                .border(1.dp, Palette.hairline, RoundedCornerShape(6.dp))
+                .border(1.dp, Palette.hairline, RoundedCornerShape(Metrics.radiusChip))
                 .clickable(interactionSource = interaction, indication = null) { expanded = true }
                 .liquidPress(interaction)
                 .padding(horizontal = 12.dp, vertical = 8.dp)

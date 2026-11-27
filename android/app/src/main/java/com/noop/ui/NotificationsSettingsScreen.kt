@@ -620,7 +620,7 @@ private fun CallsCard(
 @Composable
 private fun DeliveryNote() {
     val context = LocalContext.current
-    val shape = RoundedCornerShape(10.dp)
+    val shape = RoundedCornerShape(Metrics.radiusControl)
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -720,7 +720,7 @@ private fun AppRow(
             .fillMaxWidth()
             .height(48.dp)
             // An enabled app reads as a selected row: a soft accentMuted wash behind it.
-            .clip(RoundedCornerShape(10.dp))
+            .clip(RoundedCornerShape(Metrics.radiusControl))
             .then(if (enabled) Modifier.background(Palette.accentMuted) else Modifier)
             .padding(horizontal = 8.dp),
         verticalAlignment = Alignment.CenterVertically,
@@ -730,7 +730,7 @@ private fun AppRow(
         Box(
             modifier = Modifier
                 .size(34.dp)
-                .clip(RoundedCornerShape(8.dp))
+                .clip(RoundedCornerShape(Metrics.radiusChip))
                 .background(Palette.surfaceInset),
             contentAlignment = Alignment.Center,
         ) {
@@ -824,7 +824,7 @@ private fun PatternMenu(
 
 @Composable
 private fun TestIconButton(enabled: Boolean, appName: String, onClick: () -> Unit) {
-    val shape = RoundedCornerShape(8.dp)
+    val shape = RoundedCornerShape(Metrics.radiusChip)
     val tint = if (enabled) Palette.accent else Palette.textTertiary
     Box(
         modifier = Modifier
@@ -896,9 +896,9 @@ internal fun TimeChip(
         Dialog(onDismissRequest = { showPicker = false }) {
             Column(
                 modifier = Modifier
-                    .clip(RoundedCornerShape(20.dp))
+                    .clip(RoundedCornerShape(Metrics.cardRadius))
                     .background(Palette.surfaceOverlay)
-                    .border(1.dp, Palette.hairline, RoundedCornerShape(20.dp))
+                    .border(1.dp, Palette.hairline, RoundedCornerShape(Metrics.cardRadius))
                     .padding(20.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(16.dp),

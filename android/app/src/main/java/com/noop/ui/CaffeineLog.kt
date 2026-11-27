@@ -235,7 +235,7 @@ fun CaffeineLogCard() {
                         textStyle = NoopType.body,
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                         colors = caffeineFieldColors(),
-                        shape = RoundedCornerShape(14.dp),
+                        shape = RoundedCornerShape(Metrics.radiusCompact),
                         modifier = Modifier.weight(1f),
                     )
                     Spacer(Modifier.width(8.dp))

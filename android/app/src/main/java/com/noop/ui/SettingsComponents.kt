@@ -65,7 +65,7 @@ internal fun SettingsDisclosureGroup(
             modifier = Modifier
                 .fillMaxWidth()
                 .liquidPress(headerInteraction)
-                .clip(RoundedCornerShape(12.dp))
+                .clip(RoundedCornerShape(Metrics.radiusControl))
                 .clickable(
                     interactionSource = headerInteraction,
                     indication = null,

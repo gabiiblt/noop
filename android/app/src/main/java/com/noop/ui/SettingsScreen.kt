@@ -1257,7 +1257,7 @@ fun SettingsScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .heightIn(min = 44.dp)
-                        .clip(RoundedCornerShape(8.dp))
+                        .clip(RoundedCornerShape(Metrics.radiusChip))
                         .liquidPress(stepsRowInteraction)
                         .clickable(
                             interactionSource = stepsRowInteraction,
@@ -2632,9 +2632,9 @@ fun SettingsScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .liquidPress(modelComparisonInteraction)
-                        .clip(RoundedCornerShape(10.dp))
+                        .clip(RoundedCornerShape(Metrics.radiusControl))
                         .background(Palette.surfaceInset)
-                        .border(1.dp, Palette.hairline, RoundedCornerShape(10.dp))
+                        .border(1.dp, Palette.hairline, RoundedCornerShape(Metrics.radiusControl))
                         .clickable(
                             interactionSource = modelComparisonInteraction,
                             indication = null,
@@ -3777,9 +3777,9 @@ fun SettingsScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .liquidPress(projectHomeInteraction)
-                        .clip(RoundedCornerShape(10.dp))
+                        .clip(RoundedCornerShape(Metrics.radiusControl))
                         .background(Palette.accent.copy(alpha = 0.10f))
-                        .border(1.dp, Palette.accent.copy(alpha = 0.25f), RoundedCornerShape(10.dp))
+                        .border(1.dp, Palette.accent.copy(alpha = 0.25f), RoundedCornerShape(Metrics.radiusControl))
                         .clickable(
                             interactionSource = projectHomeInteraction,
                             indication = null,
@@ -3901,9 +3901,9 @@ fun SettingsScreen(
                         Column(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .clip(RoundedCornerShape(10.dp))
+                                .clip(RoundedCornerShape(Metrics.radiusControl))
                                 .background(Palette.surfaceInset)
-                                .border(1.dp, Palette.accent.copy(alpha = 0.3f), RoundedCornerShape(10.dp))
+                                .border(1.dp, Palette.accent.copy(alpha = 0.3f), RoundedCornerShape(Metrics.radiusControl))
                                 .padding(12.dp),
                             verticalArrangement = Arrangement.spacedBy(8.dp),
                         ) {
@@ -3952,9 +3952,9 @@ fun SettingsScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .liquidPress(whatsNewInteraction)
-                        .clip(RoundedCornerShape(10.dp))
+                        .clip(RoundedCornerShape(Metrics.radiusControl))
                         .background(Palette.surfaceInset)
-                        .border(1.dp, Palette.hairline, RoundedCornerShape(10.dp))
+                        .border(1.dp, Palette.hairline, RoundedCornerShape(Metrics.radiusControl))
                         .clickable(
                             interactionSource = whatsNewInteraction,
                             indication = null,
@@ -3992,9 +3992,9 @@ fun SettingsScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .liquidPress(scoringGuideInteraction)
-                        .clip(RoundedCornerShape(10.dp))
+                        .clip(RoundedCornerShape(Metrics.radiusControl))
                         .background(Palette.surfaceInset)
-                        .border(1.dp, Palette.hairline, RoundedCornerShape(10.dp))
+                        .border(1.dp, Palette.hairline, RoundedCornerShape(Metrics.radiusControl))
                         .clickable(
                             interactionSource = scoringGuideInteraction,
                             indication = null,
@@ -4033,9 +4033,9 @@ fun SettingsScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .liquidPress(howNoopWorksInteraction)
-                        .clip(RoundedCornerShape(10.dp))
+                        .clip(RoundedCornerShape(Metrics.radiusControl))
                         .background(Palette.surfaceInset)
-                        .border(1.dp, Palette.hairline, RoundedCornerShape(10.dp))
+                        .border(1.dp, Palette.hairline, RoundedCornerShape(Metrics.radiusControl))
                         .clickable(
                             interactionSource = howNoopWorksInteraction,
                             indication = null,
@@ -4070,9 +4070,9 @@ fun SettingsScreen(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .clip(RoundedCornerShape(10.dp))
+                        .clip(RoundedCornerShape(Metrics.radiusControl))
                         .background(Palette.surfaceInset)
-                        .border(1.dp, Palette.statusWarning.copy(alpha = 0.25f), RoundedCornerShape(10.dp))
+                        .border(1.dp, Palette.statusWarning.copy(alpha = 0.25f), RoundedCornerShape(Metrics.radiusControl))
                         .padding(12.dp),
                     horizontalArrangement = Arrangement.spacedBy(10.dp),
                     verticalAlignment = Alignment.Top,
@@ -4112,9 +4112,9 @@ fun SettingsScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .liquidPress(supportInteraction)
-                        .clip(RoundedCornerShape(10.dp))
+                        .clip(RoundedCornerShape(Metrics.radiusControl))
                         .background(Palette.accent.copy(alpha = 0.10f))
-                        .border(1.dp, Palette.accent.copy(alpha = 0.25f), RoundedCornerShape(10.dp))
+                        .border(1.dp, Palette.accent.copy(alpha = 0.25f), RoundedCornerShape(Metrics.radiusControl))
                         .clickable(
                             interactionSource = supportInteraction,
                             indication = null,
@@ -4275,8 +4275,8 @@ private fun AccentCustomPicker(hex: String, onHexChange: (String) -> Unit) {
             modifier = Modifier
                 .fillMaxWidth()
                 .height(150.dp)
-                .clip(RoundedCornerShape(12.dp))
-                .border(1.dp, Palette.hairline, RoundedCornerShape(12.dp)),
+                .clip(RoundedCornerShape(Metrics.radiusControl))
+                .border(1.dp, Palette.hairline, RoundedCornerShape(Metrics.radiusControl)),
         ) {
             val wPx = constraints.maxWidth.toFloat()
             val hPx = constraints.maxHeight.toFloat()
@@ -4399,7 +4399,7 @@ private fun BackgroundRecentThumb(
     active: Boolean,
     onClick: () -> Unit,
 ) {
-    val shape = RoundedCornerShape(10.dp)
+    val shape = RoundedCornerShape(Metrics.radiusControl)
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(3.dp),

@@ -284,8 +284,8 @@ fun LiveScreen(viewModel: AppViewModel, onManageDevices: () -> Unit = {}) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(Palette.surfaceRaised, RoundedCornerShape(12.dp))
-                    .border(1.dp, Palette.statusWarning.copy(alpha = 0.5f), RoundedCornerShape(12.dp))
+                    .background(Palette.surfaceRaised, RoundedCornerShape(Metrics.radiusControl))
+                    .border(1.dp, Palette.statusWarning.copy(alpha = 0.5f), RoundedCornerShape(Metrics.radiusControl))
                     .padding(12.dp),
                 verticalArrangement = Arrangement.spacedBy(3.dp),
             ) {
@@ -793,7 +793,7 @@ private fun ActiveBandRow(name: String, onManageDevices: () -> Unit) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
-                    .clip(RoundedCornerShape(8.dp))
+                    .clip(RoundedCornerShape(Metrics.radiusChip))
                     .liquidPress(manageInteraction)
                     .clickable(
                         interactionSource = manageInteraction,
@@ -1280,7 +1280,7 @@ private fun RRStrip(rrRecent: List<Int>) {
  *  cyan/amber — matching the rrStrip's "Waiting for R-R intervals." treatment above. */
 @Composable
 private fun LiveProofMetric(modifier: Modifier, label: String, value: String, tint: Color, offline: Boolean = false) {
-    val shape = RoundedCornerShape(10.dp)
+    val shape = RoundedCornerShape(Metrics.radiusControl)
     Column(
         modifier = modifier
             .clip(shape)

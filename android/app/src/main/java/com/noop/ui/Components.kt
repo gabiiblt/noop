@@ -1560,9 +1560,9 @@ fun StepperButton(symbol: String, onClick: () -> Unit, label: String, enabled: B
     Box(
         modifier = Modifier
             .size(30.dp)
-            .clip(RoundedCornerShape(8.dp))
+            .clip(RoundedCornerShape(Metrics.radiusChip))
             .background(Palette.surfaceInset)
-            .border(1.dp, Palette.hairline, RoundedCornerShape(8.dp))
+            .border(1.dp, Palette.hairline, RoundedCornerShape(Metrics.radiusChip))
             .clickable(enabled = enabled, onClick = onClick)
             .semantics { contentDescription = label },
         contentAlignment = Alignment.Center,

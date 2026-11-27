@@ -1118,7 +1118,7 @@ private fun CompareChartTooltip(
     val context = LocalContext.current
     val unitSystem = UnitPrefs.system(context)
     val tempUnit = UnitPrefs.temperature(context)
-    val shape = RoundedCornerShape(10.dp)
+    val shape = RoundedCornerShape(Metrics.radiusControl)
     Column(
         modifier = modifier
             .width(220.dp)

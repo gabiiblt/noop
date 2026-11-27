@@ -173,7 +173,7 @@ fun LabBookScreen(vm: AppViewModel) {
                     Box(
                         modifier = Modifier
                             .size(30.dp)
-                            .clip(RoundedCornerShape(9.dp))
+                            .clip(RoundedCornerShape(Metrics.radiusChip))
                             .background(Palette.metricCyan.copy(alpha = 0.14f)),
                         contentAlignment = Alignment.Center,
                     ) {
@@ -190,7 +190,7 @@ fun LabBookScreen(vm: AppViewModel) {
                     Box(
                         modifier = Modifier
                             .size(28.dp)
-                            .clip(RoundedCornerShape(8.dp))
+                            .clip(RoundedCornerShape(Metrics.radiusChip))
                             .clickable { showDisclaimer = true }
                             .semantics { contentDescription = uiString(R.string.l10n_lab_book_screen_what_lab_book_is_and_isn_f28686df) },
                         contentAlignment = Alignment.Center,
@@ -218,7 +218,7 @@ fun LabBookScreen(vm: AppViewModel) {
                     Box(
                         modifier = Modifier
                             .size(30.dp)
-                            .clip(RoundedCornerShape(9.dp))
+                            .clip(RoundedCornerShape(Metrics.radiusChip))
                             .background(Palette.metricAmber.copy(alpha = 0.14f)),
                         contentAlignment = Alignment.Center,
                     ) {
@@ -577,7 +577,7 @@ private fun HistoryRow(markerKey: String, row: LabMarkerRow, onDelete: (String) 
         Box(
             modifier = Modifier
                 .size(28.dp)
-                .clip(RoundedCornerShape(8.dp))
+                .clip(RoundedCornerShape(Metrics.radiusChip))
                 .clickable { onDelete(row.id) }
                 .semantics { contentDescription = uiString(R.string.l10n_lab_book_screen_delete_this_reading_b5c92bda) },
             contentAlignment = Alignment.Center,
@@ -818,7 +818,7 @@ internal fun PrimaryActionButton(
     enabled: Boolean = true,
     onClick: () -> Unit,
 ) {
-    val shape = RoundedCornerShape(13.dp)
+    val shape = RoundedCornerShape(Metrics.radiusControl)
     val container = if (enabled) Palette.accent else Palette.accent.copy(alpha = Palette.disabledOpacity)
     Row(
         modifier = Modifier

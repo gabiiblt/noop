@@ -400,12 +400,12 @@ private fun ZoneRail(zone: Int, zoneSet: com.noop.analytics.HrZoneSet) {
                         .height(if (active) 44.dp else 34.dp)
                         .background(
                             if (active) color else color.copy(alpha = 0.18f),
-                            RoundedCornerShape(8.dp),
+                            RoundedCornerShape(Metrics.radiusChip),
                         )
                         .border(
                             1.dp,
                             if (active) color else Palette.hairline,
-                            RoundedCornerShape(8.dp),
+                            RoundedCornerShape(Metrics.radiusChip),
                         ),
                     contentAlignment = Alignment.Center,
                 ) {

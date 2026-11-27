@@ -1019,7 +1019,7 @@ private fun SourceCard(
                 Box(
                     modifier = Modifier
                         .size(30.dp)
-                        .clip(RoundedCornerShape(9.dp))
+                        .clip(RoundedCornerShape(Metrics.radiusChip))
                         .background(tint.copy(alpha = 0.14f)),
                     contentAlignment = Alignment.Center,
                 ) {
@@ -1065,7 +1065,7 @@ private fun BackupButton(
     tint: Color = Palette.accent,
     onClick: () -> Unit,
 ) {
-    val shape = RoundedCornerShape(14.dp)
+    val shape = RoundedCornerShape(Metrics.radiusCompact)
     val ink = if (enabled) tint else tint.copy(alpha = Palette.disabledOpacity)
     Row(
         modifier = modifier

@@ -1063,12 +1063,12 @@ private fun ThemeSwatch(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(76.dp)
-                .clip(RoundedCornerShape(14.dp))
+                .clip(RoundedCornerShape(Metrics.radiusCompact))
                 .background(tokens.surfaceBase)
                 .border(
                     width = if (selected) 2.dp else 1.dp,
                     color = if (selected) Palette.accent else tokens.hairline,
-                    shape = RoundedCornerShape(14.dp),
+                    shape = RoundedCornerShape(Metrics.radiusCompact),
                 )
                 .padding(12.dp),
             contentAlignment = Alignment.CenterStart,
@@ -1249,9 +1249,9 @@ private fun IconSquare(icon: ImageVector, tint: Color) {
     Box(
         modifier = Modifier
             .size(42.dp)
-            .clip(RoundedCornerShape(11.dp))
+            .clip(RoundedCornerShape(Metrics.radiusControl))
             .background(tint.copy(alpha = 0.13f))
-            .border(1.dp, tint.copy(alpha = 0.22f), RoundedCornerShape(11.dp)),
+            .border(1.dp, tint.copy(alpha = 0.22f), RoundedCornerShape(Metrics.radiusControl)),
         contentAlignment = Alignment.Center,
     ) {
         Icon(icon, contentDescription = null, tint = tint, modifier = Modifier.size(20.dp))

@@ -66,7 +66,7 @@ fun WheelPickerField(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         modifier = Modifier
-            .clip(RoundedCornerShape(8.dp))
+            .clip(RoundedCornerShape(Metrics.radiusChip))
             .clickable(enabled = options.isNotEmpty()) { open = true }
             .semantics { contentDescription = uiString(R.string.l10n_wheel_picker_accessibility_tap_to_choose_1314c4ed, accessibility) },
     ) {
@@ -162,7 +162,7 @@ fun WheelPicker(
             Modifier
                 .fillMaxWidth()
                 .height(itemHeight)
-                .clip(RoundedCornerShape(8.dp))
+                .clip(RoundedCornerShape(Metrics.radiusChip))
                 .background(Palette.surfaceInset),
         )
         LazyColumn(

@@ -475,7 +475,7 @@ private fun DeepTimelineEntry(onClick: () -> Unit) {
             Box(
                 modifier = Modifier
                     .size(42.dp)
-                    .clip(RoundedCornerShape(11.dp))
+                    .clip(RoundedCornerShape(Metrics.radiusControl))
                     .background(Palette.metricRose.copy(alpha = StrandAlpha.chartFillStrong)),
                 contentAlignment = Alignment.Center,
             ) {

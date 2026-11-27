@@ -47,7 +47,7 @@ fun SleepArrangeSheet(
     }
 
     Dialog(onDismissRequest = onDismiss) {
-        Surface(color = Palette.surfaceOverlay, shape = RoundedCornerShape(16.dp)) {
+        Surface(color = Palette.surfaceOverlay, shape = RoundedCornerShape(Metrics.radiusCompact)) {
             Column(
                 modifier = Modifier.padding(20.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp),

@@ -391,7 +391,7 @@ private fun HonestyBanner(text: String, accent: Color) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(8.dp))
+            .clip(RoundedCornerShape(Metrics.radiusChip))
             .background(Palette.surfaceInset)
             .padding(10.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp),

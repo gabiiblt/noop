@@ -740,7 +740,7 @@ private fun ExperimentalTierNote() {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(12.dp))
+            .clip(RoundedCornerShape(Metrics.radiusControl))
             .background(Palette.statusWarning.copy(alpha = 0.10f))
             .padding(12.dp),
         horizontalArrangement = Arrangement.spacedBy(10.dp),
@@ -760,8 +760,8 @@ private fun TypeRow(icon: ImageVector, title: String, subtitle: String, onClick:
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(14.dp))
-            .frostedCardSurface(cornerRadius = 14.dp)
+            .clip(RoundedCornerShape(Metrics.radiusCompact))
+            .frostedCardSurface(cornerRadius = Metrics.radiusCompact)
             .clickable(onClick = onClick)
             .semantics { contentDescription = uiString(R.string.l10n_add_device_wizard_title_subtitle_8d9004e8, title, subtitle) }
             .padding(16.dp),
@@ -809,7 +809,7 @@ private fun OnePhoneWarningCard() {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(12.dp))
+            .clip(RoundedCornerShape(Metrics.radiusControl))
             .background(Palette.statusWarning.copy(alpha = 0.10f))
             .padding(12.dp),
         horizontalArrangement = Arrangement.spacedBy(10.dp),
@@ -861,7 +861,7 @@ private fun PrepStep(type: DeviceType, onScan: () -> Unit) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clip(RoundedCornerShape(12.dp))
+                    .clip(RoundedCornerShape(Metrics.radiusControl))
                     .background(Palette.statusWarning.copy(alpha = 0.10f))
                     .padding(12.dp),
                 horizontalArrangement = Arrangement.spacedBy(10.dp),
@@ -888,8 +888,8 @@ private fun PrepStep(type: DeviceType, onScan: () -> Unit) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .clip(RoundedCornerShape(14.dp))
-                .frostedCardSurface(cornerRadius = 14.dp)
+                .clip(RoundedCornerShape(Metrics.radiusCompact))
+                .frostedCardSurface(cornerRadius = Metrics.radiusCompact)
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
@@ -905,7 +905,7 @@ private fun PrepStep(type: DeviceType, onScan: () -> Unit) {
             onClick = onScan,
             modifier = Modifier
                 .fillMaxWidth()
-                .clip(RoundedCornerShape(12.dp))
+                .clip(RoundedCornerShape(Metrics.radiusControl))
                 .background(Palette.accent)
                 .semantics { contentDescription = uiString(R.string.l10n_add_device_wizard_scan_for_type_title_be2c98fb, type.title) },
         ) {
@@ -1107,8 +1107,8 @@ private fun OuraGateStep(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .clip(RoundedCornerShape(14.dp))
-                .frostedCardSurface(cornerRadius = 14.dp)
+                .clip(RoundedCornerShape(Metrics.radiusCompact))
+                .frostedCardSurface(cornerRadius = Metrics.radiusCompact)
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(14.dp),
         ) {
@@ -1139,7 +1139,7 @@ private fun OuraGateStep(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .clip(RoundedCornerShape(12.dp))
+                .clip(RoundedCornerShape(Metrics.radiusControl))
                 .background(Palette.statusCritical.copy(alpha = 0.10f))
                 .clickable { onConsent(!consent) }
                 .semantics {
@@ -1169,7 +1169,7 @@ private fun OuraGateStep(
             enabled = consent,
             modifier = Modifier
                 .fillMaxWidth()
-                .clip(RoundedCornerShape(12.dp))
+                .clip(RoundedCornerShape(Metrics.radiusControl))
                 .background(if (consent) Palette.accent else Palette.surfaceInset)
                 .semantics { contentDescription = uiString(R.string.l10n_add_device_wizard_continue_2e026239) },
         ) {
@@ -1235,7 +1235,7 @@ private fun OuraAdvancedKeyStep(
             enabled = parsed != null,
             modifier = Modifier
                 .fillMaxWidth()
-                .clip(RoundedCornerShape(12.dp))
+                .clip(RoundedCornerShape(Metrics.radiusControl))
                 .background(if (parsed != null) Palette.accent else Palette.surfaceInset)
                 .semantics { contentDescription = uiString(R.string.l10n_add_device_wizard_scan_for_your_ring_e92b3a3b) },
         ) {
@@ -1256,8 +1256,8 @@ private fun OuraPrepStep(advanced: Boolean, onScan: () -> Unit) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .clip(RoundedCornerShape(14.dp))
-                .frostedCardSurface(cornerRadius = 14.dp)
+                .clip(RoundedCornerShape(Metrics.radiusCompact))
+                .frostedCardSurface(cornerRadius = Metrics.radiusCompact)
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
@@ -1281,7 +1281,7 @@ private fun OuraPrepStep(advanced: Boolean, onScan: () -> Unit) {
             onClick = onScan,
             modifier = Modifier
                 .fillMaxWidth()
-                .clip(RoundedCornerShape(12.dp))
+                .clip(RoundedCornerShape(Metrics.radiusControl))
                 .background(Palette.accent)
                 .semantics { contentDescription = uiString(R.string.l10n_add_device_wizard_scan_for_your_ring_e92b3a3b) },
         ) {
@@ -1316,8 +1316,8 @@ private fun OuraPickStep(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clip(RoundedCornerShape(14.dp))
-                    .frostedCardSurface(cornerRadius = 14.dp)
+                    .clip(RoundedCornerShape(Metrics.radiusCompact))
+                    .frostedCardSurface(cornerRadius = Metrics.radiusCompact)
                     .padding(20.dp),
                 verticalArrangement = Arrangement.spacedBy(10.dp),
             ) {
@@ -1363,8 +1363,8 @@ private fun OuraConfirmStep(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .clip(RoundedCornerShape(14.dp))
-                .frostedCardSurface(cornerRadius = 14.dp)
+                .clip(RoundedCornerShape(Metrics.radiusCompact))
+                .frostedCardSurface(cornerRadius = Metrics.radiusCompact)
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
@@ -1404,7 +1404,7 @@ private fun OuraConfirmStep(
                 onClick = onAdopt,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clip(RoundedCornerShape(12.dp))
+                    .clip(RoundedCornerShape(Metrics.radiusControl))
                     .background(Palette.accent)
                     .semantics { contentDescription = uiString(R.string.l10n_add_device_wizard_connect_to_this_ring_02b9442b) },
             ) {
@@ -1420,7 +1420,7 @@ private fun OuraConfirmStep(
                 onClick = onAdopt,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clip(RoundedCornerShape(12.dp))
+                    .clip(RoundedCornerShape(Metrics.radiusControl))
                     .background(Palette.statusCritical.copy(alpha = 0.16f))
                     .semantics { contentDescription = uiString(R.string.l10n_add_device_wizard_take_over_this_ring_f199dc22) },
             ) {
@@ -1437,8 +1437,8 @@ private fun OuraAdoptingStep() {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(14.dp))
-            .frostedCardSurface(cornerRadius = 14.dp)
+            .clip(RoundedCornerShape(Metrics.radiusCompact))
+            .frostedCardSurface(cornerRadius = Metrics.radiusCompact)
             .padding(20.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
@@ -1461,8 +1461,8 @@ private fun OuraFailedStep(reason: String?, onTryAgain: () -> Unit, onUseFileImp
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(14.dp))
-            .frostedCardSurface(cornerRadius = 14.dp)
+            .clip(RoundedCornerShape(Metrics.radiusCompact))
+            .frostedCardSurface(cornerRadius = Metrics.radiusCompact)
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
@@ -1487,7 +1487,7 @@ private fun OuraFailedStep(reason: String?, onTryAgain: () -> Unit, onUseFileImp
                 onClick = onTryAgain,
                 modifier = Modifier
                     .weight(1f)
-                    .clip(RoundedCornerShape(12.dp))
+                    .clip(RoundedCornerShape(Metrics.radiusControl))
                     .background(Palette.accent),
             ) {
                 Text(uiString(R.string.l10n_add_device_wizard_try_again_042c862e), style = NoopType.headline, color = Palette.goldDeepText)
@@ -1496,7 +1496,7 @@ private fun OuraFailedStep(reason: String?, onTryAgain: () -> Unit, onUseFileImp
                 onClick = onUseFileImport,
                 modifier = Modifier
                     .weight(1f)
-                    .clip(RoundedCornerShape(12.dp))
+                    .clip(RoundedCornerShape(Metrics.radiusControl))
                     .background(Palette.surfaceInset),
             ) {
                 Text(uiString(R.string.l10n_add_device_wizard_use_file_import_0e092cb4), style = NoopType.headline, color = Palette.accent)
@@ -1514,7 +1514,7 @@ private fun OuraAmberPanel(title: String, body: String) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(12.dp))
+            .clip(RoundedCornerShape(Metrics.radiusControl))
             .background(Palette.statusWarning.copy(alpha = 0.10f))
             .padding(12.dp),
         verticalArrangement = Arrangement.spacedBy(4.dp),
@@ -1601,8 +1601,8 @@ private fun PickList(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clip(RoundedCornerShape(14.dp))
-                    .frostedCardSurface(cornerRadius = 14.dp)
+                    .clip(RoundedCornerShape(Metrics.radiusCompact))
+                    .frostedCardSurface(cornerRadius = Metrics.radiusCompact)
                     .padding(20.dp),
                 verticalArrangement = Arrangement.spacedBy(10.dp),
             ) {
@@ -1625,8 +1625,8 @@ private fun DiscoveredRow(name: String, subtitle: String, rssi: Int, onTap: () -
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(12.dp))
-            .frostedCardSurface(cornerRadius = 12.dp)
+            .clip(RoundedCornerShape(Metrics.radiusControl))
+            .frostedCardSurface(cornerRadius = Metrics.radiusControl)
             .clickable(onClick = onTap)
             .semantics { contentDescription = uiString(R.string.l10n_add_device_wizard_name_signal_signalbars_level_rssi_of_6aa514f6, name, SignalBars.level(rssi)) }
             .padding(14.dp),
@@ -1662,8 +1662,8 @@ private fun ConfirmStep(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .clip(RoundedCornerShape(12.dp))
-                .frostedCardSurface(cornerRadius = 12.dp)
+                .clip(RoundedCornerShape(Metrics.radiusControl))
+                .frostedCardSurface(cornerRadius = Metrics.radiusControl)
                 .padding(14.dp),
             horizontalArrangement = Arrangement.spacedBy(12.dp),
             verticalAlignment = Alignment.CenterVertically,
@@ -1692,7 +1692,7 @@ private fun ConfirmStep(
             enabled = name.trim().isNotEmpty(),
             modifier = Modifier
                 .fillMaxWidth()
-                .clip(RoundedCornerShape(12.dp))
+                .clip(RoundedCornerShape(Metrics.radiusControl))
                 .background(if (name.trim().isNotEmpty()) Palette.accent else Palette.surfaceInset),
         ) {
             Text(

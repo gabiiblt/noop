@@ -558,7 +558,7 @@ private fun StepperButton(
     tint: Color,
     onClick: () -> Unit,
 ) {
-    val shape = RoundedCornerShape(10.dp)
+    val shape = RoundedCornerShape(Metrics.radiusControl)
     val content = if (enabled) tint else Palette.textTertiary.copy(alpha = Palette.disabledOpacity)
     OutlinedButton(
         onClick = onClick,

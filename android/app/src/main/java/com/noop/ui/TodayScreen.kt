@@ -4570,7 +4570,7 @@ private fun DashboardCardRow(
     val displayValue = localizedMetricValue(value)
     // iOS `cardLink` corner is 20 (a touch rounder than the app-wide 18dp card), with the SAME neutral
     // surfaceRaised fill + plain hairline the frosted neutral surface already draws.
-    val rowShape = RoundedCornerShape(20.dp)
+    val rowShape = RoundedCornerShape(Metrics.cardRadius)
     // liquidPress: the tappable card settles inward on press (the iOS LiquidPressStyle feel). The SAME
     // interactionSource feeds the clickable and the press modifier, so it responds to the actual touch.
     // It is applied OUTSIDE the frosted surface so the whole card (surface + content) scales/dims as one.
@@ -4580,7 +4580,7 @@ private fun DashboardCardRow(
             .fillMaxWidth()
             .let { if (onClick != null) it.liquidPress(interaction) else it }
             .clip(rowShape)
-            .frostedCardSurface(cornerRadius = 20.dp)
+            .frostedCardSurface(cornerRadius = Metrics.cardRadius)
             .let {
                 if (onClick != null) {
                     it.clickable(interactionSource = interaction, indication = null, onClick = onClick)
@@ -4951,7 +4951,7 @@ private fun DashboardCardsEditorDialog(
     Dialog(onDismissRequest = onDismiss) {
         Surface(
             color = Palette.surfaceOverlay,
-            shape = RoundedCornerShape(16.dp),
+            shape = RoundedCornerShape(Metrics.radiusCompact),
         ) {
             Column(
                 modifier = Modifier.padding(20.dp),
@@ -5017,7 +5017,7 @@ private fun HostedCardsEditorDialog(
     }
 
     Dialog(onDismissRequest = onDismiss) {
-        Surface(color = Palette.surfaceOverlay, shape = RoundedCornerShape(16.dp)) {
+        Surface(color = Palette.surfaceOverlay, shape = RoundedCornerShape(Metrics.radiusCompact)) {
             Column(
                 modifier = Modifier.padding(20.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -5271,7 +5271,7 @@ private fun TodayLayoutEditorDialog(
     }
 
     Dialog(onDismissRequest = onDismiss) {
-        Surface(color = Palette.surfaceOverlay, shape = RoundedCornerShape(16.dp)) {
+        Surface(color = Palette.surfaceOverlay, shape = RoundedCornerShape(Metrics.radiusCompact)) {
             Column(
                 modifier = Modifier.padding(20.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -5396,7 +5396,7 @@ internal fun ChargeBreakdownSheet(
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .clip(RoundedCornerShape(14.dp))
+                            .clip(RoundedCornerShape(Metrics.radiusCompact))
                             .clickable(
                                 onClickLabel = uiString(R.string.l10n_today_screen_see_the_charge_trend_9dcbcff7),
                                 onClick = openTrend,
@@ -5442,7 +5442,7 @@ internal fun ChargeBreakdownSheet(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .clip(RoundedCornerShape(14.dp))
+                        .clip(RoundedCornerShape(Metrics.radiusCompact))
                         .clickable(
                             onClickLabel = uiString(R.string.today_action_how_charge),
                             onClick = onHowCalculated,
@@ -6323,8 +6323,8 @@ private fun LiquidKeyTile(
     }
     Column(
         modifier = base
-            .clip(RoundedCornerShape(16.dp))
-            .frostedCardSurface(cornerRadius = 16.dp)
+            .clip(RoundedCornerShape(Metrics.radiusCompact))
+            .frostedCardSurface(cornerRadius = Metrics.radiusCompact)
             .padding(horizontal = 12.dp, vertical = 11.dp)
             .semantics { contentDescription = uiString(R.string.l10n_today_screen_data_label_data_value_data_unit_27f6fd6b, data.label, displayValue, data.unit).trim() },
         verticalArrangement = Arrangement.spacedBy(6.dp),
@@ -7274,7 +7274,7 @@ private fun ChartMarkerPill(
 ) {
     Row(
         modifier = modifier
-            .clip(RoundedCornerShape(6.dp))
+            .clip(RoundedCornerShape(Metrics.radiusChip))
             .background(Palette.surfaceOverlay.copy(alpha = 0.92f))
             .padding(horizontal = 6.dp, vertical = 3.dp),
         verticalAlignment = Alignment.CenterVertically,
@@ -7293,7 +7293,7 @@ private fun WorkoutGlyph(icon: ImageVector, modifier: Modifier = Modifier) {
     Box(
         modifier = modifier
             .size(22.dp)
-            .clip(RoundedCornerShape(6.dp))
+            .clip(RoundedCornerShape(Metrics.radiusChip))
             .background(Palette.strain033),
         contentAlignment = Alignment.Center,
     ) {
@@ -7841,7 +7841,7 @@ private fun IllnessBanner(message: String) {
         Box(
             modifier = Modifier
                 .size(34.dp)
-                .clip(RoundedCornerShape(10.dp))
+                .clip(RoundedCornerShape(Metrics.radiusControl))
                 .background(Palette.statusWarning.copy(alpha = StrandAlpha.warningFill)),
             contentAlignment = Alignment.Center,
         ) {
@@ -8084,7 +8084,7 @@ private fun KeyMetricsEditorDialog(
     Dialog(onDismissRequest = onDismiss) {
         Surface(
             color = Palette.surfaceOverlay,
-            shape = RoundedCornerShape(16.dp),
+            shape = RoundedCornerShape(Metrics.radiusCompact),
         ) {
             Column(
                 modifier = Modifier.padding(20.dp),

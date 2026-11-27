@@ -405,7 +405,10 @@ object Metrics {
     val space18 = 18.dp
     val space24 = 24.dp
     val sourceBadgeHeight = 18.dp
-    val cardRadius = 18.dp   // Bevel continuous radius (18–22dp)
+    val cardRadius = 22.dp   // radius scale (matches Swift NoopMetrics): chip 8 / control 12 / compact 16 / card 22
+    val radiusChip = 8.dp
+    val radiusControl = 12.dp
+    val radiusCompact = 16.dp
     val cornerXs = 2.dp
     val cornerSm = 12.dp
     val cornerBadge = 6.dp

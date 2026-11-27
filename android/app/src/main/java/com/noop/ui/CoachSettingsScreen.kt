@@ -246,7 +246,7 @@ private fun CoachInstructions(vm: CoachViewModel) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clip(RoundedCornerShape(10.dp))
+                    .clip(RoundedCornerShape(Metrics.radiusControl))
                     .liquidPress(headerInteraction)
                     .clickable(interactionSource = headerInteraction, indication = null) { expanded = !expanded }
                     .semantics {
@@ -282,7 +282,7 @@ private fun CoachInstructions(vm: CoachViewModel) {
                     textStyle = NoopType.body,
                     singleLine = false,
                     colors = coachFieldColors(),
-                    shape = RoundedCornerShape(14.dp),
+                    shape = RoundedCornerShape(Metrics.radiusCompact),
                 )
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
                     TextButton(

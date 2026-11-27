@@ -456,7 +456,7 @@ private fun LiquidLogTile(
         Box(
             modifier = Modifier
                 .size(34.dp)
-                .clip(RoundedCornerShape(9.dp))
+                .clip(RoundedCornerShape(Metrics.radiusChip))
                 .background(accent.copy(alpha = 0.14f)),
             contentAlignment = Alignment.Center,
         ) {

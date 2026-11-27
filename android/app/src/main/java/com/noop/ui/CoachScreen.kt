@@ -175,7 +175,7 @@ private fun CoachSetup(vm: CoachViewModel) {
                         singleLine = true,
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Uri),
                         colors = coachFieldColors(),
-                        shape = RoundedCornerShape(14.dp),
+                        shape = RoundedCornerShape(Metrics.radiusCompact),
                     )
                 }
 
@@ -539,7 +539,7 @@ private fun CoachChat(vm: CoachViewModel, onOpenSettings: () -> Unit) {
 @OptIn(androidx.compose.foundation.ExperimentalFoundationApi::class)
 private fun ChatBubble(msg: ChatMsg, vm: CoachViewModel) {
     val isUser = msg.role == "user"
-    val bubbleShape = RoundedCornerShape(16.dp)
+    val bubbleShape = RoundedCornerShape(Metrics.radiusCompact)
     val context = LocalContext.current
     val clipboardManager = androidx.compose.ui.platform.LocalClipboardManager.current
     // K8: long-press popup menu for Copy / Share / Save on assistant replies.
@@ -558,7 +558,7 @@ private fun ChatBubble(msg: ChatMsg, vm: CoachViewModel) {
         } else {
             Modifier
                 .clip(bubbleShape)
-                .frostedCardSurface(tint = Palette.chargeColor, cornerRadius = 16.dp)
+                .frostedCardSurface(tint = Palette.chargeColor, cornerRadius = Metrics.radiusCompact)
         }
         Box(
             modifier = Modifier
@@ -631,8 +631,8 @@ private fun ThinkingBubble() {
     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Start) {
         Row(
             modifier = Modifier
-                .clip(RoundedCornerShape(16.dp))
-                .frostedCardSurface(tint = Palette.chargeColor, cornerRadius = 16.dp)
+                .clip(RoundedCornerShape(Metrics.radiusCompact))
+                .frostedCardSurface(tint = Palette.chargeColor, cornerRadius = Metrics.radiusCompact)
                 .padding(horizontal = 14.dp, vertical = 12.dp)
                 .semantics { contentDescription = uiString(R.string.l10n_coach_screen_coach_is_thinking_aaf91547) },
             verticalAlignment = Alignment.CenterVertically,
@@ -694,7 +694,7 @@ internal fun ModelDropdown(
 ) {
     var expanded by remember { mutableStateOf(false) }
     var showCustom by remember { mutableStateOf(false) }
-    val shape = RoundedCornerShape(14.dp)
+    val shape = RoundedCornerShape(Metrics.radiusCompact)
     val triggerInteraction = remember { MutableInteractionSource() }
     Box {
         Row(
@@ -785,7 +785,7 @@ private fun CustomModelDialog(
                     textStyle = NoopType.mono(13f),
                     singleLine = true,
                     colors = coachFieldColors(),
-                    shape = RoundedCornerShape(14.dp),
+                    shape = RoundedCornerShape(Metrics.radiusCompact),
                 )
             }
         },
@@ -871,7 +871,7 @@ private fun CoachKeyField(
         visualTransformation = PasswordVisualTransformation(),
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
         colors = coachFieldColors(),
-        shape = RoundedCornerShape(14.dp),
+        shape = RoundedCornerShape(Metrics.radiusCompact),
     )
 }
 
@@ -879,7 +879,7 @@ private fun CoachKeyField(
 
 @Composable
 internal fun CoachPrimaryButton(label: String, enabled: Boolean, onClick: () -> Unit) {
-    val shape = RoundedCornerShape(14.dp)
+    val shape = RoundedCornerShape(Metrics.radiusCompact)
     val bg = if (enabled) Palette.accent else Palette.accent.copy(alpha = Palette.disabledOpacity)
     val interaction = remember { MutableInteractionSource() }
     Box(
@@ -964,9 +964,9 @@ private fun MicComposerRow(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(18.dp))
+            .clip(RoundedCornerShape(Metrics.radiusCompact))
             .background(Palette.surfaceOverlay)
-            .border(1.dp, Palette.hairline, RoundedCornerShape(18.dp))
+            .border(1.dp, Palette.hairline, RoundedCornerShape(Metrics.radiusCompact))
             .padding(8.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(10.dp),
@@ -987,7 +987,7 @@ private fun MicComposerRow(
             maxLines = 4,
             enabled = !sending,
             colors = coachFieldColors(),
-            shape = RoundedCornerShape(14.dp),
+            shape = RoundedCornerShape(Metrics.radiusCompact),
         )
 
         // K4: mic button — on-device voice input. Hidden entirely when on-device recognition
@@ -1047,9 +1047,9 @@ private fun MicButton(
     Box(
         modifier = Modifier
             .size(48.dp)
-            .clip(RoundedCornerShape(14.dp))
+            .clip(RoundedCornerShape(Metrics.radiusCompact))
             .background(bg)
-            .border(1.dp, Palette.hairline, RoundedCornerShape(14.dp))
+            .border(1.dp, Palette.hairline, RoundedCornerShape(Metrics.radiusCompact))
             .let {
                 if (enabled)
                     it
@@ -1078,9 +1078,9 @@ private fun SendButton(enabled: Boolean, sending: Boolean, onClick: () -> Unit) 
     Box(
         modifier = Modifier
             .size(52.dp)
-            .clip(RoundedCornerShape(14.dp))
+            .clip(RoundedCornerShape(Metrics.radiusCompact))
             .background(bg)
-            .border(1.dp, if (enabled) Color.Transparent else Palette.hairline, RoundedCornerShape(14.dp))
+            .border(1.dp, if (enabled) Color.Transparent else Palette.hairline, RoundedCornerShape(Metrics.radiusCompact))
             .let {
                 if (enabled)
                     it

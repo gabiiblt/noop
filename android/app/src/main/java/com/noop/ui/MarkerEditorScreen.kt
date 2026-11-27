@@ -324,9 +324,9 @@ private fun DateRow(millis: Long, onPick: (Long) -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(10.dp))
+            .clip(RoundedCornerShape(Metrics.radiusControl))
             .background(Palette.surfaceInset)
-            .border(1.dp, Palette.hairline, RoundedCornerShape(10.dp))
+            .border(1.dp, Palette.hairline, RoundedCornerShape(Metrics.radiusControl))
             .clickable {
                 DatePickerDialog(
                     context,

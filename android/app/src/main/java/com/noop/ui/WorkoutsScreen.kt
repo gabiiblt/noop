@@ -416,7 +416,7 @@ private fun EmptyWorkouts() {
  */
 @Composable
 private fun PostLogNoteBanner(text: String) {
-    val shape = RoundedCornerShape(12.dp)
+    val shape = RoundedCornerShape(Metrics.radiusControl)
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -2130,7 +2130,7 @@ private fun ManualWorkoutDialog(
                 Box(
                     modifier = Modifier
                         .size(30.dp)
-                        .clip(RoundedCornerShape(9.dp))
+                        .clip(RoundedCornerShape(Metrics.radiusChip))
                         .background(Palette.effortColor.copy(alpha = 0.14f)),
                     contentAlignment = Alignment.Center,
                 ) {
@@ -2266,9 +2266,9 @@ private fun SpanTimeField(caption: String, millis: Long, onPick: (Long) -> Unit)
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .clip(RoundedCornerShape(10.dp))
+                .clip(RoundedCornerShape(Metrics.radiusControl))
                 .background(Palette.surfaceInset)
-                .border(1.dp, Palette.hairline, RoundedCornerShape(10.dp))
+                .border(1.dp, Palette.hairline, RoundedCornerShape(Metrics.radiusControl))
                 .clickable {
                     val cal = Calendar.getInstance().apply { timeInMillis = millis }
                     DatePickerDialog(

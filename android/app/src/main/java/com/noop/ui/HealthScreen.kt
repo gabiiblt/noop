@@ -727,7 +727,7 @@ private fun FitnessAgeSection(vm: AppViewModel, days: List<DailyMetric>, profile
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .clip(RoundedCornerShape(12.dp))
+                        .clip(RoundedCornerShape(Metrics.radiusControl))
                         .clickable(onClick = onOpenSettings)
                         .padding(vertical = Metrics.space8),
                     verticalAlignment = Alignment.CenterVertically,

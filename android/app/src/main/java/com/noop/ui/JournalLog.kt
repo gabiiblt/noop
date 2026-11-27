@@ -376,7 +376,7 @@ private fun JournalNumericField(
             singleLine = true,
             textStyle = NoopType.body,
             colors = journalFieldColors(),
-            shape = RoundedCornerShape(10.dp),
+            shape = RoundedCornerShape(Metrics.radiusControl),
             modifier = Modifier.width(72.dp),
         )
         item.kind.unitLabel?.takeIf { it.isNotEmpty() }?.let { unit ->
@@ -488,7 +488,7 @@ private fun JournalAddRow(onAddCustom: (String, JournalKind, JournalGroup) -> Un
                 singleLine = true,
                 textStyle = NoopType.body,
                 colors = journalFieldColors(),
-                shape = RoundedCornerShape(14.dp),
+                shape = RoundedCornerShape(Metrics.radiusCompact),
                 modifier = Modifier.weight(1f),
             )
             Spacer(Modifier.width(8.dp))
