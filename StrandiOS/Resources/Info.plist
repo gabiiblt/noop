@@ -10,8 +10,6 @@
 		<string>$(PRODUCT_BUNDLE_IDENTIFIER).coachbrief</string>
 		<string>$(PRODUCT_BUNDLE_IDENTIFIER).healthwriteback</string>
 		<string>$(PRODUCT_BUNDLE_IDENTIFIER).rescore</string>
-		<string>$(PRODUCT_BUNDLE_IDENTIFIER).stalebattery</string>
-		<string>$(PRODUCT_BUNDLE_IDENTIFIER).push</string>
 	</array>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
@@ -90,7 +88,6 @@
 		<string>location</string>
 		<string>fetch</string>
 		<string>processing</string>
-		<string>remote-notification</string>
 	</array>
 	<key>UIFileSharingEnabled</key>
 	<true/>
