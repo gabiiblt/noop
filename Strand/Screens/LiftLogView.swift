@@ -27,6 +27,9 @@ struct LiftLogView: View {
 
     /// The program being created or edited (nil = the editor is closed).
     @State private var editing: ProgramEditTarget?
+    /// The routine whose detail sheet is open, and what to do once that sheet has closed.
+    @State private var viewingProgram: ProgramEditTarget?
+    @State private var afterDetail: (() -> Void)?
     @State private var importing = false
     /// The live session, owned at the app root so it survives this screen going away.
     @EnvironmentObject private var session: LiftSessionController
@@ -74,6 +77,18 @@ struct LiftLogView: View {
         // Also on a saved session: the session sheet lives above this screen and cannot tell it
         // directly, and a save does not always bump `refreshSeq`.
         .task(id: "\(repo.refreshSeq)-\(session.savedSessions)") { await load() }
+        .sheet(item: $viewingProgram, onDismiss: {
+            let action = afterDetail
+            afterDetail = nil
+            action?()
+        }) { target in
+            if let program = target.program {
+                LiftProgramDetailSheet(
+                    program: program,
+                    onEdit: { afterDetail = { editing = ProgramEditTarget(id: program.id, program: program) } },
+                    onStart: { afterDetail = { Task { await start(program) } } })
+            }
+        }
         .sheet(item: $editing) { target in
             LiftProgramEditorSheet(program: target.program) {
                 await load()
@@ -327,7 +342,7 @@ struct LiftLogView: View {
         NoopGlassCard {
             HStack(spacing: NoopMetrics.gap) {
                 Button {
-                    editing = ProgramEditTarget(id: program.id, program: program)
+                    viewingProgram = ProgramEditTarget(id: program.id, program: program)
                 } label: {
                     VStack(alignment: .leading, spacing: 3) {
                         Text(program.name)
@@ -344,9 +359,6 @@ struct LiftLogView: View {
                                 .foregroundStyle(StrandPalette.textSecondary)
                                 .lineLimit(2)
                         }
-                        Text("Tap to edit")
-                            .font(StrandFont.footnote)
-                            .foregroundStyle(StrandPalette.textTertiary)
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .contentShape(Rectangle())
