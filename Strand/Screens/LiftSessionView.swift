@@ -97,7 +97,7 @@ struct LiftSessionView: View {
         #else
         .frame(width: 560, height: 800)
         #endif
-        .background(NoopGlassBackdrop(tint: StrandPalette.effortColor).ignoresSafeArea())
+        .background(NoopGlassBackdrop(tint: StrandPalette.gymAccent).ignoresSafeArea())
         .keyboardDoneToolbar($focused)
         .dismissesKeyboardOnTap($focused)
         // Re-read whenever the session's exercises change, so an exercise added mid-session that was
@@ -170,7 +170,7 @@ struct LiftSessionView: View {
                     .font(.system(size: 17, weight: .semibold))
                 Text("Add exercise").font(StrandFont.body)
             }
-            .foregroundStyle(canAdd ? StrandPalette.effortColor : StrandPalette.textTertiary)
+            .foregroundStyle(canAdd ? StrandPalette.gymAccent : StrandPalette.textTertiary)
             .frame(maxWidth: .infinity)
             .padding(.vertical, 14)
             .background(
@@ -209,7 +209,7 @@ struct LiftSessionView: View {
                 GeometryReader { geo in
                     ZStack(alignment: .leading) {
                         Capsule().fill(StrandPalette.textTertiary.opacity(0.25))
-                        Capsule().fill(StrandPalette.effortColor)
+                        Capsule().fill(StrandPalette.gymAccent)
                             .frame(width: geo.size.width * share)
                     }
                 }
@@ -238,7 +238,7 @@ struct LiftSessionView: View {
                             let others = members.filter { $0 != index }.map { engine.plan[$0].exercise }
                             Text("Superset with \(others.joined(separator: ", "))")
                                 .font(StrandFont.caption)
-                                .foregroundStyle(StrandPalette.effortColor)
+                                .foregroundStyle(StrandPalette.gymAccent)
                         }
                         if let from = item.swappedFrom {
                             Text("Instead of \(from)")
@@ -336,7 +336,7 @@ struct LiftSessionView: View {
                         .font(.system(size: 17, weight: .semibold))
                     Text("Add set").font(StrandFont.caption)
                 }
-                .foregroundStyle(canAdd ? StrandPalette.effortColor : StrandPalette.textTertiary)
+                .foregroundStyle(canAdd ? StrandPalette.gymAccent : StrandPalette.textTertiary)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .contentShape(Rectangle())
             }
@@ -818,7 +818,7 @@ struct LiftSessionView: View {
         switch engine.stage {
         case .working: return StrandPalette.statusPositive
         case .resting: return StrandPalette.metricAmber
-        case .warmup, .finished: return StrandPalette.effortColor
+        case .warmup, .finished: return StrandPalette.gymAccent
         }
     }
 
@@ -950,7 +950,7 @@ struct LiftSessionView: View {
         #else
         .frame(width: 460, height: 420)
         #endif
-        .noopBackdrop(StrandPalette.effortColor)
+        .noopBackdrop(StrandPalette.gymAccent)
         .keyboardDoneToolbar($focused)
         .task { await loadSetCountChanges() }
     }

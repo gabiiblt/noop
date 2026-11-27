@@ -109,7 +109,7 @@ struct LiftProgramItemSheet: View {
         #else
         .frame(width: 520, height: 720)
         #endif
-        .noopBackdrop(StrandPalette.effortColor)
+        .noopBackdrop(StrandPalette.gymAccent)
         .keyboardDoneToolbar($focused)
         .dismissesKeyboardOnTap($focused)
         .task { await loadIfNeeded() }

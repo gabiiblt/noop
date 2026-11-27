@@ -58,7 +58,7 @@ struct ExerciseLibraryView: View {
                 }
                 .scrollDismissesKeyboard(.immediately)
             }
-            .noopBackdrop(StrandPalette.effortColor)
+            .noopBackdrop(StrandPalette.gymAccent)
             #if os(iOS)
             .toolbar(.hidden, for: .navigationBar)
             #endif
@@ -190,7 +190,7 @@ struct ExerciseDetailView: View {
             .padding(.horizontal, NoopMetrics.screenPadding)
             .padding(.vertical, NoopMetrics.gap)
         }
-        .noopBackdrop(StrandPalette.effortColor)
+        .noopBackdrop(StrandPalette.gymAccent)
         .navigationTitle(Text(verbatim: name))
         #if os(iOS)
         .navigationBarTitleDisplayMode(.inline)
@@ -292,10 +292,10 @@ struct ExerciseDetailView: View {
                     let date = Date(timeIntervalSince1970: TimeInterval(p.startTs))
                     let value = LiftFormat.display(fromKilograms: p.bestEstimatedOneRepMaxKg ?? 0, system: unitSystem)
                     LineMark(x: .value("Date", date), y: .value("1RM", value))
-                        .foregroundStyle(StrandPalette.effortColor)
+                        .foregroundStyle(StrandPalette.gymAccent)
                         .interpolationMethod(.monotone)
                     PointMark(x: .value("Date", date), y: .value("1RM", value))
-                        .foregroundStyle(StrandPalette.effortColor)
+                        .foregroundStyle(StrandPalette.gymAccent)
                         .symbolSize(24)
                 }
                 .chartYScale(domain: .automatic(includesZero: false))
@@ -340,7 +340,7 @@ struct ExerciseDetailView: View {
                         HStack(alignment: .firstTextBaseline, spacing: NoopMetrics.rowSpacing) {
                             Text("\(index + 1)")
                                 .font(StrandFont.captionNumber)
-                                .foregroundStyle(StrandPalette.effortColor)
+                                .foregroundStyle(StrandPalette.gymAccent)
                                 .frame(width: 18, alignment: .leading)
                             Text(step)
                                 .font(StrandFont.body)

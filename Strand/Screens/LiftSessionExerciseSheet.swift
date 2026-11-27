@@ -52,7 +52,7 @@ struct LiftSessionExerciseSheet: View {
         #else
         .frame(width: 520, height: 640)
         #endif
-        .noopBackdrop(StrandPalette.effortColor)
+        .noopBackdrop(StrandPalette.gymAccent)
         .keyboardDoneToolbar($focused)
         .dismissesKeyboardOnTap($focused)
         .task { await load() }

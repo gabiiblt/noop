@@ -172,7 +172,7 @@ struct LiftMuscleMapSheet: View {
         #else
         .frame(width: 560, height: 800)
         #endif
-        .noopBackdrop(StrandPalette.effortColor)
+        .noopBackdrop(StrandPalette.gymAccent)
         .task { await load() }
     }
 
@@ -207,7 +207,7 @@ struct LiftMuscleMapSheet: View {
     private var tint: Color {
         switch mode {
         case .recovery: return StrandPalette.statusWarning
-        case .volume: return StrandPalette.effortColor
+        case .volume: return StrandPalette.gymAccent
         case .neglect: return StrandPalette.metricAmber
         }
     }

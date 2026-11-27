@@ -46,7 +46,7 @@ struct LiftProgramImportSheet: View {
                 }
                 .padding(NoopMetrics.screenPadding)
             }
-            .noopBackdrop(StrandPalette.effortColor)
+            .noopBackdrop(StrandPalette.gymAccent)
             .navigationTitle("Import a program")
             #if os(iOS)
             .navigationBarTitleDisplayMode(.inline)

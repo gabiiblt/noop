@@ -156,13 +156,13 @@ struct LiftMusclePicker: View {
         } label: {
             Text(muscle.displayName)
                 .font(StrandFont.caption)
-                .foregroundStyle(on ? StrandPalette.effortColor : StrandPalette.textSecondary)
+                .foregroundStyle(on ? StrandPalette.gymAccent : StrandPalette.textSecondary)
                 .padding(.horizontal, 10)
                 .padding(.vertical, 6)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .background(
                     RoundedRectangle(cornerRadius: 8, style: .continuous)
-                        .fill(on ? StrandPalette.effortColor.opacity(0.14) : StrandPalette.surfaceRaised)
+                        .fill(on ? StrandPalette.gymAccent.opacity(0.14) : StrandPalette.surfaceRaised)
                 )
                 .contentShape(Rectangle())
         }

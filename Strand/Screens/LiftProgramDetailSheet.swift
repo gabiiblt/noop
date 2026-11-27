@@ -69,7 +69,7 @@ struct LiftProgramDetailSheet: View {
         #else
         .frame(width: 520, height: 720)
         #endif
-        .noopBackdrop(StrandPalette.effortColor)
+        .noopBackdrop(StrandPalette.gymAccent)
         .task { await load() }
     }
 
@@ -90,7 +90,7 @@ struct LiftProgramDetailSheet: View {
             if !items.isEmpty {
                 Text("\(items.count) exercises")
                     .font(StrandFont.subhead)
-                    .foregroundStyle(StrandPalette.effortColor)
+                    .foregroundStyle(StrandPalette.gymAccent)
             }
         }
     }
@@ -104,7 +104,7 @@ struct LiftProgramDetailSheet: View {
                 .font(StrandFont.headline)
                 .frame(maxWidth: .infinity, minHeight: NoopMetrics.controlHeight)
         }
-        .noopGlassButton(prominent: true, tint: StrandPalette.effortColor)
+        .noopGlassButton(prominent: true, tint: StrandPalette.gymAccent)
         .disabled(items.isEmpty)
         .opacity(items.isEmpty ? NoopButtonMetrics.disabledOpacity : 1)
     }
@@ -168,7 +168,7 @@ struct LiftProgramDetailSheet: View {
                             .minimumScaleFactor(0.7)
                     }
                     RoundedRectangle(cornerRadius: 4, style: .continuous)
-                        .fill(isLast ? StrandPalette.effortColor : StrandPalette.effortColor.opacity(0.4))
+                        .fill(isLast ? StrandPalette.gymAccent : StrandPalette.gymAccent.opacity(0.4))
                         .frame(height: max(6, 96 * CGFloat(v / top)))
                 }
                 .frame(maxWidth: .infinity)
@@ -193,7 +193,7 @@ struct LiftProgramDetailSheet: View {
                     onEdit()
                 }
                 .font(StrandFont.subhead)
-                .foregroundStyle(StrandPalette.effortColor)
+                .foregroundStyle(StrandPalette.gymAccent)
                 .buttonStyle(.plain)
             }
             if items.isEmpty {
@@ -219,7 +219,7 @@ struct LiftProgramDetailSheet: View {
                 VStack(alignment: .leading, spacing: 2) {
                     Text(item.exercise)
                         .font(StrandFont.headline)
-                        .foregroundStyle(StrandPalette.effortColor)
+                        .foregroundStyle(StrandPalette.gymAccent)
                         .lineLimit(2)
                     if let rest = item.restSec {
                         Text("Rest: \(LiftFormat.duration(rest))")

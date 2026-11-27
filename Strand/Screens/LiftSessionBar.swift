@@ -100,7 +100,7 @@ struct LiftSessionBar: View {
         switch engine.stage {
         case .working:  return StrandPalette.statusPositive
         case .resting:  return StrandPalette.metricAmber
-        default:        return StrandPalette.effortColor
+        default:        return StrandPalette.gymAccent
         }
     }
 

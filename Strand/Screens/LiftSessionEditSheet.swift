@@ -78,7 +78,7 @@ struct LiftSessionEditSheet: View {
         #else
         .frame(width: 560, height: 780)
         #endif
-        .noopBackdrop(StrandPalette.effortColor)
+        .noopBackdrop(StrandPalette.gymAccent)
         .keyboardDoneToolbar($focused)
         .dismissesKeyboardOnTap($focused)
         // A field holding 0 (a discarded set) empties when focused, so typing replaces the 0 instead of
@@ -162,7 +162,7 @@ struct LiftSessionEditSheet: View {
                         .font(.system(size: 17, weight: .semibold))
                     Text("Add set").font(StrandFont.caption)
                 }
-                .foregroundStyle(canAdd ? StrandPalette.effortColor : StrandPalette.textTertiary)
+                .foregroundStyle(canAdd ? StrandPalette.gymAccent : StrandPalette.textTertiary)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .contentShape(Rectangle())
             }

@@ -46,7 +46,7 @@ struct LiftBalanceSheet: View {
         #else
         .frame(width: 560, height: 800)
         #endif
-        .noopBackdrop(StrandPalette.effortColor)
+        .noopBackdrop(StrandPalette.gymAccent)
         .task { await load() }
     }
 

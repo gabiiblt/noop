@@ -73,7 +73,7 @@ struct LiftProgramEditorSheet: View {
                             .font(StrandFont.headline)
                             .frame(maxWidth: .infinity, minHeight: NoopMetrics.controlHeight)
                     }
-                    .noopGlassButton(prominent: true, tint: StrandPalette.effortColor)
+                    .noopGlassButton(prominent: true, tint: StrandPalette.gymAccent)
                     if !isNew { deleteSection }
                 }
                 .padding(.horizontal, NoopMetrics.screenPadding)
@@ -88,7 +88,7 @@ struct LiftProgramEditorSheet: View {
         // ScrollView needs a definite height or every row collapses to the top.
         .frame(width: 520, height: 720)
         #endif
-        .noopBackdrop(StrandPalette.effortColor)
+        .noopBackdrop(StrandPalette.gymAccent)
         .keyboardDoneToolbar($focused)
         .task { await loadIfNeeded() }
         .sheet(item: $editingItem) { target in
@@ -155,7 +155,7 @@ struct LiftProgramEditorSheet: View {
                 VStack(alignment: .leading, spacing: 2) {
                     Text(item.exercise)
                         .font(StrandFont.headline)
-                        .foregroundStyle(StrandPalette.effortColor)
+                        .foregroundStyle(StrandPalette.gymAccent)
                         .lineLimit(2)
                     if linked {
                         Label("Superset", systemImage: "link")

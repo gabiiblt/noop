@@ -80,7 +80,7 @@ struct LiftSessionDetailSheet: View {
         #else
         .frame(width: 560, height: 780)
         #endif
-        .noopBackdrop(StrandPalette.effortColor)
+        .noopBackdrop(StrandPalette.gymAccent)
         .task { await load() }
         .sheet(item: $openExercise) { target in
             NavigationStack {
@@ -156,7 +156,7 @@ struct LiftSessionDetailSheet: View {
     /// The workout at a glance, as a gym app ends one: how long, how many working sets, how many records. The
     /// three numbers come from the same values the figures below read, so the two can never disagree.
     private var summaryHero: some View {
-        NoopGlassCard(tint: StrandPalette.effortColor, padding: NoopMetrics.space5) {
+        NoopGlassCard(tint: StrandPalette.gymAccent, padding: NoopMetrics.space5) {
             VStack(alignment: .leading, spacing: NoopMetrics.space3) {
                 Text("Workout complete").strandOverline()
                 Text((session.programName ?? String(localized: "Session")).uppercased())
@@ -354,7 +354,7 @@ struct LiftSessionDetailSheet: View {
         HStack(spacing: NoopMetrics.rowSpacing) {
             Text(row.isWarmup ? String(localized: "W") : "\(row.setIndex)")
                 .font(StrandFont.captionNumber)
-                .foregroundStyle(row.isWarmup ? StrandPalette.textTertiary : StrandPalette.effortColor)
+                .foregroundStyle(row.isWarmup ? StrandPalette.textTertiary : StrandPalette.gymAccent)
                 .frame(width: 18, alignment: .leading)
 
             Text(setValueText(row))
@@ -438,7 +438,7 @@ struct LiftSessionDetailSheet: View {
                                 Spacer(minLength: 0)
                                 Text(LiftFormat.trim(counts.fractional[muscle] ?? 0))
                                     .font(StrandFont.bodyNumber)
-                                    .foregroundStyle(StrandPalette.effortColor)
+                                    .foregroundStyle(StrandPalette.gymAccent)
                                 Text(componentText(counts, muscle))
                                     .font(StrandFont.caption)
                                     .foregroundStyle(StrandPalette.textTertiary)

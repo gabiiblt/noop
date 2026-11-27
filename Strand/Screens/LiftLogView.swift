@@ -73,7 +73,7 @@ struct LiftLogView: View {
                 effortNote
             }
         }
-        .environment(\.noopBackdropTint, StrandPalette.effortColor)
+        .environment(\.noopBackdropTint, StrandPalette.gymAccent)
         // Also on a saved session: the session sheet lives above this screen and cannot tell it
         // directly, and a save does not always bump `refreshSeq`.
         .task(id: "\(repo.refreshSeq)-\(session.savedSessions)") { await load() }
@@ -153,9 +153,9 @@ struct LiftLogView: View {
         VStack(spacing: NoopMetrics.space1) {
             ZStack {
                 Circle()
-                    .fill(trained ? StrandPalette.effortColor : StrandPalette.surfaceInset.opacity(0.6))
+                    .fill(trained ? StrandPalette.gymAccent : StrandPalette.surfaceInset.opacity(0.6))
                 if today && !trained {
-                    Circle().strokeBorder(StrandPalette.effortColor, lineWidth: 2)
+                    Circle().strokeBorder(StrandPalette.gymAccent, lineWidth: 2)
                 }
                 if trained {
                     Image(systemName: "checkmark")
@@ -212,7 +212,7 @@ struct LiftLogView: View {
     private func heroShell(overline: LocalizedStringKey, title: String, caption: String?,
                            action: LocalizedStringKey, systemImage: String,
                            perform: @escaping () -> Void) -> some View {
-        NoopGlassCard(tint: StrandPalette.effortColor, padding: NoopMetrics.space5) {
+        NoopGlassCard(tint: StrandPalette.gymAccent, padding: NoopMetrics.space5) {
             VStack(alignment: .leading, spacing: NoopMetrics.space3) {
                 Text(overline).strandOverline()
                 Text(title.uppercased())
@@ -232,7 +232,7 @@ struct LiftLogView: View {
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, NoopMetrics.space1)
                 }
-                .noopGlassButton(prominent: true, tint: StrandPalette.effortColor)
+                .noopGlassButton(prominent: true, tint: StrandPalette.gymAccent)
                 .controlSize(.large)
                 .padding(.top, NoopMetrics.space1)
             }
@@ -261,7 +261,7 @@ struct LiftLogView: View {
                              tint: StrandPalette.accent) { browsingLibrary = true })
         }
         list.append(Tool(id: "rotation", title: "Rotation", systemImage: "arrow.triangle.2.circlepath",
-                         tint: StrandPalette.effortColor) { showingRotation = true })
+                         tint: StrandPalette.gymAccent) { showingRotation = true })
         list.append(Tool(id: "map", title: "Muscle map", systemImage: "figure.arms.open",
                          tint: StrandPalette.metricRose) { showingMuscleMap = true })
         list.append(Tool(id: "balance", title: "Strength balance", systemImage: "scale.3d",
@@ -351,7 +351,7 @@ struct LiftLogView: View {
                         if let count = exerciseCount(program) {
                             Text(count)
                                 .font(StrandFont.caption)
-                                .foregroundStyle(StrandPalette.effortColor)
+                                .foregroundStyle(StrandPalette.gymAccent)
                         }
                         if let note = program.note, !note.isEmpty {
                             Text(note)
@@ -370,7 +370,7 @@ struct LiftLogView: View {
                         .font(.system(size: 16, weight: .bold))
                         .frame(width: 28, height: 28)
                 }
-                .noopGlassButton(prominent: true, tint: StrandPalette.effortColor)
+                .noopGlassButton(prominent: true, tint: StrandPalette.gymAccent)
                 .accessibilityLabel(session.isActive ? "Running" : "Start this program")
             }
         }
@@ -514,7 +514,7 @@ struct LiftLogView: View {
                     Capsule()
                         // Muted below the floor — below it growth is not reliably detectable, which
                         // is worth showing — and the ordinary accent above it. Never a "done" colour.
-                        .fill(StrandPalette.effortColor.opacity(atOrAboveFloor ? 1.0 : 0.45))
+                        .fill(StrandPalette.gymAccent.opacity(atOrAboveFloor ? 1.0 : 0.45))
                         .frame(width: max(2, geo.size.width * fill))
                     // The floor, marked where it actually falls.
                     Capsule()
@@ -565,13 +565,13 @@ struct LiftLogView: View {
                 VStack(spacing: 0) {
                     Text(date.formatted(.dateTime.month(.abbreviated)).uppercased())
                         .font(StrandFont.overline)
-                        .foregroundStyle(StrandPalette.effortColor)
+                        .foregroundStyle(StrandPalette.gymAccent)
                     Text(date.formatted(.dateTime.day()))
                         .font(StrandFont.rounded(22, weight: .bold))
                         .foregroundStyle(StrandPalette.textPrimary)
                 }
                 .frame(width: 48, height: 48)
-                .background(StrandPalette.effortColor.opacity(0.14),
+                .background(StrandPalette.gymAccent.opacity(0.14),
                             in: RoundedRectangle(cornerRadius: NoopMetrics.space3, style: .continuous))
                 .accessibilityHidden(true)
 

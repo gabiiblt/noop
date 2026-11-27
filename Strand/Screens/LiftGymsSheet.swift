@@ -52,7 +52,7 @@ struct LiftGymsSheet: View {
         #else
         .frame(width: 520, height: 720)
         #endif
-        .noopBackdrop(StrandPalette.effortColor)
+        .noopBackdrop(StrandPalette.gymAccent)
         .task { await load() }
         .sheet(item: $editing) { target in
             LiftGymEditSheet(gym: target.gym) { saved in
@@ -89,7 +89,7 @@ struct LiftGymsSheet: View {
 
     private func gymCard(_ gym: LiftGymRow) -> some View {
         let isActive = effectiveActiveId == gym.id
-        return NoopCard(tint: isActive ? StrandPalette.effortColor : nil) {
+        return NoopCard(tint: isActive ? StrandPalette.gymAccent : nil) {
             VStack(alignment: .leading, spacing: NoopMetrics.rowSpacing) {
                 HStack(alignment: .firstTextBaseline) {
                     Text(gym.name)
@@ -200,7 +200,7 @@ struct LiftGymEditSheet: View {
         #else
         .frame(width: 520, height: 720)
         #endif
-        .noopBackdrop(StrandPalette.effortColor)
+        .noopBackdrop(StrandPalette.gymAccent)
         .keyboardDoneToolbar($focused)
         .dismissesKeyboardOnTap($focused)
         .onAppear(perform: load)
@@ -421,14 +421,14 @@ struct LiftPlateCalculatorSheet: View {
         #else
         .frame(width: 480, height: 560)
         #endif
-        .noopBackdrop(StrandPalette.effortColor)
+        .noopBackdrop(StrandPalette.gymAccent)
         .keyboardDoneToolbar($focused)
         .dismissesKeyboardOnTap($focused)
     }
 
     @ViewBuilder private var resultCard: some View {
         if let result {
-            NoopCard(tint: StrandPalette.effortColor) {
+            NoopCard(tint: StrandPalette.gymAccent) {
                 VStack(alignment: .leading, spacing: 6) {
                     Text(LiftGymCopy.line(result))
                         .font(StrandFont.headline)

@@ -51,7 +51,7 @@ struct GymBarButton: View {
                 .font(StrandFont.body)
                 .lineLimit(1)
         }
-        .noopGlassButton(prominent: prominent, tint: prominent ? StrandPalette.effortColor : nil)
+        .noopGlassButton(prominent: prominent, tint: prominent ? StrandPalette.gymAccent : nil)
         .disabled(!enabled)
         .opacity(enabled ? 1 : NoopButtonMetrics.disabledOpacity)
     }
@@ -121,8 +121,8 @@ struct GymPill: View {
         .foregroundStyle(selected ? StrandPalette.textPrimary : StrandPalette.textSecondary)
         .padding(.horizontal, 14)
         .frame(minHeight: 40)
-        .background(selected ? StrandPalette.effortColor.opacity(0.28) : StrandPalette.surfaceRaised, in: Capsule())
-        .overlay(Capsule().stroke(selected ? StrandPalette.effortColor.opacity(0.6) : Color.clear, lineWidth: 1))
+        .background(selected ? StrandPalette.gymAccent.opacity(0.28) : StrandPalette.surfaceRaised, in: Capsule())
+        .overlay(Capsule().stroke(selected ? StrandPalette.gymAccent.opacity(0.6) : Color.clear, lineWidth: 1))
         .contentShape(Capsule())
     }
 }
@@ -153,7 +153,7 @@ struct GymNumberCell<F: Hashable>: View {
             .background(StrandPalette.surfaceRaised, in: RoundedRectangle(cornerRadius: 12, style: .continuous))
             .overlay(
                 RoundedRectangle(cornerRadius: 12, style: .continuous)
-                    .stroke(focus.wrappedValue == field ? StrandPalette.effortColor : StrandPalette.hairline,
+                    .stroke(focus.wrappedValue == field ? StrandPalette.gymAccent : StrandPalette.hairline,
                             lineWidth: focus.wrappedValue == field ? 1.5 : 0.5)
             )
             .onAppear { text = Self.format(value) }

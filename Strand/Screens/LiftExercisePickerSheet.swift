@@ -98,7 +98,7 @@ struct LiftExercisePickerSheet: View {
         #else
         .frame(width: 520, height: 720)
         #endif
-        .noopBackdrop(StrandPalette.effortColor)
+        .noopBackdrop(StrandPalette.gymAccent)
         .sheet(item: $detail) { entry in
             NavigationStack {
                 ExerciseDetailView(name: ExerciseLibrary.name(entry), catalogue: entry)
