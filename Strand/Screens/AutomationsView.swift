@@ -288,7 +288,7 @@ struct AutomationsView: View {
                                 .accessibilityLabel("Active hours end")
                             Spacer(minLength: 0)
                         }
-                        .frame(minHeight: 42).padding(.vertical, 4)
+                        .frame(minHeight: 44).padding(.vertical, 4)
                     }
                 }
             }
@@ -324,7 +324,7 @@ struct AutomationsView: View {
             Stepper("", value: value, in: range, step: step).labelsHidden()
                 .accessibilityLabel(label)
         }
-        .frame(minHeight: 42).padding(.vertical, 4)
+        .frame(minHeight: 44).padding(.vertical, 4)
     }
 
     // MARK: - Illness early-warning
@@ -394,7 +394,7 @@ struct AutomationsView: View {
                         } label: { Label("Open", systemImage: "waveform.path") }
                         .buttonStyle(.bordered).tint(StrandPalette.accent)
                     }
-                    .frame(minHeight: 42).padding(.vertical, 4)
+                    .frame(minHeight: 44).padding(.vertical, 4)
                 }
             }
         }
@@ -501,7 +501,7 @@ struct AutomationsView: View {
             Spacer()
             shortcutField(String(localized: "Shortcut name"), text: text)
         }
-        .frame(minHeight: 42).padding(.vertical, 4)
+        .frame(minHeight: 44).padding(.vertical, 4)
     }
 
     private var rowDivider: some View {
@@ -573,6 +573,6 @@ private struct ToggleRow: View {
             Toggle("", isOn: $isOn).labelsHidden().toggleStyle(.switch).tint(StrandPalette.accent)
                 .accessibilityLabel(label)
         }
-        .frame(minHeight: 42).padding(.vertical, 4)
+        .frame(minHeight: 44).padding(.vertical, 4)
     }
 }

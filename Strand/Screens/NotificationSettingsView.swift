@@ -155,7 +155,7 @@ struct NotificationSettingsView: View {
                 .tint(StrandPalette.accent)
                 .accessibilityLabel("\(app.name) wrist alerts")
         }
-        .frame(minHeight: 42)
+        .frame(minHeight: 44)
         .padding(.vertical, 4)
         .padding(.horizontal, 8)
         // An enabled app reads as a selected row: a soft accentMuted wash behind it.
@@ -257,7 +257,7 @@ struct NotificationSettingsView: View {
                             .accessibilityLabel("Quiet hours end")
                         Spacer(minLength: 0)
                     }
-                    .frame(minHeight: 42)
+                    .frame(minHeight: 44)
                     .padding(.vertical, 4)
                 }
             }
@@ -352,7 +352,7 @@ private struct FormToggleRow: View {
                 .tint(StrandPalette.accent)
                 .accessibilityLabel(label)
         }
-        .frame(minHeight: 42)
+        .frame(minHeight: 44)
         .padding(.vertical, 4)
     }
 }

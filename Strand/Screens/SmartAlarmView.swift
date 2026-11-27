@@ -241,7 +241,7 @@ struct SmartAlarmView: View {
                         .labelsHidden().toggleStyle(.switch).tint(StrandPalette.accent)
                         .accessibilityLabel("Wake me with a strap buzz")
                 }
-                .frame(minHeight: 42)
+                .frame(minHeight: 44)
 
                 if behavior.smartAlarmEnabled {
                     Divider().overlay(StrandPalette.hairline)
@@ -255,7 +255,7 @@ struct SmartAlarmView: View {
                             // same name, on the same screen, with different values.
                             .accessibilityLabel("Strap alarm wake time")
                     }
-                    .frame(minHeight: 42)
+                    .frame(minHeight: 44)
                     // The per-day overrides that re-time THIS alarm (#1864) are edited under the
                     // wind-down card, so read on its own this card can say "10:00" during a week whose
                     // Saturday fires at 20:30. Checking your alarm is exactly what someone opens this
@@ -367,7 +367,7 @@ struct SmartAlarmView: View {
                             }
                         }
                 }
-                .frame(minHeight: 42)
+                .frame(minHeight: 44)
 
                 if windDownOn {
                     Divider().overlay(StrandPalette.hairline)
@@ -447,7 +447,7 @@ struct SmartAlarmView: View {
                     }
                 }
         }
-        .frame(minHeight: 42)
+        .frame(minHeight: 44)
 
         if perDayOn {
             VStack(spacing: 8) {
