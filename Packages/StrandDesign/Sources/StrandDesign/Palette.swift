@@ -286,6 +286,9 @@ public enum StrandPalette {
     /// The accent of the gym screens: a light blue that stands where openGym uses its green.
     public static var gymAccent: Color { Color(light: "#1A9FE0", dark: "#5CC8FF") }
 
+    /// The ink on a `gymAccent` fill: dark in dark mode, white in light, as openGym's `--on-acc`.
+    public static var onGymAccent: Color { Color(light: "#FFFFFF", dark: "#000000") }
+
     /// Effort (strain) — amber world / Classic blue.
     public static var effortColor: Color   { isClassic ? Color(light: "#3A74C4", dark: "#4A90E2") : Color(light: "#2A78C8", dark: "#4090E0") }
     public static var effortDeep: Color    { isClassic ? Color(light: "#284F9C", dark: "#2F6FCB") : Color(light: "#1E5B96", dark: "#2A6FB0") }

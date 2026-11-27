@@ -209,3 +209,123 @@ struct GymSetBadge: View {
 enum GymRestPresets {
     static let seconds: [Int?] = [nil, 30, 45, 60, 90, 105, 120, 150, 180, 240, 300]
 }
+
+// MARK: - Grouped lists (the openGym look)
+
+/// A section title in the small grey voice of openGym's `h4.sec`: sentence case, above its list.
+struct GymSectionTitle: View {
+    let title: LocalizedStringKey
+    var trailing: LocalizedStringKey?
+    var onTrailing: (() -> Void)?
+
+    var body: some View {
+        HStack {
+            Text(title)
+                .font(StrandFont.footnote)
+                .foregroundStyle(StrandPalette.textSecondary)
+            Spacer(minLength: 0)
+            if let trailing, let onTrailing {
+                Button(action: onTrailing) {
+                    Text(trailing).font(StrandFont.subhead).foregroundStyle(StrandPalette.gymAccent)
+                }
+                .buttonStyle(.plain)
+            }
+        }
+        .padding(.horizontal, 4)
+    }
+}
+
+/// An inset grouped list: one rounded surface, rows divided by a hairline that starts after the icon.
+struct GymList<Content: View>: View {
+    @ViewBuilder var content: () -> Content
+
+    var body: some View {
+        VStack(spacing: 0) { content() }
+            .background(StrandPalette.surfaceRaised, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+            .overlay(RoundedRectangle(cornerRadius: 14, style: .continuous)
+                .stroke(StrandPalette.hairline, lineWidth: 0.5))
+            .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+    }
+}
+
+/// A row of a grouped list: a tinted square icon, a title, a quieter line under it, and a chevron or a tag.
+struct GymListRow: View {
+    var systemImage: String?
+    var tint: Color = StrandPalette.gymAccent
+    var leading: AnyView?
+    let title: String
+    var subtitle: String?
+    var tag: LocalizedStringKey?
+    var chevron = true
+    var divider = true
+
+    var body: some View {
+        VStack(spacing: 0) {
+            HStack(spacing: NoopMetrics.gap) {
+                if let leading {
+                    leading
+                } else if let systemImage {
+                    Image(systemName: systemImage)
+                        .font(.system(size: 15, weight: .semibold))
+                        .foregroundStyle(Color.white)
+                        .frame(width: 30, height: 30)
+                        .background(tint, in: RoundedRectangle(cornerRadius: 8, style: .continuous))
+                        .accessibilityHidden(true)
+                }
+                VStack(alignment: .leading, spacing: 1) {
+                    Text(title)
+                        .font(StrandFont.body)
+                        .foregroundStyle(StrandPalette.textPrimary)
+                        .lineLimit(2)
+                    if let subtitle, !subtitle.isEmpty {
+                        Text(subtitle)
+                            .font(StrandFont.footnote)
+                            .foregroundStyle(StrandPalette.textSecondary)
+                            .lineLimit(2)
+                    }
+                }
+                Spacer(minLength: 0)
+                if let tag { GymTag(title: tag) }
+                if chevron {
+                    Image(systemName: "chevron.right")
+                        .font(.system(size: 13, weight: .semibold))
+                        .foregroundStyle(StrandPalette.textTertiary)
+                        .accessibilityHidden(true)
+                }
+            }
+            .padding(.horizontal, NoopMetrics.gap)
+            .padding(.vertical, 11)
+            .frame(minHeight: 52)
+            .contentShape(Rectangle())
+            if divider {
+                Rectangle().fill(StrandPalette.hairline).frame(height: 0.5)
+                    .padding(.leading, systemImage == nil && leading == nil ? NoopMetrics.gap : 54)
+            }
+        }
+    }
+}
+
+/// openGym's small pill: "Start", "Resume", "Done".
+struct GymTag: View {
+    let title: LocalizedStringKey
+    var tint: Color = StrandPalette.gymAccent
+
+    var body: some View {
+        Text(title)
+            .font(StrandFont.subhead.weight(.semibold))
+            .foregroundStyle(tint)
+            .padding(.horizontal, 12)
+            .frame(minHeight: 30)
+            .background(tint.opacity(0.16), in: Capsule())
+    }
+}
+
+extension View {
+    /// The flat card of openGym: the surface fill, a hairline, a 14 pt corner.
+    func gymCard() -> some View {
+        self
+            .background(StrandPalette.surfaceRaised, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+            .overlay(RoundedRectangle(cornerRadius: 14, style: .continuous)
+                .stroke(StrandPalette.hairline, lineWidth: 0.5))
+    }
+}
