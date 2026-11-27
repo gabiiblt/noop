@@ -24,112 +24,121 @@ struct ExerciseLibraryView: View {
 
     var body: some View {
         NavigationStack {
-            ScrollView {
-                LazyVStack(alignment: .leading, spacing: NoopMetrics.gap) {
-                    searchField
-                    muscleChips
-                    equipmentChip
-                    if searched && results.isEmpty {
-                        ComingSoon(what: "No exercise matches. Try fewer words or another muscle.",
-                                   symbol: "magnifyingglass")
-                    }
-                    ForEach(results) { exercise in
-                        NavigationLink {
-                            ExerciseDetailView(name: ExerciseLibrary.name(exercise), catalogue: exercise)
-                        } label: {
-                            NoopCard(padding: 10) {
-                                CatalogueExerciseRowLabel(exercise: exercise, thumbnail: 56)
-                            }
-                        }
-                        .buttonStyle(.plain)
-                    }
-                    Text("Exercise text from openGym and ExerciseDB, pictures from free-exercise-db (public domain). See Attribution.")
-                        .font(StrandFont.footnote)
-                        .foregroundStyle(StrandPalette.textTertiary)
-                        .fixedSize(horizontal: false, vertical: true)
-                        .padding(.top, NoopMetrics.gap)
+            VStack(spacing: 0) {
+                GymSheetBar(title: "Exercise library") {
+                    GymBarIcon(systemName: "xmark", label: "Close") { dismiss() }
+                } trailing: {
+                    EmptyView()
                 }
-                .padding(.horizontal, NoopMetrics.screenPadding)
-                .padding(.vertical, NoopMetrics.gap)
+                searchField
+                    .padding(.horizontal, NoopMetrics.screenPadding)
+                filterRow
+                    .padding(.vertical, NoopMetrics.rowSpacing)
+                ScrollView {
+                    LazyVStack(alignment: .leading, spacing: 0) {
+                        if searched && results.isEmpty {
+                            ComingSoon(what: "No exercise matches. Try fewer words or another muscle.",
+                                       symbol: "magnifyingglass")
+                                .padding(.horizontal, NoopMetrics.screenPadding)
+                        }
+                        ForEach(results) { exercise in
+                            NavigationLink {
+                                ExerciseDetailView(name: ExerciseLibrary.name(exercise), catalogue: exercise)
+                            } label: {
+                                row(exercise)
+                            }
+                            .buttonStyle(.plain)
+                        }
+                        Text("Exercise text from openGym and ExerciseDB, pictures from free-exercise-db (public domain). See Attribution.")
+                            .font(StrandFont.footnote)
+                            .foregroundStyle(StrandPalette.textTertiary)
+                            .fixedSize(horizontal: false, vertical: true)
+                            .padding(NoopMetrics.screenPadding)
+                    }
+                }
+                .scrollDismissesKeyboard(.immediately)
             }
             .noopBackdrop(StrandPalette.effortColor)
-            .navigationTitle(Text("Exercise library"))
             #if os(iOS)
-            .navigationBarTitleDisplayMode(.inline)
+            .toolbar(.hidden, for: .navigationBar)
             #endif
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("Done") { dismiss() }
-                }
-            }
             .task(id: searchKey) { await search() }
             .task { equipmentOptions = (try? ExerciseLibrary.shared?.equipmentValues()) ?? [] }
         }
     }
 
-    private var searchField: some View {
-        NoopCard(padding: 12) {
-            HStack(spacing: NoopMetrics.rowSpacing) {
-                Image(systemName: "magnifyingglass")
-                    .foregroundStyle(StrandPalette.textTertiary)
-                    .accessibilityHidden(true)
-                TextField("Search exercises", text: $query)
-                    .textFieldStyle(.plain)
-                    .font(StrandFont.body)
+    private func row(_ exercise: CatalogueExercise) -> some View {
+        HStack(spacing: NoopMetrics.gap) {
+            GymExerciseThumb(catalogueId: exercise.id, size: 52)
+            VStack(alignment: .leading, spacing: 2) {
+                Text(ExerciseLibrary.name(exercise))
+                    .font(StrandFont.headline)
                     .foregroundStyle(StrandPalette.textPrimary)
-                    .autocorrectionDisabled()
-                if !query.isEmpty {
-                    Button { query = "" } label: {
-                        Image(systemName: "xmark.circle.fill").foregroundStyle(StrandPalette.textTertiary)
+                    .lineLimit(2)
+                Text(ExerciseLibrary.subtitle(exercise))
+                    .font(StrandFont.caption)
+                    .foregroundStyle(StrandPalette.textTertiary)
+                    .lineLimit(1)
+            }
+            Spacer(minLength: 0)
+            Image(systemName: "chevron.right")
+                .font(.system(size: 13, weight: .semibold))
+                .foregroundStyle(StrandPalette.textTertiary)
+        }
+        .padding(.horizontal, NoopMetrics.screenPadding)
+        .padding(.vertical, 6)
+        .contentShape(Rectangle())
+    }
+
+    private var searchField: some View {
+        HStack(spacing: NoopMetrics.rowSpacing) {
+            Image(systemName: "magnifyingglass")
+                .foregroundStyle(StrandPalette.textTertiary)
+                .accessibilityHidden(true)
+            TextField("Search exercises", text: $query)
+                .textFieldStyle(.plain)
+                .font(StrandFont.body)
+                .foregroundStyle(StrandPalette.textPrimary)
+                .autocorrectionDisabled()
+            if !query.isEmpty {
+                Button { query = "" } label: {
+                    Image(systemName: "xmark.circle.fill").foregroundStyle(StrandPalette.textTertiary)
+                }
+                .buttonStyle(.plain)
+                .accessibilityLabel(Text("Clear search"))
+            }
+        }
+        .padding(.horizontal, 14)
+        .frame(minHeight: 48)
+        .background(StrandPalette.surfaceRaised, in: Capsule())
+    }
+
+    private var filterRow: some View {
+        HStack(spacing: NoopMetrics.rowSpacing) {
+            Menu {
+                Button("All equipment") { equipment = nil }
+                ForEach(equipmentOptions, id: \.self) { option in
+                    Button(ExerciseLibrary.equipmentName(option) ?? option) { equipment = option }
+                }
+            } label: {
+                GymPill(title: ExerciseLibrary.equipmentName(equipment) ?? String(localized: "All equipment"),
+                        selected: equipment != nil)
+            }
+            Menu {
+                Button("All muscles") { muscle = nil }
+                ForEach(LiftMuscle.Region.allCases, id: \.self) { region in
+                    Section(region.displayName) {
+                        ForEach(LiftMuscle.inRegion(region), id: \.self) { m in
+                            Button(m.displayName) { muscle = m }
+                        }
                     }
-                    .buttonStyle(.plain)
-                    .accessibilityLabel(Text("Clear search"))
                 }
+            } label: {
+                GymPill(title: muscle?.displayName ?? String(localized: "All muscles"), selected: muscle != nil)
             }
+            Spacer(minLength: 0)
         }
-    }
-
-    private var muscleChips: some View {
-        ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: 8) {
-                chip(String(localized: "All muscles"), selected: muscle == nil) { muscle = nil }
-                ForEach(LiftMuscle.ordered, id: \.self) { m in
-                    chip(m.displayName, selected: muscle == m) { muscle = (muscle == m) ? nil : m }
-                }
-            }
-        }
-    }
-
-    private var equipmentChip: some View {
-        Menu {
-            Button(String(localized: "All equipment")) { equipment = nil }
-            ForEach(equipmentOptions, id: \.self) { option in
-                Button(ExerciseLibrary.equipmentName(option) ?? option) { equipment = option }
-            }
-        } label: {
-            chipLabel(ExerciseLibrary.equipmentName(equipment) ?? String(localized: "All equipment"),
-                      selected: equipment != nil, systemImage: "line.3.horizontal.decrease")
-        }
-        .buttonStyle(.plain)
-    }
-
-    private func chip(_ title: String, selected: Bool, action: @escaping () -> Void) -> some View {
-        Button(action: action) { chipLabel(title, selected: selected, systemImage: nil) }
-            .buttonStyle(.plain)
-    }
-
-    private func chipLabel(_ title: String, selected: Bool, systemImage: String?) -> some View {
-        HStack(spacing: 4) {
-            if let systemImage {
-                Image(systemName: systemImage).font(.system(size: 11, weight: .semibold))
-            }
-            Text(title).font(StrandFont.caption)
-        }
-        .foregroundStyle(selected ? StrandPalette.textPrimary : StrandPalette.textSecondary)
-        .padding(.horizontal, 12)
-        .padding(.vertical, 7)
-        .background(selected ? StrandPalette.accent.opacity(0.18) : StrandPalette.surfaceRaised, in: Capsule())
-        .overlay(Capsule().stroke(selected ? StrandPalette.accent : StrandPalette.hairline, lineWidth: 1))
+        .padding(.horizontal, NoopMetrics.screenPadding)
     }
 
     private func search() async {
