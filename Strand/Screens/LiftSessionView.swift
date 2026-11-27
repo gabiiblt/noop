@@ -166,17 +166,13 @@ struct LiftSessionView: View {
             addingExercise = true
         } label: {
             HStack(spacing: 8) {
-                Image(systemName: "plus.circle.fill")
-                    .font(.system(size: 17, weight: .semibold))
-                Text("Add exercise").font(StrandFont.body)
+                Image(systemName: "plus")
+                    .font(.system(size: 15, weight: .semibold))
+                Text("Add exercise").font(StrandFont.headline)
             }
             .foregroundStyle(canAdd ? StrandPalette.gymAccent : StrandPalette.textTertiary)
-            .frame(maxWidth: .infinity)
-            .padding(.vertical, 14)
-            .background(
-                RoundedRectangle(cornerRadius: NoopMetrics.cardRadius, style: .continuous)
-                    .strokeBorder(StrandPalette.textTertiary.opacity(0.35),
-                                  style: StrokeStyle(lineWidth: 1, dash: [5, 4])))
+            .frame(maxWidth: .infinity, minHeight: NoopMetrics.controlHeight)
+            .gymCard()
             .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
@@ -185,14 +181,14 @@ struct LiftSessionView: View {
 
     private func header(_ engine: LiftSessionEngine) -> some View {
         VStack(alignment: .leading, spacing: NoopMetrics.space2) {
-            Text((session.programName ?? String(localized: "Session")).uppercased())
-                .font(StrandFont.rounded(30, weight: .black))
+            Text(session.programName ?? String(localized: "Session"))
+                .font(StrandFont.title1)
                 .foregroundStyle(StrandPalette.textPrimary)
                 .lineLimit(2)
                 .minimumScaleFactor(0.6)
             progressSegments(engine)
             Text(String(localized: "\(engine.completedWorkingSets) of \(engine.plannedWorkingSets) sets done"))
-                .font(StrandFont.captionNumber)
+                .font(StrandFont.footnote.monospacedDigit())
                 .foregroundStyle(StrandPalette.textSecondary)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -223,13 +219,13 @@ struct LiftSessionView: View {
 
     private func exerciseCard(_ engine: LiftSessionEngine, index: Int, item: LiftPlanItem) -> some View {
         let isCurrent = engine.currentSlot?.exerciseIndex == index
-        return NoopGlassCard(tint: isCurrent ? StrandPalette.statusPositive : nil) {
+        return VStack(alignment: .leading, spacing: NoopMetrics.rowSpacing) {
             VStack(alignment: .leading, spacing: NoopMetrics.rowSpacing) {
                 HStack(alignment: .top) {
                     VStack(alignment: .leading, spacing: 2) {
                         Text(item.exercise)
-                            .font(StrandFont.title2)
-                            .foregroundStyle(StrandPalette.textPrimary)
+                            .font(StrandFont.headline)
+                            .foregroundStyle(isCurrent ? StrandPalette.gymAccent : StrandPalette.textPrimary)
                         Text(LiftMuscleSummary.line(primary: item.primaryMuscle,
                                                     secondaries: item.secondaryMuscles))
                             .font(StrandFont.caption)
@@ -282,6 +278,11 @@ struct LiftSessionView: View {
                 setCountRow(engine, index: index, item: item)
             }
         }
+        .padding(NoopMetrics.gap)
+        .gymCard()
+        // The exercise being worked is the one bright element: an accent hairline, nothing else.
+        .overlay(RoundedRectangle(cornerRadius: 14, style: .continuous)
+            .stroke(StrandPalette.gymAccent.opacity(isCurrent ? 0.7 : 0), lineWidth: 1.5))
         .id(index)
     }
 
@@ -375,23 +376,25 @@ struct LiftSessionView: View {
 
     /// Width of the trailing tick column. Mirrored by a clear spacer in the heading row so the four
     /// labels sit over the four things they name.
-    private static let tickColumnWidth: CGFloat = 30
+    private static let tickColumnWidth: CGFloat = 36
 
     /// Width of the set-detail button column, mirrored by a clear spacer in the heading row.
     private static let detailColumnWidth: CGFloat = 24
 
     private var columnHeadings: some View {
         HStack(spacing: 8) {
-            Text("Set").strandOverline()
-                .frame(width: Self.setColumnWidth, alignment: .center)
-            Text(weightHeading).strandOverline().frame(maxWidth: .infinity, alignment: .leading)
-            Text("Reps").strandOverline().frame(maxWidth: .infinity, alignment: .leading)
-            Text("RPE").strandOverline().frame(maxWidth: .infinity, alignment: .leading)
+            Text("Set").frame(width: Self.setColumnWidth, alignment: .center)
+            Text(weightHeading).frame(maxWidth: .infinity, alignment: .center)
+            Text("Reps").frame(maxWidth: .infinity, alignment: .center)
+            Text("RPE").frame(maxWidth: .infinity, alignment: .center)
             Color.clear.frame(width: Self.detailColumnWidth)
             Color.clear.frame(width: Self.tickColumnWidth)
         }
+        .font(StrandFont.footnote)
+        .foregroundStyle(StrandPalette.textTertiary)
         .lineLimit(1)
         .minimumScaleFactor(0.8)
+        .padding(.horizontal, 8)
     }
 
     private var weightHeading: LocalizedStringKey {
@@ -427,7 +430,7 @@ struct LiftSessionView: View {
         .padding(.vertical, 8)
         .padding(.horizontal, 8)
         .background(rowBackground(isWorking: isWorking, done: recorded != nil),
-                    in: RoundedRectangle(cornerRadius: NoopMetrics.space3, style: .continuous))
+                    in: RoundedRectangle(cornerRadius: 12, style: .continuous))
     }
 
     /// What goes on the bar for this set's weight at the session's gym, or nil when there is no gym, the exercise
@@ -459,11 +462,11 @@ struct LiftSessionView: View {
                     .font(StrandFont.captionNumber.weight(.bold))
                     .foregroundStyle(isWarmup(slot)
                                      ? StrandPalette.metricAmber
-                                     : (isWorking ? StrandPalette.textPrimary
+                                     : (isWorking ? StrandPalette.gymAccent
                                                   : StrandPalette.textSecondary))
-                    .frame(width: 26, height: 26)
+                    .frame(width: 30, height: 30)
                     .background((isWarmup(slot) ? StrandPalette.metricAmber : StrandPalette.textTertiary).opacity(0.18),
-                                in: Circle())
+                                in: RoundedRectangle(cornerRadius: 8, style: .continuous))
                     .frame(width: Self.setColumnWidth, alignment: .center)
                     .contentShape(Rectangle())
             }
@@ -501,11 +504,11 @@ struct LiftSessionView: View {
                 if recorded == nil { session.start(slot) } else { session.start(slot) }
             } label: {
                 Image(systemName: "checkmark")
-                    .font(.system(size: 13, weight: .heavy))
-                    .foregroundStyle(recorded == nil ? StrandPalette.textTertiary : StrandPalette.goldDeepText)
-                    .frame(width: 28, height: 28)
-                    .background(recorded == nil ? StrandPalette.textTertiary.opacity(0.18) : StrandPalette.statusPositive,
-                                in: RoundedRectangle(cornerRadius: 8, style: .continuous))
+                    .font(.system(size: 14, weight: .bold))
+                    .foregroundStyle(recorded == nil ? StrandPalette.textTertiary : StrandPalette.onGymAccent)
+                    .frame(width: 32, height: 32)
+                    .background(recorded == nil ? StrandPalette.surfaceInset : StrandPalette.gymAccent,
+                                in: Circle())
             }
             .buttonStyle(.plain)
             .frame(width: Self.tickColumnWidth)
@@ -555,8 +558,8 @@ struct LiftSessionView: View {
     /// is over, and what is running is the gap after it. The rest is drawn as its own band between
     /// the two set rows instead — see `restBand`.
     private func rowBackground(isWorking: Bool, done: Bool) -> Color {
-        if isWorking { return StrandPalette.statusPositive.opacity(0.24) }
-        if done { return StrandPalette.statusPositive.opacity(0.08) }
+        if isWorking { return StrandPalette.gymAccent.opacity(0.16) }
+        if done { return StrandPalette.gymAccent.opacity(0.07) }
         return .clear
     }
 
@@ -583,7 +586,7 @@ struct LiftSessionView: View {
                     .foregroundStyle(StrandPalette.metricAmber)
                 Spacer(minLength: 0)
                 LiftRunningClock { engine.restRemaining(now: $0) ?? 0 }
-                    .font(StrandFont.rounded(34, weight: .heavy))
+                    .font(StrandFont.rounded(32, weight: .semibold).monospacedDigit())
                     .foregroundStyle(StrandPalette.metricAmber)
             }
             .lineLimit(1)
@@ -649,11 +652,15 @@ struct LiftSessionView: View {
                              text: Binding<String>, ghost: String) -> some View {
         TextField(ghost, text: text)
             .textFieldStyle(.plain)
-            .font(StrandFont.bodyNumber)
+            .multilineTextAlignment(.center)
+            .font(StrandFont.rounded(18, weight: .semibold).monospacedDigit())
             .foregroundStyle(StrandPalette.textPrimary)
             .numericKeyboard()
             .focused($focused, equals: field)
-            .frame(maxWidth: .infinity, alignment: .leading)
+            .frame(maxWidth: .infinity, minHeight: 40)
+            .background(StrandPalette.surfaceInset, in: RoundedRectangle(cornerRadius: 10, style: .continuous))
+            .overlay(RoundedRectangle(cornerRadius: 10, style: .continuous)
+                .stroke(StrandPalette.gymAccent, lineWidth: focused == field ? 1.5 : 0))
     }
 
     // MARK: - Ghost values
