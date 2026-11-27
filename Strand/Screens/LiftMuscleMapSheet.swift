@@ -96,6 +96,12 @@ struct BodyFigure {
 
 // MARK: - The figure
 
+/// One side of the body drawn as an anatomy plate: a pale, modelled body, every muscle given volume by a soft shadow
+/// inside its edge and a light from the top left, and the muscles the mode picks out painted in `color`, stronger the
+/// higher their level. All vector, from the MuscleMap outlines: no picture is shipped.
+///
+/// The body is made whole by drawing every outline once more, wide and in skin colour, under the muscles: the source
+/// artwork leaves gaps between muscles, which showed the card through and cut the body into pieces.
 struct BodyMapFigureView: View {
     let figure: BodyFigure
     let level: (LiftMuscle) -> Int
@@ -103,39 +109,87 @@ struct BodyMapFigureView: View {
     let selected: LiftMuscle?
     let onTap: (LiftMuscle?) -> Void
 
-    /// Shade steps for a trained muscle. Five levels, so "more colour = more" means one thing everywhere; the lowest
-    /// is strong enough to read as colour, not as a stain on the grey.
-    private static let opacities: [Double] = [0, 0.42, 0.62, 0.82, 1.0]
+    /// Strength of `color` per level (1...4). The lowest still reads as colour, not as a stain on the skin.
+    static let opacities: [Double] = [0, 0.55, 0.7, 0.85, 1.0]
 
     var body: some View {
         GeometryReader { geo in
-            Canvas { ctx, size in
-                let t = figure.transform(in: size)
-                // The parts that are not muscles (head, hands, knees, feet): a quiet neutral, so the body reads whole.
-                for p in figure.silhouette {
-                    ctx.fill(p.applying(t), with: .color(StrandPalette.textTertiary.opacity(0.22)))
-                }
-                for (muscle, path) in figure.regions {
-                    let shaded = path.applying(t)
-                    var lvl = level(muscle)
-                    for other in figure.blend[muscle] ?? [] { lvl = max(lvl, level(other)) }
-                    // An untouched muscle is a visible grey, never the card's own colour: drawn in the card colour it
-                    // vanished, and the body looked cut into pieces.
-                    ctx.fill(shaded, with: .color(lvl > 0 ? color.opacity(Self.opacities[min(lvl, 4)])
-                                                          : StrandPalette.textTertiary.opacity(0.38)))
-                    // The seams between muscles, so each one reads as its own shape.
-                    ctx.stroke(shaded, with: .color(StrandPalette.surfaceBase.opacity(0.9)), lineWidth: 1.2)
-                    if muscle == selected {
-                        ctx.stroke(shaded, with: .color(StrandPalette.textPrimary), lineWidth: 2)
-                    }
-                }
-            }
-            .contentShape(Rectangle())
-            .gesture(SpatialTapGesture().onEnded { value in
-                onTap(figure.muscle(at: value.location, in: geo.size))
-            })
+            Canvas { ctx, size in draw(&ctx, size) }
+                .contentShape(Rectangle())
+                .gesture(SpatialTapGesture().onEnded { value in
+                    onTap(figure.muscle(at: value.location, in: geo.size))
+                })
         }
         .aspectRatio(figure.viewBox.width / figure.viewBox.height, contentMode: .fit)
+        .accessibilityHidden(true)
+    }
+
+    private func draw(_ ctx: inout GraphicsContext, _ size: CGSize) {
+        let t = figure.transform(in: size)
+        // Widths are given in the artwork's units and scaled with it, so the plate looks the same at any size.
+        let k = min(size.width / figure.viewBox.width, size.height / figure.viewBox.height)
+        let bounds = figure.viewBox.applying(t)
+        let skin = GraphicsContext.Shading.linearGradient(
+            Gradient(colors: [StrandPalette.anatomySkinTop, StrandPalette.anatomySkinBottom]),
+            startPoint: CGPoint(x: bounds.midX, y: bounds.minY), endPoint: CGPoint(x: bounds.midX, y: bounds.maxY))
+
+        let silhouette = figure.silhouette.map { $0.applying(t) }
+        let muscles = figure.regions.map { (muscle: $0.muscle, path: $0.path.applying(t)) }
+
+        // 1. The whole body, gaps closed.
+        for p in silhouette + muscles.map(\.path) {
+            ctx.stroke(p, with: skin, style: StrokeStyle(lineWidth: 30 * k, lineCap: .round, lineJoin: .round))
+            ctx.fill(p, with: skin)
+        }
+        // 2. Head, hands, knees and feet: skin with volume.
+        for p in silhouette { volume(&ctx, p, k: k, shadow: StrandPalette.anatomyShadow) }
+
+        // 3. The muscles.
+        for (muscle, p) in muscles {
+            var lvl = level(muscle)
+            for other in figure.blend[muscle] ?? [] { lvl = max(lvl, level(other)) }
+            let box = p.boundingRect
+            let lit = CGPoint(x: box.minX, y: box.minY)
+            let shade = CGPoint(x: box.minX + box.width * 0.6, y: box.maxY)
+            if lvl > 0 {
+                ctx.fill(p, with: .color(color.opacity(Self.opacities[min(lvl, 4)])))
+                // The same light as the skin: brighter top left, deeper bottom right.
+                ctx.fill(p, with: .linearGradient(
+                    Gradient(colors: [StrandPalette.anatomyMuscleLight.opacity(0.35), .clear,
+                                      StrandPalette.anatomySeam.opacity(0.35)]),
+                    startPoint: lit, endPoint: shade))
+            } else {
+                ctx.fill(p, with: .linearGradient(
+                    Gradient(colors: [StrandPalette.anatomyMuscleLight, StrandPalette.anatomyMuscleShade]),
+                    startPoint: lit, endPoint: shade))
+            }
+            volume(&ctx, p, k: k, shadow: lvl > 0 ? StrandPalette.anatomySeam : StrandPalette.anatomyShadow)
+            ctx.stroke(p, with: .color(StrandPalette.anatomySeam.opacity(0.45)), lineWidth: max(0.5, 1.0 * k))
+        }
+
+        // 4. The selected muscle, outlined over everything.
+        if let selected {
+            for (muscle, p) in muscles where muscle == selected {
+                ctx.stroke(p, with: .color(StrandPalette.anatomySeam), lineWidth: max(1.5, 4 * k))
+                ctx.stroke(p, with: .color(StrandPalette.anatomyMuscleLight), lineWidth: max(0.75, 1.5 * k))
+            }
+        }
+    }
+
+    /// A soft shadow just inside the outline and a thin light on its top-left edge: what turns a flat shape into a
+    /// rounded muscle.
+    private func volume(_ ctx: inout GraphicsContext, _ p: Path, k: CGFloat, shadow: Color) {
+        ctx.drawLayer { layer in
+            layer.clip(to: p)
+            layer.addFilter(.blur(radius: 6 * k))
+            layer.stroke(p, with: .color(shadow.opacity(0.42)), lineWidth: 14 * k)
+        }
+        ctx.drawLayer { layer in
+            layer.clip(to: p)
+            layer.addFilter(.blur(radius: 3 * k))
+            layer.stroke(p.offsetBy(dx: -2 * k, dy: -2 * k),
+                         with: .color(StrandPalette.anatomyMuscleLight.opacity(0.22)), lineWidth: 3 * k)
+        }
     }
 }
 
@@ -206,7 +260,7 @@ struct LiftMuscleMapSheet: View {
 
     private var tint: Color {
         switch mode {
-        case .recovery: return StrandPalette.statusWarning
+        case .recovery: return StrandPalette.metricRose
         case .volume: return StrandPalette.effortColor
         case .neglect: return StrandPalette.metricAmber
         }
@@ -216,11 +270,17 @@ struct LiftMuscleMapSheet: View {
         NoopCard {
             VStack(alignment: .leading, spacing: NoopMetrics.rowSpacing) {
                 if let sides {
-                    HStack(spacing: 8) {
+                    HStack(spacing: NoopMetrics.space3) {
                         BodyMapFigureView(figure: sides.front, level: levelOf, color: tint, selected: selected) { selected = $0 }
                         BodyMapFigureView(figure: sides.back, level: levelOf, color: tint, selected: selected) { selected = $0 }
                     }
                     .frame(maxHeight: 520)
+                    .padding(.vertical, NoopMetrics.space5)
+                    .padding(.horizontal, NoopMetrics.space3)
+                    .frame(maxWidth: .infinity)
+                    // An anatomy plate: a pale body on a dark stage, in light mode too.
+                    .background(StrandPalette.anatomyStage,
+                                in: RoundedRectangle(cornerRadius: NoopMetrics.glassTileRadius, style: .continuous))
                     legend
                     Text("Tap a muscle for its numbers.")
                         .font(StrandFont.footnote)
@@ -245,9 +305,9 @@ struct LiftMuscleMapSheet: View {
         HStack(spacing: NoopMetrics.space2) {
             Text("Less").font(StrandFont.caption).foregroundStyle(StrandPalette.textTertiary)
             RoundedRectangle(cornerRadius: 3, style: .continuous)
-                .fill(StrandPalette.textTertiary.opacity(0.38))
+                .fill(StrandPalette.anatomyMuscleShade)
                 .frame(width: 18, height: 10)
-            ForEach([0.42, 0.62, 0.82, 1.0], id: \.self) { step in
+            ForEach(Array(BodyMapFigureView.opacities.dropFirst()), id: \.self) { step in
                 RoundedRectangle(cornerRadius: 3, style: .continuous)
                     .fill(tint.opacity(step))
                     .frame(width: 18, height: 10)

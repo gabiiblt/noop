@@ -44,8 +44,26 @@ final class SVGPathDataTests: XCTestCase {
         XCTAssertEqual(out[2], .quad(cx: 15, cy: -10, x: 20, y: 0))
     }
 
-    func testAnArcStopsTheReadInsteadOfGuessing() {
-        XCTAssertEqual(SVGPathData.parse("M0 0L1 1A5 5 0 0 1 9 9L2 2"), [.move(x: 0, y: 0), .line(x: 1, y: 1)])
+    /// A half circle from (0,0) to (10,0), sweeping the positive way (up the screen): two quarter-turn curves through
+    /// the top point (5,-5), and the read carries on after it.
+    func testAnArcBecomesQuarterTurnCurves() throws {
+        let out = SVGPathData.parse("M0 0A5 5 0 0 1 10 0L20 0")
+        XCTAssertEqual(out.count, 4)
+        guard case .cubic(_, _, _, _, let mx, let my) = out[1],
+              case .cubic(_, _, _, _, let ex, let ey) = out[2] else { return XCTFail("\(out)") }
+        XCTAssertEqual(mx, 5, accuracy: 1e-9); XCTAssertEqual(my, -5, accuracy: 1e-9)
+        XCTAssertEqual(ex, 10, accuracy: 1e-9); XCTAssertEqual(ey, 0, accuracy: 1e-9)
+        XCTAssertEqual(out[3], .line(x: 20, y: 0))
+    }
+
+    /// The artwork writes the two flags with no separator: "0110 0" is large 0, sweep 1, then 10 and 0.
+    func testArcFlagsRunTogetherAndRelativeArcs() {
+        XCTAssertEqual(SVGPathData.parse("M0 0a5 5 0 0110 0"), SVGPathData.parse("M0 0A5 5 0 0 1 10 0"))
+    }
+
+    func testDegenerateArcs() {
+        XCTAssertEqual(SVGPathData.parse("M0 0A0 5 0 0 1 10 0"), [.move(x: 0, y: 0), .line(x: 10, y: 0)])
+        XCTAssertEqual(SVGPathData.parse("M3 3A5 5 0 0 1 3 3"), [.move(x: 3, y: 3)])
     }
 
     func testGarbageAndEmptyReadAsNothingWithoutCrashing() {
@@ -89,6 +107,11 @@ final class SVGPathDataTests: XCTestCase {
                 for d in view.silhouette + view.regions.values.flatMap({ $0 }) {
                     let segments = SVGPathData.parse(d)
                     XCTAssertFalse(segments.isEmpty, "\(body)/\(side) unreadable: \(d.prefix(40))")
+                    // Read to the end: as many closes as the string has. A read that stops early (as at an arc, once)
+                    // drops the closes after it and draws a muscle cut short.
+                    XCTAssertEqual(segments.filter { $0 == .close }.count,
+                                   d.filter { $0 == "z" || $0 == "Z" }.count,
+                                   "\(body)/\(side) stops early: \(d.prefix(40))")
                     XCTAssertEqual(segments.first, segments.first.flatMap { if case .move = $0 { return $0 } else { return nil } },
                                    "\(body)/\(side) does not start with a move")
                     let box = try XCTUnwrap(SVGPathData.bounds(segments))

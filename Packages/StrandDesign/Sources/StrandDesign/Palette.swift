@@ -285,6 +285,22 @@ public enum StrandPalette {
 
     /// Effort (strain) — amber world / Classic blue.
     public static var effortColor: Color   { isClassic ? Color(light: "#3A74C4", dark: "#4A90E2") : Color(light: "#2A78C8", dark: "#4090E0") }
+
+    // MARK: Anatomy (the muscle map)
+    //
+    // An anatomy plate reads the same in light and dark: a pale body on a dark stage, so these hold one value in both.
+    /// The body's skin, top and bottom of its gradient.
+    public static let anatomySkinTop     = Color(light: "#D9D9DC", dark: "#D9D9DC")
+    public static let anatomySkinBottom  = Color(light: "#A9A9AE", dark: "#A9A9AE")
+    /// An untrained muscle, lit from the top left.
+    public static let anatomyMuscleLight = Color(light: "#FAFAFA", dark: "#FAFAFA")
+    public static let anatomyMuscleShade = Color(light: "#BDBDC1", dark: "#BDBDC1")
+    /// The soft shadow inside a muscle's edge that gives it volume.
+    public static let anatomyShadow      = Color(light: "#55555A", dark: "#55555A")
+    /// The fine line between two muscles, and the outline of the one selected.
+    public static let anatomySeam        = Color(light: "#2E2E34", dark: "#2E2E34")
+    /// The dark stage the body stands on.
+    public static let anatomyStage       = Color(light: "#0E0F12", dark: "#0B0C0F")
     public static var effortDeep: Color    { isClassic ? Color(light: "#284F9C", dark: "#2F6FCB") : Color(light: "#1E5B96", dark: "#2A6FB0") }
     public static var effortBright: Color  { isClassic ? Color(light: "#5E92D6", dark: "#7FB2E8") : Color(light: "#5AA0E0", dark: "#74B6F0") }
     public static var effortGlow: Color    { isClassic ? Color(light: "#3A74C4", dark: "#4A90E2") : Color(light: "#2A78C8", dark: "#4090E0") }
