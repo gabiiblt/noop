@@ -91,7 +91,7 @@ struct WorkoutSelectionScreen: View {
                 ToolbarItem(placement: .topBarTrailingCompat) {
                     Button { dismiss() } label: {
                         Image(systemName: "xmark")
-                            .font(.system(size: 15, weight: .semibold))
+                            .font(.system(size: 16, weight: .semibold))
                             .foregroundStyle(StrandPalette.textPrimary)
                             .frame(width: 34, height: 34)
                             .contentShape(Circle())
@@ -305,7 +305,7 @@ struct WorkoutActivityMetadataView: View {
                 HStack(spacing: 4) {
                     if let symbol = item.symbol {
                         Image(systemName: symbol)
-                            .font(.system(size: 11, weight: .semibold))
+                            .font(.system(size: 12, weight: .semibold))
                     }
                     Text(item.text)
                         .font(StrandFont.footnote)

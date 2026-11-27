@@ -111,7 +111,7 @@ struct LabBookView: View {
     private var headerCard: some View {
         NoopCard(tint: StrandPalette.metricCyan) {
             VStack(alignment: .leading, spacing: 12) {
-                HStack(spacing: 10) {
+                HStack(spacing: 12) {
                     Image(systemName: "books.vertical.fill")
                         .font(.system(size: 16, weight: .semibold))
                         .foregroundStyle(StrandPalette.metricCyan)
@@ -169,8 +169,8 @@ struct LabBookView: View {
 
     private var importCard: some View {
         NoopCard(padding: 18, tint: StrandPalette.metricAmber) {
-            VStack(alignment: .leading, spacing: 10) {
-                HStack(spacing: 10) {
+            VStack(alignment: .leading, spacing: 12) {
+                HStack(spacing: 12) {
                     Image(systemName: "tray.and.arrow.down.fill")
                         .font(.system(size: 16, weight: .semibold))
                         .foregroundStyle(StrandPalette.metricAmber)
@@ -184,7 +184,7 @@ struct LabBookView: View {
                     .font(StrandFont.subhead)
                     .foregroundStyle(StrandPalette.textSecondary)
                     .fixedSize(horizontal: false, vertical: true)
-                HStack(spacing: 10) {
+                HStack(spacing: 12) {
                     Button {
                         presentCsvImporter()
                     } label: {
@@ -317,7 +317,7 @@ struct LabBookView: View {
 
     private var emptyState: some View {
         NoopCard {
-            VStack(alignment: .leading, spacing: 10) {
+            VStack(alignment: .leading, spacing: 12) {
                 Image(systemName: "square.and.pencil")
                     .font(StrandFont.headline)
                     .foregroundStyle(StrandPalette.metricCyan)
@@ -410,7 +410,7 @@ struct LabBookView: View {
     // MARK: - Disclaimer (always visible footnote + link)
 
     private var disclaimerNote: some View {
-        VStack(alignment: .leading, spacing: 6) {
+        VStack(alignment: .leading, spacing: 8) {
             Text("Lab Book is a private notebook, not a medical service. NOOP stores and lines up the numbers you enter. It doesn't test, read, diagnose, or advise. Your records never leave \(Platform.deviceNounPhrase); there's no account or cloud, so it isn't \"HIPAA-covered.\" Always rely on your doctor or pharmacist to interpret results.")
                 .font(StrandFont.footnote)
                 .foregroundStyle(StrandPalette.textTertiary)
@@ -654,7 +654,7 @@ private struct MarkerDetailView: View {
         VStack(alignment: .leading, spacing: NoopMetrics.gap) {
             SectionHeader("Trend", overline: "your readings over time")
             NoopCard(tint: StrandPalette.metricCyan) {
-                VStack(alignment: .leading, spacing: 10) {
+                VStack(alignment: .leading, spacing: 12) {
                     let nums = numericReadings.compactMap { $0.value }
                     if nums.count > 1 {
                         Sparkline(values: nums,
@@ -667,7 +667,7 @@ private struct MarkerDetailView: View {
                         .foregroundStyle(StrandPalette.textSecondary)
                         .fixedSize(horizontal: false, vertical: true)
                     if let ref = latestReferenceText {
-                        HStack(spacing: 6) {
+                        HStack(spacing: 8) {
                             SourceBadge("from your report", tint: StrandPalette.textTertiary)
                             Text(ref)
                                 .font(StrandFont.footnote)
@@ -757,7 +757,7 @@ private struct MarkerDetailView: View {
                 Button(role: .destructive) { signal = nil } label: { Label("Clear", systemImage: "xmark") }
             }
         } label: {
-            HStack(spacing: 6) {
+            HStack(spacing: 8) {
                 Image(systemName: "plus.circle.fill")
                 Text(signal?.title ?? "Choose a signal")
                     .font(StrandFont.subhead)
@@ -799,7 +799,7 @@ private struct MarkerDetailView: View {
     private func pairResult(_ c: Correlation, n: Int) -> some View {
         let tint = LabBookSignals.correlationColor(c.r)
         return VStack(alignment: .leading, spacing: 8) {
-            HStack(spacing: 10) {
+            HStack(spacing: 12) {
                 // A small liquid vessel posed at the association STRENGTH (|r|, a neutral 0–1 statistical
                 // magnitude — never a clinical value), tinted by the relationship's own colour. Matches
                 // Compare's pair card. Decorative — the r read-out + sentence carry the meaning.
@@ -875,13 +875,13 @@ private struct MarkerDetailView: View {
                 Task { await onDelete(row.id) }
             } label: {
                 Image(systemName: "trash")
-                    .font(.system(size: 13))
+                    .font(.system(size: 14))
                     .foregroundStyle(StrandPalette.statusCritical)
             }
             .buttonStyle(.plain)
             .accessibilityLabel("Delete this reading")
         }
-        .padding(.vertical, 9)
+        .padding(.vertical, 8)
         .accessibilityElement(children: .combine)
     }
 
@@ -1029,10 +1029,10 @@ private struct LabBookDisclaimerView: View {
     }
 
     private func bullet(_ text: String) -> some View {
-        HStack(alignment: .top, spacing: 10) {
+        HStack(alignment: .top, spacing: 12) {
             Circle().fill(StrandPalette.metricCyan)
                 .frame(width: 6, height: 6)
-                .padding(.top, 7)
+                .padding(.top, 8)
                 .accessibilityHidden(true)
             Text(text)
                 .font(StrandFont.subhead)

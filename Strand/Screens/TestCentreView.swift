@@ -913,7 +913,7 @@ private struct TestModeRow: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 6) {
+        VStack(alignment: .leading, spacing: 8) {
             HStack(spacing: 12) {
                 Image(systemName: mode.icon)
                     .foregroundStyle(StrandPalette.accent).frame(width: 24)

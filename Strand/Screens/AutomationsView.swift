@@ -127,7 +127,7 @@ struct AutomationsView: View {
         Section2(icon: "hand.tap.fill", title: String(localized: "Double-tap"),
                  blurb: String(localized: "Double-tap the strap to trigger an action on \(Platform.deviceNounPhrase). (The strap exposes a single double-tap gesture.)"),
                  active: behavior.doubleTapAction != .none) {
-            VStack(alignment: .leading, spacing: 14) {
+            VStack(alignment: .leading, spacing: 16) {
                 HStack {
                     Text("When I double-tap").font(StrandFont.body).foregroundStyle(StrandPalette.textPrimary)
                     Spacer()
@@ -160,7 +160,7 @@ struct AutomationsView: View {
     }
 
     private var momentsView: some View {
-        VStack(alignment: .leading, spacing: 6) {
+        VStack(alignment: .leading, spacing: 8) {
             HStack {
                 Text("Recent moments").strandOverline()
                 Spacer()
@@ -260,7 +260,7 @@ struct AutomationsView: View {
                             .font(StrandFont.footnote)
                             .foregroundStyle(StrandPalette.statusWarning)
                             .frame(maxWidth: .infinity, alignment: .leading)
-                            .padding(.top, 6)
+                            .padding(.top, 8)
                     }
                     rowDivider
                     stepperRow(label: String(localized: "Sitting for"), help: String(localized: "Minutes seated before the first nudge."),
@@ -543,7 +543,7 @@ private struct Section2<Content: View>: View {
                                 .foregroundStyle(StrandPalette.accent)
                         }
                     }
-                    HStack(spacing: 10) {
+                    HStack(spacing: 12) {
                         Image(systemName: icon)
                             .foregroundStyle(active ? StrandPalette.accent : StrandPalette.textSecondary)
                             .accessibilityHidden(true)

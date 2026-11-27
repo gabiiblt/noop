@@ -1295,14 +1295,14 @@ struct TodayView: View {
     /// Apple-style large-title header: a tappable "Today ⌄" + full date on the left (taps to change day),
     /// then updates / quick-add / and an OBVIOUS menu avatar (opens Settings) on the right.
     @ViewBuilder private var todayTopBar: some View {
-        HStack(alignment: .center, spacing: 10) {
+        HStack(alignment: .center, spacing: 12) {
             Button { showDayPicker = true } label: {
                 // Just the date, small (locale numeric), no relative word and no prev/next arrows. Every ~10s
                 // it swaps for ~1.5s to a one-word "Swipe" / "Tap" hint in the accent colour so users learn
                 // they can change the day by swiping across or tapping here. fixedSize makes it claim its own
                 // width so a tight top bar never compresses it, and the trailing icon cluster keeps its room.
                 Text(dayNavHint ?? dayNavDateText)
-                    .font(.system(size: 13, weight: .semibold, design: .rounded))
+                    .font(.system(size: 14, weight: .semibold, design: .rounded))
                     .foregroundStyle(dayNavHint != nil ? StrandPalette.accent : StrandPalette.textPrimary)
                     .lineLimit(1)
                     .fixedSize()
@@ -1337,7 +1337,7 @@ struct TodayView: View {
                 // Updates bell.
                 Button { showUpdatesInbox = true } label: {
                     Image(systemName: updateStore.unreadCount > 0 ? "bell.badge" : "bell")
-                        .font(.system(size: 15, weight: .medium))
+                        .font(.system(size: 16, weight: .medium))
                         .symbolRenderingMode(.hierarchical)
                         .foregroundStyle(StrandPalette.textSecondary)
                         .frame(width: 36, height: 36)
@@ -1345,7 +1345,7 @@ struct TodayView: View {
                         .overlay(alignment: .topTrailing) {
                             if updateStore.unreadCount > 0 {
                                 Text("\(min(updateStore.unreadCount, 99))")
-                                    .font(.system(size: 9, weight: .bold, design: .rounded))
+                                    .font(.system(size: 10, weight: .semibold, design: .rounded))
                                     .monospacedDigit()
                                     .foregroundStyle(StrandPalette.goldDeepText)
                                     .padding(.horizontal, 3.5).padding(.vertical, 1)
@@ -1361,7 +1361,7 @@ struct TodayView: View {
                 // Quick-action + (the accented primary, gold, same 36 size as the rest).
                 Button { router.requestQuickActions() } label: {
                     Image(systemName: "plus")
-                        .font(.system(size: 17, weight: .bold))
+                        .font(.system(size: 18, weight: .bold))
                         .foregroundStyle(StrandPalette.goldDeepText)
                         .frame(width: 36, height: 36)
                         .background(Circle().fill(StrandPalette.accent))
@@ -1423,7 +1423,7 @@ struct TodayView: View {
                 .overlay(alignment: .topTrailing) {
                     if updateStore.unreadCount > 0 {
                         Text("\(min(updateStore.unreadCount, 99))")
-                            .font(.system(size: 9, weight: .bold, design: .rounded))
+                            .font(.system(size: 10, weight: .semibold, design: .rounded))
                             .monospacedDigit()
                             .foregroundStyle(StrandPalette.goldDeepText)
                             // Fixed 14pt square + Circle() = a true CIRCLE on both platforms, kept INSIDE
@@ -1734,7 +1734,7 @@ struct TodayView: View {
                           overline: lastScoredRecoveryDay.map { "\(carriedCaption($0))" } ?? "Should you push today?")
             NoopCard {
                     VStack(alignment: .leading, spacing: 12) {
-                        HStack(spacing: 10) {
+                        HStack(spacing: 12) {
                             Circle().fill(readinessColor(r.level)).frame(width: 10, height: 10)
                                 .accessibilityHidden(true)
                             Text(headline).font(StrandFont.headline)
@@ -1768,7 +1768,7 @@ struct TodayView: View {
                                     // for colour-blind users; hidden from VoiceOver since the
                                     // flag word is folded into the row's combined label below.
                                     Image(systemName: flagSymbol(s.flag))
-                                        .font(.system(size: 9, weight: .semibold))
+                                        .font(.system(size: 10, weight: .semibold))
                                         .foregroundStyle(flagColor(s.flag))
                                         .padding(.top, 4)
                                         .accessibilityHidden(true)
@@ -2096,7 +2096,7 @@ struct TodayView: View {
                     .font(.system(size: 16, weight: .semibold))
                     .foregroundStyle(StrandPalette.chargeColor)
                     .accessibilityHidden(true)
-                VStack(alignment: .leading, spacing: 3) {
+                VStack(alignment: .leading, spacing: 4) {
                     Text(ChargeBreakdownFormat.chargeDeepWindowGapTitle)
                         .font(StrandFont.headline)
                         .foregroundStyle(StrandPalette.textPrimary)
@@ -2127,7 +2127,7 @@ struct TodayView: View {
                     .font(.system(size: 16, weight: .semibold))
                     .foregroundStyle(StrandPalette.chargeColor)
                     .accessibilityHidden(true)
-                VStack(alignment: .leading, spacing: 3) {
+                VStack(alignment: .leading, spacing: 4) {
                     HStack(alignment: .firstTextBaseline, spacing: 8) {
                         Text(countdown)
                             .font(StrandFont.headline)
@@ -2206,7 +2206,7 @@ struct TodayView: View {
                     NavigationLink {
                         ScoringGuideView(initialSection: .charge, onClose: { showChargeBreakdown = false })
                     } label: {
-                        HStack(spacing: 10) {
+                        HStack(spacing: 12) {
                             Image(systemName: "function")
                                 .font(.system(size: 14, weight: .semibold))
                                 .foregroundStyle(StrandPalette.chargeColor)
@@ -2221,7 +2221,7 @@ struct TodayView: View {
                                 .font(.system(size: 12, weight: .semibold))
                                 .foregroundStyle(StrandPalette.textTertiary)
                         }
-                        .padding(14)
+                        .padding(16)
                         .background(NoopPanelSurface(cornerRadius: NoopMetrics.radiusCompact))
                         .contentShape(Rectangle())
                     }
@@ -2316,7 +2316,7 @@ struct TodayView: View {
             synthesisCollapsible(d: d, score: score)
 
             if let note = effortZeroNote {
-                HStack(alignment: .top, spacing: 6) {
+                HStack(alignment: .top, spacing: 8) {
                     Image(systemName: "info.circle")
                         .font(StrandFont.footnote)
                         .foregroundStyle(StrandPalette.effortColor)
@@ -2390,7 +2390,7 @@ struct TodayView: View {
                         }
                         Spacer(minLength: 8)
                         Image(systemName: "chevron.down")
-                            .font(.system(size: 12, weight: .bold))
+                            .font(.system(size: 12, weight: .semibold))
                             .foregroundStyle(StrandPalette.textTertiary)
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
@@ -2415,8 +2415,8 @@ struct TodayView: View {
                 .font(StrandFont.overline)
                 .tracking(StrandFont.overlineTracking)
                 .foregroundStyle(readinessColor(readiness.level))
-                .padding(.horizontal, 10)
-                .padding(.vertical, 5)
+                .padding(.horizontal, 12)
+                .padding(.vertical, 4)
                 .background(Capsule(style: .continuous).fill(readinessColor(readiness.level).opacity(0.12)))
                 .overlay(Capsule(style: .continuous).stroke(readinessColor(readiness.level).opacity(0.32), lineWidth: 1))
                 .contentShape(Capsule())
@@ -2496,7 +2496,7 @@ struct TodayView: View {
             // only the display. `DaytimeLoadLine` is the tab's OWN line, so the host cannot drift into
             // a second drawing of the same day.
             NoopCard(tint: StressRamp.calm) {
-                VStack(alignment: .leading, spacing: 14) {
+                VStack(alignment: .leading, spacing: 16) {
                     Text("Stress through the day").strandOverline()
                     if hostedStressHours.contains(where: { $0.level != nil }) {
                         DaytimeLoadLine(hours: hostedStressHours)
@@ -2828,7 +2828,7 @@ struct TodayView: View {
             RoundedRectangle(cornerRadius: NoopMetrics.radiusChip, style: .continuous)
                 .fill(tint.opacity(0.14))
                 .frame(width: 34, height: 34)
-                .overlay(Image(systemName: icon).font(.system(size: 15, weight: .semibold)).foregroundStyle(tint))
+                .overlay(Image(systemName: icon).font(.system(size: 16, weight: .semibold)).foregroundStyle(tint))
             VStack(alignment: .leading, spacing: 2) {
                 Text(title.uppercased())
                     .font(StrandFont.overline)
@@ -2846,10 +2846,10 @@ struct TodayView: View {
             let isPlaceholder = (value == "—" || value == Self.calibratingPlaceholder)
             Text(value).font(StrandFont.rounded(18, weight: .semibold))
                 .foregroundStyle(isPlaceholder ? StrandPalette.textTertiary : StrandPalette.textPrimary)
-            Image(systemName: "chevron.right").font(.system(size: 13, weight: .semibold))
+            Image(systemName: "chevron.right").font(.system(size: 14, weight: .semibold))
                 .foregroundStyle(StrandPalette.textTertiary)
         }
-        .padding(.horizontal, 13).padding(.vertical, 11)
+        .padding(.horizontal, 12).padding(.vertical, 12)
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(FrostedCardSurface(cornerRadius: NoopMetrics.cardRadius))
         .contentShape(Rectangle())
@@ -3005,7 +3005,7 @@ struct TodayView: View {
                             .foregroundStyle(StrandPalette.textTertiary)
                         Spacer(minLength: 0)
                     }
-                    .padding(.top, 10)
+                    .padding(.top, 12)
                     .accessibilityElement(children: .combine)
                     .accessibilityLabel("These vitals are from \(carriedCaption(prior))")
                 }
@@ -3038,7 +3038,7 @@ struct TodayView: View {
                                _ unit: String, _ tint: Color, linked: Bool) -> some View {
         HStack(spacing: 12) {
             Image(systemName: icon)
-                .font(.system(size: 15, weight: .semibold))
+                .font(.system(size: 16, weight: .semibold))
                 .foregroundStyle(tint)
                 .frame(width: 22)
                 .accessibilityHidden(true)
@@ -3050,7 +3050,7 @@ struct TodayView: View {
                 .tracking(0.6)
                 .foregroundStyle(StrandPalette.textSecondary)
             Spacer(minLength: 8)
-            HStack(alignment: .firstTextBaseline, spacing: 3) {
+            HStack(alignment: .firstTextBaseline, spacing: 4) {
                 Text(value)
                     .font(StrandFont.number(24))
                     .foregroundStyle(StrandPalette.textPrimary)
@@ -3066,7 +3066,7 @@ struct TodayView: View {
                     .accessibilityHidden(true)
             }
         }
-        .padding(.vertical, 13)
+        .padding(.vertical, 12)
         .accessibilityElement(children: .combine)
         .accessibilityLabel("\(label): \(value) \(unit)")
     }
@@ -3321,7 +3321,7 @@ struct TodayView: View {
             // Charge ring). Charge's chevron opens the "what shaped it" breakdown (its richest explanation);
             // Effort / Rest open their scoring-guide section.
             Button { if let onOpenBreakdown { onOpenBreakdown() } else { guideSection = section } } label: {
-                HStack(spacing: 3) {
+                HStack(spacing: 4) {
                     // #937: an invisible LEADING twin of the trailing chevron. The word + chevron used to
                     // centre as ONE block, which pushed the word visibly off the ring's axis (worst on short
                     // labels like REST). Balancing the row with a same-sized clear chevron re-centres the
@@ -3330,7 +3330,7 @@ struct TodayView: View {
                     // plain leading-to-trailing content with no alignment-guide math, so LTR and RTL mirror
                     // identically. Hidden from VoiceOver: it is a spacer, not content.
                     Image(systemName: "chevron.right")
-                        .font(.system(size: 9, weight: .bold))
+                        .font(.system(size: 10, weight: .semibold))
                         .opacity(0)
                         .accessibilityHidden(true)
                     // The CHARGE/EFFORT/REST hero label is localized: the catalog key is the natural-case
@@ -3341,7 +3341,7 @@ struct TodayView: View {
                         .font(StrandFont.overline)
                         .tracking(StrandFont.overlineTracking)
                     Image(systemName: "chevron.right")
-                        .font(.system(size: 9, weight: .bold))
+                        .font(.system(size: 10, weight: .semibold))
                         .opacity(0.6)
                 }
                 .foregroundStyle(StrandPalette.textSecondary)
@@ -3470,7 +3470,7 @@ struct TodayView: View {
     /// number. Mirrors Android's RingNeedsTrackedNight.
     @ViewBuilder
     private func ringNeedsTrackedNight() -> some View {
-        VStack(spacing: 3) {
+        VStack(spacing: 4) {
             Text("Calibrating").font(StrandFont.headline).foregroundStyle(StrandPalette.textTertiary)
                 .lineLimit(1).minimumScaleFactor(0.7).fixedSize()
             Text("needs a tracked night").font(StrandFont.footnote).foregroundStyle(StrandPalette.textSecondary)
@@ -3539,7 +3539,7 @@ struct TodayView: View {
     /// an empty track, #802). This overlay therefore only covers the calibrating and no-data cases.
     @ViewBuilder
     private func ringEmptyOverlay(d: DailyMetric?, diameter: CGFloat) -> some View {
-        VStack(spacing: 3) {
+        VStack(spacing: 4) {
             if let n = recoveryCalibration {
                 // "Calibrating" is a long word for the ring's interior, it reads as the centre label, with
                 // the same lineLimit/scaleFactor guard so it never wraps, then its "N of 4" subtitle below.
@@ -3863,7 +3863,7 @@ struct TodayView: View {
         return Button {
             withAnimation(StrandMotion.interactive) { metricsExpanded.toggle() }
         } label: {
-            HStack(spacing: 6) {
+            HStack(spacing: 8) {
                 Text(metricsExpanded
                      ? String(localized: "Show fewer")
                      : String(localized: "Show all metrics"))
@@ -3874,7 +3874,7 @@ struct TodayView: View {
                         .foregroundStyle(StrandPalette.textTertiary)
                 }
                 Image(systemName: metricsExpanded ? "chevron.up" : "chevron.down")
-                    .font(.system(size: 11, weight: .bold))
+                    .font(.system(size: 12, weight: .semibold))
             }
             .foregroundStyle(StrandPalette.accent)
             .frame(maxWidth: .infinity)
@@ -4226,7 +4226,7 @@ struct TodayView: View {
                                 Text("Synced from").strandOverline()
                                 Spacer()
                                 Image(systemName: "chevron.up")
-                                    .font(.system(size: 11, weight: .bold))
+                                    .font(.system(size: 12, weight: .semibold))
                                     .foregroundStyle(StrandPalette.textTertiary)
                             }
                             .contentShape(Rectangle())
@@ -4305,7 +4305,7 @@ struct TodayView: View {
                         .minimumScaleFactor(0.85)
                     Spacer(minLength: 8)
                     Image(systemName: "chevron.right")
-                        .font(.system(size: 11, weight: .bold))
+                        .font(.system(size: 12, weight: .semibold))
                         .foregroundStyle(StrandPalette.textTertiary)
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -4332,7 +4332,7 @@ struct TodayView: View {
 
     @ViewBuilder
     private func sourceRow(badge: String, tint: Color, present: Bool, detail: String) -> some View {
-        HStack(spacing: 10) {
+        HStack(spacing: 12) {
             SourceBadge("\(badge)", tint: present ? tint : StrandPalette.textTertiary)
             Spacer()
             Text(present ? detail : String(localized: "Not connected"))
@@ -4359,7 +4359,7 @@ struct TodayView: View {
             guideSection = section
         } label: {
             Image(systemName: "info.circle")
-                .font(.system(size: 13, weight: .regular))
+                .font(.system(size: 14, weight: .regular))
                 .foregroundStyle(StrandPalette.textTertiary)
                 .padding(8)
                 .contentShape(Rectangle())
@@ -5672,7 +5672,7 @@ private struct StrapSyncRow: View {
     var body: some View {
         if !live.backfilling {
             TimelineView(.periodic(from: .now, by: 60)) { context in
-                HStack(alignment: .top, spacing: 10) {
+                HStack(alignment: .top, spacing: 12) {
                     SourceBadge("Strap sync",
                                 tint: live.lastSyncError != nil ? StrandPalette.statusWarning
                                     : live.lastSyncedAt != nil ? StrandPalette.accent
@@ -5746,12 +5746,12 @@ private struct StrapBatteryRow: View {
         // #2208: the strap's charge only when the strap is the active device.
         if live.connected, live.activeIsWhoop, let pct = live.batteryPct {
             Divider().overlay(StrandPalette.hairline)
-            HStack(spacing: 10) {
+            HStack(spacing: 12) {
                 SourceBadge("Strap battery", tint: tint(pct))
                 Spacer()
-                HStack(spacing: 5) {
+                HStack(spacing: 4) {
                     Image(systemName: symbol(pct))
-                        .font(.system(size: 11, weight: .medium))
+                        .font(.system(size: 12, weight: .medium))
                         .foregroundStyle(tint(pct))
                     Text("\(Int(pct.rounded()))%")
                         .font(StrandFont.captionNumber)

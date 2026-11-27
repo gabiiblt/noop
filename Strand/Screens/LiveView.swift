@@ -287,7 +287,7 @@ struct LiveView: View {
             Circle().fill(color).frame(width: 9, height: 9)
             Text(label).font(StrandFont.subhead).foregroundStyle(StrandPalette.textPrimary)
         }
-        .padding(.horizontal, 14).padding(.vertical, 8)
+        .padding(.horizontal, 16).padding(.vertical, 8)
         .background(StrandPalette.surfaceInset, in: Capsule())
         .overlay(Capsule().strokeBorder(StrandPalette.hairline, lineWidth: 1))
     }
@@ -308,7 +308,7 @@ struct LiveView: View {
                     LivePhysiology(activeIsWhoop: activeIsWhoop)
                         .frame(maxWidth: .infinity, alignment: .leading)
                 }
-                VStack(alignment: .leading, spacing: 18) {
+                VStack(alignment: .leading, spacing: 20) {
                     LiveHeartReadout(activeIsWhoop: activeIsWhoop, activeIsOura: activeIsOura, hrMax: model.profile.hrMax)
                     Divider().overlay(StrandPalette.hairline)
                     LivePhysiology(activeIsWhoop: activeIsWhoop)
@@ -339,12 +339,12 @@ struct LiveView: View {
             } else {
                 card {
                     ViewThatFits(in: .horizontal) {
-                        HStack(alignment: .center, spacing: 14) {
+                        HStack(alignment: .center, spacing: 16) {
                             sessionPrompt
                             Spacer(minLength: 12)
                             sessionActions
                         }
-                        VStack(alignment: .leading, spacing: 14) {
+                        VStack(alignment: .leading, spacing: 16) {
                             sessionPrompt
                             sessionActions
                         }
@@ -358,7 +358,7 @@ struct LiveView: View {
     }
 
     private var sessionPrompt: some View {
-        VStack(alignment: .leading, spacing: 6) {
+        VStack(alignment: .leading, spacing: 8) {
             Text("Ready for a marked effort.")
                 .font(StrandFont.headline)
                 .foregroundStyle(StrandPalette.textPrimary)
@@ -416,7 +416,7 @@ struct LiveView: View {
                     // Re-render once a second so the elapsed clock ticks without a manual Timer.
                     TimelineView(.periodic(from: .now, by: 1)) { context in
                         Text(ActiveWorkoutClock.clock(Int(w.elapsed(at: context.date))))
-                            .font(StrandFont.number(17)).monospacedDigit()
+                            .font(StrandFont.number(18)).monospacedDigit()
                             .foregroundStyle(StrandPalette.textPrimary)
                     }
                 }
@@ -461,11 +461,11 @@ struct LiveView: View {
     }
 
     private func reconnectGuideBanner(_ guide: String) -> some View {
-        HStack(alignment: .top, spacing: 10) {
+        HStack(alignment: .top, spacing: 12) {
             Image(systemName: "exclamationmark.triangle.fill")
                 .foregroundStyle(StrandPalette.statusWarning)
                 .accessibilityHidden(true)
-            VStack(alignment: .leading, spacing: 3) {
+            VStack(alignment: .leading, spacing: 4) {
                 Text("Can't connect: your strap's pairing was reset")
                     .font(StrandFont.subhead).foregroundStyle(StrandPalette.textPrimary)
                 Text(guide)
@@ -483,11 +483,11 @@ struct LiveView: View {
     }
 
     private func pairingHintBanner(_ hint: String) -> some View {
-        HStack(alignment: .top, spacing: 10) {
+        HStack(alignment: .top, spacing: 12) {
             Image(systemName: "exclamationmark.triangle.fill")
                 .foregroundStyle(StrandPalette.statusWarning)
                 .accessibilityHidden(true)
-            VStack(alignment: .leading, spacing: 3) {
+            VStack(alignment: .leading, spacing: 4) {
                 Text("Live HR works. Free the strap to unlock buzz, alarms & sync")
                     .font(StrandFont.subhead).foregroundStyle(StrandPalette.textPrimary)
                 Text(hint)
@@ -517,11 +517,11 @@ struct LiveView: View {
     /// is NOT a warning — live HR is working — so it uses the accent (health-green) treatment with a signal
     /// glyph. Mirrors the banner layout (icon + headline + one-line explanation) for visual consistency.
     private func standardHRNote(_ detail: String) -> some View {
-        HStack(alignment: .top, spacing: 10) {
+        HStack(alignment: .top, spacing: 12) {
             Image(systemName: "antenna.radiowaves.left.and.right")
                 .foregroundStyle(StrandPalette.accent)
                 .accessibilityHidden(true)
-            VStack(alignment: .leading, spacing: 3) {
+            VStack(alignment: .leading, spacing: 4) {
                 Text("Standard HR mode (low bandwidth)")
                     .font(StrandFont.subhead).foregroundStyle(StrandPalette.textPrimary)
                 Text(detail)
@@ -546,8 +546,8 @@ struct LiveView: View {
     /// Pick the strap family to scan for. Switching the selection drops the current strap's bond so the
     /// newly-picked one connects fresh — letting a user move between a WHOOP 4 and a 5/MG.
     private var modelPicker: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            HStack(spacing: 10) {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack(spacing: 12) {
                 Text("Strap").font(StrandFont.caption).foregroundStyle(StrandPalette.textSecondary)
                 SegmentedPillControl(
                     WhoopModel.allCases,
@@ -592,7 +592,7 @@ struct LiveView: View {
     @ViewBuilder private var offlineConnectCallout: some View {
         card {
             VStack(alignment: .leading, spacing: 12) {
-                HStack(spacing: 10) {
+                HStack(spacing: 12) {
                     Image(systemName: "antenna.radiowaves.left.and.right")
                         .foregroundStyle(StrandPalette.accent)
                         .accessibilityHidden(true)
@@ -693,7 +693,7 @@ struct LiveView: View {
     @ViewBuilder private var ringConnectCallout: some View {
         card {
             VStack(alignment: .leading, spacing: 12) {
-                HStack(spacing: 10) {
+                HStack(spacing: 12) {
                     Image(systemName: "antenna.radiowaves.left.and.right")
                         .foregroundStyle(StrandPalette.accent)
                         .accessibilityHidden(true)
@@ -1218,7 +1218,7 @@ private struct ActiveWorkoutLive: View {
     let effortScale: EffortScale
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 10) {
+        VStack(alignment: .leading, spacing: 12) {
             HStack(spacing: NoopMetrics.gap) {
                 stat("HR", model.bpm.map { "\($0)" } ?? "—",
                      tint: model.bpm == nil ? StrandPalette.textPrimary : StrandPalette.metricRose)
@@ -1238,7 +1238,7 @@ private struct ActiveWorkoutLive: View {
         VStack(alignment: .leading, spacing: 2) {
             Text(title.uppercased()).font(StrandFont.overline).tracking(StrandFont.overlineTracking)
                 .foregroundStyle(StrandPalette.textSecondary)
-            Text(value).font(StrandFont.number(17))
+            Text(value).font(StrandFont.number(18))
                 .foregroundStyle(tint).lineLimit(1).minimumScaleFactor(0.6)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -1417,7 +1417,7 @@ private struct SignalTrustTile: View {
     let tile: Model
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 10) {
+        VStack(alignment: .leading, spacing: 12) {
             HStack(spacing: 8) {
                 // The signal's liquid gauge — a static-posed small vessel (no per-frame cost).
                 LiquidVessel(value: tile.frac, tint: tile.tint, animated: false)
@@ -1441,7 +1441,7 @@ private struct SignalTrustTile: View {
                 .minimumScaleFactor(0.8)
                 .fixedSize(horizontal: false, vertical: true)
         }
-        .padding(14)
+        .padding(16)
         .frame(minHeight: 112, alignment: .top)
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(NoopPanelSurface(cornerRadius: NoopMetrics.cardRadius, surfaceOpacity: cardOpacity))

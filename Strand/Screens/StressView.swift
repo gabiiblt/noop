@@ -691,7 +691,7 @@ struct StressView: View {
     }
 
     private func bandLegend(_ range: String, _ label: String, _ color: Color) -> some View {
-        HStack(spacing: 7) {
+        HStack(spacing: 8) {
             Circle().fill(color).frame(width: 8, height: 8)
             VStack(alignment: .leading, spacing: 1) {
                 Text(label).font(StrandFont.captionNumber).foregroundStyle(StrandPalette.textPrimary)
@@ -1332,7 +1332,7 @@ private struct StressPreviewHarness: View {
 
                 // Screen-9 day autonomic-load line + Calm/Moderate/High totals bar.
                 NoopCard(tint: StressRamp.calm) {
-                    VStack(alignment: .leading, spacing: 14) {
+                    VStack(alignment: .leading, spacing: 16) {
                         Text("Autonomic load through the day").strandOverline()
                         DaytimeLoadLine(hours: hours)
                         Divider().overlay(StrandPalette.hairline)

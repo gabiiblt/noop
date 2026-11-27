@@ -120,7 +120,7 @@ struct AppleWatchAboutView: View {
     private var introCard: some View {
         NoopCard(tint: StrandPalette.accent) {
             VStack(alignment: .leading, spacing: 12) {
-                HStack(spacing: 10) {
+                HStack(spacing: 12) {
                     Image(systemName: "applewatch")
                         .font(.system(size: 18, weight: .semibold))
                         .foregroundStyle(StrandPalette.accent)
@@ -150,7 +150,7 @@ struct AppleWatchAboutView: View {
 
     private var capabilityCard: some View {
         NoopCard {
-            VStack(alignment: .leading, spacing: 14) {
+            VStack(alignment: .leading, spacing: 16) {
                 Text("WHAT THE WATCH CAN DO").font(StrandFont.overline)
                     .tracking(StrandFont.overlineTracking)
                     .foregroundStyle(StrandPalette.textSecondary)
@@ -174,10 +174,10 @@ struct AppleWatchAboutView: View {
     }
 
     private func metricRow(_ item: WatchMetric) -> some View {
-        VStack(alignment: .leading, spacing: 6) {
-            HStack(spacing: 10) {
+        VStack(alignment: .leading, spacing: 8) {
+            HStack(spacing: 12) {
                 Image(systemName: item.icon)
-                    .font(.system(size: 15, weight: .semibold))
+                    .font(.system(size: 16, weight: .semibold))
                     .foregroundStyle(item.confidence.accent)
                     .frame(width: 22)
                     .accessibilityHidden(true)
@@ -204,7 +204,7 @@ struct AppleWatchAboutView: View {
     private var hrvCard: some View {
         NoopCard(tint: StrandPalette.chargeColor) {
             VStack(alignment: .leading, spacing: 12) {
-                HStack(spacing: 10) {
+                HStack(spacing: 12) {
                     Image(systemName: "waveform.path.ecg")
                         .font(.system(size: 16, weight: .semibold))
                         .foregroundStyle(StrandPalette.chargeColor)
@@ -232,7 +232,7 @@ struct AppleWatchAboutView: View {
     private var spo2Card: some View {
         NoopCard {
             VStack(alignment: .leading, spacing: 12) {
-                HStack(spacing: 10) {
+                HStack(spacing: 12) {
                     Image(systemName: "drop.degreesign")
                         .font(.system(size: 16, weight: .semibold))
                         .foregroundStyle(StrandPalette.metricCyan)

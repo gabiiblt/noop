@@ -18,8 +18,8 @@ struct ShortcutExportSettingsView: View {
 
     private var exportCard: some View {
         StrandCard(padding: 20) {
-            VStack(alignment: .leading, spacing: 10) {
-                HStack(spacing: 10) {
+            VStack(alignment: .leading, spacing: 12) {
+                HStack(spacing: 12) {
                     Image(systemName: "square.and.arrow.up.on.square.fill")
                         .foregroundStyle(StrandPalette.accent)
                         .accessibilityHidden(true)

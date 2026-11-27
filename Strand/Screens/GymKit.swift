@@ -66,7 +66,7 @@ struct GymBarIcon: View {
     var body: some View {
         Button(action: action) {
             Image(systemName: systemName)
-                .font(.system(size: 15, weight: .semibold))
+                .font(.system(size: 16, weight: .semibold))
                 .foregroundStyle(StrandPalette.textPrimary)
                 .frame(width: NoopMetrics.glassIconButtonSize, height: NoopMetrics.glassIconButtonSize)
                 .noopGlass(Circle(), interactive: true)
@@ -112,14 +112,14 @@ struct GymPill: View {
     var selected = false
 
     var body: some View {
-        HStack(spacing: 6) {
+        HStack(spacing: 8) {
             if let systemImage {
-                Image(systemName: systemImage).font(.system(size: 13, weight: .semibold))
+                Image(systemName: systemImage).font(.system(size: 14, weight: .semibold))
             }
             Text(title).font(StrandFont.subhead).lineLimit(1)
         }
         .foregroundStyle(selected ? StrandPalette.textPrimary : StrandPalette.textSecondary)
-        .padding(.horizontal, 14)
+        .padding(.horizontal, 16)
         .frame(minHeight: 40)
         .background(selected ? StrandPalette.gymAccent.opacity(0.28) : StrandPalette.surfaceRaised, in: Capsule())
         .overlay(Capsule().stroke(selected ? StrandPalette.gymAccent.opacity(0.6) : Color.clear, lineWidth: 1))
@@ -266,7 +266,7 @@ struct GymListRow: View {
                     leading
                 } else if let systemImage {
                     Image(systemName: systemImage)
-                        .font(.system(size: 15, weight: .semibold))
+                        .font(.system(size: 16, weight: .semibold))
                         .foregroundStyle(Color.white)
                         .frame(width: 30, height: 30)
                         .background(tint, in: RoundedRectangle(cornerRadius: NoopMetrics.radiusChip, style: .continuous))
@@ -288,13 +288,13 @@ struct GymListRow: View {
                 if let tag { GymTag(title: tag) }
                 if chevron {
                     Image(systemName: "chevron.right")
-                        .font(.system(size: 13, weight: .semibold))
+                        .font(.system(size: 14, weight: .semibold))
                         .foregroundStyle(StrandPalette.textTertiary)
                         .accessibilityHidden(true)
                 }
             }
             .padding(.horizontal, NoopMetrics.gap)
-            .padding(.vertical, 11)
+            .padding(.vertical, 12)
             .frame(minHeight: 52)
             .contentShape(Rectangle())
             if divider {

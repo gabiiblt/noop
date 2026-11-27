@@ -47,7 +47,7 @@ struct LiftHeartRate: View {
         let value = Text(model.bpm.map(String.init) ?? "—").monospacedDigit()
         switch style {
         case .compact:
-            HStack(spacing: 3) {
+            HStack(spacing: 4) {
                 Image(systemName: "heart.fill")
                     .font(.system(size: 10, weight: .semibold))
                 value.font(StrandFont.captionNumber)

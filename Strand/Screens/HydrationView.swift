@@ -153,7 +153,7 @@ struct HydrationView: View {
                 .accessibilityLabel("Log custom \(customSizeML) millilitres")
                 Button { showCustomSizeSheet = true } label: {
                     Image(systemName: "pencil")
-                        .font(.system(size: 15, weight: .semibold))
+                        .font(.system(size: 16, weight: .semibold))
                         .foregroundStyle(StrandPalette.accent)
                         .frame(width: 44, height: 44)
                         .background(RoundedRectangle(cornerRadius: NoopMetrics.cardRadius, style: .continuous)
@@ -194,7 +194,7 @@ struct HydrationView: View {
                     VStack(spacing: 0) {
                         ForEach(Array(entries.enumerated()), id: \.element.id) { idx, entry in
                             entryRow(entry)
-                                .padding(.vertical, 6)
+                                .padding(.vertical, 8)
                             if idx < entries.count - 1 {
                                 Divider().opacity(0.4)
                             }
@@ -216,9 +216,9 @@ struct HydrationView: View {
     /// here would be a lie — the next sync re-reads the same day from Health and the figure would come
     /// straight back. Removing it for real means removing it in the app that logged it.
     @ViewBuilder private var importedRow: some View {
-        HStack(spacing: 10) {
+        HStack(spacing: 12) {
             Image(systemName: "heart.text.square")
-                .font(.system(size: 13, weight: .semibold))
+                .font(.system(size: 14, weight: .semibold))
                 .foregroundStyle(StrandPalette.textSecondary)
                 .accessibilityHidden(true)
             Text("From Apple Health")
@@ -230,7 +230,7 @@ struct HydrationView: View {
                 .foregroundStyle(StrandPalette.textPrimary)
                 .monospacedDigit()
         }
-        .padding(.vertical, 6)
+        .padding(.vertical, 8)
         .accessibilityElement(children: .combine)
         .accessibilityLabel("\(Int(importedML.rounded())) millilitres from Apple Health. Edit it in the app that logged it.")
         if !entries.isEmpty { Divider().opacity(0.4) }
@@ -238,11 +238,11 @@ struct HydrationView: View {
 
     /// One logged-drink row: the time it was logged + its amount (tap to edit) with a trailing trash.
     private func entryRow(_ entry: HydrationEntry) -> some View {
-        HStack(spacing: 10) {
+        HStack(spacing: 12) {
             Button { editingEntry = entry } label: {
-                HStack(spacing: 10) {
+                HStack(spacing: 12) {
                     Image(systemName: "drop.fill")
-                        .font(.system(size: 13, weight: .semibold))
+                        .font(.system(size: 14, weight: .semibold))
                         .foregroundStyle(StrandPalette.accent)
                         .accessibilityHidden(true)
                     Text(Self.entryTimeFmt.string(from: entry.loggedAt))
@@ -264,7 +264,7 @@ struct HydrationView: View {
                 Task { await deleteEntry(entry) }
             } label: {
                 Image(systemName: "trash")
-                    .font(.system(size: 13, weight: .semibold))
+                    .font(.system(size: 14, weight: .semibold))
                     .foregroundStyle(StrandPalette.textTertiary)
                     .frame(width: 36, height: 36)
                     .contentShape(Rectangle())
@@ -298,9 +298,9 @@ struct HydrationView: View {
             // Scale the bars to the LARGER of the goal and the biggest day, so an over-goal day doesn't clip.
             let ceiling = max(Double(max(goalML, 1)), history.map(\.value).max() ?? 0, 1)
             let lastIndex = history.count - 1
-            HStack(alignment: .bottom, spacing: 10) {
+            HStack(alignment: .bottom, spacing: 12) {
                 ForEach(Array(history.enumerated()), id: \.element.day) { idx, bar in
-                    VStack(spacing: 6) {
+                    VStack(spacing: 8) {
                         ZStack(alignment: .bottom) {
                             RoundedRectangle(cornerRadius: 6, style: .continuous)
                                 .fill(StrandPalette.textPrimary.opacity(0.10))
@@ -337,9 +337,9 @@ struct HydrationView: View {
                         .foregroundStyle(StrandPalette.textSecondary)
                         .fixedSize(horizontal: false, vertical: true)
                 } else {
-                    HStack(spacing: 10) {
+                    HStack(spacing: 12) {
                         Image(systemName: "drop.fill")
-                            .font(.system(size: 15, weight: .semibold))
+                            .font(.system(size: 16, weight: .semibold))
                             .foregroundStyle(StrandPalette.accent)
                             .accessibilityHidden(true)
                         Text("Logged today")

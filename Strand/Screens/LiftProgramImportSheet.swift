@@ -110,7 +110,7 @@ struct LiftProgramImportSheet: View {
         VStack(alignment: .leading, spacing: NoopMetrics.gap) {
             ForEach(Array(result.programs.enumerated()), id: \.offset) { _, program in
                 GymCard {
-                    VStack(alignment: .leading, spacing: 6) {
+                    VStack(alignment: .leading, spacing: 8) {
                         Text(program.name)
                             .font(StrandFont.headline)
                             .foregroundStyle(StrandPalette.textPrimary)
@@ -134,7 +134,7 @@ struct LiftProgramImportSheet: View {
 
             if !result.warnings.isEmpty {
                 GymCard {
-                    VStack(alignment: .leading, spacing: 6) {
+                    VStack(alignment: .leading, spacing: 8) {
                         // No count in the heading: the warnings are listed directly beneath it, so
                         // the number adds nothing — and it dodges plural agreement in ten languages.
                         Text("Worth checking")

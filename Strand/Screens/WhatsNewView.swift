@@ -79,7 +79,7 @@ struct WhatsNewView: View {
 
     private var expectationsCard: some View {
         NoopCard(tint: StrandPalette.accent) {
-            VStack(alignment: .leading, spacing: 14) {
+            VStack(alignment: .leading, spacing: 16) {
                 Text("WHAT TO EXPECT").font(StrandFont.overline)
                     .tracking(StrandFont.overlineTracking)
                     .foregroundStyle(StrandPalette.textSecondary)
@@ -89,7 +89,7 @@ struct WhatsNewView: View {
                             .foregroundStyle(StrandPalette.accent)
                             .frame(width: 22)
                             .padding(.top, 2)
-                        VStack(alignment: .leading, spacing: 3) {
+                        VStack(alignment: .leading, spacing: 4) {
                             Text(e.title).font(StrandFont.headline)
                                 .foregroundStyle(StrandPalette.textPrimary)
                             Text(e.body).font(StrandFont.subhead)
@@ -105,7 +105,7 @@ struct WhatsNewView: View {
 
     private func releaseCard(_ release: AppChangelog.Release, isLatest: Bool = false) -> some View {
         NoopCard(tint: isLatest ? StrandPalette.accent : nil) {
-            VStack(alignment: .leading, spacing: 10) {
+            VStack(alignment: .leading, spacing: 12) {
                 HStack(spacing: 8) {
                     SourceBadge("v\(release.version)")
                     Text(release.title).font(StrandFont.headline)
@@ -117,7 +117,7 @@ struct WhatsNewView: View {
                 ForEach(Array(release.items.enumerated()), id: \.offset) { _, item in
                     HStack(alignment: .top, spacing: 8) {
                         Circle().fill(StrandPalette.accent).frame(width: 5, height: 5)
-                            .padding(.top, 7)
+                            .padding(.top, 8)
                         Text(item).font(StrandFont.subhead)
                             .foregroundStyle(StrandPalette.textSecondary)
                             .fixedSize(horizontal: false, vertical: true)

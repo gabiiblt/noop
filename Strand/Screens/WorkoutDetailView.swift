@@ -176,7 +176,7 @@ struct WorkoutDetailView: View {
                 SectionHeader("Heart Rate Recovery", overline: "After high-intensity effort",
                               trailing: String(localized: "Peak \(recovery.endHR) bpm"))
                 NoopCard(tint: StrandPalette.metricRose) {
-                    VStack(alignment: .leading, spacing: 14) {
+                    VStack(alignment: .leading, spacing: 16) {
                         HStack(spacing: 0) {
                             recoveryStat(String(localized: "1 min"), value: recovery.after1Minute)
                             recoveryStat(String(localized: "2 min"), value: recovery.after2Minutes)
@@ -194,7 +194,7 @@ struct WorkoutDetailView: View {
     }
 
     private func recoveryStat(_ label: String, value: Int?) -> some View {
-        VStack(alignment: .leading, spacing: 3) {
+        VStack(alignment: .leading, spacing: 4) {
             Text(label).strandOverline()
             Text(value.map { "\($0)" } ?? "–")
                 .font(StrandFont.number(24))
@@ -215,7 +215,7 @@ struct WorkoutDetailView: View {
 
     private var headerCard: some View {
         NoopCard(tint: StrandPalette.effortColor) {
-            HStack(alignment: .center, spacing: 14) {
+            HStack(alignment: .center, spacing: 16) {
                 Image(systemName: sportSymbol(row.sport))
                     .font(.system(size: 22, weight: .semibold))
                     .foregroundStyle(StrandPalette.effortColor)
@@ -223,7 +223,7 @@ struct WorkoutDetailView: View {
                     .background(StrandPalette.effortColor.opacity(0.14),
                                 in: RoundedRectangle(cornerRadius: NoopMetrics.radiusControl, style: .continuous))
                     .accessibilityHidden(true)
-                VStack(alignment: .leading, spacing: 3) {
+                VStack(alignment: .leading, spacing: 4) {
                     Text(WorkoutSource.displaySport(row.sport))
                         .font(StrandFont.title2)
                         .foregroundStyle(StrandPalette.textPrimary)
@@ -349,10 +349,10 @@ struct WorkoutDetailView: View {
     }
 
     private func routeStat(_ title: String, _ value: String, tint: Color) -> some View {
-        VStack(alignment: .leading, spacing: 3) {
+        VStack(alignment: .leading, spacing: 4) {
             Text(title.uppercased()).strandOverline()
             Text(value)
-                .font(StrandFont.number(15))
+                .font(StrandFont.number(16))
                 .foregroundStyle(tint)
                 .lineLimit(1).minimumScaleFactor(0.7)
         }
@@ -509,15 +509,15 @@ struct WorkoutDetailView: View {
     }
 
     private func zoneStat(_ zone: Int, minutes: Double, total: Double) -> some View {
-        VStack(alignment: .leading, spacing: 3) {
-            HStack(spacing: 5) {
+        VStack(alignment: .leading, spacing: 4) {
+            HStack(spacing: 4) {
                 RoundedRectangle(cornerRadius: 2, style: .continuous)
                     .fill(StrandPalette.hrZoneColor(zone))
                     .frame(width: 9, height: 9)
                 Text("Z\(zone)" as String).strandOverline()
             }
             Text("\(Int((minutes / max(total, 0.001) * 100).rounded()))%")
-                .font(StrandFont.number(15))
+                .font(StrandFont.number(16))
                 .foregroundStyle(StrandPalette.textPrimary)
             Text(durationLabel(minutes * 60))
                 .font(StrandFont.footnote)
@@ -539,7 +539,7 @@ struct WorkoutDetailView: View {
         return VStack(alignment: .leading, spacing: NoopMetrics.gap) {
             SectionHeader("Effort", overline: "This session")
             NoopCard(tint: StrandPalette.effortColor) {
-                HStack(alignment: .center, spacing: 18) {
+                HStack(alignment: .center, spacing: 20) {
                     ZStack {
                         // Static (posed) vessel — a compact liquid gauge inside a card, so it costs a single
                         // cached frame rather than a live canvas (same call as Trends' pip vessels).

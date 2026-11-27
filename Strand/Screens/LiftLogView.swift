@@ -316,7 +316,7 @@ struct LiftLogView: View {
                     } label: {
                         HStack(spacing: NoopMetrics.gap) {
                             Image(systemName: "plus")
-                                .font(.system(size: 15, weight: .semibold))
+                                .font(.system(size: 16, weight: .semibold))
                                 .foregroundStyle(StrandPalette.gymAccent)
                                 .frame(width: 30, height: 30)
                                 .background(StrandPalette.gymAccent.opacity(0.16), in: RoundedRectangle(cornerRadius: NoopMetrics.radiusChip, style: .continuous))
@@ -526,7 +526,7 @@ struct LiftLogView: View {
         let minutes = max(0, ((session.endTs ?? session.startTs) - session.startTs) / 60)
         let leaf = VStack(spacing: 0) {
             Text(date.formatted(.dateTime.month(.abbreviated)).uppercased())
-                .font(.system(size: 9, weight: .bold))
+                .font(.system(size: 10, weight: .semibold))
                 .foregroundStyle(StrandPalette.gymAccent)
             Text(date.formatted(.dateTime.day()))
                 .font(StrandFont.rounded(17, weight: .bold))

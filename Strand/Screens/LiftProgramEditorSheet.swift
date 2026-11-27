@@ -230,7 +230,7 @@ struct LiftProgramEditorSheet: View {
                         update(item.id) { $0.targetSets = rows - 1 }
                     } label: {
                         Image(systemName: "minus")
-                            .font(.system(size: 15, weight: .semibold))
+                            .font(.system(size: 16, weight: .semibold))
                             .frame(width: 44, height: 44)
                             .background(StrandPalette.surfaceRaised, in: Circle())
                     }
@@ -269,7 +269,7 @@ struct LiftProgramEditorSheet: View {
             }
         } label: {
             Image(systemName: "ellipsis")
-                .font(.system(size: 17, weight: .semibold))
+                .font(.system(size: 18, weight: .semibold))
                 .foregroundStyle(StrandPalette.textSecondary)
                 .frame(width: 44, height: 44)
                 .contentShape(Rectangle())

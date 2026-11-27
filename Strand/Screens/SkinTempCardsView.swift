@@ -39,9 +39,9 @@ private let skinTempPrivacyLine =
 private struct PrivacyNote: View {
     var text: String = skinTempPrivacyLine
     var body: some View {
-        HStack(alignment: .top, spacing: 6) {
+        HStack(alignment: .top, spacing: 8) {
             Image(systemName: "lock.fill")
-                .font(.system(size: 9, weight: .semibold))
+                .font(.system(size: 10, weight: .semibold))
                 .foregroundStyle(StrandPalette.textTertiary)
                 .accessibilityHidden(true)
             Text(text)
@@ -644,9 +644,9 @@ struct BodyClockCard: View {
                     .fixedSize(horizontal: false, vertical: true)
 
                 // The estimated temperature-minimum clock time — the canonical phase marker.
-                HStack(spacing: 6) {
+                HStack(spacing: 8) {
                     Image(systemName: "moon.stars")
-                        .font(.system(size: 11, weight: .semibold))
+                        .font(.system(size: 12, weight: .semibold))
                         .foregroundStyle(hue)
                         .accessibilityHidden(true)
                     Text("Estimated body-clock low around \(clockString(estimate.tempMinHour))")
@@ -696,7 +696,7 @@ struct BodyClockCard: View {
     }
 
     private func planSummary(_ plan: CircadianEngine.JetLagPlan, firstDay: CircadianEngine.DayPlan) -> some View {
-        VStack(alignment: .leading, spacing: 6) {
+        VStack(alignment: .leading, spacing: 8) {
             Text("Plan · \(plan.estimatedDays)-day shift")
                 .strandOverline()
             // Day 1's concrete light + lights-out cue — light + sleep timing only.
@@ -781,7 +781,7 @@ struct HeadsUpCard: View {
             VStack(alignment: .leading, spacing: NoopMetrics.gap) {
                 HStack(alignment: .top, spacing: 12) {
                     Image(systemName: glyph)
-                        .font(.system(size: 15, weight: .semibold))
+                        .font(.system(size: 16, weight: .semibold))
                         .foregroundStyle(hue)
                         .frame(width: 30, height: 30)
                         .background(hue.opacity(0.16), in: Circle())
@@ -905,8 +905,8 @@ private struct FlowChips: View {
         // A simple wrapping HStack via a flexible layout; for the small counts here a plain
         // HStack with wrapping fallback is enough and avoids a custom Layout dependency.
         ViewThatFits(in: .horizontal) {
-            HStack(spacing: 6) { chips }
-            VStack(alignment: .leading, spacing: 6) { chips }
+            HStack(spacing: 8) { chips }
+            VStack(alignment: .leading, spacing: 8) { chips }
         }
     }
     @ViewBuilder private var chips: some View {
@@ -914,7 +914,7 @@ private struct FlowChips: View {
             Text(v)
                 .font(StrandFont.captionNumber)
                 .foregroundStyle(tint)
-                .padding(.horizontal, 7).padding(.vertical, 2)
+                .padding(.horizontal, 8).padding(.vertical, 2)
                 .background(tint.opacity(0.14), in: Capsule(style: .continuous))
         }
     }

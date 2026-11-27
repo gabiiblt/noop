@@ -667,7 +667,7 @@ struct InsightsView: View {
                                   tint: snapshot.loggedToday ? StrandPalette.statusPositive : StrandPalette.statusWarning)
             }
 
-            VStack(alignment: .leading, spacing: 6) {
+            VStack(alignment: .leading, spacing: 8) {
                 // Liquid progress: the experiment window as a filling LiquidTube (the same horizontal
                 // vessel Today's Key Metrics + workout bars use) rather than a flat ProgressView. Static
                 // (no live slosh needed for a progress read); carries the same a11y label + value.
@@ -1077,7 +1077,7 @@ struct InsightsView: View {
                 // vessel filled to the effect magnitude (|Cohen's d|, capped where large is about 0.8+) in
                 // the sign-aware tint, the leading-gauge idiom Today uses, so the strength reads at a glance.
                 HStack(alignment: .center) {
-                    HStack(spacing: 10) {
+                    HStack(spacing: 12) {
                         LiquidVessel(value: min(1, abs(e.cohensD) / 0.8), tint: tintColor, animated: false)
                             .frame(width: 26, height: 26)
                             .accessibilityHidden(true)
@@ -1121,7 +1121,7 @@ struct InsightsView: View {
                 HStack {
                     Text("Effect size").strandOverline()
                     Spacer()
-                    HStack(spacing: 6) {
+                    HStack(spacing: 8) {
                         Text(String(format: "d = %.2f", e.cohensD))
                             .font(StrandFont.captionNumber)
                             .foregroundStyle(tintColor)
@@ -1305,8 +1305,8 @@ struct InsightsView: View {
         // Build the reading sentence ONCE and reuse it for the visible copy and
         // the accessibility label (was computed twice per row).
         let sentence = relationshipSentence(rel)
-        return VStack(alignment: .leading, spacing: 10) {
-            HStack(spacing: 10) {
+        return VStack(alignment: .leading, spacing: 12) {
+            HStack(spacing: 12) {
                 // Liquid magnitude accent: a small filling vessel showing |r| in the correlation's
                 // strength colour, the same leading-gauge idiom Today's card rows + vitals use. Static
                 // (a small gauge doesn't need live slosh); decorative, the exact r + a11y read below.
@@ -1337,7 +1337,7 @@ struct InsightsView: View {
                 .font(StrandFont.footnote)
                 .foregroundStyle(StrandPalette.textTertiary)
         }
-        .padding(.vertical, 11)
+        .padding(.vertical, 12)
         .accessibilityElement(children: .combine)
         .accessibilityLabel(sentence)
     }

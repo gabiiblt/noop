@@ -87,7 +87,7 @@ struct NoopLimitationsView: View {
 
     private var tableCard: some View {
         NoopCard {
-            VStack(alignment: .leading, spacing: 14) {
+            VStack(alignment: .leading, spacing: 16) {
                 Text("WHAT NOOP READS").font(StrandFont.overline)
                     .tracking(StrandFont.overlineTracking)
                     .foregroundStyle(StrandPalette.textTertiary)
@@ -122,7 +122,7 @@ struct NoopLimitationsView: View {
 
     private var legendCard: some View {
         NoopCard {
-            VStack(alignment: .leading, spacing: 10) {
+            VStack(alignment: .leading, spacing: 12) {
                 Text("LEGEND").font(StrandFont.overline)
                     .tracking(StrandFont.overlineTracking)
                     .foregroundStyle(StrandPalette.textTertiary)
@@ -146,7 +146,7 @@ struct NoopLimitationsView: View {
 
     private func supportCell(_ state: LimitState) -> some View {
         Image(systemName: state.glyph)
-            .font(.system(size: 15, weight: .semibold))
+            .font(.system(size: 16, weight: .semibold))
             .foregroundStyle(state.tint)
             .frame(width: 52)
             .accessibilityHidden(true)

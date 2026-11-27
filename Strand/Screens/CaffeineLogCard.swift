@@ -35,7 +35,7 @@ struct CaffeineLogCard: View {
         VStack(alignment: .leading, spacing: NoopMetrics.gap) {
             SectionHeader("Caffeine", overline: "Log")
             NoopCard(tint: StrandPalette.accent) {
-                VStack(alignment: .leading, spacing: 10) {
+                VStack(alignment: .leading, spacing: 12) {
                     Text("Log a coffee, tea, or energy drink and NOOP shows a rough estimate of how much may still be active. It's a guide based on a typical 5 to 6 hour half-life, not a measurement.")
                         .font(StrandFont.footnote)
                         .foregroundStyle(StrandPalette.textTertiary)
@@ -92,7 +92,7 @@ struct CaffeineLogCard: View {
     /// computed from the dose-decay lead (`CaffeineDecay.cutoffMinutesSinceMidnight`), so it's never a magic
     /// number and matches the "still active" math.
     @ViewBuilder private var cutoffSection: some View {
-        VStack(alignment: .leading, spacing: 10) {
+        VStack(alignment: .leading, spacing: 12) {
             HStack {
                 VStack(alignment: .leading, spacing: 2) {
                     Text("Cutoff before bed")
@@ -141,7 +141,7 @@ struct CaffeineLogCard: View {
                     .foregroundStyle(StrandPalette.statusWarning)
                     .fixedSize(horizontal: false, vertical: true)
             }
-            .padding(10)
+            .padding(12)
             .background(StrandPalette.statusWarning.opacity(0.10),
                         in: RoundedRectangle(cornerRadius: NoopMetrics.radiusControl, style: .continuous))
             .accessibilityElement(children: .combine)
@@ -324,7 +324,7 @@ struct CaffeineLogCard: View {
                 .font(StrandFont.footnote)
                 .foregroundStyle(selected ? StrandPalette.surfaceBase : StrandPalette.textSecondary)
                 .padding(.horizontal, 12)
-                .padding(.vertical, 5)
+                .padding(.vertical, 4)
                 .background(selected ? StrandPalette.accent : StrandPalette.surfaceInset, in: Capsule())
                 .overlay(Capsule().stroke(selected ? StrandPalette.accent : StrandPalette.hairline,
                                           lineWidth: 1))

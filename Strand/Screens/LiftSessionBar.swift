@@ -30,7 +30,7 @@ struct LiftSessionBar: View {
                 // seen inside the app: the icon and the numbers sit near the edges and the heart rate
                 // stacks over the clock, so the words get the width (Utku, 21 Sep 2026, with a screenshot
                 // of the bar: "more place for writings"). Same sizes as before.
-                HStack(spacing: 10) {
+                HStack(spacing: 12) {
                     Image(systemName: "dumbbell.fill")
                         .font(.system(size: 14, weight: .semibold))
                         .foregroundStyle(tint(engine))
@@ -87,7 +87,7 @@ struct LiftSessionBar: View {
                 }
                 .padding(.leading, 12)
                 .padding(.trailing, 8)
-                .padding(.vertical, 10)
+                .padding(.vertical, 12)
                 .contentShape(Capsule())
                 .noopGlass(Capsule(), tint: tint(engine), interactive: true)
             }

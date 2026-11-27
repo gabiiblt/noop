@@ -124,7 +124,7 @@ struct MarkerEditorView: View {
                 Button {
                     choose(def)
                 } label: {
-                    HStack(spacing: 10) {
+                    HStack(spacing: 12) {
                         VStack(alignment: .leading, spacing: 1) {
                             Text(def.displayName)
                                 .font(StrandFont.subhead)
@@ -138,7 +138,7 @@ struct MarkerEditorView: View {
                             .font(StrandFont.captionNumber)
                             .foregroundStyle(StrandPalette.textSecondary)
                     }
-                    .padding(.vertical, 9)
+                    .padding(.vertical, 8)
                     .contentShape(Rectangle())
                 }
                     .buttonStyle(.plain)
@@ -163,7 +163,7 @@ struct MarkerEditorView: View {
     }
 
     private func chosenMarkerRow(_ def: MarkerDefinition) -> some View {
-        HStack(spacing: 10) {
+        HStack(spacing: 12) {
             VStack(alignment: .leading, spacing: 2) {
                 Text(def.displayName).font(StrandFont.headline).foregroundStyle(StrandPalette.textPrimary)
                 Text(def.category.displayName).font(StrandFont.footnote).foregroundStyle(StrandPalette.textTertiary)
@@ -185,7 +185,7 @@ struct MarkerEditorView: View {
                     .font(StrandFont.body)
                     .foregroundStyle(StrandPalette.textPrimary)
                     .focused($focused, equals: .customName)
-                    .padding(.horizontal, 12).padding(.vertical, 9)
+                    .padding(.horizontal, 12).padding(.vertical, 8)
                     .background(StrandPalette.surfaceInset, in: inputShape)
                     .overlay(inputShape.strokeBorder(StrandPalette.hairline, lineWidth: 1))
                     .accessibilityLabel("Custom marker name")
@@ -196,7 +196,7 @@ struct MarkerEditorView: View {
                     .font(StrandFont.body)
                     .foregroundStyle(StrandPalette.textPrimary)
                     .focused($focused, equals: .customUnit)
-                    .padding(.horizontal, 12).padding(.vertical, 9)
+                    .padding(.horizontal, 12).padding(.vertical, 8)
                     .background(StrandPalette.surfaceInset, in: inputShape)
                     .overlay(inputShape.strokeBorder(StrandPalette.hairline, lineWidth: 1))
                     .accessibilityLabel("Custom marker unit")
@@ -214,7 +214,7 @@ struct MarkerEditorView: View {
         VStack(alignment: .leading, spacing: NoopMetrics.gap) {
             SectionHeader("Reading", overline: "your number, date and any note")
             NoopCard {
-                VStack(alignment: .leading, spacing: 14) {
+                VStack(alignment: .leading, spacing: 16) {
                     if isBloodPressure {
                         bloodPressureFields
                     } else {
@@ -232,7 +232,7 @@ struct MarkerEditorView: View {
                             .font(StrandFont.body)
                             .foregroundStyle(StrandPalette.textPrimary)
                             .focused($focused, equals: .note)
-                            .padding(.horizontal, 12).padding(.vertical, 9)
+                            .padding(.horizontal, 12).padding(.vertical, 8)
                             .background(StrandPalette.surfaceInset, in: inputShape)
                             .overlay(inputShape.strokeBorder(StrandPalette.hairline, lineWidth: 1))
                             .accessibilityLabel("Optional note")
@@ -243,7 +243,7 @@ struct MarkerEditorView: View {
                             .font(StrandFont.body)
                             .foregroundStyle(StrandPalette.textPrimary)
                             .focused($focused, equals: .reference)
-                            .padding(.horizontal, 12).padding(.vertical, 9)
+                            .padding(.horizontal, 12).padding(.vertical, 8)
                             .background(StrandPalette.surfaceInset, in: inputShape)
                             .overlay(inputShape.strokeBorder(StrandPalette.hairline, lineWidth: 1))
                             .accessibilityLabel("Reference range from your own report, optional")
@@ -258,7 +258,7 @@ struct MarkerEditorView: View {
     }
 
     private var valueField: some View {
-        VStack(alignment: .leading, spacing: 6) {
+        VStack(alignment: .leading, spacing: 8) {
             HStack {
                 Text("Value").strandOverline()
                 Spacer()
@@ -277,7 +277,7 @@ struct MarkerEditorView: View {
                     .focused($focused, equals: .value)
                 Text(activeUnit).font(StrandFont.footnote).foregroundStyle(StrandPalette.textTertiary)
             }
-            .padding(.horizontal, 12).padding(.vertical, 9)
+            .padding(.horizontal, 12).padding(.vertical, 8)
             .background(StrandPalette.surfaceInset, in: inputShape)
             .overlay(inputShape.strokeBorder(StrandPalette.hairline, lineWidth: 1))
             if unitOptions.count > 1 {
@@ -290,7 +290,7 @@ struct MarkerEditorView: View {
 
     private var bloodPressureFields: some View {
         VStack(alignment: .leading, spacing: 12) {
-            HStack(spacing: 14) {
+            HStack(spacing: 16) {
                 field(String(localized: "Systolic")) {
                     numberBox(placeholder: String(localized: "e.g. 120"), text: $valueText, unit: "mmHg", field: .value)
                         .accessibilityLabel("Systolic blood pressure in mmHg")
@@ -307,7 +307,7 @@ struct MarkerEditorView: View {
     }
 
     private func numberBox(placeholder: String, text: Binding<String>, unit: String, field: Field) -> some View {
-        HStack(spacing: 6) {
+        HStack(spacing: 8) {
             TextField(placeholder, text: text)
                 .textFieldStyle(.plain)
                 .font(StrandFont.bodyNumber)
@@ -316,7 +316,7 @@ struct MarkerEditorView: View {
                 .focused($focused, equals: field)
             Text(unit).font(StrandFont.footnote).foregroundStyle(StrandPalette.textTertiary)
         }
-        .padding(.horizontal, 12).padding(.vertical, 9)
+        .padding(.horizontal, 12).padding(.vertical, 8)
         .frame(maxWidth: .infinity)
         .background(StrandPalette.surfaceInset, in: inputShape)
         .overlay(inputShape.strokeBorder(StrandPalette.hairline, lineWidth: 1))
@@ -461,7 +461,7 @@ struct MarkerEditorView: View {
     private var inputShape: RoundedRectangle { RoundedRectangle(cornerRadius: NoopMetrics.radiusControl, style: .continuous) }
 
     private func field<Content: View>(_ label: String, @ViewBuilder _ content: () -> Content) -> some View {
-        VStack(alignment: .leading, spacing: 6) {
+        VStack(alignment: .leading, spacing: 8) {
             Text(label).strandOverline()
             content()
         }

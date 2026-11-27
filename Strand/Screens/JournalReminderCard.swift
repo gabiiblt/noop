@@ -80,7 +80,7 @@ struct JournalReminderCard: View {
                 .accessibilityHint(Text(String(localized: "Open journal")))
                 // The last-N-days strip: one equal-width bar per day, each its own tap target. Filled =
                 // logged; today is ringed. Tapping a bar deep-links the journal to that day (#656).
-                HStack(spacing: 6) {
+                HStack(spacing: 8) {
                     ForEach(keys.indices, id: \.self) { i in
                         let key = keys[i]
                         let off = Self.stripDays - 1 - i          // keys[0] = 6 days ago … last = today

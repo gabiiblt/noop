@@ -585,7 +585,7 @@ struct MetricExplorerView: View {
     /// as the headline above the per-metric catalog.
     private var deepTimelineRow: some View {
         NoopCard {
-            HStack(spacing: 14) {
+            HStack(spacing: 16) {
                 ZStack {
                     RoundedRectangle(cornerRadius: NoopMetrics.radiusControl, style: .continuous)
                         .fill(StrandPalette.metricRose.opacity(0.16))
@@ -660,12 +660,12 @@ private struct MetricRow: View {
     }
 
     var body: some View {
-        HStack(spacing: 14) {
+        HStack(spacing: 16) {
             ZStack {
                 RoundedRectangle(cornerRadius: NoopMetrics.radiusChip, style: .continuous)
                     .fill(StrandPalette.surfaceInset)
                 Image(systemName: metric.icon)
-                    .font(.system(size: 15, weight: .medium))
+                    .font(.system(size: 16, weight: .medium))
                     .foregroundStyle(metricAccent(metric))
             }
             .frame(width: 34, height: 34)
@@ -694,11 +694,11 @@ private struct MetricRow: View {
                     .accessibilityLabel("No data")
             }
             Image(systemName: "chevron.right")
-                .font(.system(size: 11, weight: .semibold))
+                .font(.system(size: 12, weight: .semibold))
                 .foregroundStyle(StrandPalette.textTertiary)
         }
-        .padding(.horizontal, 14)
-        .padding(.vertical, 11)
+        .padding(.horizontal, 16)
+        .padding(.vertical, 12)
         .contentShape(Rectangle())
         .accessibilityElement(children: .combine)
         // Whole-string key per variant (never a concatenated localized tail on an a11y label).
@@ -1017,7 +1017,7 @@ struct MetricDetailView: View {
                     // stats so it reads as context for the series just plotted, not as a generic banner.
                     if let note = skinTempNote {
                         NoopCard {
-                            HStack(alignment: .top, spacing: 10) {
+                            HStack(alignment: .top, spacing: 12) {
                                 Image(systemName: "info.circle")
                                     .font(.system(size: 14, weight: .medium))
                                     .foregroundStyle(StrandPalette.textTertiary)
@@ -1315,7 +1315,7 @@ struct MetricDetailView: View {
                 HStack {
                     Spacer(minLength: 0)
                     if let fraction, let v = value {
-                        VStack(spacing: 10) {
+                        VStack(spacing: 12) {
                             ZStack {
                                 // The big hero vessel stays live (animated) — the one sloshing gauge on the
                                 // screen, exactly like the hero gauges on Today.
@@ -1343,7 +1343,7 @@ struct MetricDetailView: View {
                         .accessibilityElement(children: .ignore)
                         .accessibilityLabel("\(heroValue), \(asOf)")
                     } else if let v = value {
-                        VStack(spacing: 6) {
+                        VStack(spacing: 8) {
                             CountUpText(value: v, format: { fmt($0) },
                                         font: StrandFont.number(54),
                                         color: StrandPalette.textPrimary)
@@ -1353,9 +1353,9 @@ struct MetricDetailView: View {
                                 .font(StrandFont.footnote)
                                 .foregroundStyle(StrandPalette.textTertiary)
                         }
-                        .padding(.vertical, 18)
+                        .padding(.vertical, 20)
                     } else {
-                        VStack(spacing: 6) {
+                        VStack(spacing: 8) {
                             Text(heroValue)
                                 .font(StrandFont.number(54))
                                 .foregroundStyle(StrandPalette.textPrimary)
@@ -1363,7 +1363,7 @@ struct MetricDetailView: View {
                                 .font(StrandFont.footnote)
                                 .foregroundStyle(StrandPalette.textTertiary)
                         }
-                        .padding(.vertical, 18)
+                        .padding(.vertical, 20)
                     }
                     Spacer(minLength: 0)
                 }
@@ -1705,7 +1705,7 @@ struct MetricDetailView: View {
                                     .foregroundStyle(StrandPalette.textSecondary)
                                     .frame(maxWidth: .infinity, alignment: .leading)
                                 Text(row.value)
-                                    .font(StrandFont.number(15))
+                                    .font(StrandFont.number(16))
                                     .foregroundStyle(StrandPalette.textPrimary)
                                 Text(row.source)
                                     .font(StrandFont.footnote)
@@ -1832,7 +1832,7 @@ struct MetricDetailView: View {
                     .foregroundStyle(StrandPalette.textTertiary)
             }
             Spacer(minLength: 8)
-            HStack(spacing: 10) {
+            HStack(spacing: 12) {
                 // The strength bar as the signature liquid tube — filled to |r|, tinted by the
                 // correlation's sign (positive green / negative red), posed (static) so a list of them
                 // costs one cached frame each. Replaces the flat capsule with the liquid range-bar idiom.
@@ -1840,12 +1840,12 @@ struct MetricDetailView: View {
                     .frame(width: 64)
                     .accessibilityHidden(true)
                 Text("\(row.r >= 0 ? "+" : "−")\(String(format: "%.2f", abs(row.r)))")
-                    .font(StrandFont.number(15))
+                    .font(StrandFont.number(16))
                     .foregroundStyle(color)
                     .frame(width: 52, alignment: .trailing)
             }
         }
-        .padding(.vertical, 10)
+        .padding(.vertical, 12)
         .accessibilityElement(children: .combine)
         .accessibilityLabel("\(row.metric.title), correlation \(String(format: "%.2f", row.r)), \(row.n) days")
     }

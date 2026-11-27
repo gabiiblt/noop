@@ -17,7 +17,7 @@ struct TermsGateView: View {
             StrandPalette.surfaceBase.ignoresSafeArea()
 
             VStack(spacing: 0) {
-                VStack(spacing: 6) {
+                VStack(spacing: 8) {
                     Text("Before you use NOOP")
                         .font(StrandFont.title1)
                         .foregroundStyle(StrandPalette.textPrimary)
@@ -30,7 +30,7 @@ struct TermsGateView: View {
                 .padding(.bottom, 22)
 
                 ScrollView {
-                    VStack(alignment: .leading, spacing: 18) {
+                    VStack(alignment: .leading, spacing: 20) {
                         ForEach(Terms.points, id: \.0) { point in
                             VStack(alignment: .leading, spacing: 4) {
                                 Text(point.0)
@@ -71,7 +71,7 @@ struct TermsGateView: View {
                             .padding(.top, 2)
                     }
                     .padding(.horizontal, 30)
-                    .padding(.bottom, 18)
+                    .padding(.bottom, 20)
                 }
                 #if os(iOS)
                 // #697/#horizontal-swipe parity, see ScreenScaffold. Shown before onboarding/pairing,
@@ -87,7 +87,7 @@ struct TermsGateView: View {
                     Text("Accept & Continue")
                         .font(StrandFont.headline)
                         .frame(maxWidth: .infinity)
-                        .padding(.vertical, 9)
+                        .padding(.vertical, 8)
                 }
                 .buttonStyle(.borderedProminent)
                 .tint(StrandPalette.accent)

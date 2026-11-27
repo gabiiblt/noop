@@ -183,7 +183,7 @@ struct ManualWorkoutSheet: View {
                     numberInput(String(localized: "optional"), text: $distanceText, unit: distanceUnit, field: .distance)
                         .accessibilityLabel("Distance, optional")
                 }
-                HStack(spacing: 14) {
+                HStack(spacing: 16) {
                     field(String(localized: "Avg HR")) {
                         numberInput(String(localized: "optional"), text: $avgHrText, unit: "bpm", field: .avgHr)
                             .accessibilityLabel("Average heart rate in beats per minute, optional")
@@ -233,7 +233,7 @@ struct ManualWorkoutSheet: View {
             .font(StrandFont.body)
             .foregroundStyle(StrandPalette.textPrimary)
             .focused($sportFocused)
-            .padding(.horizontal, 12).padding(.vertical, 9)
+            .padding(.horizontal, 12).padding(.vertical, 8)
             .background(StrandPalette.surfaceInset, in: inputShape)
             .overlay(inputShape.strokeBorder(StrandPalette.hairline, lineWidth: 1))
             .accessibilityLabel("Sport")
@@ -298,7 +298,7 @@ struct ManualWorkoutSheet: View {
             sport = name
             sportFocused = false
         } label: {
-            HStack(spacing: 6) {
+            HStack(spacing: 8) {
                 Text(name)
                     .font(StrandFont.body)
                     .foregroundStyle(StrandPalette.textPrimary)
@@ -354,7 +354,7 @@ struct ManualWorkoutSheet: View {
     }
 
     private func field<Content: View>(_ label: String, @ViewBuilder _ content: () -> Content) -> some View {
-        VStack(alignment: .leading, spacing: 6) {
+        VStack(alignment: .leading, spacing: 8) {
             Text(label).strandOverline()
             content()
         }
@@ -362,7 +362,7 @@ struct ManualWorkoutSheet: View {
     }
 
     private func numberInput(_ placeholder: String, text: Binding<String>, unit: String, field: NumberField) -> some View {
-        HStack(spacing: 6) {
+        HStack(spacing: 8) {
             TextField(placeholder, text: text)
                 .textFieldStyle(.plain)
                 .font(StrandFont.bodyNumber)
@@ -372,7 +372,7 @@ struct ManualWorkoutSheet: View {
                 .focused($focusedField, equals: field)
             Text(unit).font(StrandFont.footnote).foregroundStyle(StrandPalette.textTertiary)
         }
-        .padding(.horizontal, 12).padding(.vertical, 9)
+        .padding(.horizontal, 12).padding(.vertical, 8)
         // Fill the field column so the Avg HR / Calories boxes share an identical width — left to
         // their intrinsic size the two boxes rendered unequal (the "bpm"/"kcal" units differ in
         // length), so the side-by-side row read as lopsided (#234).

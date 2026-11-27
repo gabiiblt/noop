@@ -15,7 +15,7 @@ struct HealthAlertBanner: View {
             NoopCard(padding: 14, tint: StrandPalette.statusWarning) {
                 HStack(alignment: .top, spacing: 12) {
                     Image(systemName: "exclamationmark.triangle.fill")
-                        .font(.system(size: 15, weight: .semibold))
+                        .font(.system(size: 16, weight: .semibold))
                         .foregroundStyle(StrandPalette.statusWarning)
                         .frame(width: 30, height: 30)
                         .background(StrandPalette.statusWarning.opacity(0.16), in: Circle())

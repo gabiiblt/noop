@@ -75,7 +75,7 @@ struct RollingStepsAverageCard: View {
                 Image(systemName: "chevron.right").font(.system(size: 12, weight: .semibold))
                     .foregroundStyle(StrandPalette.textTertiary)
             }
-            .padding(14)
+            .padding(16)
             .background(NoopPanelSurface(tint: StrandPalette.metricCyan, cornerRadius: NoopMetrics.cardRadius))
         }
         .buttonStyle(.plain)

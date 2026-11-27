@@ -199,7 +199,7 @@ struct CoachView: View {
     private var setupCard: some View {
         StrandCard(padding: 20) {
             VStack(alignment: .leading, spacing: 16) {
-                HStack(spacing: 10) {
+                HStack(spacing: 12) {
                     Image(systemName: "sparkles")
                         .foregroundStyle(StrandPalette.accent)
                         .accessibilityHidden(true)
@@ -214,7 +214,7 @@ struct CoachView: View {
                     .fixedSize(horizontal: false, vertical: true)
 
                 // Provider
-                VStack(alignment: .leading, spacing: 6) {
+                VStack(alignment: .leading, spacing: 8) {
                     Text("Provider").strandOverline()
                     Picker("Provider", selection: $coach.provider) {
                         ForEach(AIProvider.allCases) { p in
@@ -228,14 +228,14 @@ struct CoachView: View {
 
                 // Server URL (Custom / local LLM only)
                 if coach.provider == .custom {
-                    VStack(alignment: .leading, spacing: 6) {
+                    VStack(alignment: .leading, spacing: 8) {
                         Text("Server URL").strandOverline()
                         TextField("http://localhost:11434/v1", text: $coach.customBaseURL)
                             .textFieldStyle(.plain)
                             .font(StrandFont.body)
                             .foregroundStyle(StrandPalette.textPrimary)
                             .padding(.horizontal, 12)
-                            .padding(.vertical, 9)
+                            .padding(.vertical, 8)
                             .background(StrandPalette.surfaceInset, in: RoundedRectangle(cornerRadius: NoopMetrics.radiusControl, style: .continuous))
                             .overlay(RoundedRectangle(cornerRadius: NoopMetrics.radiusControl, style: .continuous)
                                 .strokeBorder(StrandPalette.hairline, lineWidth: 1))
@@ -247,7 +247,7 @@ struct CoachView: View {
                             .fixedSize(horizontal: false, vertical: true)
                     }
 
-                    VStack(alignment: .leading, spacing: 6) {
+                    VStack(alignment: .leading, spacing: 8) {
                         Text("Key header").strandOverline()
                         Picker("Key header", selection: $coach.customAuthHeader) {
                             ForEach(CustomAIAuthHeader.allCases) { header in
@@ -268,7 +268,7 @@ struct CoachView: View {
                 modelSelector
 
                 // Key
-                VStack(alignment: .leading, spacing: 6) {
+                VStack(alignment: .leading, spacing: 8) {
                     Text(coach.provider == .custom ? "API key (optional)" : "API key").strandOverline()
                     SecureField(coach.provider == .custom
                                 ? "Only if your server requires one"
@@ -277,7 +277,7 @@ struct CoachView: View {
                         .font(StrandFont.body)
                         .foregroundStyle(StrandPalette.textPrimary)
                         .padding(.horizontal, 12)
-                        .padding(.vertical, 9)
+                        .padding(.vertical, 8)
                         .background(StrandPalette.surfaceInset, in: RoundedRectangle(cornerRadius: NoopMetrics.radiusControl, style: .continuous))
                         .overlay(RoundedRectangle(cornerRadius: NoopMetrics.radiusControl, style: .continuous)
                             .strokeBorder(StrandPalette.hairline, lineWidth: 1))
@@ -314,7 +314,7 @@ struct CoachView: View {
     /// Model selector: a Picker over `coach.availableModels` with a free-text "Custom…" path and a
     /// "Refresh models" button that fetches the provider's live list.
     private var modelSelector: some View {
-        VStack(alignment: .leading, spacing: 6) {
+        VStack(alignment: .leading, spacing: 8) {
             HStack {
                 Text("Model").strandOverline()
                 Spacer()
@@ -351,7 +351,7 @@ struct CoachView: View {
                         .font(StrandFont.body)
                         .foregroundStyle(StrandPalette.textPrimary)
                         .padding(.horizontal, 12)
-                        .padding(.vertical, 9)
+                        .padding(.vertical, 8)
                         .background(StrandPalette.surfaceInset, in: RoundedRectangle(cornerRadius: NoopMetrics.radiusControl, style: .continuous))
                         .overlay(RoundedRectangle(cornerRadius: NoopMetrics.radiusControl, style: .continuous)
                             .strokeBorder(StrandPalette.hairline, lineWidth: 1))
@@ -394,7 +394,7 @@ struct CoachView: View {
     // MARK: - Connected state
 
     private var connectedHeader: some View {
-        HStack(spacing: 10) {
+        HStack(spacing: 12) {
             StatePill("\(coach.provider.displayName) · \(coach.model)", tone: .accent, showsDot: true)
             Spacer()
             if coach.sending {
@@ -539,8 +539,8 @@ struct CoachView: View {
                     .foregroundStyle(StrandPalette.surfaceBase)
                     .textSelection(.enabled)
                     .multilineTextAlignment(.leading)
-                    .padding(.horizontal, 14)
-                    .padding(.vertical, 10)
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 12)
                     .background(StrandPalette.accent, in: RoundedRectangle(cornerRadius: NoopMetrics.radiusCompact, style: .continuous))
                     .frame(maxWidth: 520, alignment: .trailing)
             }
@@ -556,8 +556,8 @@ struct CoachView: View {
                     .markdownTheme(.strand)
                     .textSelection(.enabled)
                     .fixedSize(horizontal: false, vertical: true)
-                    .padding(.horizontal, 14)
-                    .padding(.vertical, 11)
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 12)
                     .frostedCardSurface(tint: StrandPalette.chargeColor, cornerRadius: NoopMetrics.radiusCompact)
                     .frame(maxWidth: 560, alignment: .leading)
                     // K8: Copy / Share / Save context menu on assistant replies.
@@ -596,8 +596,8 @@ struct CoachView: View {
                 .foregroundStyle(StrandPalette.textSecondary)
             Spacer(minLength: 0)
         }
-        .padding(.horizontal, 14)
-        .padding(.vertical, 11)
+        .padding(.horizontal, 16)
+        .padding(.vertical, 12)
         .frostedCardSurface(tint: StrandPalette.chargeColor, cornerRadius: NoopMetrics.radiusCompact)
         .frame(maxWidth: 320, alignment: .leading)
         .accessibilityLabel("Coach is thinking")
@@ -605,7 +605,7 @@ struct CoachView: View {
 
     private func errorBanner(_ message: String) -> some View {
         StrandCard(padding: 14) {
-            HStack(alignment: .top, spacing: 10) {
+            HStack(alignment: .top, spacing: 12) {
                 Image(systemName: "exclamationmark.triangle.fill")
                     .foregroundStyle(StrandPalette.statusCritical)
                     .accessibilityHidden(true)
@@ -640,7 +640,7 @@ struct CoachView: View {
                     .font(StrandFont.body)
                     .foregroundStyle(StrandPalette.textPrimary)
                     .padding(.horizontal, 12)
-                    .padding(.vertical, 9)
+                    .padding(.vertical, 8)
                     .background(StrandPalette.surfaceInset, in: RoundedRectangle(cornerRadius: NoopMetrics.radiusControl, style: .continuous))
                     .overlay(RoundedRectangle(cornerRadius: NoopMetrics.radiusControl, style: .continuous)
                         .strokeBorder(StrandPalette.hairline, lineWidth: 1))
@@ -685,7 +685,7 @@ struct CoachView: View {
                             .font(StrandFont.captionNumber)
                             .foregroundStyle(StrandPalette.textSecondary)
                             .padding(.horizontal, 12)
-                            .padding(.vertical, 7)
+                            .padding(.vertical, 8)
                             .background(StrandPalette.surfaceInset, in: Capsule(style: .continuous))
                             .overlay(Capsule(style: .continuous).strokeBorder(StrandPalette.hairline, lineWidth: 1))
                     }
@@ -721,7 +721,7 @@ struct CoachView: View {
                             .font(StrandFont.captionNumber)
                             .foregroundStyle(StrandPalette.textSecondary)
                             .padding(.horizontal, 12)
-                            .padding(.vertical, 7)
+                            .padding(.vertical, 8)
                             .background(StrandPalette.surfaceInset, in: Capsule(style: .continuous))
                             .overlay(Capsule(style: .continuous).strokeBorder(StrandPalette.hairline, lineWidth: 1))
                     }
@@ -756,7 +756,7 @@ struct CoachView: View {
     /// The input bar, a frosted overlay surface holding the field + Send, so the composer reads as a
     /// distinct docked surface above the canvas rather than two floating controls.
     private var composer: some View {
-        HStack(alignment: .bottom, spacing: 10) {
+        HStack(alignment: .bottom, spacing: 12) {
             TextField("Ask Coach about your data…", text: $draft, axis: .vertical)
                 .textFieldStyle(.plain)
                 .font(StrandFont.body)
@@ -764,7 +764,7 @@ struct CoachView: View {
                 .lineLimit(1...5)
                 .focused($composerFocused)
                 .padding(.horizontal, 12)
-                .padding(.vertical, 9)
+                .padding(.vertical, 8)
                 .background(StrandPalette.surfaceInset, in: RoundedRectangle(cornerRadius: NoopMetrics.radiusControl, style: .continuous))
                 .overlay(RoundedRectangle(cornerRadius: NoopMetrics.radiusControl, style: .continuous)
                     .strokeBorder(composerFocused ? StrandPalette.focusRing : StrandPalette.hairline, lineWidth: 1))
@@ -787,7 +787,7 @@ struct CoachView: View {
                         ProgressView().controlSize(.small).tint(StrandPalette.goldDeepText)
                     } else {
                         Image(systemName: "arrow.up")
-                            .font(.system(size: 15, weight: .semibold))
+                            .font(.system(size: 16, weight: .semibold))
                     }
                 }
                 .frame(width: 44, height: 38)
@@ -822,7 +822,7 @@ struct CoachView: View {
                         .foregroundStyle(StrandPalette.statusCritical)
                 } else {
                     Image(systemName: "mic.fill")
-                        .font(.system(size: 15, weight: .semibold))
+                        .font(.system(size: 16, weight: .semibold))
                         .foregroundStyle(canUseVoice ? StrandPalette.textSecondary : StrandPalette.textTertiary)
                 }
             }

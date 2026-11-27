@@ -230,7 +230,7 @@ struct ChargeLegacyRRGapNote: View {
                     .font(.system(size: 16, weight: .semibold))
                     .foregroundStyle(StrandPalette.chargeColor)
                     .accessibilityHidden(true)
-                VStack(alignment: .leading, spacing: 3) {
+                VStack(alignment: .leading, spacing: 4) {
                     Text(ChargeBreakdownFormat.chargeLegacyRRGapTitle)
                         .font(StrandFont.headline)
                         .foregroundStyle(StrandPalette.textPrimary)
@@ -259,7 +259,7 @@ struct ConfidenceTierChip: View {
     private var hue: Color { ChargeBreakdownFormat.confidenceDotColor(confidence) }
 
     var body: some View {
-        HStack(spacing: 6) {
+        HStack(spacing: 8) {
             Circle()
                 .fill(hue)
                 .frame(width: 7, height: 7)
@@ -270,8 +270,8 @@ struct ConfidenceTierChip: View {
                 .tracking(0.4)
                 .foregroundStyle(hue)
         }
-        .padding(.horizontal, 10)
-        .padding(.vertical, 5)
+        .padding(.horizontal, 12)
+        .padding(.vertical, 4)
         .background(Capsule(style: .continuous).fill(hue.opacity(0.12)))
         .overlay(Capsule(style: .continuous).stroke(hue.opacity(0.32), lineWidth: 1))
         .accessibilityElement(children: .ignore)
@@ -352,7 +352,7 @@ struct ChargeDriverRow: View {
                     .background(chipHue.opacity(0.14), in: Capsule(style: .continuous))
             }
             // value vs baseline , the baseline line is omitted for terms with no learned baseline.
-            HStack(spacing: 6) {
+            HStack(spacing: 8) {
                 Text(driver.valueText)
                     .font(StrandFont.captionNumber)
                     .foregroundStyle(StrandPalette.textSecondary)
@@ -418,7 +418,7 @@ struct SkinTempDeviationRow: View {
 #Preview("Charge breakdown") {
     ScrollView {
         VStack(alignment: .leading, spacing: NoopMetrics.sectionGap) {
-            HStack(spacing: 10) {
+            HStack(spacing: 12) {
                 ConfidenceTierChip(confidence: .calibrating)
                 ConfidenceTierChip(confidence: .building)
                 ConfidenceTierChip(confidence: .solid)

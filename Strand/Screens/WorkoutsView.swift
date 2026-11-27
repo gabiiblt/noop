@@ -382,7 +382,7 @@ struct WorkoutsView: View {
     }
 
     private func recoveryLegend(_ label: LocalizedStringKey, color: Color) -> some View {
-        HStack(spacing: 5) {
+        HStack(spacing: 4) {
             Circle().fill(color).frame(width: 8, height: 8)
             Text(label).font(StrandFont.footnote).foregroundStyle(StrandPalette.textSecondary)
         }
@@ -423,7 +423,7 @@ struct WorkoutsView: View {
 
     /// The transient "personal pattern" caption — an Effort-tinted frosted strip with a chart glyph.
     private func postLogBanner(_ text: String) -> some View {
-        HStack(alignment: .top, spacing: 10) {
+        HStack(alignment: .top, spacing: 12) {
             Image(systemName: "chart.line.uptrend.xyaxis")
                 .font(.system(size: 14, weight: .semibold))
                 .foregroundStyle(StrandPalette.effortColor)
@@ -553,8 +553,8 @@ struct WorkoutsView: View {
                         Label(String(localized: "Clear"), systemImage: "xmark.circle.fill")
                             .font(StrandFont.footnote)
                             .foregroundStyle(StrandPalette.textSecondary)
-                            .padding(.horizontal, 10)
-                            .padding(.vertical, 7)
+                            .padding(.horizontal, 12)
+                            .padding(.vertical, 8)
                             .frame(minHeight: 44)
                     }
                     .accessibilityLabel(String(localized: "Clear filters"))
@@ -572,12 +572,12 @@ struct WorkoutsView: View {
         } label: {
             HStack(spacing: 4) {
                 Text(title).font(StrandFont.footnote).lineLimit(1)
-                Image(systemName: "chevron.down").font(.system(size: 9, weight: .semibold))
+                Image(systemName: "chevron.down").font(.system(size: 10, weight: .semibold))
             }
             .frame(maxWidth: .infinity)
             .foregroundStyle(active ? StrandPalette.effortColor : StrandPalette.textSecondary)
-            .padding(.horizontal, 10)
-            .padding(.vertical, 6)
+            .padding(.horizontal, 12)
+            .padding(.vertical, 8)
             .background(
                 (active ? StrandPalette.effortColor.opacity(0.14) : StrandPalette.surfaceInset.opacity(0.6)),
                 in: RoundedRectangle(cornerRadius: NoopMetrics.radiusControl, style: .continuous)
@@ -781,7 +781,7 @@ struct WorkoutsView: View {
         let scaleMax: Double = effortScale == .whoop ? 21 : 100
         let displayValue = UnitFormatter.effortValue(avgStrain, scale: effortScale)
         let fraction = max(0, min(1, displayValue / scaleMax))
-        VStack(spacing: 18) {
+        VStack(spacing: 20) {
             Text("TYPICAL EFFORT")
                 .font(StrandFont.overline).tracking(StrandFont.overlineTracking)
                 .foregroundStyle(StrandPalette.effortColor)
@@ -904,7 +904,7 @@ struct WorkoutsView: View {
                                 .font(StrandFont.caption).foregroundStyle(StrandPalette.textSecondary)
                             Spacer(minLength: 8)
                             if grid.streak > 0 {
-                                Text("\(grid.streak)").font(StrandFont.number(15))
+                                Text("\(grid.streak)").font(StrandFont.number(16))
                                     .foregroundStyle(StrandPalette.effortColor)
                                 Text(grid.streak == 1 ? "day in a row" : "days in a row")
                                     .font(StrandFont.caption).foregroundStyle(StrandPalette.textTertiary)
@@ -1063,9 +1063,9 @@ struct WorkoutsView: View {
         NoopCard(tint: StrandPalette.effortColor) {
             VStack(alignment: .leading, spacing: 12) {
                 // Identical header for every card.
-                HStack(spacing: 10) {
+                HStack(spacing: 12) {
                     Image(systemName: sportIcon(g.sport))
-                        .font(.system(size: 15, weight: .semibold))
+                        .font(.system(size: 16, weight: .semibold))
                         .foregroundStyle(StrandPalette.effortColor)
                         .frame(width: 22, alignment: .center)
                     Text(WorkoutSource.displaySport(g.sport))
@@ -1074,7 +1074,7 @@ struct WorkoutsView: View {
                         .lineLimit(1)
                     Spacer(minLength: 0)
                     Text("\(g.count)")
-                        .font(StrandFont.number(15))
+                        .font(StrandFont.number(16))
                         .foregroundStyle(StrandPalette.effortBright)
                 }
                 if let zones { zoneMiniBar(zones) }
@@ -1116,10 +1116,10 @@ struct WorkoutsView: View {
     }
 
     private func miniStat(_ label: String, _ value: String, tint: Color = StrandPalette.textPrimary) -> some View {
-        VStack(alignment: .leading, spacing: 3) {
+        VStack(alignment: .leading, spacing: 4) {
             Text(label).strandOverline()
             Text(value)
-                .font(StrandFont.number(15))
+                .font(StrandFont.number(16))
                 .foregroundStyle(tint)
                 .lineLimit(1)
                 .minimumScaleFactor(0.7)
@@ -1176,15 +1176,15 @@ struct WorkoutsView: View {
     }
 
     private func zoneStat(_ zone: Int, minutes: Double, total: Double) -> some View {
-        VStack(alignment: .leading, spacing: 3) {
-            HStack(spacing: 5) {
+        VStack(alignment: .leading, spacing: 4) {
+            HStack(spacing: 4) {
                 RoundedRectangle(cornerRadius: 2, style: .continuous)
                     .fill(StrandPalette.hrZoneColor(zone))
                     .frame(width: 9, height: 9)
                 Text("Z\(zone)" as String).strandOverline()
             }
             Text("\(Int((minutes / max(total, 0.001) * 100).rounded()))%")
-                .font(StrandFont.number(15))
+                .font(StrandFont.number(16))
                 .foregroundStyle(StrandPalette.textPrimary)
             Text(durationLabel(minutes * 60))
                 .font(StrandFont.footnote)
@@ -1255,7 +1255,7 @@ struct WorkoutsView: View {
                 Text(selectionMode ? String(localized: "Done") : String(localized: "Select"))
                     .font(StrandFont.footnote)
                     .foregroundStyle(selectionMode ? StrandPalette.effortColor : StrandPalette.accent)
-                    .padding(.horizontal, 12).padding(.vertical, 6)
+                    .padding(.horizontal, 12).padding(.vertical, 8)
                     .background(
                         (selectionMode ? StrandPalette.effortColor.opacity(0.14)
                                        : StrandPalette.surfaceInset.opacity(0.6)),
@@ -1272,7 +1272,7 @@ struct WorkoutsView: View {
     private func selectionToolbar(rows: [WorkoutRow]) -> some View {
         let chosen = rows.filter { selected.contains(selectionKey($0)) }
         let canMerge = WorkoutMerge.canMerge(chosen)
-        return HStack(spacing: 10) {
+        return HStack(spacing: 12) {
             Button {
                 beginMerge(chosen)
             } label: {
@@ -1423,7 +1423,7 @@ struct WorkoutsView: View {
             .frame(width: ColWidth.date, alignment: .leading)
 
             // Sport ("detected" reads as "Activity")
-            HStack(spacing: 7) {
+            HStack(spacing: 8) {
                 Image(systemName: sportIcon(row.sport))
                     .font(.system(size: 12, weight: .medium))
                     .foregroundStyle(StrandPalette.textSecondary)
@@ -1504,7 +1504,7 @@ struct WorkoutsView: View {
                     compactSelectionGlyph(selectable: selectable, isSelected: isSelected)
                 }
                 Image(systemName: sportIcon(row.sport))
-                    .font(.system(size: 15, weight: .medium))
+                    .font(.system(size: 16, weight: .medium))
                     .foregroundStyle(StrandPalette.textSecondary)
                     .frame(width: 22)
                     .accessibilityHidden(true)
@@ -1516,7 +1516,7 @@ struct WorkoutsView: View {
                             .lineLimit(1)
                         Spacer(minLength: 0)
                         Text(Self.effortCellLabel(strain: row.strain, scale: effortScale))
-                            .font(StrandFont.number(15))
+                            .font(StrandFont.number(16))
                             .foregroundStyle(row.strain != nil ? StrandPalette.effortColor : StrandPalette.textTertiary)
                     }
                     Text(compactRowSubtitle(row))
@@ -1607,7 +1607,7 @@ struct WorkoutsView: View {
             rowMenu(row)
         } label: {
             Image(systemName: "ellipsis")
-                .font(.system(size: 13, weight: .semibold))
+                .font(.system(size: 14, weight: .semibold))
                 .foregroundStyle(StrandPalette.textTertiary)
                 .frame(width: ColWidth.action, height: RowMetrics.rowHeight)
                 .contentShape(Rectangle())
@@ -1661,7 +1661,7 @@ struct WorkoutsView: View {
 
     private func cell(_ text: String, width: CGFloat, color: Color? = nil) -> some View {
         Text(text)
-            .font(StrandFont.number(13, weight: .regular))
+            .font(StrandFont.number(14, weight: .regular))
             .foregroundStyle(color ?? (text == "–" ? StrandPalette.textTertiary : StrandPalette.textPrimary))
             .frame(width: width, alignment: .trailing)
     }

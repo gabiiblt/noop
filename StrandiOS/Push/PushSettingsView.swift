@@ -31,7 +31,7 @@ struct PushSettingsView: View {
     private var connectionCard: some View {
         StrandCard(padding: 20) {
             VStack(alignment: .leading, spacing: 12) {
-                HStack(spacing: 10) {
+                HStack(spacing: 12) {
                     Image(systemName: "arrow.up.forward.app.fill")
                         .foregroundStyle(StrandPalette.accent)
                         .accessibilityHidden(true)
@@ -51,7 +51,7 @@ struct PushSettingsView: View {
                     PushWake.reRegister()
                 }
 
-                VStack(alignment: .leading, spacing: 6) {
+                VStack(alignment: .leading, spacing: 8) {
                     Text("Address").strandOverline()
                     TextField("https://server.example.ts.net/push", text: $endpoint)
                         .modifier(PushFieldChrome())
@@ -66,7 +66,7 @@ struct PushSettingsView: View {
                     }
                 }
 
-                VStack(alignment: .leading, spacing: 6) {
+                VStack(alignment: .leading, spacing: 8) {
                     Text(tokenStored ? "Token (saved in the Keychain)" : "Token").strandOverline()
                     SecureField(tokenStored ? "Paste a new token to replace it" : "Paste your token", text: $tokenDraft)
                         .modifier(PushFieldChrome())
@@ -104,7 +104,7 @@ struct PushSettingsView: View {
 
     private var statusCard: some View {
         StrandCard(padding: 20) {
-            VStack(alignment: .leading, spacing: 10) {
+            VStack(alignment: .leading, spacing: 12) {
                 Text("Status").strandOverline()
                 Text(push.statusLine)
                     .font(StrandFont.body)
@@ -167,7 +167,7 @@ private struct PushFieldChrome: ViewModifier {
             .font(StrandFont.body)
             .foregroundStyle(StrandPalette.textPrimary)
             .padding(.horizontal, 12)
-            .padding(.vertical, 9)
+            .padding(.vertical, 8)
             .background(StrandPalette.surfaceInset, in: RoundedRectangle(cornerRadius: NoopMetrics.radiusControl, style: .continuous))
             .overlay(RoundedRectangle(cornerRadius: NoopMetrics.radiusControl, style: .continuous)
                 .strokeBorder(StrandPalette.hairline, lineWidth: 1))

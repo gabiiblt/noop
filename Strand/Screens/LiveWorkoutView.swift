@@ -253,7 +253,7 @@ struct LiveWorkoutView: View {
                     .padding(.vertical, NoopMetrics.space1)
                     .background(tint.opacity(0.12), in: Capsule())
             }
-            HStack(spacing: 6) {
+            HStack(spacing: 8) {
                 ForEach(1...5, id: \.self) { z in
                     let active = z == zone
                     let color = StrandPalette.hrZoneColor(z)

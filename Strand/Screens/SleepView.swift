@@ -393,7 +393,7 @@ struct SleepView: View {
         let message = banner.snapshot.session.userEdited
             ? String(localized: "Sleep deleted.")
             : String(localized: "Sleep deleted. NOOP won't detect sleep between \(clockTime(banner.displayStart)) and \(clockTime(banner.windowEnd)) again.")
-        HStack(alignment: .center, spacing: 10) {
+        HStack(alignment: .center, spacing: 12) {
             Image(systemName: "moon.zzz")
                 .font(.system(size: 14, weight: .semibold))
                 .foregroundStyle(StrandPalette.restColor)
@@ -535,7 +535,7 @@ struct SleepView: View {
                 .font(StrandFont.rounded(24, weight: .semibold))
                 .foregroundStyle(Color.white.opacity(0.96))
                 .shadow(color: .black.opacity(0.35), radius: 5, y: 1)
-                .padding(.top, 6)
+                .padding(.top, 8)
                 .accessibilityAddTraits(.isHeader)
 
             if let score {
@@ -570,7 +570,7 @@ struct SleepView: View {
                         .font(StrandFont.subhead)
                         .foregroundStyle(Color.white.opacity(0.72))
                 }
-                .padding(.top, 14)
+                .padding(.top, 16)
                 .padding(.bottom, 4)
                 .accessibilityElement(children: .combine)
             }
@@ -584,8 +584,8 @@ struct SleepView: View {
             // Subtle Customize at the hero foot — functional, not competing with the gauge.
             sleepArrangeAffordance
                 .padding(.horizontal, 16)
-                .padding(.top, 6)
-                .padding(.bottom, 6)
+                .padding(.top, 8)
+                .padding(.bottom, 8)
         }
         .frame(maxWidth: .infinity)
     }
@@ -773,7 +773,7 @@ struct SleepView: View {
     @ViewBuilder
     private func napRow(_ nap: CachedSleepSession) -> some View {
         let isEdited = nap.userEdited
-        HStack(spacing: 10) {
+        HStack(spacing: 12) {
             Image(systemName: "powersleep")
                 .font(StrandFont.headline)
                 .foregroundStyle(StrandPalette.restColor)
@@ -996,7 +996,7 @@ struct SleepView: View {
                 .foregroundStyle(StrandPalette.textTertiary)
             if night.motionEpochs.count >= 2 {
                 MotionTrace(epochs: night.motionEpochs, height: 40, tint: StrandPalette.restColor)
-                    .padding(.horizontal, 10)
+                    .padding(.horizontal, 12)
             } else {
                 Text("No movement detail for this night")
                     .font(StrandFont.footnote)
@@ -1211,14 +1211,14 @@ struct SleepView: View {
     /// popover, so the pick is explainable on the spot without leaving the hero. (spec 2026-06-20 C1/C4)
     @ViewBuilder
     private func mainSleepFooter(_ night: Night) -> some View {
-        HStack(spacing: 10) {
+        HStack(spacing: 12) {
             // C4 — provenance. Dynamic String into the badge slot, so wrap in "\()" (the
             // String vs LocalizedStringKey SwiftUI footgun) to show it verbatim, not as a lookup key.
             SourceBadge("\(nightSource(night))", tint: StrandPalette.restColor)
             Spacer(minLength: 8)
             if mainSleepReasonText(night) != nil {
                 Button { showMainSleepWhy.toggle() } label: {
-                    HStack(spacing: 5) {
+                    HStack(spacing: 4) {
                         Image(systemName: "info.circle")
                         Text("Why this sleep?")
                     }
@@ -1274,7 +1274,7 @@ struct SleepView: View {
     }
 
     private func sleepTime(icon: String, label: LocalizedStringKey, value: String) -> some View {
-        HStack(spacing: 10) {
+        HStack(spacing: 12) {
             Image(systemName: icon)
                 .font(StrandFont.headline)
                 .foregroundStyle(StrandPalette.restColor)
@@ -1323,7 +1323,7 @@ struct SleepView: View {
     @ViewBuilder
     private func stageBar(_ s: Stages) -> some View {
         let total = max(1, s.total)
-        VStack(alignment: .leading, spacing: 10) {
+        VStack(alignment: .leading, spacing: 12) {
             Spacer(minLength: 0)
             GeometryReader { geo in
                 HStack(spacing: 2) {
@@ -1357,7 +1357,7 @@ struct SleepView: View {
 
     @ViewBuilder
     private func legend(_ stage: SleepStage, _ label: String) -> some View {
-        HStack(spacing: 5) {
+        HStack(spacing: 4) {
             RoundedRectangle(cornerRadius: 2, style: .continuous)
                 .fill(StrandPalette.sleepStageColor(stage))
                 .frame(width: 9, height: 9)
@@ -1405,7 +1405,7 @@ struct SleepView: View {
         let fraction = total > 0 ? min(1, max(0, minutes / total)) : 0
         let isSelected = selectedStage == stage
         let othersSelected = selectedStage != nil && !isSelected
-        HStack(spacing: 10) {
+        HStack(spacing: 12) {
             RoundedRectangle(cornerRadius: 3, style: .continuous)
                 .fill(color)
                 .frame(width: 12, height: 12)
@@ -1428,7 +1428,7 @@ struct SleepView: View {
                 .frame(width: 60, alignment: .trailing)
         }
         .padding(.vertical, 4)
-        .padding(.horizontal, 6)
+        .padding(.horizontal, 8)
         .background(
             RoundedRectangle(cornerRadius: NoopMetrics.radiusChip, style: .continuous)
                 .fill(color.opacity(isSelected ? 0.14 : 0))
@@ -1473,7 +1473,7 @@ struct SleepView: View {
             SleepHRChart(nightHR: nightHR, intervals: smoothed, origin: origin, span: span, night: night,
                          selectedStage: selectedStage, timeFormatter: Self.stageAxisFormatter)
                 .frame(height: 124)
-                .padding(.horizontal, 10)
+                .padding(.horizontal, 12)
                 .padding(.bottom, 2)
             stageTimelineRow(.awake, minutes: s.awake, percent: stageSharePercent(.awake, s), intervals: smoothed, origin: origin, span: span)
             stageTimelineRow(.rem,   minutes: s.rem,   percent: stageSharePercent(.rem, s), intervals: smoothed, origin: origin, span: span)
@@ -1489,7 +1489,7 @@ struct SleepView: View {
             }
             .font(StrandFont.footnote)
             .foregroundStyle(StrandPalette.textTertiary)
-            .padding(.horizontal, 10)
+            .padding(.horizontal, 12)
             .accessibilityHidden(true)
             // WHOOP's per-stage insight: with a stage selected, tonight vs the 30-day typical
             // range; otherwise a quiet hint that the rows are tappable. It grows only when a
@@ -1627,7 +1627,7 @@ struct SleepView: View {
         let color = StrandPalette.sleepStageColor(stage)
         let isSelected = selectedStage == stage
         let dimmed = selectedStage != nil && !isSelected
-        VStack(alignment: .leading, spacing: 6) {
+        VStack(alignment: .leading, spacing: 8) {
             HStack(spacing: 8) {
                 Text(stage.label.uppercased())
                     .font(StrandFont.overline)
@@ -1658,7 +1658,7 @@ struct SleepView: View {
             .frame(height: 20)
         }
         .padding(.vertical, 8)
-        .padding(.horizontal, 10)
+        .padding(.horizontal, 12)
         .background(
             RoundedRectangle(cornerRadius: NoopMetrics.radiusControl, style: .continuous)
                 .fill(StrandPalette.textPrimary.opacity(0.045))
@@ -2800,7 +2800,7 @@ private struct SleepTimeEditor: View {
                 .fixedSize(horizontal: false, vertical: true)
 
             NoopCard(padding: NoopMetrics.cardPadding, tint: StrandPalette.restColor) {
-                VStack(alignment: .leading, spacing: 10) {
+                VStack(alignment: .leading, spacing: 12) {
                     // Bed is bounded to the PAST (#940): a sleep can't start in the future, and an
                     // unbounded picker let a cross-midnight time roll land the bed on the coming
                     // evening, creating a future-dated night the tab couldn't render.

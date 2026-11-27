@@ -276,7 +276,7 @@ struct RootView: View {
                 .searchable(text: $searchQuery, placement: .sidebar, prompt: "Search")
 
                 Divider().overlay(StrandPalette.hairline)
-                SidebarStatus().padding(.horizontal, 14).padding(.vertical, 12)
+                SidebarStatus().padding(.horizontal, 16).padding(.vertical, 12)
             }
             // One continuous flat WHOOP-grey surface behind the brand header, the list rows, and the
             // status pill, no black-vs-vibrancy seam (Design Reset, 2026-06-23).
@@ -546,7 +546,7 @@ struct BrandMark: View {
 private struct SidebarStatus: View {
     @EnvironmentObject var live: LiveState
     var body: some View {
-        HStack(spacing: 9) {
+        HStack(spacing: 8) {
             Circle()
                 .fill(statusColor)
                 .frame(width: 9, height: 9)
@@ -570,7 +570,7 @@ private struct SidebarStatus: View {
             }
             Spacer()
         }
-        .padding(10)
+        .padding(12)
         .background(NoopPanelSurface(cornerRadius: NoopMetrics.radiusControl))
     }
 

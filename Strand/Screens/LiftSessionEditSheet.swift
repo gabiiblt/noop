@@ -146,7 +146,7 @@ struct LiftSessionEditSheet: View {
             field(.reps(entry.id), text: binding(exercise, entry.id, \.reps))
             field(.rpe(entry.id), text: binding(exercise, entry.id, \.rpe))
         }
-        .padding(.vertical, 6)
+        .padding(.vertical, 8)
     }
 
     /// Add a set at the end of an exercise, or drop its last one — the same control as the session
@@ -157,9 +157,9 @@ struct LiftSessionEditSheet: View {
         let canRemove = group.entries.count > 1
         return HStack(spacing: 8) {
             Button { addSet(index) } label: {
-                HStack(spacing: 6) {
+                HStack(spacing: 8) {
                     Image(systemName: "plus.circle")
-                        .font(.system(size: 17, weight: .semibold))
+                        .font(.system(size: 18, weight: .semibold))
                     Text("Add set").font(StrandFont.caption)
                 }
                 .foregroundStyle(canAdd ? StrandPalette.gymAccent : StrandPalette.textTertiary)
@@ -172,7 +172,7 @@ struct LiftSessionEditSheet: View {
 
             Button { removeSet(index) } label: {
                 Image(systemName: "minus.circle")
-                    .font(.system(size: 17, weight: .semibold))
+                    .font(.system(size: 18, weight: .semibold))
                     .foregroundStyle(canRemove ? StrandPalette.textSecondary
                                                : StrandPalette.textTertiary.opacity(0.4))
                     .contentShape(Rectangle())

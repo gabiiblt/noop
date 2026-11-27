@@ -108,7 +108,7 @@ struct CoachSettingsView: View {
     /// A frosted Charge-tinted card so it reads as part of the green Coach world, not a flat panel.
     private var consentBar: some View {
         NoopCard(padding: 14, tint: StrandPalette.chargeColor) {
-            HStack(spacing: 10) {
+            HStack(spacing: 12) {
                 Image(systemName: coach.dataConsent ? "lock.open.fill" : "lock.fill")
                     .foregroundStyle(coach.dataConsent ? StrandPalette.accent : StrandPalette.textTertiary)
                     .accessibilityHidden(true)
@@ -137,7 +137,7 @@ struct CoachSettingsView: View {
     /// Lab Book markers). Summary-only, never raw readings, so the no-raw-egress posture holds.
     private var onDeviceSignalsBar: some View {
         NoopCard(padding: 14, tint: StrandPalette.chargeColor) {
-            HStack(spacing: 10) {
+            HStack(spacing: 12) {
                 Image(systemName: coach.includeOnDeviceSignals ? "checklist.checked" : "checklist")
                     .foregroundStyle(coach.includeOnDeviceSignals ? StrandPalette.accent : StrandPalette.textTertiary)
                     .accessibilityHidden(true)
@@ -162,7 +162,7 @@ struct CoachSettingsView: View {
     /// API. Only shown when the provider is Gemini. OFF by default.
     private var multimodalChartBar: some View {
         NoopCard(padding: 14, tint: StrandPalette.chargeColor) {
-            HStack(spacing: 10) {
+            HStack(spacing: 12) {
                 Image(systemName: coach.multimodalChartEnabled ? "photo.badge.checkmark" : "photo")
                     .foregroundStyle(coach.multimodalChartEnabled ? StrandPalette.accent : StrandPalette.textTertiary)
                     .accessibilityHidden(true)
@@ -195,7 +195,7 @@ struct CoachSettingsView: View {
                         if promptExpanded { promptDraft = coach.customSystemPrompt }
                     }
                 } label: {
-                    HStack(spacing: 10) {
+                    HStack(spacing: 12) {
                         Image(systemName: "text.alignleft")
                             .foregroundStyle(coach.hasCustomSystemPrompt ? StrandPalette.accent : StrandPalette.textTertiary)
                             .accessibilityHidden(true)
@@ -257,8 +257,8 @@ struct CoachSettingsView: View {
     /// explicit "Generate now" button. Mirrors the `ScheduledDebugExport` settings row shape (TestCentreView).
     private var morningBriefBar: some View {
         NoopCard(padding: 14, tint: StrandPalette.chargeColor) {
-            VStack(alignment: .leading, spacing: 10) {
-                HStack(spacing: 10) {
+            VStack(alignment: .leading, spacing: 12) {
+                HStack(spacing: 12) {
                     Image(systemName: briefEnabled ? "sunrise.fill" : "sunrise")
                         .foregroundStyle(briefEnabled ? StrandPalette.accent : StrandPalette.textTertiary)
                         .accessibilityHidden(true)

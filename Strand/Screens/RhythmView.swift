@@ -103,7 +103,7 @@ struct RhythmConsentGate: View {
             StrandPalette.surfaceBase.ignoresSafeArea()
 
             VStack(spacing: 0) {
-                VStack(spacing: 6) {
+                VStack(spacing: 8) {
                     Text("Before you turn on Rhythm")
                         .font(StrandFont.title1)
                         .foregroundStyle(StrandPalette.textPrimary)
@@ -118,7 +118,7 @@ struct RhythmConsentGate: View {
                 .padding(.horizontal, 24)
 
                 ScrollView {
-                    VStack(alignment: .leading, spacing: 18) {
+                    VStack(alignment: .leading, spacing: 20) {
                         ForEach(RhythmConsent.points, id: \.0) { point in
                             VStack(alignment: .leading, spacing: 4) {
                                 Text(point.0)
@@ -138,7 +138,7 @@ struct RhythmConsentGate: View {
                             .fixedSize(horizontal: false, vertical: true)
                     }
                     .padding(.horizontal, 30)
-                    .padding(.bottom, 18)
+                    .padding(.bottom, 20)
                 }
                 #if os(iOS)
                 // #697/#horizontal-swipe parity, see ScreenScaffold.
@@ -381,14 +381,14 @@ struct RhythmView: View {
     /// the short `chipLabel` sits in the pill, the sentence `headlineDetail` reads below. Non-diagnostic.
     private var statusChip: some View {
         let label = night?.overall ?? headlineWindow?.label ?? .unreadable
-        return HStack(spacing: 6) {
+        return HStack(spacing: 8) {
             Image(systemName: Self.statusIcon(label))
             Text(chipLabel(label))
         }
         .font(StrandFont.subhead)
         .foregroundStyle(StrandPalette.restBright)
         .padding(.horizontal, 12)
-        .padding(.vertical, 7)
+        .padding(.vertical, 8)
         .background(StrandPalette.restColor.opacity(0.16), in: Capsule(style: .continuous))
         .overlay(Capsule(style: .continuous).strokeBorder(StrandPalette.restColor.opacity(0.34), lineWidth: 1))
     }
@@ -416,7 +416,7 @@ struct RhythmView: View {
 
     private var summaryCard: some View {
         StrandCard(padding: 18, tint: StrandPalette.restColor) {
-            VStack(alignment: .leading, spacing: 10) {
+            VStack(alignment: .leading, spacing: 12) {
                 HStack(alignment: .firstTextBaseline) {
                     Text("LAST NIGHT").strandOverline()
                     Spacer()
@@ -450,7 +450,7 @@ struct RhythmView: View {
     /// Static tube so a page of them costs one cached frame each. Decorative for VoiceOver (the numbers
     /// grid carries the meaning).
     private func liquidStatRow(_ label: LocalizedStringKey, frac: Double?, tint: Color) -> some View {
-        VStack(alignment: .leading, spacing: 5) {
+        VStack(alignment: .leading, spacing: 4) {
             HStack {
                 Text(label)
                     .font(StrandFont.overline)

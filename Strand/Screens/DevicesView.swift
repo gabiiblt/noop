@@ -116,11 +116,11 @@ private struct DevicesContent: View {
     /// because the two live in different view files with no shared banner container today; the STRING is
     /// shared, which is the part that must not drift.
     private func repairGuideBanner(_ guide: String) -> some View {
-        HStack(alignment: .top, spacing: 10) {
+        HStack(alignment: .top, spacing: 12) {
             Image(systemName: "exclamationmark.triangle.fill")
                 .foregroundStyle(StrandPalette.statusWarning)
                 .accessibilityHidden(true)
-            VStack(alignment: .leading, spacing: 3) {
+            VStack(alignment: .leading, spacing: 4) {
                 Text("Can't connect: your strap's pairing was reset")
                     .font(StrandFont.subhead).foregroundStyle(StrandPalette.textPrimary)
                 Text(guide)
@@ -452,7 +452,7 @@ private struct DevicesContent: View {
     }
 
     private var whoopFirstFooter: some View {
-        HStack(alignment: .top, spacing: 10) {
+        HStack(alignment: .top, spacing: 12) {
             Image(systemName: "info.circle")
                 .foregroundStyle(StrandPalette.textTertiary)
                 .accessibilityHidden(true)
@@ -556,7 +556,7 @@ private struct DevicesContent: View {
                     Text(c.bName).font(StrandFont.caption).foregroundStyle(StrandPalette.textSecondary)
                 }
                 ForEach(c.rows, id: \.metric) { row in
-                    HStack(spacing: 10) {
+                    HStack(spacing: 12) {
                         Text(metricLabel(row.metric)).font(StrandFont.subhead)
                             .foregroundStyle(StrandPalette.textPrimary)
                             .frame(maxWidth: .infinity, alignment: .leading)
@@ -577,7 +577,7 @@ private struct DevicesContent: View {
     /// history preserved). Switching-not-combining: scores stay single-owner-per-day, this just picks the
     /// owner. Collapses automatically when only one strap remains (the caller gates on count > 1).
     private var strapSwitcher: some View {
-        HStack(spacing: 6) {
+        HStack(spacing: 8) {
             ForEach(activeDevices, id: \.id) { device in
                 let isActive = device.status == .active
                 Button { if !isActive { switchTarget = device } } label: {
@@ -585,7 +585,7 @@ private struct DevicesContent: View {
                         .font(StrandFont.caption)
                         .lineLimit(1)
                         .frame(maxWidth: .infinity)
-                        .padding(.vertical, 7)
+                        .padding(.vertical, 8)
                         .background(isActive ? StrandPalette.accent.opacity(0.18) : Color.clear,
                                     in: Capsule(style: .continuous))
                         .overlay(Capsule(style: .continuous).strokeBorder(
@@ -808,7 +808,7 @@ private struct DeviceCard: View {
                         .frame(width: 28)
                         .accessibilityHidden(true)
 
-                    VStack(alignment: .leading, spacing: 3) {
+                    VStack(alignment: .leading, spacing: 4) {
                         Text(device.displayName)
                             .font(StrandFont.headline)
                             .foregroundStyle(StrandPalette.textPrimary)
@@ -880,7 +880,7 @@ private struct DeviceCard: View {
                         .accessibilityLabel(warning)
                 }
 
-                HStack(spacing: 6) {
+                HStack(spacing: 8) {
                     Text(lastSeenLine)
                         .font(StrandFont.footnote)
                         .foregroundStyle(StrandPalette.textTertiary)
@@ -950,7 +950,7 @@ private struct DeviceCard: View {
         }
         .overlay(alignment: .bottomTrailing) {
             actionsMenu
-                .padding(18)
+                .padding(20)
         }
     }
 
@@ -978,7 +978,7 @@ private struct DeviceCard: View {
     /// The live battery as a liquid tube (fills to the charge, coloured by band) with a trailing percent.
     /// Static-posed so it costs nothing per frame — one of many small liquid elements on the screen.
     private func batteryTube(_ pct: Int) -> some View {
-        HStack(spacing: 10) {
+        HStack(spacing: 12) {
             Image(systemName: batterySymbol(pct))
                 .font(StrandFont.caption)
                 .foregroundStyle(batteryTint(pct))
@@ -1111,7 +1111,7 @@ private struct DeviceCard: View {
 
     /// One icon-prefixed info row (captures / powers), matching the card's caption style.
     private func capabilityRow(symbol: String, text: String, tint: Color) -> some View {
-        HStack(alignment: .top, spacing: 6) {
+        HStack(alignment: .top, spacing: 8) {
             Image(systemName: symbol)
                 .font(StrandFont.caption)
                 .foregroundStyle(StrandPalette.textTertiary)
@@ -1138,7 +1138,7 @@ private struct DeviceCard: View {
     /// reading: re-states the single-owner reality so the user understands why a re-reset / Oura re-claim
     /// would break NOOP's ownership.
     private var ouraLocalStateNote: some View {
-        HStack(alignment: .top, spacing: 6) {
+        HStack(alignment: .top, spacing: 8) {
             Image(systemName: "info.circle")
                 .font(StrandFont.caption)
                 .foregroundStyle(StrandPalette.statusWarning)

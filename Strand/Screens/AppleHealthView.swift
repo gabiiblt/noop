@@ -352,7 +352,7 @@ struct AppleHealthView: View {
 
     private var loadingState: some View {
         NoopCard(tint: StrandPalette.metricCyan) {
-            HStack(spacing: 10) {
+            HStack(spacing: 12) {
                 ConnectionDot(tone: .accent, pulsing: true)
                 Text("Reading your Apple Health history…")
                     .font(StrandFont.subhead).foregroundStyle(StrandPalette.textSecondary)
@@ -372,7 +372,7 @@ struct AppleHealthView: View {
     private var liveSyncCard: some View {
         StrandCard(padding: 20, tint: StrandPalette.metricCyan) {
             VStack(alignment: .leading, spacing: 12) {
-                HStack(spacing: 10) {
+                HStack(spacing: 12) {
                     Image(systemName: "heart.text.square.fill")
                         .font(.system(size: 16, weight: .semibold))
                         .foregroundStyle(StrandPalette.metricCyan)
@@ -673,7 +673,7 @@ struct AppleHealthView: View {
 
     /// Lone-reading body for series with exactly one point in range.
     private func singlePoint(_ value: Double, fmt: (Double) -> String, accent: Color) -> some View {
-        VStack(alignment: .leading, spacing: 6) {
+        VStack(alignment: .leading, spacing: 8) {
             Text("Latest reading").strandOverline()
             Text(fmt(value)).font(StrandFont.number(34)).foregroundStyle(accent)
         }

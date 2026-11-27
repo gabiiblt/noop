@@ -366,7 +366,7 @@ struct LiveSessionSummarySheet: View {
             Text(label).font(StrandFont.subhead).foregroundStyle(StrandPalette.textSecondary)
             Spacer()
             Text(Self.clock(seconds))
-                .font(StrandFont.number(17)).monospacedDigit()
+                .font(StrandFont.number(18)).monospacedDigit()
                 .foregroundStyle(StrandPalette.textPrimary)
         }
     }

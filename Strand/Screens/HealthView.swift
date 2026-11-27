@@ -566,7 +566,7 @@ private struct RecoveryContributorsSection: View {
         let contributors = buildContributors(latest)
 
         VStack(alignment: .leading, spacing: NoopMetrics.gap) {
-            HStack(alignment: .firstTextBaseline, spacing: 10) {
+            HStack(alignment: .firstTextBaseline, spacing: 12) {
                 SectionHeader("Contributors", overline: "Recovery", trailing: nil)
                 if ready {
                     ScoreStatePill(.solid)
@@ -878,7 +878,7 @@ private struct FitnessAgeSection: View {
         Button { fitnessSheet = .settings } label: {
             HStack(spacing: 8) {
                 Image(systemName: "lungs.fill")
-                    .font(.system(size: 13, weight: .semibold))
+                    .font(.system(size: 14, weight: .semibold))
                     .foregroundStyle(StrandPalette.metricCyan)
                 Text("Add your waist for a more accurate VO₂max")
                     .font(StrandFont.footnote)
@@ -939,7 +939,7 @@ private struct FitnessAgeSection: View {
                         }
                     }
                     Image(systemName: "chevron.right")
-                        .font(.system(size: 13, weight: .semibold))
+                        .font(.system(size: 14, weight: .semibold))
                         .foregroundStyle(StrandPalette.textTertiary)
                         .accessibilityHidden(true)
                 }
@@ -1415,7 +1415,7 @@ private struct LiquidVitalTile: View {
             VStack(alignment: .leading, spacing: 0) {
                 Text("\(reading.label)").strandOverline()
                 Spacer(minLength: 8)
-                HStack(alignment: .center, spacing: 10) {
+                HStack(alignment: .center, spacing: 12) {
                     // The signature liquid gauge — static (posed) so a grid of them doesn't each run a live
                     // 30fps Canvas. nil fraction (no value) reads as an empty vessel, no fabricated fill.
                     LiquidVessel(value: vesselFraction, tint: reading.metricColor, animated: false)
@@ -1437,7 +1437,7 @@ private struct LiquidVitalTile: View {
                 #if !os(watchOS)
                 if let sparkline = reading.sparkline, sparkline.count > 1 {
                     Sparkline(values: sparkline, gradient: Gradient(colors: [reading.metricColor.opacity(0.5), reading.metricColor]))
-                        .frame(height: 22).padding(.top, 6)
+                        .frame(height: 22).padding(.top, 8)
                         .accessibilityHidden(true)
                 }
                 #endif

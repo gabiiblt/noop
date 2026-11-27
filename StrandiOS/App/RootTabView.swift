@@ -273,7 +273,7 @@ struct RootTabView: View {
         .safeAreaInset(edge: .bottom, spacing: 0) {
             if liftSession.isActive {
                 LiftSessionBar()
-                    .padding(.horizontal, 14)
+                    .padding(.horizontal, 16)
                     // Clear the floating tab bar with the same constant every screen uses, or the
                     // session bar sits on top of the tab labels.
                     .padding(.bottom, NoopMetrics.tabBarClearance)
@@ -549,7 +549,7 @@ struct RootTabView: View {
     private func moreSection<Rows: View>(_ title: String,
                                          @ViewBuilder rows: @escaping () -> Rows) -> some View {
         let isOpen = expandedMoreSections.contains(title)
-        VStack(alignment: .leading, spacing: 10) {
+        VStack(alignment: .leading, spacing: 12) {
             // Tappable overline header: the same ALL-CAPS tracked label as before, now with a trailing
             // chevron that rotates open. A plain Button (not a SwiftUI DisclosureGroup) so the header keeps
             // the exact strandOverline styling and the card layout below stays identical to before.
@@ -562,11 +562,11 @@ struct RootTabView: View {
                     expandedMoreSectionsCSV = MoreSectionPrefs.encode(open)
                 }
             } label: {
-                HStack(spacing: 6) {
+                HStack(spacing: 8) {
                     Text(title).strandOverline()
                     Spacer(minLength: 8)
                     Image(systemName: "chevron.down")
-                        .font(.system(size: 11, weight: .semibold))
+                        .font(.system(size: 12, weight: .semibold))
                         .foregroundStyle(StrandPalette.textTertiary)
                         .rotationEffect(.degrees(isOpen ? 0 : -90))
                 }
@@ -655,12 +655,12 @@ private struct MoreRow: View {
 
     var body: some View {
         NavigationLink(value: route) {
-            HStack(spacing: 14) {
+            HStack(spacing: 16) {
                 // Pin the icon to the accent explicitly. A plain inherited tint gets re-resolved by iOS to
                 // its default blue a beat after first render — so the icons flashed green→blue (#184). The
                 // explicit foregroundStyle on the image overrides that; the title keeps the primary colour.
                 Image(systemName: icon)
-                    .font(.system(size: 17, weight: .regular))
+                    .font(.system(size: 18, weight: .regular))
                     .foregroundStyle(StrandPalette.accent)
                     .frame(width: 26, alignment: .center)
                 Text(title)
@@ -668,7 +668,7 @@ private struct MoreRow: View {
                     .foregroundStyle(StrandPalette.textPrimary)
                 Spacer(minLength: 8)
                 Image(systemName: "chevron.right")
-                    .font(.system(size: 13, weight: .semibold))
+                    .font(.system(size: 14, weight: .semibold))
                     .foregroundStyle(StrandPalette.textTertiary)
             }
             .padding(.horizontal, 16)
@@ -709,8 +709,8 @@ private struct QuickActionSheet: View {
             Capsule()
                 .fill(StrandPalette.hairlineStrong)
                 .frame(width: 36, height: 4)
-                .padding(.top, 10)
-                .padding(.bottom, 14)
+                .padding(.top, 12)
+                .padding(.bottom, 16)
 
             Text("QUICK ACTIONS")
                 .font(StrandFont.overline)
@@ -718,7 +718,7 @@ private struct QuickActionSheet: View {
                 .foregroundStyle(StrandPalette.textTertiary)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.horizontal, 16)
-                .padding(.bottom, 10)
+                .padding(.bottom, 12)
 
             VStack(spacing: 8) {
                 row("Live HR", icon: "waveform.path.ecg", tint: StrandPalette.metricRose) { onPick(.live) }
@@ -746,9 +746,9 @@ private struct QuickActionSheet: View {
     /// One flat action row: hued line-icon tile + title, inset surface, hairline border.
     private func row(_ title: LocalizedStringKey, icon: String, tint: Color, action: @escaping () -> Void) -> some View {
         Button(action: action) {
-            HStack(spacing: 13) {
+            HStack(spacing: 12) {
                 Image(systemName: icon)
-                    .font(.system(size: 17, weight: .semibold))
+                    .font(.system(size: 18, weight: .semibold))
                     .foregroundStyle(tint)
                     .frame(width: 38, height: 38)
                     .background(RoundedRectangle(cornerRadius: NoopMetrics.radiusControl, style: .continuous).fill(StrandPalette.surfaceInset))
@@ -757,10 +757,10 @@ private struct QuickActionSheet: View {
                     .foregroundStyle(StrandPalette.textPrimary)
                 Spacer()
                 Image(systemName: "chevron.right")
-                    .font(.system(size: 13, weight: .semibold))
+                    .font(.system(size: 14, weight: .semibold))
                     .foregroundStyle(StrandPalette.textTertiary)
             }
-            .padding(.vertical, 10)
+            .padding(.vertical, 12)
             .padding(.horizontal, 12)
             .background(NoopPanelSurface(cornerRadius: NoopMetrics.radiusCompact))
             .contentShape(Rectangle())

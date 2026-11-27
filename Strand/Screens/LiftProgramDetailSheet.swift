@@ -76,7 +76,7 @@ struct LiftProgramDetailSheet: View {
     // MARK: - Header + start
 
     private var header: some View {
-        VStack(alignment: .leading, spacing: 6) {
+        VStack(alignment: .leading, spacing: 8) {
             Text(program.name)
                 .font(StrandFont.title1)
                 .textCase(.uppercase)
@@ -155,7 +155,7 @@ struct LiftProgramDetailSheet: View {
     private var bars: some View {
         let shown = Array(points.suffix(10))
         let top = max(shown.map(value).max() ?? 1, 1)
-        return HStack(alignment: .bottom, spacing: 6) {
+        return HStack(alignment: .bottom, spacing: 8) {
             ForEach(shown) { point in
                 let v = value(point)
                 let isLast = point.id == shown.last?.id

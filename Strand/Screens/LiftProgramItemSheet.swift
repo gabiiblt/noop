@@ -205,7 +205,7 @@ struct LiftProgramItemSheet: View {
         VStack(alignment: .leading, spacing: NoopMetrics.gap) {
             GymSectionTitle(title: "Targets")
             GymCard {
-                VStack(alignment: .leading, spacing: 14) {
+                VStack(alignment: .leading, spacing: 16) {
                     HStack(spacing: NoopMetrics.gap) {
                         field("Working sets") {
                             numberInput("4", text: $setsText, field: .sets)
@@ -258,7 +258,7 @@ struct LiftProgramItemSheet: View {
         VStack(alignment: .leading, spacing: NoopMetrics.gap) {
             GymSectionTitle(title: "Progression")
             GymCard {
-                VStack(alignment: .leading, spacing: 14) {
+                VStack(alignment: .leading, spacing: 16) {
                     Picker("Progression", selection: $progression) {
                         Text("None").tag(LiftProgressionPolicy?.none)
                         ForEach(LiftProgressionStore.pickable, id: \.self) { rule in
@@ -319,7 +319,7 @@ struct LiftProgramItemSheet: View {
         VStack(alignment: .leading, spacing: NoopMetrics.gap) {
             GymSectionTitle(title: "Backups")
             GymCard {
-                VStack(alignment: .leading, spacing: 14) {
+                VStack(alignment: .leading, spacing: 16) {
                     ForEach(backups, id: \.self) { name in
                         HStack {
                             Text(name)
@@ -424,7 +424,7 @@ struct LiftProgramItemSheet: View {
 
     private func field<Content: View>(_ label: LocalizedStringKey,
                                       @ViewBuilder _ content: () -> Content) -> some View {
-        VStack(alignment: .leading, spacing: 6) {
+        VStack(alignment: .leading, spacing: 8) {
             Text(label).gymLabel()
             content()
         }

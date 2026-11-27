@@ -136,7 +136,7 @@ struct IntervalTimerView: View {
     // MARK: Status row
 
     private var statusRow: some View {
-        HStack(spacing: 10) {
+        HStack(spacing: 12) {
             if live.bonded {
                 StatePill("Buzz cues on", tone: .positive)
             } else {
@@ -161,7 +161,7 @@ struct IntervalTimerView: View {
     /// the active phase's reset token tints only the arc + chip, the card stays WHOOP-grey.
     private var stageCard: some View {
         StrandCard(padding: 24) {
-            VStack(spacing: 18) {
+            VStack(spacing: 20) {
                 // Phase chip + round chip line.
                 HStack {
                     phaseChip
@@ -233,14 +233,14 @@ struct IntervalTimerView: View {
             .tracking(2)
             .foregroundStyle(phaseColor)
             .padding(.horizontal, 12)
-            .padding(.vertical, 6)
+            .padding(.vertical, 8)
             .background(phaseColor.opacity(0.16), in: Capsule(style: .continuous))
             .overlay(Capsule(style: .continuous).strokeBorder(phaseColor.opacity(0.35), lineWidth: 1))
     }
 
     /// Frosted round chip — "ROUND n / N".
     private var roundChip: some View {
-        HStack(spacing: 6) {
+        HStack(spacing: 8) {
             Text("ROUND").strandOverline()
             Text("\(min(currentRound, rounds))")
                 .font(StrandFont.number(18))
@@ -250,7 +250,7 @@ struct IntervalTimerView: View {
                 .foregroundStyle(StrandPalette.textTertiary)
         }
         .padding(.horizontal, 12)
-        .padding(.vertical, 7)
+        .padding(.vertical, 8)
         .background(StrandPalette.surfaceInset, in: Capsule(style: .continuous))
         .overlay(Capsule(style: .continuous).strokeBorder(StrandPalette.hairline, lineWidth: 1))
     }
@@ -308,7 +308,7 @@ struct IntervalTimerView: View {
     }
 
     private func overviewStat(_ label: String, _ value: String, _ color: Color) -> some View {
-        VStack(alignment: .leading, spacing: 3) {
+        VStack(alignment: .leading, spacing: 4) {
             // Same shape, and the same hazard, as IntelligenceView's day-row stat: four equal columns
             // with NO gap (`HStack(spacing: 0)` above), so a label wide enough to fill its column runs
             // into the next. "REMAINING" is the longest label on either screen at nine characters, and
@@ -335,7 +335,7 @@ struct IntervalTimerView: View {
 
     private var configCard: some View {
         StrandCard {
-            VStack(alignment: .leading, spacing: 14) {
+            VStack(alignment: .leading, spacing: 16) {
                 Text("Configure").strandOverline()
                 configStepper(title: String(localized: "Work"), unit: String(localized: "sec"), value: $workSeconds,
                               range: 5...600, step: 5, tint: StrandPalette.effortColor)

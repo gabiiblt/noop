@@ -165,7 +165,7 @@ struct HowNoopWorksView: View {
 
     private var introCard: some View {
         NoopCard {
-            VStack(alignment: .leading, spacing: 14) {
+            VStack(alignment: .leading, spacing: 16) {
                 Text("THE ONE RULE").font(StrandFont.overline)
                     .tracking(StrandFont.overlineTracking)
                     .foregroundStyle(StrandPalette.textSecondary)
@@ -184,7 +184,7 @@ struct HowNoopWorksView: View {
     private func primerCard(_ section: Section) -> some View {
         NoopCard(tint: section.tint) {
             VStack(alignment: .leading, spacing: 12) {
-                HStack(spacing: 10) {
+                HStack(spacing: 12) {
                     Image(systemName: section.icon)
                         .font(.system(size: 18))
                         .foregroundStyle(section.tint)
@@ -270,8 +270,8 @@ struct HowNoopWorksView: View {
     /// family, honest about the approach without claiming a proprietary-identical result.
     private var scoringMethodsCard: some View {
         NoopCard(tint: DomainTheme.charge.color) {
-            VStack(alignment: .leading, spacing: 14) {
-                HStack(spacing: 10) {
+            VStack(alignment: .leading, spacing: 16) {
+                HStack(spacing: 12) {
                     Image(systemName: "function")
                         .font(.system(size: 18))
                         .foregroundStyle(DomainTheme.charge.color)
@@ -293,7 +293,7 @@ struct HowNoopWorksView: View {
                     .font(StrandFont.subhead)
                     .foregroundStyle(StrandPalette.textSecondary)
                     .fixedSize(horizontal: false, vertical: true)
-                VStack(alignment: .leading, spacing: 14) {
+                VStack(alignment: .leading, spacing: 16) {
                     ForEach(ScoreMethod.allCases) { method in
                         methodRow(method)
                     }

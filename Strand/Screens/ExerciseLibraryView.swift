@@ -82,11 +82,11 @@ struct ExerciseLibraryView: View {
             }
             Spacer(minLength: 0)
             Image(systemName: "chevron.right")
-                .font(.system(size: 13, weight: .semibold))
+                .font(.system(size: 14, weight: .semibold))
                 .foregroundStyle(StrandPalette.textTertiary)
         }
         .padding(.horizontal, NoopMetrics.screenPadding)
-        .padding(.vertical, 6)
+        .padding(.vertical, 8)
         .contentShape(Rectangle())
     }
 
@@ -108,7 +108,7 @@ struct ExerciseLibraryView: View {
                 .accessibilityLabel(Text("Clear search"))
             }
         }
-        .padding(.horizontal, 14)
+        .padding(.horizontal, 16)
         .frame(minHeight: 48)
         .background(StrandPalette.surfaceRaised, in: Capsule())
     }
@@ -265,7 +265,7 @@ struct ExerciseDetailView: View {
 
     private func tile(_ label: String, _ value: String, _ caption: String) -> some View {
         NoopCard(padding: 14) {
-            VStack(alignment: .leading, spacing: 3) {
+            VStack(alignment: .leading, spacing: 4) {
                 Text(label).strandOverline()
                 Text(value)
                     .font(StrandFont.title2)
@@ -335,7 +335,7 @@ struct ExerciseDetailView: View {
         return VStack(alignment: .leading, spacing: NoopMetrics.gap) {
             SectionHeader("How to do it", overline: "Steps")
             NoopCard {
-                VStack(alignment: .leading, spacing: 10) {
+                VStack(alignment: .leading, spacing: 12) {
                     ForEach(Array(steps.enumerated()), id: \.offset) { index, step in
                         HStack(alignment: .firstTextBaseline, spacing: NoopMetrics.rowSpacing) {
                             Text("\(index + 1)")

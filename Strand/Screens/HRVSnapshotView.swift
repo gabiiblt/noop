@@ -95,7 +95,7 @@ struct HRVSnapshotView: View {
     // MARK: - Status row
 
     private var statusRow: some View {
-        HStack(spacing: 10) {
+        HStack(spacing: 12) {
             switch phase {
             case .idle:
                 StatePill("Ready", tone: .neutral)
@@ -131,12 +131,12 @@ struct HRVSnapshotView: View {
 
     private var captureCard: some View {
         StrandCard(padding: 24, tint: StrandPalette.restColor) {
-            VStack(spacing: 18) {
+            VStack(spacing: 20) {
                 ZStack {
                     ScenicHeroBackground(domain: .rest, starCount: 48)
                         .clipShape(RoundedRectangle(cornerRadius: NoopMetrics.cardRadius, style: .continuous))
                     captureDial
-                        .padding(.vertical, 6)
+                        .padding(.vertical, 8)
                 }
                 .frame(height: 260)
                 .frame(maxWidth: .infinity)
@@ -295,11 +295,11 @@ struct HRVSnapshotView: View {
 
     private func resultCard(_ result: HRVAnalyzer.HRVResult) -> some View {
         StrandCard(padding: 18, tint: StrandPalette.restColor) {
-            VStack(alignment: .leading, spacing: 14) {
+            VStack(alignment: .leading, spacing: 16) {
                 Text("YOUR READING").strandOverline()
 
                 if result.rmssd == nil {
-                    HStack(spacing: 10) {
+                    HStack(spacing: 12) {
                         Image(systemName: "exclamationmark.triangle.fill")
                             .foregroundStyle(StrandPalette.statusWarning)
                             .accessibilityHidden(true)
@@ -365,7 +365,7 @@ struct HRVSnapshotView: View {
     // MARK: - Not-bonded hint
 
     private var notBondedHint: some View {
-        HStack(spacing: 10) {
+        HStack(spacing: 12) {
             Image(systemName: "applewatch.radiowaves.left.and.right")
                 .foregroundStyle(StrandPalette.statusWarning)
                 .accessibilityHidden(true)
@@ -375,7 +375,7 @@ struct HRVSnapshotView: View {
                 .fixedSize(horizontal: false, vertical: true)
             Spacer(minLength: 0)
         }
-        .padding(14)
+        .padding(16)
         .background(StrandPalette.statusWarning.opacity(0.08),
                     in: RoundedRectangle(cornerRadius: NoopMetrics.cardRadius, style: .continuous))
         .overlay(

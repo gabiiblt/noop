@@ -138,7 +138,7 @@ struct LiftExercisePickerSheet: View {
                 .accessibilityLabel("Clear search")
             }
         }
-        .padding(.horizontal, 14)
+        .padding(.horizontal, 16)
         .frame(minHeight: 48)
         .background(StrandPalette.surfaceRaised, in: Capsule())
     }
@@ -209,7 +209,7 @@ struct LiftExercisePickerSheet: View {
             }
         }
         .padding(.horizontal, NoopMetrics.screenPadding)
-        .padding(.vertical, 6)
+        .padding(.vertical, 8)
         .contentShape(Rectangle())
     }
 

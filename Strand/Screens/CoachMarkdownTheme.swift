@@ -117,7 +117,7 @@ extension Theme {
                         FontFamilyVariant(.monospaced)
                         FontSize(.em(0.88))
                     }
-                    .padding(10)
+                    .padding(12)
             }
             .background(StrandPalette.surfaceInset)
             .clipShape(RoundedRectangle(cornerRadius: NoopMetrics.radiusChip, style: .continuous))
@@ -148,8 +148,8 @@ extension Theme {
                     FontSize(.em(0.9))
                 }
                 .fixedSize(horizontal: false, vertical: true)
-                .padding(.vertical, 5)
-                .padding(.horizontal, 10)
+                .padding(.vertical, 4)
+                .padding(.horizontal, 12)
                 .relativeLineSpacing(.em(0.2))
         }
 }

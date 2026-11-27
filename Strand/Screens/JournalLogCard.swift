@@ -95,7 +95,7 @@ struct JournalLogCard: View {
             if !editing {
                 ScrollViewReader { proxy in
                     ScrollView(.horizontal, showsIndicators: false) {
-                        HStack(spacing: 6) {
+                        HStack(spacing: 8) {
                             ForEach(Self.journalDayOffsets, id: \.self) { off in
                                 dayPill(journalDayLabel(off), offset: off).id(off)
                             }
@@ -111,7 +111,7 @@ struct JournalLogCard: View {
                 }
             }
             NoopCard(tint: StrandPalette.restColor) {
-                VStack(alignment: .leading, spacing: 10) {
+                VStack(alignment: .leading, spacing: 12) {
                     Text(editing
                          ? "Rename, regroup, or remove an item to tidy your list. Renaming keeps the original question behind the scenes, so a WHOOP import still lines up. Custom items are deleted; built-in ones are hidden and can be restored below."
                          : dayOffset == -1
@@ -142,7 +142,7 @@ struct JournalLogCard: View {
             let collapsed = collapsedGroups.contains(group.rawValue)
             VStack(alignment: .leading, spacing: 8) {
                 Button { toggleCollapsed(group) } label: {
-                    HStack(spacing: 6) {
+                    HStack(spacing: 8) {
                         Text(group.title.uppercased())
                             .font(StrandFont.overline)
                             .tracking(StrandFont.overlineTracking)
@@ -189,7 +189,7 @@ struct JournalLogCard: View {
 
     private func numericField(_ item: JournalCatalogItem) -> some View {
         let current = numericAnswers[item.canonical]
-        return HStack(spacing: 6) {
+        return HStack(spacing: 8) {
             stepperButton("minus", q: item.canonical, current: current)
             NumericLogField(
                 value: current,
@@ -240,7 +240,7 @@ struct JournalLogCard: View {
     // MARK: - Edit-mode controls
 
     private func editControls(_ item: JournalCatalogItem) -> some View {
-        HStack(spacing: 10) {
+        HStack(spacing: 12) {
             if item.hidden {
                 pillButton("Restore", selected: false) { catalog.restore(item.canonical) }
             } else {
@@ -393,7 +393,7 @@ struct JournalLogCard: View {
                 .font(StrandFont.footnote)
                 .foregroundStyle(selected ? StrandPalette.surfaceBase : StrandPalette.textSecondary)
                 .padding(.horizontal, 12)
-                .padding(.vertical, 5)
+                .padding(.vertical, 4)
                 .background(selected ? StrandPalette.restColor : StrandPalette.surfaceInset,
                             in: Capsule())
                 .overlay(Capsule().stroke(selected ? StrandPalette.restColor : StrandPalette.hairline,
@@ -416,7 +416,7 @@ private struct NumericLogField: View {
         TextField(placeholder, text: $text)
             .textFieldStyle(.roundedBorder)
             .multilineTextAlignment(.center)
-            .font(StrandFont.number(15))
+            .font(StrandFont.number(16))
             .onAppear { text = value.map(Self.format) ?? "" }
             .onChangeCompat(of: value) { v in text = v.map(Self.format) ?? "" }
             .onSubmit { commit() }

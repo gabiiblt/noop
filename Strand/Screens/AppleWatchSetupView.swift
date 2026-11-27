@@ -145,7 +145,7 @@ struct AppleWatchSetupView: View {
         VStack(alignment: .leading, spacing: NoopMetrics.sectionGap) {
             NoopCard(tint: StrandPalette.accent) {
                 VStack(alignment: .leading, spacing: 12) {
-                    HStack(spacing: 10) {
+                    HStack(spacing: 12) {
                         Image(systemName: "applewatch")
                             .font(.system(size: 18, weight: .semibold))
                             .foregroundStyle(StrandPalette.accent)
@@ -212,11 +212,11 @@ struct AppleWatchSetupView: View {
     private func bullet(_ icon: String, _ title: String, _ detail: String) -> some View {
         HStack(alignment: .top, spacing: 12) {
             Image(systemName: icon)
-                .font(.system(size: 15, weight: .semibold))
+                .font(.system(size: 16, weight: .semibold))
                 .foregroundStyle(StrandPalette.textSecondary)
                 .frame(width: 22)
                 .accessibilityHidden(true)
-            VStack(alignment: .leading, spacing: 3) {
+            VStack(alignment: .leading, spacing: 4) {
                 Text(title)
                     .font(StrandFont.subhead)
                     .foregroundStyle(StrandPalette.textPrimary)
@@ -236,8 +236,8 @@ struct AppleWatchSetupView: View {
     @ViewBuilder private var permissionBody: some View {
         #if os(iOS)
         NoopCard(tint: StrandPalette.metricCyan) {
-            VStack(alignment: .leading, spacing: 14) {
-                HStack(spacing: 10) {
+            VStack(alignment: .leading, spacing: 16) {
+                HStack(spacing: 12) {
                     Image(systemName: "heart.text.square.fill")
                         .font(.system(size: 16, weight: .semibold))
                         .foregroundStyle(StrandPalette.metricCyan)
@@ -321,7 +321,7 @@ struct AppleWatchSetupView: View {
         // macOS has no HealthKit at all. Be honest: the watch path is an iPhone feature.
         NoopCard(tint: StrandPalette.metricCyan) {
             VStack(alignment: .leading, spacing: 12) {
-                HStack(spacing: 10) {
+                HStack(spacing: 12) {
                     Image(systemName: "iphone")
                         .font(.system(size: 16, weight: .semibold))
                         .foregroundStyle(StrandPalette.metricCyan)

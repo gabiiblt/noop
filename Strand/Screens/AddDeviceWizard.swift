@@ -324,7 +324,7 @@ struct AddDeviceWizard: View {
     // MARK: Step 1 — type picker
 
     @ViewBuilder private var typeStep: some View {
-        VStack(alignment: .leading, spacing: 10) {
+        VStack(alignment: .leading, spacing: 12) {
             typeRow(.whoop5mg, icon: "applewatch.side.right",
                     title: "WHOOP 5.0 / MG",
                     subtitle: String(localized: "Newer WHOOP band with live data and history sync"))
@@ -377,13 +377,13 @@ struct AddDeviceWizard: View {
                 step = .prep
             }
         } label: {
-            HStack(spacing: 14) {
+            HStack(spacing: 16) {
                 Image(systemName: icon)
                     .font(StrandFont.title2)
                     .foregroundStyle(StrandPalette.accent)
                     .frame(width: 30)
                     .accessibilityHidden(true)
-                VStack(alignment: .leading, spacing: 3) {
+                VStack(alignment: .leading, spacing: 4) {
                     Text(title).font(StrandFont.headline)
                         .foregroundStyle(StrandPalette.textPrimary)
                     Text(subtitle).font(StrandFont.caption)
@@ -408,7 +408,7 @@ struct AddDeviceWizard: View {
     @ViewBuilder private var prepStep: some View {
         if let type, type != .oura {
             VStack(alignment: .leading, spacing: 16) {
-                HStack(spacing: 14) {
+                HStack(spacing: 16) {
                     Image(systemName: typeIcon(type))
                         .font(.system(size: 30))
                         .foregroundStyle(StrandPalette.accent)
@@ -434,7 +434,7 @@ struct AddDeviceWizard: View {
 
                 VStack(alignment: .leading, spacing: 12) {
                     ForEach(Array(prepInstructions(type).enumerated()), id: \.offset) { _, line in
-                        HStack(alignment: .top, spacing: 10) {
+                        HStack(alignment: .top, spacing: 12) {
                             Image(systemName: "checkmark.circle.fill")
                                 .font(StrandFont.subhead)
                                 .foregroundStyle(StrandPalette.accent)
@@ -457,7 +457,7 @@ struct AddDeviceWizard: View {
                     Label("Scan", systemImage: "dot.radiowaves.left.and.right")
                         .font(StrandFont.headline)
                         .frame(maxWidth: .infinity)
-                        .padding(.vertical, 6)
+                        .padding(.vertical, 8)
                 }
                 .buttonStyle(.borderedProminent)
                 .tint(StrandPalette.accent)
@@ -535,7 +535,7 @@ struct AddDeviceWizard: View {
             // The header icon + Beta pill ride above the gate / prep faces only; the later faces carry their
             // own card chrome (matching the Android per-step composition).
             if ouraStep == .gate || ouraStep == .prep {
-                HStack(spacing: 14) {
+                HStack(spacing: 16) {
                     Image(systemName: "circle.circle")
                         .font(.system(size: 30))
                         .foregroundStyle(StrandPalette.accent)
@@ -565,8 +565,8 @@ struct AddDeviceWizard: View {
         ouraBetaBanner
 
         StrandCard(padding: 16) {
-            VStack(alignment: .leading, spacing: 14) {
-                VStack(alignment: .leading, spacing: 6) {
+            VStack(alignment: .leading, spacing: 16) {
+                VStack(alignment: .leading, spacing: 8) {
                     Text("What you get").strandOverline()
                     ouraBullet(String(localized: "Your ring talks to NOOP only, fully offline, no Oura account."))
                     ouraBullet(String(localized: "Live heart rate, and HRV when the ring can measure it."))
@@ -574,7 +574,7 @@ struct AddDeviceWizard: View {
                     ouraBullet(String(localized: "NOOP's own Charge, Effort and Rest, computed on your device from published methods."))
                 }
                 Divider().overlay(StrandPalette.hairline)
-                VStack(alignment: .leading, spacing: 6) {
+                VStack(alignment: .leading, spacing: 8) {
                     Text("What you lose").strandOverline()
                     ouraBullet(String(localized: "The Oura app and your Oura account stop working with this ring. This is the point. You are replacing Oura."))
                     ouraBullet(String(localized: "Oura's own Readiness and Sleep scores. NOOP does not copy them. It computes its own."))
@@ -588,7 +588,7 @@ struct AddDeviceWizard: View {
         Button {
             ouraConsented.toggle()
         } label: {
-            HStack(alignment: .top, spacing: 10) {
+            HStack(alignment: .top, spacing: 12) {
                 Image(systemName: ouraConsented ? "checkmark.square.fill" : "square")
                     .font(StrandFont.headline)
                     .foregroundStyle(StrandPalette.statusCritical)
@@ -615,7 +615,7 @@ struct AddDeviceWizard: View {
             Label("Continue", systemImage: "arrow.right")
                 .font(StrandFont.headline)
                 .frame(maxWidth: .infinity)
-                .padding(.vertical, 6)
+                .padding(.vertical, 8)
         }
         .buttonStyle(.borderedProminent)
         .tint(StrandPalette.accent)
@@ -650,7 +650,7 @@ struct AddDeviceWizard: View {
             .foregroundStyle(StrandPalette.textSecondary)
 
         // One-owner heads-up, amber (mirrors the WHOOP single-connection warning).
-        HStack(alignment: .top, spacing: 10) {
+        HStack(alignment: .top, spacing: 12) {
             Image(systemName: "exclamationmark.triangle.fill")
                 .foregroundStyle(StrandPalette.statusWarning)
                 .accessibilityHidden(true)
@@ -673,7 +673,7 @@ struct AddDeviceWizard: View {
 
         VStack(alignment: .leading, spacing: 12) {
             ForEach(Array(prepInstructions(.oura).enumerated()), id: \.offset) { _, line in
-                HStack(alignment: .top, spacing: 10) {
+                HStack(alignment: .top, spacing: 12) {
                     Image(systemName: "checkmark.circle.fill")
                         .font(StrandFont.subhead)
                         .foregroundStyle(StrandPalette.accent)
@@ -696,7 +696,7 @@ struct AddDeviceWizard: View {
             Label("Scan for your ring", systemImage: "dot.radiowaves.left.and.right")
                 .font(StrandFont.headline)
                 .frame(maxWidth: .infinity)
-                .padding(.vertical, 6)
+                .padding(.vertical, 8)
         }
         .buttonStyle(.borderedProminent)
         .tint(StrandPalette.accent)
@@ -710,7 +710,7 @@ struct AddDeviceWizard: View {
             .font(StrandFont.subhead)
             .foregroundStyle(StrandPalette.textSecondary)
 
-        HStack(alignment: .top, spacing: 10) {
+        HStack(alignment: .top, spacing: 12) {
             Image(systemName: "key.horizontal")
                 .foregroundStyle(StrandPalette.statusWarning)
                 .accessibilityHidden(true)
@@ -754,7 +754,7 @@ struct AddDeviceWizard: View {
             Label("Scan for your ring", systemImage: "dot.radiowaves.left.and.right")
                 .font(StrandFont.headline)
                 .frame(maxWidth: .infinity)
-                .padding(.vertical, 6)
+                .padding(.vertical, 8)
         }
         .buttonStyle(.borderedProminent)
         .tint(StrandPalette.accent)
@@ -803,7 +803,7 @@ struct AddDeviceWizard: View {
         let gen = pickedOura?.gen ?? .gen3
         VStack(alignment: .leading, spacing: 16) {
             VStack(alignment: .leading, spacing: 12) {
-                HStack(spacing: 10) {
+                HStack(spacing: 12) {
                     Image(systemName: "circle.circle")
                         .font(.system(size: 22))
                         .foregroundStyle(StrandPalette.accent)
@@ -853,7 +853,7 @@ struct AddDeviceWizard: View {
                     Text("Connect to this ring")
                         .font(StrandFont.headline)
                         .frame(maxWidth: .infinity)
-                        .padding(.vertical, 6)
+                        .padding(.vertical, 8)
                 }
                 .buttonStyle(.borderedProminent)
                 .tint(StrandPalette.accent)
@@ -871,7 +871,7 @@ struct AddDeviceWizard: View {
                         .font(StrandFont.headline)
                         .foregroundStyle(StrandPalette.statusCritical)
                         .frame(maxWidth: .infinity)
-                        .padding(.vertical, 10)
+                        .padding(.vertical, 12)
                         .background(StrandPalette.statusCritical.opacity(0.16),
                                     in: RoundedRectangle(cornerRadius: NoopMetrics.radiusControl, style: .continuous))
                 }
@@ -918,7 +918,7 @@ struct AddDeviceWizard: View {
                 .font(StrandFont.subhead)
                 .foregroundStyle(StrandPalette.textSecondary)
                 .fixedSize(horizontal: false, vertical: true)
-            HStack(spacing: 10) {
+            HStack(spacing: 12) {
                 Button {
                     pickedOura = nil
                     ouraScanner.scan()
@@ -927,7 +927,7 @@ struct AddDeviceWizard: View {
                     Text("Try again")
                         .font(StrandFont.headline)
                         .frame(maxWidth: .infinity)
-                        .padding(.vertical, 6)
+                        .padding(.vertical, 8)
                 }
                 .buttonStyle(.borderedProminent)
                 .tint(StrandPalette.accent)
@@ -941,7 +941,7 @@ struct AddDeviceWizard: View {
                         .font(StrandFont.headline)
                         .foregroundStyle(StrandPalette.accent)
                         .frame(maxWidth: .infinity)
-                        .padding(.vertical, 6)
+                        .padding(.vertical, 8)
                         .background(StrandPalette.surfaceInset,
                                     in: RoundedRectangle(cornerRadius: NoopMetrics.radiusControl, style: .continuous))
                 }
@@ -977,7 +977,7 @@ struct AddDeviceWizard: View {
 
     /// The shared Oura Beta heads-up banner (amber), reused at the top of the consent gate.
     private var ouraBetaBanner: some View {
-        HStack(alignment: .top, spacing: 10) {
+        HStack(alignment: .top, spacing: 12) {
             Image(systemName: "flask")
                 .foregroundStyle(StrandPalette.statusWarning)
                 .accessibilityHidden(true)
@@ -1003,7 +1003,7 @@ struct AddDeviceWizard: View {
             Image(systemName: "circle.fill")
                 .font(.system(size: 5))
                 .foregroundStyle(StrandPalette.textTertiary)
-                .padding(.top, 6)
+                .padding(.top, 8)
                 .accessibilityHidden(true)
             Text(text)
                 .font(StrandFont.subhead)
@@ -1123,7 +1123,7 @@ struct AddDeviceWizard: View {
                 }
                 Spacer()
             }
-            .padding(14)
+            .padding(16)
             .frame(maxWidth: .infinity, alignment: .leading)
             .frostedCardSurface(cornerRadius: NoopMetrics.radiusControl)
 
@@ -1410,7 +1410,7 @@ struct AddDeviceWizard: View {
     /// A shared "this tier is experimental" note shown on the type list heading and every experimental
     /// prep step. Honest, US-neutral, no em-dashes.
     private var experimentalTierNote: some View {
-        HStack(alignment: .top, spacing: 10) {
+        HStack(alignment: .top, spacing: 12) {
             Image(systemName: "flask")
                 .foregroundStyle(StrandPalette.statusWarning)
                 .accessibilityHidden(true)
@@ -1426,7 +1426,7 @@ struct AddDeviceWizard: View {
     }
 
     private var experimentalNote: some View {
-        HStack(alignment: .top, spacing: 10) {
+        HStack(alignment: .top, spacing: 12) {
             Image(systemName: "flask")
                 .foregroundStyle(StrandPalette.statusWarning)
                 .accessibilityHidden(true)
@@ -1446,7 +1446,7 @@ struct AddDeviceWizard: View {
     /// concrete fix) is the honest, frustration-saving move. Amber `statusWarning` matches the existing
     /// experimental-note treatment so it reads as "heads-up", not "error".
     private var singleConnectionWarning: some View {
-        HStack(alignment: .top, spacing: 10) {
+        HStack(alignment: .top, spacing: 12) {
             Image(systemName: "exclamationmark.triangle.fill")
                 .foregroundStyle(StrandPalette.statusWarning)
                 .accessibilityHidden(true)
@@ -1471,7 +1471,7 @@ struct AddDeviceWizard: View {
     }
 
     private var whoopFirstNote: some View {
-        HStack(alignment: .top, spacing: 10) {
+        HStack(alignment: .top, spacing: 12) {
             Image(systemName: "info.circle")
                 .foregroundStyle(StrandPalette.textTertiary)
                 .accessibilityHidden(true)
@@ -1480,7 +1480,7 @@ struct AddDeviceWizard: View {
                 .foregroundStyle(StrandPalette.textTertiary)
                 .fixedSize(horizontal: false, vertical: true)
         }
-        .padding(.top, 10)
+        .padding(.top, 12)
     }
 
     /// Best-effort brand from the advertised name; neutral fallback for unknown straps. Delegates to the
@@ -1616,7 +1616,7 @@ private struct OuraPickList: View {
                 // Honest needs-pairing state: the ring won't answer (still Oura-owned / not reset). Never a
                 // fabricated reading: point at the file-import lane instead.
                 VStack(alignment: .leading, spacing: 12) {
-                    HStack(alignment: .top, spacing: 10) {
+                    HStack(alignment: .top, spacing: 12) {
                         Image(systemName: "info.circle")
                             .foregroundStyle(StrandPalette.statusWarning)
                             .accessibilityHidden(true)
@@ -1634,7 +1634,7 @@ private struct OuraPickList: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .frostedCardSurface(cornerRadius: NoopMetrics.radiusCompact)
             } else if scanner.discovered.isEmpty {
-                VStack(alignment: .leading, spacing: 10) {
+                VStack(alignment: .leading, spacing: 12) {
                     SearchingCard()
                     Text("Not showing up? Make sure you reset the ring in the Oura app and force-quit it, then tap Rescan. A ring still owned by Oura will not list here.")
                         .font(StrandFont.footnote)
@@ -1679,7 +1679,7 @@ private struct SearchingCard: View {
     /// FTMS / Huami / Oura pick lists keep their existing copy unchanged.
     var whoopHint: Bool = false
     var body: some View {
-        VStack(alignment: .leading, spacing: 10) {
+        VStack(alignment: .leading, spacing: 12) {
             ProgressView().tint(StrandPalette.accent)
             Text("Searching…")
                 .font(StrandFont.body)
@@ -1723,7 +1723,7 @@ private struct DiscoveredRow: View {
                     .font(StrandFont.caption)
                     .foregroundStyle(StrandPalette.textTertiary)
             }
-            .padding(14)
+            .padding(16)
             .frame(maxWidth: .infinity, alignment: .leading)
             .frostedCardSurface(cornerRadius: NoopMetrics.radiusControl)
         }

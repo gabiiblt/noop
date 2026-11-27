@@ -141,7 +141,7 @@ public struct OnboardingWizard: View {
                 Color.clear.frame(width: 64, height: 28)
             } else {
                 Button(action: back) {
-                    HStack(spacing: 6) {
+                    HStack(spacing: 8) {
                         Image(systemName: "chevron.left")
                         Text("Back")
                     }
@@ -169,7 +169,7 @@ public struct OnboardingWizard: View {
                 .frame(height: 3)
                 .frame(maxWidth: 620)
 
-            HStack(spacing: 14) {
+            HStack(spacing: 16) {
                 PrimaryButton(title: ctaTitle, systemImage: ctaIcon, action: primaryAction)
                     .frame(maxWidth: .infinity)
             }
@@ -329,7 +329,7 @@ private struct WhatItDoesStep: View {
 
     var body: some View {
         StepShell(title: String(localized: "What NOOP does"), subtitle: String(localized: "Three quiet promises.")) {
-            VStack(spacing: 14) {
+            VStack(spacing: 16) {
                 ForEach(Array(slides.enumerated()), id: \.element.id) { index, slide in
                     SlideRow(slide: slide, index: index)
                 }
@@ -382,13 +382,13 @@ private struct ExpectationsStep: View {
                   subtitle: String(localized: "A few honest words, so nothing's a surprise.")) {
             VStack(spacing: 12) {
                 ForEach(Array(AppChangelog.expectations.enumerated()), id: \.element.id) { index, e in
-                    HStack(alignment: .top, spacing: 14) {
+                    HStack(alignment: .top, spacing: 16) {
                         Image(systemName: e.icon)
                             .font(.system(size: 18, weight: .medium))
                             .foregroundStyle(StrandPalette.accent)
                             .frame(width: 26)
                             .padding(.top, 2)
-                        VStack(alignment: .leading, spacing: 3) {
+                        VStack(alignment: .leading, spacing: 4) {
                             Text(e.title).font(StrandFont.headline)
                                 .foregroundStyle(StrandPalette.textPrimary)
                             Text(e.body).font(StrandFont.subhead)
@@ -397,7 +397,7 @@ private struct ExpectationsStep: View {
                         }
                         Spacer(minLength: 0)
                     }
-                    .padding(14)
+                    .padding(16)
                     .frame(maxWidth: 520, alignment: .leading)
                     .background(NoopPanelSurface(cornerRadius: NoopMetrics.radiusCompact))
                     .opacity(shown ? 1 : 0)
@@ -425,13 +425,13 @@ private struct ExpectationsStep: View {
     /// One expectation callout, matching the data-driven rows above so the iOS-only addition is visually
     /// identical to the rest of the list.
     private func expectationRow(icon: String, title: String, body: String) -> some View {
-        HStack(alignment: .top, spacing: 14) {
+        HStack(alignment: .top, spacing: 16) {
             Image(systemName: icon)
                 .font(.system(size: 18, weight: .medium))
                 .foregroundStyle(StrandPalette.accent)
                 .frame(width: 26)
                 .padding(.top, 2)
-            VStack(alignment: .leading, spacing: 3) {
+            VStack(alignment: .leading, spacing: 4) {
                 Text(title).font(StrandFont.headline)
                     .foregroundStyle(StrandPalette.textPrimary)
                 Text(body).font(StrandFont.subhead)
@@ -440,7 +440,7 @@ private struct ExpectationsStep: View {
             }
             Spacer(minLength: 0)
         }
-        .padding(14)
+        .padding(16)
         .frame(maxWidth: 520, alignment: .leading)
         .background(NoopPanelSurface(cornerRadius: NoopMetrics.radiusCompact))
     }
@@ -632,8 +632,8 @@ private struct ScanStep: View {
     // The calm, never-alarmist "can't find it" card.
     private var reassurance: some View {
         StrandCard {
-            VStack(alignment: .leading, spacing: 14) {
-                HStack(spacing: 10) {
+            VStack(alignment: .leading, spacing: 16) {
+                HStack(spacing: 12) {
                     Image(systemName: "info.circle.fill")
                         .foregroundStyle(StrandPalette.statusWarning)
                     Text("Don't see it? That's normal.")
@@ -648,7 +648,7 @@ private struct ScanStep: View {
 
                 Divider().overlay(StrandPalette.hairline)
 
-                VStack(alignment: .leading, spacing: 10) {
+                VStack(alignment: .leading, spacing: 12) {
                     Checkline(text: String(localized: "It's charged and worn. The sensor needs skin contact to wake."))
                     Checkline(text: String(localized: "It isn't held by the WHOOP phone app. Only one host at a time: close the app or turn off its Bluetooth."))
                     Checkline(text: String(localized: "It's within about a metre of \(Platform.deviceNounPhrase)."))
@@ -750,7 +750,7 @@ private struct ProfileStep: View {
                   subtitle: String(localized: "So your zones, calories and baselines are accurate.")) {
             VStack(spacing: 16) {
                 StrandCard {
-                    VStack(spacing: 18) {
+                    VStack(spacing: 20) {
                         // #146: capture a date of birth so age advances on its own instead of going stale.
                         DatePicker(selection: $profile.dateOfBirth,
                                    in: ProfileStore.dateOfBirthRange,
@@ -840,7 +840,7 @@ private struct ImportStep: View {
     var body: some View {
         StepShell(title: String(localized: "Bring your history"),
                   subtitle: String(localized: "Optional: import now, or continue and return to Data Sources later.")) {
-            VStack(spacing: 18) {
+            VStack(spacing: 20) {
                 ZStack {
                     Circle()
                         .fill(StrandPalette.accentMuted.opacity(0.45))
@@ -858,7 +858,7 @@ private struct ImportStep: View {
                 )
 
                 StrandCard {
-                    VStack(spacing: 10) {
+                    VStack(spacing: 12) {
                         ImportActionButton(
                             title: model.isImporting(.whoop) ? String(localized: "Importing…") : String(localized: "Import WHOOP export"),
                             systemImage: "tray.and.arrow.down",
@@ -1051,7 +1051,7 @@ private struct DoneStep: View {
                 }
                 .frame(height: 130)
 
-                VStack(spacing: 10) {
+                VStack(spacing: 12) {
                     Text("Your thread starts here.")
                         .font(StrandFont.title1)
                         .foregroundStyle(StrandPalette.textPrimary)
@@ -1266,7 +1266,7 @@ private struct InfoCard: View {
     let message: String
     var body: some View {
         StrandCard {
-            HStack(alignment: .top, spacing: 14) {
+            HStack(alignment: .top, spacing: 16) {
                 ZStack {
                     RoundedRectangle(cornerRadius: NoopMetrics.radiusControl, style: .continuous)
                         .fill(tint.opacity(0.14))
@@ -1275,7 +1275,7 @@ private struct InfoCard: View {
                         .font(.system(size: 18, weight: .semibold))
                         .foregroundStyle(tint)
                 }
-                VStack(alignment: .leading, spacing: 5) {
+                VStack(alignment: .leading, spacing: 4) {
                     Text(title)
                         .font(StrandFont.headline)
                         .foregroundStyle(StrandPalette.textPrimary)
@@ -1294,7 +1294,7 @@ private struct InfoCard: View {
 private struct Checkline: View {
     let text: String
     var body: some View {
-        HStack(alignment: .top, spacing: 10) {
+        HStack(alignment: .top, spacing: 12) {
             Image(systemName: "checkmark.circle.fill")
                 .font(.system(size: 14))
                 .foregroundStyle(StrandPalette.statusPositive)
@@ -1329,7 +1329,7 @@ private struct DisclosureToggle: View {
         Button {
             withAnimation(StrandMotion.gentle) { open.toggle() }
         } label: {
-            HStack(spacing: 6) {
+            HStack(spacing: 8) {
                 Image(systemName: open ? "chevron.up" : "chevron.down")
                 Text(label)
             }
@@ -1348,7 +1348,7 @@ private struct ImportActionButton: View {
 
     var body: some View {
         Button(action: action) {
-            HStack(spacing: 10) {
+            HStack(spacing: 12) {
                 Image(systemName: systemImage)
                     .font(.system(size: 14, weight: .semibold))
                     .frame(width: 18)
@@ -1356,7 +1356,7 @@ private struct ImportActionButton: View {
                     .font(StrandFont.subhead.weight(.semibold))
                 Spacer(minLength: 0)
                 Image(systemName: "chevron.right")
-                    .font(.system(size: 11, weight: .bold))
+                    .font(.system(size: 12, weight: .semibold))
                     .foregroundStyle(StrandPalette.textTertiary)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
@@ -1391,7 +1391,7 @@ private struct PrimaryButtonStyle: ButtonStyle {
         configuration.label
             .frame(maxWidth: .infinity)
             .foregroundStyle(Color.white)
-            .padding(.vertical, 14)
+            .padding(.vertical, 16)
             .padding(.horizontal, 20)
             .background(
                 RoundedRectangle(cornerRadius: NoopMetrics.radiusCompact, style: .continuous)
@@ -1408,8 +1408,8 @@ private struct SecondaryButtonStyle: ButtonStyle {
         configuration.label
             .font(StrandFont.subhead.weight(.semibold))
             .foregroundStyle(StrandPalette.textPrimary)
-            .padding(.vertical, 11)
-            .padding(.horizontal, 18)
+            .padding(.vertical, 12)
+            .padding(.horizontal, 20)
             .background(NoopPanelSurface(cornerRadius: NoopMetrics.radiusControl))
             .overlay(
                 RoundedRectangle(cornerRadius: NoopMetrics.radiusControl, style: .continuous)

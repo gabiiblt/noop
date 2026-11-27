@@ -112,15 +112,15 @@ struct LiftRecordBadge: View {
     let kinds: [LiftRecordKind]
 
     var body: some View {
-        HStack(spacing: 3) {
+        HStack(spacing: 4) {
             Image(systemName: "trophy.fill")
-                .font(.system(size: 9, weight: .semibold))
+                .font(.system(size: 10, weight: .semibold))
             Text(kinds.map(\.displayName).joined(separator: " · "))
                 .font(StrandFont.caption)
                 .lineLimit(1)
         }
         .foregroundStyle(StrandPalette.statusWarning)
-        .padding(.horizontal, 6)
+        .padding(.horizontal, 8)
         .padding(.vertical, 2)
         .background(StrandPalette.statusWarning.opacity(0.14), in: Capsule())
         .accessibilityElement(children: .combine)

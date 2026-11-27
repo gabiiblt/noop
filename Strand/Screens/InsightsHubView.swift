@@ -148,7 +148,7 @@ struct InsightsHubView: View {
                 HStack {
                     Text("Effect size").strandOverline()
                     Spacer()
-                    HStack(spacing: 6) {
+                    HStack(spacing: 8) {
                         Text(String(format: "d = %.2f", e.cohensD))
                             .font(StrandFont.captionNumber)
                             .foregroundStyle(tintColor)
@@ -190,7 +190,7 @@ struct InsightsHubView: View {
 
     private var methodNote: some View {
         NoopCard {
-            VStack(alignment: .leading, spacing: 6) {
+            VStack(alignment: .leading, spacing: 8) {
                 Text("How to read this").strandOverline()
                 Text(String(localized: "Everything here is a pattern in your own logged days: an association with an effect size and confidence, never a cause or a diagnosis. Population patterns are shown as \u{201C}typical\u{201D} and are always overridden by your own data once you have enough of it. Approximations, not WHOOP\u{2019}s scores; not a medical device."))
                     .font(StrandFont.footnote)

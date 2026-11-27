@@ -181,7 +181,7 @@ struct CoupledView: View {
             showChargeBreakdown = true
         } label: {
             card {
-                VStack(spacing: 14) {
+                VStack(spacing: 16) {
                     SectionHeader("Recovery", overline: "Coupled read")
                         .frame(maxWidth: .infinity, alignment: .leading)
                     ZStack {
@@ -274,7 +274,7 @@ struct CoupledView: View {
             .font(StrandFont.overline)
             .tracking(StrandFont.overlineTracking)
             .foregroundStyle(tint)
-            .padding(.horizontal, 12).padding(.vertical, 5)
+            .padding(.horizontal, 12).padding(.vertical, 4)
             .background(Capsule(style: .continuous).fill(tint.opacity(0.12)))
             .overlay(Capsule(style: .continuous).stroke(tint.opacity(0.32), lineWidth: 1))
             .accessibilityLabel("Readiness: \(word)")
@@ -295,7 +295,7 @@ struct CoupledView: View {
 
     private var strainCard: some View {
         card {
-            VStack(alignment: .leading, spacing: 14) {
+            VStack(alignment: .leading, spacing: 16) {
                 SectionHeader("Day Strain", overline: "Effort", trailing: strainBandWord)
                 HStack(alignment: .center, spacing: 16) {
                     // Left: the liquid vessel filled to the 0–21 Day-Strain fraction (Effort world), with the
@@ -321,7 +321,7 @@ struct CoupledView: View {
                     .frame(width: 148, height: 148)
 
                     // Right: the coupled stat stack, OPTIMAL range (with a liquid tube band), calories, workouts.
-                    VStack(alignment: .leading, spacing: 14) {
+                    VStack(alignment: .leading, spacing: 16) {
                         optimalStat
                         // heroStat renders `Text(title.uppercased())`, so `title` is a plain String and
                         // a bare literal would NOT localize — pass the resolved localized value (the
@@ -402,7 +402,7 @@ struct CoupledView: View {
             SleepView()
         } label: {
             card {
-                VStack(alignment: .leading, spacing: 14) {
+                VStack(alignment: .leading, spacing: 16) {
                     SectionHeader("Sleep performance", overline: "Last night", trailing: String(localized: "Rest"))
                     HStack(alignment: .center, spacing: 16) {
                         // Left: the SLEEP PERFORMANCE % as the liquid vessel (Rest world), with the score
@@ -448,7 +448,7 @@ struct CoupledView: View {
                         .frame(maxWidth: .infinity, alignment: .leading)
 
                         Image(systemName: "chevron.right")
-                            .font(.system(size: 13, weight: .semibold))
+                            .font(.system(size: 14, weight: .semibold))
                             .foregroundStyle(StrandPalette.textTertiary)
                     }
                 }
@@ -577,7 +577,7 @@ struct CoupledView: View {
                     NavigationLink {
                         ScoringGuideView(initialSection: .charge, onClose: { showChargeBreakdown = false })
                     } label: {
-                        HStack(spacing: 10) {
+                        HStack(spacing: 12) {
                             Image(systemName: "function")
                                 .font(.system(size: 14, weight: .semibold))
                                 .foregroundStyle(StrandPalette.chargeColor)
@@ -592,7 +592,7 @@ struct CoupledView: View {
                                 .font(.system(size: 12, weight: .semibold))
                                 .foregroundStyle(StrandPalette.textTertiary)
                         }
-                        .padding(14)
+                        .padding(16)
                         .background(NoopPanelSurface(cornerRadius: NoopMetrics.radiusCompact))
                         .contentShape(Rectangle())
                     }
@@ -640,7 +640,7 @@ struct CoupledView: View {
                     .font(.system(size: 16, weight: .semibold))
                     .foregroundStyle(StrandPalette.chargeColor)
                     .accessibilityHidden(true)
-                VStack(alignment: .leading, spacing: 3) {
+                VStack(alignment: .leading, spacing: 4) {
                     HStack(alignment: .firstTextBaseline, spacing: 8) {
                         Text(countdown)
                             .font(StrandFont.headline)

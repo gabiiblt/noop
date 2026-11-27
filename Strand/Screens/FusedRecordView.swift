@@ -219,9 +219,9 @@ private struct FusedMetricRowView: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 6) {
+        VStack(alignment: .leading, spacing: 8) {
             // Top line: metric label + the winning value (best-sourced), right-aligned.
-            HStack(alignment: .firstTextBaseline, spacing: 10) {
+            HStack(alignment: .firstTextBaseline, spacing: 12) {
                 Text(LocalizedStringKey(row.label))
                     .font(StrandFont.headline)
                     .foregroundStyle(StrandPalette.textPrimary)
@@ -253,7 +253,7 @@ private struct FusedMetricRowView: View {
             }
         }
         .padding(.horizontal, NoopMetrics.cardPadding)
-        .padding(.vertical, 14)
+        .padding(.vertical, 16)
         .frame(maxWidth: .infinity, alignment: .leading)
         .contentShape(Rectangle())
         // The whole conflict row is the compare affordance, so VoiceOver and a tap both reach it.
@@ -284,7 +284,7 @@ private struct FusedMetricRowView: View {
 
         case .minorDelta:
             if let other = point.contributors.dropFirst().first {
-                HStack(spacing: 6) {
+                HStack(spacing: 8) {
                     StatePill("Differs slightly", tone: .neutral, showsDot: false)
                     Text("\(other.source.displayName): \(FusionFormat.value(other.value, metricKey: point.metric, temperature: temperatureUnit))")
                         .font(StrandFont.footnote)
@@ -295,13 +295,13 @@ private struct FusedMetricRowView: View {
 
         case .conflict:
             Button(action: onCompare) {
-                HStack(spacing: 6) {
+                HStack(spacing: 8) {
                     StatePill("Sources differ", tone: .warning)
                     Text(conflictSummary)
                         .font(StrandFont.footnote)
                         .foregroundStyle(StrandPalette.textSecondary)
                     Image(systemName: "chevron.right")
-                        .font(.system(size: 9, weight: .semibold))
+                        .font(.system(size: 10, weight: .semibold))
                         .foregroundStyle(StrandPalette.textTertiary)
                     Spacer(minLength: 0)
                 }
@@ -350,7 +350,7 @@ private struct ConflictCompareSheet: View {
 
                 // Why this one — the honest explanation of the pick, never a "correct" claim.
                 if let winner = point.contributors.first {
-                    HStack(alignment: .top, spacing: 10) {
+                    HStack(alignment: .top, spacing: 12) {
                         Image(systemName: "info.circle")
                             .font(StrandFont.subhead)
                             .foregroundStyle(StrandPalette.accent)

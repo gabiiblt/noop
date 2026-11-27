@@ -877,14 +877,14 @@ struct DataSourcesView: View {
     /// owner knows broadcast is for them and a 5/MG owner understands the PPG-derived source — without
     /// over-promising. Plain copy, no claim that either generation is "better".
     private var generationExplainer: some View {
-        VStack(alignment: .leading, spacing: 6) {
+        VStack(alignment: .leading, spacing: 8) {
             generationRow(title: "WHOOP 4.0",
                           detail: String(localized: "Broadcasts the strap's own live heart rate over Bluetooth."))
             generationRow(title: "WHOOP 5.0 & MG",
                           detail: String(localized: "Broadcasts the live heart rate NOOP derives from the strap once connected."))
         }
         .padding(.top, 2)
-        .padding(.horizontal, 10).padding(.vertical, 8)
+        .padding(.horizontal, 12).padding(.vertical, 8)
         .background(DomainTheme.effort.color.opacity(0.08),
                     in: RoundedRectangle(cornerRadius: NoopMetrics.radiusControl, style: .continuous))
     }

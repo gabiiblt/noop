@@ -133,7 +133,7 @@ struct LiftSessionView: View {
                     Color.clear.frame(height: 8)
                 }
                 .padding(.horizontal, NoopMetrics.screenPadding)
-                .padding(.top, 18)
+                .padding(.top, 20)
             }
             .onChange(of: engine.currentSlot) { slot in
                 // Follow the session down the sheet, but only when it moves on its own — scrolling
@@ -167,7 +167,7 @@ struct LiftSessionView: View {
         } label: {
             HStack(spacing: 8) {
                 Image(systemName: "plus")
-                    .font(.system(size: 15, weight: .semibold))
+                    .font(.system(size: 16, weight: .semibold))
                 Text("Add exercise").font(StrandFont.headline)
             }
             .foregroundStyle(canAdd ? StrandPalette.gymAccent : StrandPalette.textTertiary)
@@ -261,7 +261,7 @@ struct LiftSessionView: View {
                         // Belt and braces with the entry cap: the sets are what this screen is for,
                         // and a note must never be able to push them off it.
                         .lineLimit(4)
-                        .padding(10)
+                        .padding(12)
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .background(StrandPalette.metricAmber.opacity(0.12),
                                     in: RoundedRectangle(cornerRadius: NoopMetrics.radiusChip, style: .continuous))
@@ -332,9 +332,9 @@ struct LiftSessionView: View {
             Button {
                 session.addSet(toExercise: index)
             } label: {
-                HStack(spacing: 6) {
+                HStack(spacing: 8) {
                     Image(systemName: "plus.circle")
-                        .font(.system(size: 17, weight: .semibold))
+                        .font(.system(size: 18, weight: .semibold))
                     Text("Add set").font(StrandFont.caption)
                 }
                 .foregroundStyle(canAdd ? StrandPalette.gymAccent : StrandPalette.textTertiary)
@@ -349,7 +349,7 @@ struct LiftSessionView: View {
                 session.removeSet(fromExercise: index)
             } label: {
                 Image(systemName: "minus.circle")
-                    .font(.system(size: 17, weight: .semibold))
+                    .font(.system(size: 18, weight: .semibold))
                     // Dimmed rather than gone: the pair reads as one control, and a minus that
                     // disappears once the last set is done looks like a feature that broke.
                     .foregroundStyle(canRemove ? StrandPalette.textSecondary
@@ -504,7 +504,7 @@ struct LiftSessionView: View {
                 if recorded == nil { session.start(slot) } else { session.start(slot) }
             } label: {
                 Image(systemName: "checkmark")
-                    .font(.system(size: 14, weight: .bold))
+                    .font(.system(size: 14, weight: .semibold))
                     .foregroundStyle(recorded == nil ? StrandPalette.textTertiary : StrandPalette.onGymAccent)
                     .frame(width: 32, height: 32)
                     .background(recorded == nil ? StrandPalette.surfaceInset : StrandPalette.gymAccent,
@@ -593,7 +593,7 @@ struct LiftSessionView: View {
             .minimumScaleFactor(0.75)
             .accessibilityElement(children: .combine)
             // Shorter, longer, or on to the next set: the rest that was planned is not always the rest that is needed.
-            HStack(spacing: 14) {
+            HStack(spacing: 16) {
                 restButton(verbatim: "−15 s", label: "Shorten the rest by 15 seconds") { session.adjustRest(by: -15) }
                 restButton(verbatim: "+15 s", label: "Lengthen the rest by 15 seconds") { session.adjustRest(by: 15) }
                 Spacer(minLength: 0)
@@ -625,7 +625,7 @@ struct LiftSessionView: View {
                 .font(StrandFont.captionNumber.weight(.bold))
                 .foregroundStyle(StrandPalette.metricAmber)
                 .padding(.horizontal, NoopMetrics.space3)
-                .padding(.vertical, 6)
+                .padding(.vertical, 8)
                 .contentShape(Capsule())
         }
         .buttonStyle(.plain)
@@ -771,14 +771,14 @@ struct LiftSessionView: View {
 
     private func controlBar(_ engine: LiftSessionEngine) -> some View {
         VStack(spacing: NoopMetrics.rowSpacing) {
-            HStack(spacing: 14) {
+            HStack(spacing: 16) {
                 clock(String(localized: "Session"), tint: StrandPalette.textPrimary) { $0 - engine.startTs }
                 stageClock(engine)
                 heartRate()
                 Spacer(minLength: 0)
                 Button { session.undo() } label: {
                     Image(systemName: "arrow.uturn.backward")
-                        .font(.system(size: 15, weight: .semibold))
+                        .font(.system(size: 16, weight: .semibold))
                 }
                 .buttonStyle(.plain)
                 .foregroundStyle(engine.canUndo ? StrandPalette.textSecondary : StrandPalette.textTertiary)

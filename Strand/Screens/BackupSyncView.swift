@@ -65,7 +65,7 @@ struct BackupSyncView: View {
 
     private var folderCard: some View {
         StrandCard(padding: 20) {
-            VStack(alignment: .leading, spacing: 10) {
+            VStack(alignment: .leading, spacing: 12) {
                 Text("Backup folder")
                     .font(StrandFont.headline).foregroundStyle(StrandPalette.textPrimary)
                 Text(folderLabel.map { String(localized: "Saving to: \($0)") }
@@ -105,7 +105,7 @@ struct BackupSyncView: View {
 
     private var autoCard: some View {
         StrandCard(padding: 20, tint: auto && folderLabel != nil ? StrandPalette.accent : nil) {
-            VStack(alignment: .leading, spacing: 14) {
+            VStack(alignment: .leading, spacing: 16) {
                 HStack(alignment: .center, spacing: 16) {
                     VStack(alignment: .leading, spacing: 2) {
                         Text("Daily auto-backup")
@@ -166,7 +166,7 @@ struct BackupSyncView: View {
 
     private var restoreCard: some View {
         StrandCard(padding: 20) {
-            VStack(alignment: .leading, spacing: 10) {
+            VStack(alignment: .leading, spacing: 12) {
                 Text("Restore")
                     .font(StrandFont.headline).foregroundStyle(StrandPalette.textPrimary)
                 Text("Replace this device's data with one of the backups in your folder. This overwrites current data, so back up first if you're unsure.")

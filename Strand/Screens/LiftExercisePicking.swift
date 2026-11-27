@@ -99,8 +99,8 @@ struct LiftMusclePicker: View {
         VStack(alignment: .leading, spacing: NoopMetrics.gap) {
             GymSectionTitle(title: "Muscles")
             GymCard {
-                VStack(alignment: .leading, spacing: 14) {
-                    VStack(alignment: .leading, spacing: 6) {
+                VStack(alignment: .leading, spacing: 16) {
+                    VStack(alignment: .leading, spacing: 8) {
                         Text("Primary").gymLabel()
                         Menu {
                             Button("Not classified") { primary = nil }
@@ -128,7 +128,7 @@ struct LiftMusclePicker: View {
                         .accessibilityLabel("Primary muscle")
                     }
 
-                    VStack(alignment: .leading, spacing: 6) {
+                    VStack(alignment: .leading, spacing: 8) {
                         Text("Also works (counted as half a set)").gymLabel()
                         LazyVGrid(columns: [GridItem(.adaptive(minimum: 104), spacing: 8)],
                                   alignment: .leading, spacing: 8) {
@@ -157,8 +157,8 @@ struct LiftMusclePicker: View {
             Text(muscle.displayName)
                 .font(StrandFont.caption)
                 .foregroundStyle(on ? StrandPalette.gymAccent : StrandPalette.textSecondary)
-                .padding(.horizontal, 10)
-                .padding(.vertical, 6)
+                .padding(.horizontal, 12)
+                .padding(.vertical, 8)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .background(
                     RoundedRectangle(cornerRadius: NoopMetrics.radiusChip, style: .continuous)

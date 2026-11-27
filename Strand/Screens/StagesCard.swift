@@ -222,7 +222,7 @@ struct StageDetailView: View {
                 .foregroundStyle(StrandPalette.textTertiary)
             if night.motionEpochs.count >= 2 {
                 MotionTrace(epochs: night.motionEpochs, height: 40, tint: StrandPalette.restColor)
-                    .padding(.horizontal, 10)
+                    .padding(.horizontal, 12)
             } else {
                 Text("No movement detail for this night")
                     .font(StrandFont.footnote)
@@ -340,7 +340,7 @@ struct StageDetailView: View {
     @ViewBuilder
     private func stageBar(_ s: Stages) -> some View {
         let total = max(1, s.total)
-        VStack(alignment: .leading, spacing: 10) {
+        VStack(alignment: .leading, spacing: 12) {
             Spacer(minLength: 0)
             GeometryReader { geo in
                 HStack(spacing: 2) {
@@ -374,7 +374,7 @@ struct StageDetailView: View {
 
     @ViewBuilder
     private func legend(_ stage: SleepStage, _ label: String) -> some View {
-        HStack(spacing: 5) {
+        HStack(spacing: 4) {
             RoundedRectangle(cornerRadius: 2, style: .continuous)
                 .fill(StrandPalette.sleepStageColor(stage))
                 .frame(width: 9, height: 9)
@@ -421,7 +421,7 @@ struct StageDetailView: View {
         let fraction = total > 0 ? min(1, max(0, minutes / total)) : 0
         let isSelected = selectedStage == stage
         let othersSelected = selectedStage != nil && !isSelected
-        HStack(spacing: 10) {
+        HStack(spacing: 12) {
             RoundedRectangle(cornerRadius: 3, style: .continuous)
                 .fill(color)
                 .frame(width: 12, height: 12)
@@ -444,7 +444,7 @@ struct StageDetailView: View {
                 .frame(width: 60, alignment: .trailing)
         }
         .padding(.vertical, 4)
-        .padding(.horizontal, 6)
+        .padding(.horizontal, 8)
         .background(
             RoundedRectangle(cornerRadius: NoopMetrics.radiusChip, style: .continuous)
                 .fill(color.opacity(isSelected ? 0.14 : 0))
@@ -487,7 +487,7 @@ struct StageDetailView: View {
             SleepHRChart(nightHR: nightHR, intervals: smoothed, origin: origin, span: span, night: night,
                          selectedStage: selectedStage, timeFormatter: Self.stageAxisFormatter)
                 .frame(height: 124)
-                .padding(.horizontal, 10)
+                .padding(.horizontal, 12)
                 .padding(.bottom, 2)
             stageTimelineRow(.awake, minutes: s.awake, percent: stageSharePercent(.awake, s), intervals: smoothed, origin: origin, span: span)
             stageTimelineRow(.rem,   minutes: s.rem,   percent: stageSharePercent(.rem, s), intervals: smoothed, origin: origin, span: span)
@@ -503,7 +503,7 @@ struct StageDetailView: View {
             }
             .font(StrandFont.footnote)
             .foregroundStyle(StrandPalette.textTertiary)
-            .padding(.horizontal, 10)
+            .padding(.horizontal, 12)
             .accessibilityHidden(true)
             // WHOOP's per-stage insight: with a stage selected, tonight vs the 30-day typical
             // range; otherwise a quiet hint that the rows are tappable. It grows only when a
@@ -641,7 +641,7 @@ struct StageDetailView: View {
         let color = StrandPalette.sleepStageColor(stage)
         let isSelected = selectedStage == stage
         let dimmed = selectedStage != nil && !isSelected
-        VStack(alignment: .leading, spacing: 6) {
+        VStack(alignment: .leading, spacing: 8) {
             HStack(spacing: 8) {
                 Text(stage.label.uppercased())
                     .font(StrandFont.overline)
@@ -672,7 +672,7 @@ struct StageDetailView: View {
             .frame(height: 20)
         }
         .padding(.vertical, 8)
-        .padding(.horizontal, 10)
+        .padding(.horizontal, 12)
         .background(
             RoundedRectangle(cornerRadius: NoopMetrics.radiusControl, style: .continuous)
                 .fill(StrandPalette.textPrimary.opacity(0.045))

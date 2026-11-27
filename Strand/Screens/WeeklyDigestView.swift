@@ -303,7 +303,7 @@ struct WeeklyDigestContent: View {
         let hasFocal = !digest.focalPoints.isEmpty
         if hasFocal || !signals.isEmpty || !compact {
             NoopCard {
-                VStack(alignment: .leading, spacing: 14) {
+                VStack(alignment: .leading, spacing: 16) {
                     if hasFocal {
                         VStack(alignment: .leading, spacing: 8) {
                             ForEach(Array(digest.focalPoints.enumerated()), id: \.offset) { _, line in
@@ -315,7 +315,7 @@ struct WeeklyDigestContent: View {
                     // Secondary nightly signals (HRV / RHR) as compact rows — full screen only.
                     if !signals.isEmpty {
                         if hasFocal { Divider().overlay(StrandPalette.hairline) }
-                        VStack(spacing: 10) {
+                        VStack(spacing: 12) {
                             ForEach(signals, id: \.metric.rawValue) { row in
                                 metricRow(row)
                             }
@@ -383,23 +383,23 @@ struct WeeklyDigestContent: View {
     private func deltaChip(_ s: WeeklyMetricSummary) -> some View {
         let tone = chipTone(s)
         let arrow = s.wowDelta > 0 ? "arrow.up" : (s.wowDelta < 0 ? "arrow.down" : "minus")
-        return HStack(spacing: 3) {
+        return HStack(spacing: 4) {
             Image(systemName: arrow)
-                .font(.system(size: 9, weight: .bold))
+                .font(.system(size: 10, weight: .semibold))
                 .accessibilityHidden(true)
             Text(deltaText(s))
                 .font(StrandFont.captionNumber)
         }
         .foregroundStyle(tone)
         .padding(.horizontal, 8)
-        .padding(.vertical, 3)
+        .padding(.vertical, 4)
         .background(tone.opacity(0.12), in: Capsule())
     }
 
     // MARK: Footer (full screen only)
 
     private var footer: some View {
-        VStack(alignment: .leading, spacing: 6) {
+        VStack(alignment: .leading, spacing: 8) {
             Divider().overlay(StrandPalette.hairline)
             if let sd = digest.sleepConsistencySD {
                 Text("Sleep steadiness: Rest varied ±\(fmt1(sd)) pts night to night.")

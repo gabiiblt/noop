@@ -54,7 +54,7 @@ struct StagesVsTypicalCard: View {
             let sign = diff >= 0 ? "+" : "−"
             return String(localized: "\(sign)\(durationText(abs(diff))) vs typ")
         }()
-        VStack(alignment: .leading, spacing: 6) {
+        VStack(alignment: .leading, spacing: 8) {
             HStack(alignment: .firstTextBaseline, spacing: 8) {
                 RoundedRectangle(cornerRadius: 3, style: .continuous)
                     .fill(color)

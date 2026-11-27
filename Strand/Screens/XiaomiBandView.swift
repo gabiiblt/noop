@@ -250,7 +250,7 @@ struct XiaomiBandView: View {
 
     private var loadingState: some View {
         NoopCard(tint: StrandPalette.metricAmber) {
-            HStack(spacing: 10) {
+            HStack(spacing: 12) {
                 ConnectionDot(tone: .accent, pulsing: true)
                 Text("Reading your Mi Band history…")
                     .font(StrandFont.subhead).foregroundStyle(StrandPalette.textSecondary)
@@ -427,7 +427,7 @@ struct XiaomiBandView: View {
     }
 
     private func singlePoint(_ value: Double, fmt: (Double) -> String, accent: Color) -> some View {
-        VStack(alignment: .leading, spacing: 6) {
+        VStack(alignment: .leading, spacing: 8) {
             Text("Latest reading").strandOverline()
             Text(fmt(value)).font(StrandFont.number(34)).foregroundStyle(accent)
         }

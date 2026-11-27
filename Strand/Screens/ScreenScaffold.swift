@@ -201,7 +201,7 @@ struct SyncingHistoryNote: View {
     let chunks: Int
 
     var body: some View {
-        HStack(spacing: 10) {
+        HStack(spacing: 12) {
             StatePill("Syncing strap history…", tone: .accent, pulsing: true)
             if chunks > 0 {
                 Text("\(chunks) chunks pulled")
@@ -239,7 +239,7 @@ struct DataPendingNote: View {
                     .font(StrandFont.headline)
                     .foregroundStyle(StrandPalette.accent)
                     .accessibilityHidden(true)
-                VStack(alignment: .leading, spacing: 6) {
+                VStack(alignment: .leading, spacing: 8) {
                     Text(title)
                         .font(StrandFont.headline)
                         .foregroundStyle(StrandPalette.textPrimary)

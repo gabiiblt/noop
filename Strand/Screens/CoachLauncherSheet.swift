@@ -80,7 +80,7 @@ struct CoachLauncherSheet: View {
             TextField("Ask your coach…", text: $draft, axis: .vertical)
                 .textFieldStyle(.plain)
                 .lineLimit(1...3)
-                .padding(.horizontal, 12).padding(.vertical, 9)
+                .padding(.horizontal, 12).padding(.vertical, 8)
                 .background(FrostedCardSurface(cornerRadius: NoopMetrics.cardRadius))
                 .onSubmit { submitDraft() }
             Button {
@@ -114,7 +114,7 @@ struct CoachLauncherSheet: View {
             Text("Connect a provider")
                 .font(StrandFont.caption)
                 .foregroundStyle(StrandPalette.textPrimary)
-                .padding(.horizontal, 14).padding(.vertical, 10)
+                .padding(.horizontal, 16).padding(.vertical, 12)
                 .frame(maxWidth: .infinity)
                 .background(FrostedCardSurface(cornerRadius: NoopMetrics.cardRadius))
                 .contentShape(Rectangle())

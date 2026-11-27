@@ -86,12 +86,12 @@ struct SmartAlarmView: View {
                 .clipShape(RoundedRectangle(cornerRadius: NoopMetrics.cardRadius, style: .continuous))
             VStack(alignment: .leading, spacing: 12) {
                 Text("Tonight").strandOverline()
-                HStack(alignment: .firstTextBaseline, spacing: 14) {
+                HStack(alignment: .firstTextBaseline, spacing: 16) {
                     heroTime(label: "Wind down",
                              time: windDownOn ? timeLabel(WindDownNudge.nudgeMinuteOfDay()) : "—",
                              tint: StrandPalette.restColor)
                     Image(systemName: "arrow.right")
-                        .font(.system(size: 13, weight: .semibold))
+                        .font(.system(size: 14, weight: .semibold))
                         .foregroundStyle(StrandPalette.textTertiary)
                         .accessibilityHidden(true)
                     // "Wake" was the wind-down INPUT wearing the name of the thing that wakes you, in the
@@ -170,7 +170,7 @@ struct SmartAlarmView: View {
                     Image(systemName: "exclamationmark.triangle.fill")
                         .foregroundStyle(StrandPalette.statusWarning)
                         .accessibilityHidden(true)
-                    VStack(alignment: .leading, spacing: 6) {
+                    VStack(alignment: .leading, spacing: 8) {
                         Text("Your strap isn't accepting the alarm")
                             .font(StrandFont.headline)
                             .foregroundStyle(StrandPalette.textPrimary)
@@ -193,7 +193,7 @@ struct SmartAlarmView: View {
                 Image(systemName: "bell.slash")
                     .foregroundStyle(StrandPalette.statusWarning)
                     .accessibilityHidden(true)
-                VStack(alignment: .leading, spacing: 6) {
+                VStack(alignment: .leading, spacing: 8) {
                     Text("The strap alarm is a silent buzz, not a sound")
                         .font(StrandFont.headline)
                         .foregroundStyle(StrandPalette.textPrimary)
@@ -216,7 +216,7 @@ struct SmartAlarmView: View {
             VStack(alignment: .leading, spacing: 16) {
                 VStack(alignment: .leading, spacing: 2) {
                     Text("Morning").strandOverline()
-                    HStack(spacing: 10) {
+                    HStack(spacing: 12) {
                         Image(systemName: "alarm.fill")
                             .foregroundStyle(StrandPalette.accent)
                             .accessibilityHidden(true)
@@ -332,7 +332,7 @@ struct SmartAlarmView: View {
             VStack(alignment: .leading, spacing: 16) {
                 VStack(alignment: .leading, spacing: 2) {
                     Text("Evening").strandOverline()
-                    HStack(spacing: 10) {
+                    HStack(spacing: 12) {
                         Image(systemName: "moon.zzz.fill")
                             .foregroundStyle(StrandPalette.restColor)
                             .accessibilityHidden(true)
@@ -620,7 +620,7 @@ struct SmartAlarmView: View {
                     Image(systemName: "arrow.uturn.backward")
                         .font(.system(size: 12, weight: .semibold))
                         .foregroundStyle(StrandPalette.textTertiary)
-                        .padding(6)
+                        .padding(8)
                         .contentShape(Rectangle())
                 }
                 .buttonStyle(.plain)
@@ -689,8 +689,8 @@ struct SmartAlarmView: View {
     // MARK: - Strap alarm weekday picker (#766, moved here from Automations, behaviour intact)
 
     private var alarmWeekdayPicker: some View {
-        VStack(alignment: .leading, spacing: 6) {
-            HStack(spacing: 6) {
+        VStack(alignment: .leading, spacing: 8) {
+            HStack(spacing: 8) {
                 ForEach(Self.weekdayOrder, id: \.self) { dow in
                     let selected = Self.alarmWeekdayIsSelected(dow, in: behavior.smartAlarmWeekdays)
                     Text(Self.alarmWeekdayInitial(dow))

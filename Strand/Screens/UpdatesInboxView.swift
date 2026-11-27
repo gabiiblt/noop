@@ -193,7 +193,7 @@ private struct UpdateRow: View {
 
     var body: some View {
         NoopCard(tint: item.read ? nil : tint) {
-            VStack(alignment: .leading, spacing: 10) {
+            VStack(alignment: .leading, spacing: 12) {
                 HStack(alignment: .top, spacing: 12) {
                     Image(systemName: symbol)
                         .font(StrandFont.headline)
@@ -201,7 +201,7 @@ private struct UpdateRow: View {
                         .frame(width: 24)
                         .padding(.top, 1)
                         .accessibilityHidden(true)
-                    VStack(alignment: .leading, spacing: 3) {
+                    VStack(alignment: .leading, spacing: 4) {
                         Text(item.title)
                             .font(StrandFont.headline.weight(.semibold))
                             .foregroundStyle(StrandPalette.textPrimary)
@@ -220,7 +220,7 @@ private struct UpdateRow: View {
                     if !item.read {
                         Circle().fill(StrandPalette.statusCritical)
                             .frame(width: 8, height: 8)
-                            .padding(.top, 5)
+                            .padding(.top, 4)
                             .accessibilityHidden(true)
                     }
                 }

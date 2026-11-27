@@ -443,7 +443,7 @@ struct SettingsView: View {
                     .fixedSize(horizontal: false, vertical: true)
                 rowDivider
                 FormRow(label: "Max heart rate") {
-                    VStack(alignment: .trailing, spacing: 6) {
+                    VStack(alignment: .trailing, spacing: 8) {
                         hrMaxField
                         Text(profile.hrMaxOverride > 0
                              ? "Manual override"
@@ -504,7 +504,7 @@ struct SettingsView: View {
                 // up to 30 because a 5/MG motion counter can overcount by ~24×; the stepper uses a
                 // variable increment (fine near 1.0, coarse up top) so high values stay reachable.
                 FormRow(label: "Step calibration") {
-                    HStack(spacing: 10) {
+                    HStack(spacing: 12) {
                         Text(String(format: "%.1f", profile.stepTicksPerStep))
                             .font(StrandFont.bodyNumber)
                             .foregroundStyle(StrandPalette.textPrimary)
@@ -608,7 +608,7 @@ struct SettingsView: View {
                                        action: @escaping () -> Void) -> some View {
         let shape = RoundedRectangle(cornerRadius: NoopMetrics.radiusControl, style: .continuous)
         Button(action: action) {
-            VStack(spacing: 3) {
+            VStack(spacing: 4) {
                 Group {
                     if let thumb { thumb.resizable().scaledToFill() } else { StrandPalette.surfaceInset }
                 }
@@ -651,11 +651,11 @@ struct SettingsView: View {
                 // Recent presets: tap a thumbnail to re-apply that image + the scaling it was last shown
                 // with. The first (accent-ringed) one is the active background.
                 if !backgroundStore.recents.isEmpty {
-                    VStack(alignment: .leading, spacing: 6) {
+                    VStack(alignment: .leading, spacing: 8) {
                         Text("Recent")
                             .font(StrandFont.footnote)
                             .foregroundStyle(StrandPalette.textSecondary)
-                        HStack(spacing: 10) {
+                        HStack(spacing: 12) {
                             ForEach(backgroundStore.recents.indices, id: \.self) { index in
                                 backgroundRecentThumb(
                                     thumb: backgroundStore.thumbnails.indices.contains(index)
@@ -1475,7 +1475,7 @@ struct SettingsView: View {
     /// the connect handshake → `LiveState.advertisingName`) and writes a new one via `renameStrap`. The
     /// strap reboots to apply, so the new name lands on the next connect. WHOOP 4.0 only (Harvard).
     @ViewBuilder private var strapNameControl: some View {
-        VStack(alignment: .leading, spacing: 6) {
+        VStack(alignment: .leading, spacing: 8) {
             Text("Strap name").strandOverline()
             Text("Current: \(live.advertisingName ?? "—")")
                 .font(StrandFont.subhead)
@@ -1486,7 +1486,7 @@ struct SettingsView: View {
                     .font(StrandFont.body)
                     .foregroundStyle(StrandPalette.textPrimary)
                     .padding(.horizontal, NoopMetrics.space3)
-                    .padding(.vertical, 9)
+                    .padding(.vertical, 8)
                     .background(StrandPalette.surfaceInset, in: RoundedRectangle(cornerRadius: NoopMetrics.radiusControl, style: .continuous))
                     .overlay(RoundedRectangle(cornerRadius: NoopMetrics.radiusControl, style: .continuous)
                         .strokeBorder(StrandPalette.hairline, lineWidth: 1))
@@ -2193,10 +2193,10 @@ struct SettingsView: View {
                     }
                 }
 
-                HStack(alignment: .top, spacing: 10) {
+                HStack(alignment: .top, spacing: 12) {
                     Image(systemName: "info.circle.fill")
                         .foregroundStyle(StrandPalette.textTertiary)
-                        .font(.system(size: 13))
+                        .font(.system(size: 14))
                         .accessibilityHidden(true)
                     Text("Importing overwrites everything currently on \(Platform.deviceNounPhrase). Your old data is kept in a side file just in case. NOOP needs a relaunch for an import to take effect. Export CSV writes a WHOOP-format zip of your days, sleeps, workouts and journal that re-imports into NOOP on Mac, iPhone, or Android. On-device computed rows are marked APPROXIMATE in its Source column; the full backup stays the lossless restore path.")
                         .font(StrandFont.footnote)
@@ -2208,10 +2208,10 @@ struct SettingsView: View {
                 // can open it in any archive tool. Say so plainly next to the Export button, rather than
                 // let people assume the file itself is protected once it leaves the device (e.g. dropped
                 // into a cloud-synced folder).
-                HStack(alignment: .top, spacing: 10) {
+                HStack(alignment: .top, spacing: 12) {
                     Image(systemName: "exclamationmark.triangle.fill")
                         .foregroundStyle(StrandPalette.statusWarning)
-                        .font(.system(size: 13))
+                        .font(.system(size: 14))
                         .accessibilityHidden(true)
                     Text("This is a plain, unencrypted archive — anyone who gets the file can open it with any zip tool. Store it somewhere you trust.")
                         .font(StrandFont.footnote)
@@ -2343,7 +2343,7 @@ struct SettingsView: View {
             blurb: "NOOP: all your data, none of the cloud."
         ) {
             VStack(alignment: .leading, spacing: 16) {
-                HStack(spacing: 10) {
+                HStack(spacing: 12) {
                     Text("NOOP")
                         .font(StrandFont.title2)
                         .foregroundStyle(StrandPalette.textPrimary)
@@ -2360,7 +2360,7 @@ struct SettingsView: View {
                 Button {
                     showHowNoopWorks = true
                 } label: {
-                    HStack(spacing: 10) {
+                    HStack(spacing: 12) {
                         Image(systemName: "questionmark.circle")
                             .foregroundStyle(StrandPalette.accent)
                             .accessibilityHidden(true)
@@ -2389,7 +2389,7 @@ struct SettingsView: View {
                 Button {
                     showScoringGuide = true
                 } label: {
-                    HStack(spacing: 10) {
+                    HStack(spacing: 12) {
                         Image(systemName: "questionmark.circle")
                             .foregroundStyle(StrandPalette.accent)
                             .accessibilityHidden(true)
@@ -2421,7 +2421,7 @@ struct SettingsView: View {
                 NavigationLink {
                     AppleWatchAboutView(onStartSetup: { showAppleWatchSetup = true })
                 } label: {
-                    HStack(spacing: 10) {
+                    HStack(spacing: 12) {
                         Image(systemName: "applewatch")
                             .foregroundStyle(StrandPalette.accent)
                             .accessibilityHidden(true)
@@ -2451,7 +2451,7 @@ struct SettingsView: View {
                 NavigationLink {
                     StorageView()
                 } label: {
-                    HStack(spacing: 10) {
+                    HStack(spacing: 12) {
                         Image(systemName: "internaldrive")
                             .foregroundStyle(StrandPalette.accent)
                             .accessibilityHidden(true)
@@ -2577,7 +2577,7 @@ struct SettingsView: View {
 
                 // Project home — NOOP's code, releases, issues and wiki live on GitHub.
                 Link(destination: URL(string: "https://github.com/ryanbr/noop")!) {
-                    HStack(spacing: 10) {
+                    HStack(spacing: 12) {
                         Image(systemName: "chevron.left.forwardslash.chevron.right")
                             .foregroundStyle(StrandPalette.accent)
                             .accessibilityHidden(true)
@@ -2606,10 +2606,10 @@ struct SettingsView: View {
                     .fixedSize(horizontal: false, vertical: true)
 
                 // Medical disclaimer
-                HStack(alignment: .top, spacing: 10) {
+                HStack(alignment: .top, spacing: 12) {
                     Image(systemName: "exclamationmark.triangle.fill")
                         .foregroundStyle(StrandPalette.statusWarning)
-                        .font(.system(size: 13))
+                        .font(.system(size: 14))
                         .accessibilityHidden(true)
                     Text("NOOP is not a medical device. It is for informational and personal-insight purposes only and is not intended to diagnose, treat, cure or prevent any condition. Talk to a clinician for medical advice.")
                         .font(StrandFont.footnote)
@@ -2627,7 +2627,7 @@ struct SettingsView: View {
 
                 rowDivider
 
-                VStack(alignment: .leading, spacing: 6) {
+                VStack(alignment: .leading, spacing: 8) {
                     Text("Built on").strandOverline()
                     attribution(repo: "johnmiddleton12/my-whoop", note: String(localized: "WHOOP 4.0 protocol"))
                     attribution(repo: "b-nnett/goose", note: String(localized: "WHOOP 5.0 protocol"))
@@ -2643,7 +2643,7 @@ struct SettingsView: View {
     private func attribution(repo: String, note: String) -> some View {
         HStack(spacing: 8) {
             Image(systemName: "chevron.right")
-                .font(.system(size: 9, weight: .semibold))
+                .font(.system(size: 10, weight: .semibold))
                 .foregroundStyle(StrandPalette.accent)
                 .accessibilityHidden(true)
             Text(repo)
@@ -2664,7 +2664,7 @@ struct SettingsView: View {
         Button {
             showDiagnostics = true
         } label: {
-            HStack(spacing: 10) {
+            HStack(spacing: 12) {
                 Image(systemName: "stethoscope")
                     .foregroundStyle(StrandPalette.accent)
                     .accessibilityHidden(true)
@@ -2695,7 +2695,7 @@ struct SettingsView: View {
     private var iphoneExpectations: some View {
         let diag = IOSDiagnostics.capture()
         let expiry = diag.expiryDaysRemaining()
-        return VStack(alignment: .leading, spacing: 10) {
+        return VStack(alignment: .leading, spacing: 12) {
             HStack(spacing: 8) {
                 Image(systemName: "iphone.gen3")
                     .foregroundStyle(StrandPalette.accent)
@@ -2714,7 +2714,7 @@ struct SettingsView: View {
                 let warning = days <= 3
                 HStack(alignment: .top, spacing: 8) {
                     Image(systemName: warning ? "exclamationmark.triangle.fill" : "clock.badge.checkmark")
-                        .font(.system(size: 13))
+                        .font(.system(size: 14))
                         .foregroundStyle(warning ? StrandPalette.statusWarning : StrandPalette.textTertiary)
                         .accessibilityHidden(true)
                     Text(expiryMessage(days))
@@ -2752,7 +2752,7 @@ struct SettingsView: View {
             Image(systemName: "circle.fill")
                 .font(.system(size: 4))
                 .foregroundStyle(StrandPalette.textTertiary)
-                .padding(.top, 6)
+                .padding(.top, 8)
                 .accessibilityHidden(true)
             Text(text)
                 .font(StrandFont.footnote)
@@ -3091,7 +3091,7 @@ struct StepsCalibrationSheet: View {
     /// The honest "it's an estimate, not a step counter" framing — reused verbatim from the engine doc.
     private var explainerCard: some View {
         NoopCard {
-            VStack(alignment: .leading, spacing: 10) {
+            VStack(alignment: .leading, spacing: 12) {
                 Label("How this works", systemImage: "figure.walk.motion")
                     .font(StrandFont.headline)
                     .foregroundStyle(StrandPalette.textPrimary)
@@ -3118,7 +3118,7 @@ struct StepsCalibrationSheet: View {
     /// and reconnect", not "wait for a sync" (which never comes). Imports don't supply strap motion either.
     private var noMotionNote: some View {
         NoopCard(tint: StrandPalette.metricAmber) {
-            VStack(alignment: .leading, spacing: 10) {
+            VStack(alignment: .leading, spacing: 12) {
                 Label("No motion synced yet", systemImage: "antenna.radiowaves.left.and.right.slash")
                     .font(StrandFont.headline)
                     .foregroundStyle(StrandPalette.textPrimary)

@@ -147,7 +147,7 @@ struct IntelligenceView: View {
         return VStack(alignment: .leading, spacing: NoopMetrics.gap) {
             SectionHeader("Tomorrow's Charge", overline: "Evening forecast", trailing: String(localized: "Estimate"))
             NoopCard(padding: 20, tint: StrandPalette.chargeColor) {
-                VStack(spacing: 14) {
+                VStack(spacing: 16) {
                     // The signature liquid gauge: a filling vessel tinted to the forecast Charge, with the
                     // 0–100 estimate counting up over it and the ± band + state word beneath (Sleep's
                     // restHero idiom). Live so the fill actually flows on the hero surface.
@@ -169,10 +169,10 @@ struct IntelligenceView: View {
                         .allowsHitTesting(false)   // taps fall through to the vessel → splash
                     }
                     .padding(.top, 4)
-                    .padding(.bottom, 6)
+                    .padding(.bottom, 8)
                     .accessibilityElement(children: .ignore)
                     .accessibilityLabel("Tomorrow's Charge estimate \(Int(f.charge.rounded())) plus or minus \(Int(f.band.rounded()))")
-                    VStack(alignment: .leading, spacing: 10) {
+                    VStack(alignment: .leading, spacing: 12) {
                         Text("You'll likely wake around \(Int(f.charge.rounded())) ± \(Int(f.band.rounded())) Charge if you sleep about \(sleepHoursLabel(f.plannedSleepHours)) tonight.")
                             .font(StrandFont.subhead).foregroundStyle(StrandPalette.textSecondary)
                             .fixedSize(horizontal: false, vertical: true)
@@ -308,7 +308,7 @@ struct IntelligenceView: View {
     }
 
     private func stat(_ label: String, _ value: String, _ color: Color) -> some View {
-        VStack(alignment: .leading, spacing: 3) {
+        VStack(alignment: .leading, spacing: 4) {
             // `lineLimit` + `minimumScaleFactor` so a long label shrinks instead of running into its
             // neighbour. The five stats share the width as equal columns with NO gap between them
             // (`HStack(spacing: 0)` above), so a label wide enough to fill its column touches the next

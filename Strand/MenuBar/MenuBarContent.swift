@@ -57,7 +57,7 @@ public struct MenuBarLabel: View {
     public var body: some View {
         HStack(spacing: 4) {
             Image(systemName: live.connected ? "heart.fill" : "heart")
-                .font(.system(size: 11, weight: .semibold))
+                .font(.system(size: 12, weight: .semibold))
                 .foregroundStyle(dotColor)
             Text(displayHR.map(String.init) ?? "—")
                 .font(StrandFont.rounded(12, weight: .semibold))
@@ -133,7 +133,7 @@ public struct MenuBarContent: View {
     }
 
     public var body: some View {
-        VStack(alignment: .leading, spacing: 14) {
+        VStack(alignment: .leading, spacing: 16) {
             header
             recoveryBlock
             Divider().overlay(StrandPalette.hairline)
@@ -238,7 +238,7 @@ public struct MenuBarContent: View {
     }
 
     private func statCell(_ label: String, _ value: String, tint: Color) -> some View {
-        VStack(spacing: 3) {
+        VStack(spacing: 4) {
             Text(label)
                 .font(StrandFont.overline)
                 .tracking(StrandFont.overlineTracking)
@@ -246,7 +246,7 @@ public struct MenuBarContent: View {
                 .lineLimit(1)
                 .minimumScaleFactor(0.7)
             Text(value)
-                .font(StrandFont.number(17, weight: .medium))
+                .font(StrandFont.number(18, weight: .medium))
                 .foregroundStyle(tint)
                 .lineLimit(1)
                 .minimumScaleFactor(0.6)
@@ -332,7 +332,7 @@ public struct MenuBarContent: View {
         action: @escaping () -> Void
     ) -> some View {
         Button(action: action) {
-            HStack(spacing: 6) {
+            HStack(spacing: 8) {
                 Image(systemName: systemImage)
                     .font(.system(size: 12, weight: .semibold))
                 Text(title)

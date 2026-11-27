@@ -408,7 +408,7 @@ struct CompareView: View {
                 }
             }
         } label: {
-            HStack(spacing: 6) {
+            HStack(spacing: 8) {
                 Image(systemName: "plus.circle.fill")
                 Text(selected.count >= maxSelection ? "Max 4" : "Add metric")
                     .font(StrandFont.subhead)
@@ -469,7 +469,7 @@ struct CompareView: View {
     private func legend(_ series: [CompareSeries]) -> some View {
         VStack(spacing: 0) {
             ForEach(Array(series.enumerated()), id: \.element.id) { idx, s in
-                HStack(spacing: 10) {
+                HStack(spacing: 12) {
                     // A small liquid vessel posed at this series' LATEST value within its own min–max
                     // window (the same 0–1 position the overlay's "now" end-cap sits at) — the liquid
                     // accent tying the legend to the real series. Static, decorative (the min/max text
@@ -490,7 +490,7 @@ struct CompareView: View {
                         .font(StrandFont.captionNumber)
                         .foregroundStyle(StrandPalette.textSecondary)
                 }
-                .padding(.vertical, 7)
+                .padding(.vertical, 8)
                 .accessibilityElement(children: .combine)
                 .accessibilityLabel("\(s.metric.title), range \(s.metric.format(s.realMin, effortScale: effortScale)) to \(s.metric.format(s.realMax, effortScale: effortScale))")
                 if idx < series.count - 1 {
@@ -591,7 +591,7 @@ struct CompareView: View {
         // TrendChip surfacing the signed direction at a glance — the Today delta idiom, applied to r.
         return NoopCard(tint: tint) {
             VStack(alignment: .leading, spacing: 8) {
-                HStack(spacing: 10) {
+                HStack(spacing: 12) {
                     // A small liquid vessel filled to the correlation STRENGTH (|r|, a neutral 0–1
                     // magnitude — not a health value), tinted by the relationship's own colour. Static
                     // (posed) so a page of pair cards costs one cached frame each, matching Today's small
@@ -600,7 +600,7 @@ struct CompareView: View {
                         .frame(width: 30, height: 30)
                         .accessibilityHidden(true)
                     // Two color swatches for the pair.
-                    HStack(spacing: 3) {
+                    HStack(spacing: 4) {
                         Circle().fill(p.a.color).frame(width: 8, height: 8)
                         Circle().fill(p.b.color).frame(width: 8, height: 8)
                     }
@@ -689,7 +689,7 @@ private struct FlowChips: View {
         LazyVGrid(columns: columns, alignment: .leading, spacing: 8) {
             ForEach(metrics) { metric in
                 let color = colorFor(metric)
-                HStack(spacing: 7) {
+                HStack(spacing: 8) {
                     Circle().fill(color).frame(width: 8, height: 8)
                     Text(metric.title)
                         .font(StrandFont.subhead)
@@ -700,13 +700,13 @@ private struct FlowChips: View {
                         onRemove(metric)
                     } label: {
                         Image(systemName: "xmark")
-                            .font(.system(size: 9, weight: .bold))
+                            .font(.system(size: 10, weight: .semibold))
                             .foregroundStyle(StrandPalette.textTertiary)
                     }
                     .buttonStyle(.plain)
                     .accessibilityLabel("Remove \(metric.title)")
                 }
-                .padding(.horizontal, 11)
+                .padding(.horizontal, 12)
                 .padding(.vertical, 8)
                 .background(
                     Capsule(style: .continuous).fill(StrandPalette.surfaceOverlay)
@@ -1102,12 +1102,12 @@ private struct MultiTooltip: View {
     private var dateLabel: String { Self.dateLabelFormatter.string(from: date) }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 5) {
+        VStack(alignment: .leading, spacing: 4) {
             Text(dateLabel)
                 .font(StrandFont.footnote)
                 .foregroundStyle(StrandPalette.textTertiary)
             ForEach(series) { s in
-                HStack(spacing: 7) {
+                HStack(spacing: 8) {
                     Circle().fill(s.color).frame(width: 7, height: 7)
                     Text(s.metric.title)
                         .font(StrandFont.caption)
@@ -1119,7 +1119,7 @@ private struct MultiTooltip: View {
                 }
             }
         }
-        .padding(10)
+        .padding(12)
         .background(NoopPanelSurface(cornerRadius: NoopMetrics.radiusControl, elevated: true))
         .frame(width: tooltipWidth, alignment: .leading)
         .position(x: clampedX, y: tooltipHeight / 2 + 8)

@@ -168,7 +168,7 @@ struct ScoringGuideView: View {
 
     private var introCard: some View {
         NoopCard {
-            VStack(alignment: .leading, spacing: 14) {
+            VStack(alignment: .leading, spacing: 16) {
                 Text("THE THREE SCORES").font(StrandFont.overline)
                     .tracking(StrandFont.overlineTracking)
                     .foregroundStyle(StrandPalette.textSecondary)
@@ -189,7 +189,7 @@ struct ScoringGuideView: View {
     }
 
     private func legendDot(_ section: ScoreSection, _ label: String) -> some View {
-        HStack(spacing: 6) {
+        HStack(spacing: 8) {
             Circle().fill(section.accent).frame(width: 8, height: 8)
             Text(label).font(StrandFont.caption).foregroundStyle(StrandPalette.textSecondary)
         }
@@ -205,9 +205,9 @@ struct ScoringGuideView: View {
     /// token, never gold / strain / sleep-purple.
     private func scoreCard(_ section: ScoreSection, headline: String, body: String, vsWhoop: String) -> some View {
         NoopCard(tint: section.accent) {
-            VStack(alignment: .leading, spacing: 14) {
+            VStack(alignment: .leading, spacing: 16) {
                 // Header row — the flat sample ring sits beside the accent icon + headline.
-                HStack(alignment: .center, spacing: 14) {
+                HStack(alignment: .center, spacing: 16) {
                     sampleRing(section)
                         .accessibilityHidden(true)
                     VStack(alignment: .leading, spacing: 8) {
@@ -263,7 +263,7 @@ struct ScoringGuideView: View {
     /// Today hero rings. Decorative ("what a strong day looks like"), so it's hidden from VoiceOver by the
     /// caller. Replaces the old per-section BevelGauge(bloomActive: true).
     private func sampleRing(_ section: ScoreSection) -> some View {
-        VStack(spacing: 5) {
+        VStack(spacing: 4) {
             GlowRing(
                 fraction: section.sampleFraction,
                 value: section.sampleFraction * 100,

@@ -50,7 +50,7 @@ struct NotificationSettingsView: View {
                 .toggleStyle(.switch)
                 .tint(StrandPalette.accent)
 
-                HStack(spacing: 10) {
+                HStack(spacing: 12) {
                     StatePill("\(strapPillTitle)", tone: strapPillTone, pulsing: live.connected)
                     StatePill(store.enabledCount == 1 ? "1 app on" : "\(store.enabledCount) apps on",
                               tone: store.enabledCount > 0 ? .positive : .neutral,
@@ -73,10 +73,10 @@ struct NotificationSettingsView: View {
     }
 
     private var deliveryNote: some View {
-        HStack(alignment: .top, spacing: 10) {
+        HStack(alignment: .top, spacing: 12) {
             Image(systemName: "info.circle.fill")
                 .foregroundStyle(StrandPalette.accent)
-                .font(.system(size: 13))
+                .font(.system(size: 14))
                 .accessibilityHidden(true)
             Text("Wrist delivery isn't live yet. It needs a small on-device watcher (coming in an update) to read macOS notifications. Everything stays on this Mac. Your choices are saved now and will apply automatically once delivery ships.")
                 .font(StrandFont.footnote)
@@ -194,12 +194,12 @@ struct NotificationSettingsView: View {
                 }
             }
         } label: {
-            HStack(spacing: 5) {
-                Image(systemName: "waveform.path").font(.system(size: 11))
+            HStack(spacing: 4) {
+                Image(systemName: "waveform.path").font(.system(size: 12))
                 Text(store.pattern(app.id).label).font(StrandFont.caption)
             }
-            .padding(.horizontal, 10)
-            .padding(.vertical, 5)
+            .padding(.horizontal, 12)
+            .padding(.vertical, 4)
             .background(StrandPalette.surfaceInset, in: Capsule())
             .overlay(Capsule().strokeBorder(StrandPalette.hairline, lineWidth: 1))
             .foregroundStyle(StrandPalette.textSecondary)
@@ -214,7 +214,7 @@ struct NotificationSettingsView: View {
             model.buzz(loops: store.pattern(app.id).loops)
         } label: {
             Image(systemName: "play.fill")
-                .font(.system(size: 11))
+                .font(.system(size: 12))
                 .frame(width: 24, height: 24)
         }
         .buttonStyle(.bordered)

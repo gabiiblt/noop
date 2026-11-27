@@ -271,7 +271,7 @@ private struct BreathingContent: View {
     // MARK: - Status row
 
     private var statusRow: some View {
-        HStack(spacing: 10) {
+        HStack(spacing: 12) {
             StatePill(running ? "Session live" : "Ready",
                       tone: running ? .accent : .neutral,
                       pulsing: running)
@@ -284,14 +284,14 @@ private struct BreathingContent: View {
 
             Spacer()
 
-            HStack(spacing: 6) {
+            HStack(spacing: 8) {
                 if let target = sessionLength.targetSeconds {
                     Text("\(timeString(sessionSeconds)) / \(timeString(target))")
-                        .font(StrandFont.number(15))
+                        .font(StrandFont.number(16))
                         .foregroundStyle(StrandPalette.textPrimary)
                 } else {
                     Text(timeString(sessionSeconds))
-                        .font(StrandFont.number(15))
+                        .font(StrandFont.number(16))
                         .foregroundStyle(StrandPalette.textPrimary)
                 }
                 Text("·").foregroundStyle(StrandPalette.textTertiary)
@@ -306,7 +306,7 @@ private struct BreathingContent: View {
 
     private var orbCard: some View {
         StrandCard(padding: 24, tint: StrandPalette.restColor) {
-            VStack(spacing: 18) {
+            VStack(spacing: 20) {
                 HStack {
                     Text(pace.label.uppercased()).strandOverline()
                     Spacer()
@@ -333,7 +333,7 @@ private struct BreathingContent: View {
                     ScenicHeroBackground(domain: .rest, starCount: 56)
                         .clipShape(RoundedRectangle(cornerRadius: NoopMetrics.cardRadius, style: .continuous))
                     breathingOrb
-                        .padding(.vertical, 6)
+                        .padding(.vertical, 8)
                 }
                 .frame(height: 320)
                 .frame(maxWidth: .infinity)
@@ -355,9 +355,9 @@ private struct BreathingContent: View {
     /// Opt-in audio pacer toggle, sitting on the orb card so it reads as part of the breathing setup.
     /// Default off; flipping it primes/tears down the tone engine via the onChange hook above.
     private var audioCueToggle: some View {
-        HStack(spacing: 10) {
+        HStack(spacing: 12) {
             Image(systemName: audioCues ? "speaker.wave.2.fill" : "speaker.slash.fill")
-                .font(.system(size: 13, weight: .semibold))
+                .font(.system(size: 14, weight: .semibold))
                 .foregroundStyle(audioCues ? StrandPalette.restBright : StrandPalette.textTertiary)
                 .accessibilityHidden(true)
             VStack(alignment: .leading, spacing: 1) {
@@ -390,7 +390,7 @@ private struct BreathingContent: View {
     }
 
     private var durationPills: some View {
-        VStack(alignment: .leading, spacing: 6) {
+        VStack(alignment: .leading, spacing: 8) {
             Text(String(localized: "Session length"))
                 .font(StrandFont.caption)
                 .foregroundStyle(StrandPalette.textTertiary)
@@ -416,7 +416,7 @@ private struct BreathingContent: View {
     private var breathEduSheet: some View {
         NavigationStack {
             ScrollView {
-                VStack(alignment: .leading, spacing: 14) {
+                VStack(alignment: .leading, spacing: 16) {
                     if let proto = selectedProtocol {
                         Text(String(localized: String.LocalizationValue(proto.title)))
                             .font(StrandFont.title2)
@@ -544,7 +544,7 @@ private struct BreathingContent: View {
 
     private func outcomeCard(_ line: String) -> some View {
         StrandCard(padding: 14, tint: StrandPalette.restColor) {
-            HStack(spacing: 10) {
+            HStack(spacing: 12) {
                 Image(systemName: "wind")
                     .font(.system(size: 14, weight: .semibold))
                     .foregroundStyle(StrandPalette.restBright)
@@ -648,7 +648,7 @@ private struct BreathingContent: View {
 
     private var coherenceCard: some View {
         StrandCard(tint: StrandPalette.restColor) {
-            VStack(alignment: .leading, spacing: 10) {
+            VStack(alignment: .leading, spacing: 12) {
                 HStack {
                     Text("Coherence estimate").strandOverline()
                     Spacer()
@@ -697,7 +697,7 @@ private struct BreathingContent: View {
     // MARK: - Haptic hint
 
     private var hapticHint: some View {
-        HStack(spacing: 10) {
+        HStack(spacing: 12) {
             Image(systemName: "applewatch.radiowaves.left.and.right")
                 .foregroundStyle(StrandPalette.statusWarning)
             Text("Connect your strap for haptic guidance. You'll feel one pulse on the inhale, two on the exhale, so you can breathe with your eyes closed.")
@@ -706,7 +706,7 @@ private struct BreathingContent: View {
                 .fixedSize(horizontal: false, vertical: true)
             Spacer(minLength: 0)
         }
-        .padding(14)
+        .padding(16)
         .background(StrandPalette.statusWarning.opacity(0.08),
                     in: RoundedRectangle(cornerRadius: NoopMetrics.cardRadius, style: .continuous))
         .overlay(
@@ -1125,7 +1125,7 @@ private struct ResonanceModeView: View {
                               tone: result.didLock ? .positive : .neutral, showsDot: true)
                 }
 
-                HStack(alignment: .firstTextBaseline, spacing: 6) {
+                HStack(alignment: .firstTextBaseline, spacing: 8) {
                     CountUpText(value: result.lockedBpm,
                                 format: { String(format: "%.1f", $0) },
                                 font: StrandFont.number(40),
@@ -1161,7 +1161,7 @@ private struct ResonanceModeView: View {
                     Spacer()
                     StatePill("Locked", tone: .positive, showsDot: true)
                 }
-                HStack(alignment: .firstTextBaseline, spacing: 6) {
+                HStack(alignment: .firstTextBaseline, spacing: 8) {
                     CountUpText(value: bpm,
                                 format: { String(format: "%.1f", $0) },
                                 font: StrandFont.number(34),
@@ -1184,7 +1184,7 @@ private struct ResonanceModeView: View {
     /// is the a11y win; the bars are decorative. Unscored paces read "—".
     private func rsaCurve(_ scores: [ResonanceEngine.PaceScore]) -> some View {
         let maxRsa = scores.compactMap(\.rsaAmplitude).max() ?? 1
-        return VStack(alignment: .leading, spacing: 6) {
+        return VStack(alignment: .leading, spacing: 8) {
             Text("RSA RESPONSE BY PACE").strandOverline()
             ForEach(scores, id: \.bpm) { s in
                 HStack(spacing: 8) {
@@ -1217,7 +1217,7 @@ private struct ResonanceModeView: View {
     }
 
     private var connectHint: some View {
-        HStack(spacing: 10) {
+        HStack(spacing: 12) {
             Image(systemName: "applewatch.radiowaves.left.and.right")
                 .foregroundStyle(StrandPalette.statusWarning)
             Text("Connect your strap for the felt cue. The sweep paces you with one buzz on the inhale, two on the exhale.")
@@ -1226,7 +1226,7 @@ private struct ResonanceModeView: View {
                 .fixedSize(horizontal: false, vertical: true)
             Spacer(minLength: 0)
         }
-        .padding(14)
+        .padding(16)
         .background(StrandPalette.statusWarning.opacity(0.08),
                     in: RoundedRectangle(cornerRadius: NoopMetrics.cardRadius, style: .continuous))
     }
@@ -1305,14 +1305,14 @@ private struct CalmModeView: View {
 
     private var liveCard: some View {
         StrandCard(tint: StrandPalette.restColor) {
-            VStack(spacing: 14) {
+            VStack(spacing: 16) {
                 HStack {
                     Text("Settling").strandOverline()
                     Spacer()
                     StatePill("Live", tone: .accent, showsDot: true, pulsing: true)
                 }
 
-                HStack(alignment: .firstTextBaseline, spacing: 10) {
+                HStack(alignment: .firstTextBaseline, spacing: 12) {
                     if let bpm = model.bpm {
                         CountUpText(value: Double(bpm),
                                     format: { "\(Int($0.rounded()))" },
@@ -1355,7 +1355,7 @@ private struct CalmModeView: View {
     private func outcomeCard(_ line: String) -> some View {
         StrandCard(padding: 14, tint: StrandPalette.restColor) {
             VStack(alignment: .leading, spacing: 8) {
-                HStack(spacing: 10) {
+                HStack(spacing: 12) {
                     Image(systemName: controller.calmDidNotFall ? "minus.circle" : "checkmark.circle")
                         .font(.system(size: 14, weight: .semibold))
                         .foregroundStyle(controller.calmDidNotFall ? StrandPalette.textTertiary : StrandPalette.statusPositive)

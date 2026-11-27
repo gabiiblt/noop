@@ -56,7 +56,7 @@ struct AutoWorkoutCard: View {
                         dismiss(w)
                     } label: {
                         Image(systemName: "xmark")
-                            .font(.system(size: 13, weight: .semibold))
+                            .font(.system(size: 14, weight: .semibold))
                             .foregroundStyle(StrandPalette.textTertiary)
                             .padding(NoopMetrics.space1)
                     }

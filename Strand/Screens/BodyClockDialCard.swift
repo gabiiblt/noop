@@ -275,7 +275,7 @@ struct BodyClockDialCard: View {
     /// "outer means ideal" is an arbitrary choice, not something a reader can infer. The swatches are
     /// drawn with the SAME stroke style as the arcs so the mapping cannot drift apart from the drawing.
     private var legend: some View {
-        HStack(spacing: 14) {
+        HStack(spacing: 16) {
             legendItem(colour: hue, dashed: false, label: String(localized: "Last night"))
             legendItem(colour: hue.opacity(0.55), dashed: true,
                        label: String(localized: "Your clock"))
@@ -285,7 +285,7 @@ struct BodyClockDialCard: View {
     }
 
     private func legendItem(colour: Color, dashed: Bool, label: String) -> some View {
-        HStack(spacing: 5) {
+        HStack(spacing: 4) {
             Canvas { ctx, size in
                 var p = Path()
                 p.move(to: CGPoint(x: 0, y: size.height / 2))
