@@ -109,7 +109,7 @@ struct LiftProgramItemSheet: View {
         #else
         .frame(width: 520, height: 720)
         #endif
-        .noopBackdrop(StrandPalette.effortColor)
+        .noopBackdrop(StrandPalette.gymAccent)
         .keyboardDoneToolbar($focused)
         .dismissesKeyboardOnTap($focused)
         .task { await loadIfNeeded() }
@@ -152,8 +152,8 @@ struct LiftProgramItemSheet: View {
 
     private var exerciseSection: some View {
         VStack(alignment: .leading, spacing: NoopMetrics.gap) {
-            SectionHeader("Exercise", overline: "Movement")
-            NoopCard {
+            GymSectionTitle(title: "Exercise")
+            GymCard {
                 VStack(alignment: .leading, spacing: NoopMetrics.gap) {
                     TextField("Incline dumbbell press", text: $exercise)
                         .textFieldStyle(.plain)
@@ -163,7 +163,7 @@ struct LiftProgramItemSheet: View {
 
                     if !suggestions.isEmpty {
                         VStack(alignment: .leading, spacing: 8) {
-                            Text("Used before").strandOverline()
+                            Text("Used before").gymLabel()
                             ForEach(suggestions, id: \.id) { row in
                                 HStack(spacing: 8) {
                                     Button {
@@ -203,8 +203,8 @@ struct LiftProgramItemSheet: View {
 
     private var targetsSection: some View {
         VStack(alignment: .leading, spacing: NoopMetrics.gap) {
-            SectionHeader("Targets", overline: "What you're aiming for")
-            NoopCard {
+            GymSectionTitle(title: "Targets")
+            GymCard {
                 VStack(alignment: .leading, spacing: 14) {
                     HStack(spacing: NoopMetrics.gap) {
                         field("Working sets") {
@@ -256,8 +256,8 @@ struct LiftProgramItemSheet: View {
     /// rule behaves exactly as it always has.
     private var progressionSection: some View {
         VStack(alignment: .leading, spacing: NoopMetrics.gap) {
-            SectionHeader("Progression", overline: "Next target")
-            NoopCard {
+            GymSectionTitle(title: "Progression")
+            GymCard {
                 VStack(alignment: .leading, spacing: 14) {
                     Picker("Progression", selection: $progression) {
                         Text("None").tag(LiftProgressionPolicy?.none)
@@ -317,8 +317,8 @@ struct LiftProgramItemSheet: View {
     /// What can take this line's place when its machine is taken: the plan already says what to do instead.
     private var backupsSection: some View {
         VStack(alignment: .leading, spacing: NoopMetrics.gap) {
-            SectionHeader("Backups", overline: "If the machine is taken")
-            NoopCard {
+            GymSectionTitle(title: "Backups")
+            GymCard {
                 VStack(alignment: .leading, spacing: 14) {
                     ForEach(backups, id: \.self) { name in
                         HStack {
@@ -346,14 +346,14 @@ struct LiftProgramItemSheet: View {
                             Button("Add", action: addBackup)
                                 .buttonStyle(.plain)
                                 .font(StrandFont.body)
-                                .foregroundStyle(StrandPalette.accent)
+                                .foregroundStyle(StrandPalette.gymAccent)
                                 .disabled(backupText.trimmingCharacters(in: .whitespaces).isEmpty)
                         }
                         ForEach(backupSuggestions, id: \.id) { row in
                             Button(row.name) { backupText = row.name; addBackup() }
                                 .buttonStyle(.plain)
                                 .font(StrandFont.footnote)
-                                .foregroundStyle(StrandPalette.accent)
+                                .foregroundStyle(StrandPalette.gymAccent)
                         }
                     }
                     Text("In a session, one tap swaps a backup in for this exercise. The sets, reps and rest stay; the weight does not, because it was for the other one.")
@@ -383,8 +383,8 @@ struct LiftProgramItemSheet: View {
 
     private var noteSection: some View {
         VStack(alignment: .leading, spacing: NoopMetrics.gap) {
-            SectionHeader("Technique note", overline: "In your words")
-            NoopCard {
+            GymSectionTitle(title: "Technique note")
+            GymCard {
                 TextField("Slow eccentric, pause at the bottom", text: $note, axis: .vertical)
                     // A cue read between sets, and it renders directly above the set rows — every
                     // line pushes them down the screen.
@@ -412,7 +412,7 @@ struct LiftProgramItemSheet: View {
                 .foregroundStyle(StrandPalette.textSecondary)
             Spacer()
             Button("Save") { Task { await save() } }
-                .buttonStyle(.noopPrimary)
+                .noopGlassButton(prominent: true, tint: StrandPalette.gymAccent)
                 .frame(maxWidth: 160)
                 .disabled(!canSave)
                 .opacity(canSave ? 1 : NoopButtonMetrics.disabledOpacity)
@@ -425,7 +425,7 @@ struct LiftProgramItemSheet: View {
     private func field<Content: View>(_ label: LocalizedStringKey,
                                       @ViewBuilder _ content: () -> Content) -> some View {
         VStack(alignment: .leading, spacing: 6) {
-            Text(label).strandOverline()
+            Text(label).gymLabel()
             content()
         }
         .frame(maxWidth: .infinity, alignment: .leading)

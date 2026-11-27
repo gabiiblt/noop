@@ -52,7 +52,7 @@ struct LiftGymsSheet: View {
         #else
         .frame(width: 520, height: 720)
         #endif
-        .noopBackdrop(StrandPalette.effortColor)
+        .noopBackdrop(StrandPalette.gymAccent)
         .task { await load() }
         .sheet(item: $editing) { target in
             LiftGymEditSheet(gym: target.gym) { saved in
@@ -79,7 +79,7 @@ struct LiftGymsSheet: View {
     // MARK: - Cards
 
     private var emptyCard: some View {
-        NoopCard {
+        GymCard {
             Text("No gym yet. Until you add one, plate lines are not shown. A gym that lists no plates uses the standard set for its unit.")
                 .font(StrandFont.footnote)
                 .foregroundStyle(StrandPalette.textSecondary)
@@ -89,7 +89,7 @@ struct LiftGymsSheet: View {
 
     private func gymCard(_ gym: LiftGymRow) -> some View {
         let isActive = effectiveActiveId == gym.id
-        return NoopCard(tint: isActive ? StrandPalette.effortColor : nil) {
+        return GymCard(tint: isActive ? StrandPalette.gymAccent : nil) {
             VStack(alignment: .leading, spacing: NoopMetrics.rowSpacing) {
                 HStack(alignment: .firstTextBaseline) {
                     Text(gym.name)
@@ -113,17 +113,17 @@ struct LiftGymsSheet: View {
                         Button("Use this gym") { activeGymId = gym.id; Task { await onChanged() } }
                             .buttonStyle(.plain)
                             .font(StrandFont.body)
-                            .foregroundStyle(StrandPalette.accent)
+                            .foregroundStyle(StrandPalette.gymAccent)
                     }
                     Spacer(minLength: 0)
                     Button("Calculator") { calculating = gym }
                         .buttonStyle(.plain)
                         .font(StrandFont.body)
-                        .foregroundStyle(StrandPalette.accent)
+                        .foregroundStyle(StrandPalette.gymAccent)
                     Button("Edit") { editing = EditTarget(gym: gym) }
                         .buttonStyle(.plain)
                         .font(StrandFont.body)
-                        .foregroundStyle(StrandPalette.accent)
+                        .foregroundStyle(StrandPalette.gymAccent)
                     Button { deleting = gym } label: {
                         Image(systemName: "trash").foregroundStyle(StrandPalette.textTertiary)
                     }
@@ -200,7 +200,7 @@ struct LiftGymEditSheet: View {
         #else
         .frame(width: 520, height: 720)
         #endif
-        .noopBackdrop(StrandPalette.effortColor)
+        .noopBackdrop(StrandPalette.gymAccent)
         .keyboardDoneToolbar($focused)
         .dismissesKeyboardOnTap($focused)
         .onAppear(perform: load)
@@ -209,9 +209,9 @@ struct LiftGymEditSheet: View {
     // MARK: - Sections
 
     private var nameCard: some View {
-        NoopCard {
+        GymCard {
             VStack(alignment: .leading, spacing: NoopMetrics.rowSpacing) {
-                Text("Name").strandOverline()
+                Text("Name").gymLabel()
                 TextField("Home, Big gym", text: $name)
                     .textFieldStyle(.plain)
                     .font(StrandFont.body)
@@ -220,7 +220,7 @@ struct LiftGymEditSheet: View {
                     .onChange(of: name) { new in
                         if new.count > WhoopStore.maxGymNameLength { name = String(new.prefix(WhoopStore.maxGymNameLength)) }
                     }
-                Text("Unit").strandOverline()
+                Text("Unit").gymLabel()
                 Picker("Unit", selection: $unit) {
                     Text("kg").tag(LiftPlateUnit.kg)
                     Text("lb").tag(LiftPlateUnit.lb)
@@ -238,11 +238,11 @@ struct LiftGymEditSheet: View {
     }
 
     private var platesCard: some View {
-        NoopCard {
+        GymCard {
             VStack(alignment: .leading, spacing: NoopMetrics.rowSpacing) {
-                Text("Plates").strandOverline()
+                Text("Plates").gymLabel()
                 Toggle("I counted my plates", isOn: $ownPlates)
-                    .tint(StrandPalette.accent)
+                    .tint(StrandPalette.gymAccent)
                     .onChange(of: ownPlates) { on in
                         if on && pairs.isEmpty {
                             pairs = Dictionary(uniqueKeysWithValues: LiftPlates.defaultInventory(unit).map { ($0.size, $0.pairs) })
@@ -273,9 +273,9 @@ struct LiftGymEditSheet: View {
     }
 
     private var barsCard: some View {
-        NoopCard {
+        GymCard {
             VStack(alignment: .leading, spacing: NoopMetrics.rowSpacing) {
-                Text("Bars").strandOverline()
+                Text("Bars").gymLabel()
                 ForEach(LiftPlates.barTypes, id: \.self) { type in
                     HStack {
                         Text(LiftGymCopy.barName(type))
@@ -304,9 +304,9 @@ struct LiftGymEditSheet: View {
     }
 
     private var dumbbellsCard: some View {
-        NoopCard {
+        GymCard {
             VStack(alignment: .leading, spacing: NoopMetrics.rowSpacing) {
-                Text("Dumbbells").strandOverline()
+                Text("Dumbbells").gymLabel()
                 TextField("5, 7.5, 10, 12.5, 15", text: $dumbbellText)
                     .textFieldStyle(.plain)
                     .font(StrandFont.body)
@@ -328,7 +328,7 @@ struct LiftGymEditSheet: View {
                 .foregroundStyle(StrandPalette.textSecondary)
             Spacer()
             Button("Save") { Task { await save() } }
-                .buttonStyle(.noopPrimary)
+                .noopGlassButton(prominent: true, tint: StrandPalette.gymAccent)
                 .frame(maxWidth: 160)
                 .disabled(!canSave)
                 .opacity(canSave ? 1 : NoopButtonMetrics.disabledOpacity)
@@ -393,14 +393,14 @@ struct LiftPlateCalculatorSheet: View {
     var body: some View {
         ScreenScaffold(title: "Plate calculator", subtitle: LocalizedStringKey(gym.name)) {
             VStack(alignment: .leading, spacing: NoopMetrics.sectionGap) {
-                NoopCard {
+                GymCard {
                     VStack(alignment: .leading, spacing: NoopMetrics.rowSpacing) {
-                        Text("Loaded on").strandOverline()
+                        Text("Loaded on").gymLabel()
                         Picker("Loaded on", selection: $equipment) {
                             ForEach(equipmentChoices, id: \.self) { Text(LiftGymCopy.barName($0)).tag($0) }
                         }
                         .pickerStyle(.menu)
-                        Text("Total weight (\(LiftGymCopy.unitLabel(unit)))").strandOverline()
+                        Text("Total weight (\(LiftGymCopy.unitLabel(unit)))").gymLabel()
                         TextField("100", text: $weightText)
                             .textFieldStyle(.plain)
                             .font(StrandFont.bodyNumber)
@@ -413,7 +413,7 @@ struct LiftPlateCalculatorSheet: View {
                 Button("Done") { dismiss() }
                     .buttonStyle(.plain)
                     .font(StrandFont.body)
-                    .foregroundStyle(StrandPalette.accent)
+                    .foregroundStyle(StrandPalette.gymAccent)
             }
         }
         #if os(iOS)
@@ -421,14 +421,14 @@ struct LiftPlateCalculatorSheet: View {
         #else
         .frame(width: 480, height: 560)
         #endif
-        .noopBackdrop(StrandPalette.effortColor)
+        .noopBackdrop(StrandPalette.gymAccent)
         .keyboardDoneToolbar($focused)
         .dismissesKeyboardOnTap($focused)
     }
 
     @ViewBuilder private var resultCard: some View {
         if let result {
-            NoopCard(tint: StrandPalette.effortColor) {
+            GymCard(tint: StrandPalette.gymAccent) {
                 VStack(alignment: .leading, spacing: 6) {
                     Text(LiftGymCopy.line(result))
                         .font(StrandFont.headline)
@@ -448,7 +448,7 @@ struct LiftPlateCalculatorSheet: View {
                 }
             }
         } else if weight != nil {
-            NoopCard {
+            GymCard {
                 Text("Nothing to load for that weight.")
                     .font(StrandFont.footnote)
                     .foregroundStyle(StrandPalette.textSecondary)

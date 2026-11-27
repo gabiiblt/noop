@@ -2,7 +2,7 @@ import SwiftUI
 import StrandDesign
 import WhoopStore
 
-// Build or edit a program: a name and an ordered list of exercise lines carrying the TARGETS —
+// Build or edit a routine: a name and an ordered list of exercise lines carrying the TARGETS —
 // working sets, reps, weight, rest and the user's own technique note.
 //
 // Lines are edited as local drafts and written in one go on Save, through
@@ -34,8 +34,19 @@ struct LiftProgramEditorSheet: View {
     @AppStorage(UnitPrefs.systemKey) private var unitSystemRaw = UnitSystem.metric.rawValue
     private var unitSystem: UnitSystem { UnitSystem(rawValue: unitSystemRaw) ?? .metric }
 
+    @State private var picking = false
+    /// "Create" was tapped in the picker: the custom exercise editor opens once the picker is gone.
+    @State private var wantsCustom = false
+    /// Lines whose note field is open, whether or not it has text yet.
+    @State private var noteOpen: Set<String> = []
+
     @FocusState private var focused: Field?
-    private enum Field: Hashable { case name, note }
+    private enum Field: Hashable {
+        case name, note
+        case itemNote(String)
+        case weight(String, Int)
+        case reps(String, Int)
+    }
 
     private var isNew: Bool { program == nil }
     private var canSave: Bool {
@@ -43,16 +54,32 @@ struct LiftProgramEditorSheet: View {
     }
 
     var body: some View {
-        ScreenScaffold(
-            title: isNew ? "New program" : "Edit program",
-            subtitle: "Your targets for each exercise. What you actually lift is recorded when you run it."
-        ) {
-            VStack(alignment: .leading, spacing: NoopMetrics.sectionGap) {
-                detailsSection
-                exercisesSection
-                if !isNew { deleteSection }
-                footer
+        VStack(spacing: 0) {
+            GymSheetBar(title: isNew ? "New routine" : "Edit routine") {
+                GymBarButton(title: "Cancel") { dismiss() }
+            } trailing: {
+                GymBarButton(title: isNew ? "Save" : "Update", prominent: true, enabled: canSave) {
+                    Task { await save() }
+                }
             }
+            ScrollView {
+                VStack(alignment: .leading, spacing: NoopMetrics.sectionGap) {
+                    titleField
+                    ForEach(Array(items.enumerated()), id: \.element.id) { index, item in
+                        exerciseBlock(item, index: index)
+                    }
+                    Button { picking = true } label: {
+                        Label("Add exercise", systemImage: "plus")
+                            .font(StrandFont.headline)
+                            .frame(maxWidth: .infinity, minHeight: NoopMetrics.controlHeight)
+                    }
+                    .noopGlassButton(prominent: true, tint: StrandPalette.gymAccent)
+                    if !isNew { deleteSection }
+                }
+                .padding(.horizontal, NoopMetrics.screenPadding)
+                .padding(.bottom, NoopMetrics.sectionGap)
+            }
+            .scrollDismissesKeyboard(.interactively)
         }
         #if os(iOS)
         .presentationDragIndicator(.visible)
@@ -61,227 +88,253 @@ struct LiftProgramEditorSheet: View {
         // ScrollView needs a definite height or every row collapses to the top.
         .frame(width: 520, height: 720)
         #endif
-        .noopBackdrop(StrandPalette.effortColor)
+        .noopBackdrop(StrandPalette.gymAccent)
         .keyboardDoneToolbar($focused)
-        .dismissesKeyboardOnTap($focused)
         .task { await loadIfNeeded() }
         .sheet(item: $editingItem) { target in
             LiftProgramItemSheet(item: target.item) { saved in
                 apply(saved, replacing: target.item)
             }
         }
-    }
-
-    // MARK: - Name + note
-
-    private var detailsSection: some View {
-        VStack(alignment: .leading, spacing: NoopMetrics.gap) {
-            SectionHeader("Program", overline: "Details")
-            NoopCard {
-                VStack(alignment: .leading, spacing: 14) {
-                    field("Name") {
-                        TextField("Upper A", text: $name)
-                            .textFieldStyle(.plain)
-                            .font(StrandFont.body)
-                            .foregroundStyle(StrandPalette.textPrimary)
-                            .focused($focused, equals: .name)
-                    }
-                    field("Note (optional)") {
-                        TextField("Anything you want to remember", text: $note)
-                            // Capped at what the hub can actually show (two caption lines). A field
-                            // that silently discards the end is worse than one that stops.
-                            .onChange(of: note) { new in
-                                if new.count > WhoopStore.maxProgramNoteLength {
-                                    note = String(new.prefix(WhoopStore.maxProgramNoteLength))
-                                }
-                            }
-                            .textFieldStyle(.plain)
-                            .font(StrandFont.body)
-                            .foregroundStyle(StrandPalette.textPrimary)
-                            .focused($focused, equals: .note)
-                    }
-                }
-            }
-        }
-    }
-
-    // MARK: - Exercise lines
-
-    private var exercisesSection: some View {
-        VStack(alignment: .leading, spacing: NoopMetrics.gap) {
-            SectionHeader("Exercises", overline: "In order")
-
-            if items.isEmpty {
-                NoopCard {
-                    Text("No exercises yet. Add the first one below — you can type any name you like; NOOP remembers it for next time.")
-                        .font(StrandFont.footnote)
-                        .foregroundStyle(StrandPalette.textSecondary)
-                        .fixedSize(horizontal: false, vertical: true)
-                }
-            } else {
-                ForEach(Array(items.enumerated()), id: \.element.id) { index, item in
-                    itemRow(item, index: index)
-                    if index < items.count - 1 { linkButton(index) }
-                }
-            }
-
-            Button {
+        .sheet(isPresented: $picking, onDismiss: {
+            if wantsCustom {
+                wantsCustom = false
                 editingItem = ItemEditTarget(id: "new", item: nil)
-            } label: {
-                Label("Add exercise", systemImage: "plus")
             }
-            .buttonStyle(NoopButtonStyle(.secondary))
+        }) {
+            LiftExercisePickerSheet(onPick: { picked in addLine(picked) },
+                                    onCreate: { wantsCustom = true })
         }
     }
 
-    /// Join a line to the next one as a superset (one set of each in turn, the rest after the round), or cut the link.
-    private func linkButton(_ index: Int) -> some View {
-        let linked = LiftSuperset.isLinkedToNext(items, index)
-        return Button {
-            items = LiftSuperset.toggledLink(items, at: index)
-        } label: {
-            Label(linked ? "Superset: tap to unlink" : "Superset with the next exercise",
-                  systemImage: linked ? "link" : "link.badge.plus")
-                .font(StrandFont.caption)
-                .foregroundStyle(linked ? StrandPalette.effortColor : StrandPalette.textTertiary)
-                .frame(maxWidth: .infinity)
-        }
-        .buttonStyle(.plain)
-    }
+    // MARK: - Title
 
-    private func itemRow(_ item: LiftProgramItemRow, index: Int) -> some View {
-        NoopCard(tint: item.supersetGroup != nil ? StrandPalette.effortColor : nil) {
-            HStack(alignment: .top, spacing: NoopMetrics.gap) {
-                Button {
-                    editingItem = ItemEditTarget(id: item.id, item: item)
-                } label: {
-                    VStack(alignment: .leading, spacing: 3) {
-                        Text(item.exercise)
-                            .font(StrandFont.headline)
-                            .foregroundStyle(StrandPalette.textPrimary)
-                        Text(targetSummary(item))
-                            .font(StrandFont.caption)
-                            .foregroundStyle(StrandPalette.textSecondary)
-                        if !item.backups.isEmpty {
-                            Text("Backups: \(item.backups.joined(separator: ", "))")
-                                .font(StrandFont.caption)
-                                .foregroundStyle(StrandPalette.textTertiary)
-                                .lineLimit(2)
-                        }
-                        if let note = item.note, !note.isEmpty {
-                            Text(note)
-                                .font(StrandFont.caption)
-                                .foregroundStyle(StrandPalette.textTertiary)
-                                .lineLimit(2)
-                        }
+    private var titleField: some View {
+        VStack(alignment: .leading, spacing: NoopMetrics.rowSpacing) {
+            HStack(spacing: NoopMetrics.rowSpacing) {
+                TextField("Routine title", text: $name)
+                    .textFieldStyle(.plain)
+                    .font(StrandFont.title1)
+                    .foregroundStyle(StrandPalette.textPrimary)
+                    .focused($focused, equals: .name)
+                if !name.isEmpty {
+                    Button { name = "" } label: {
+                        Image(systemName: "xmark.circle.fill")
+                            .font(.system(size: 20))
+                            .foregroundStyle(StrandPalette.textTertiary)
+                            .frame(width: 44, height: 44)
                     }
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .contentShape(Rectangle())
+                    .buttonStyle(.plain)
+                    .accessibilityLabel("Clear title")
                 }
-                .buttonStyle(.plain)
-
-                VStack(spacing: NoopMetrics.rowSpacing) {
-                    Button {
-                        move(from: index, by: -1)
-                    } label: {
-                        Image(systemName: "chevron.up")
+            }
+            Divider().overlay(StrandPalette.hairline)
+            TextField("Note (optional)", text: $note)
+                // Capped at what the hub can actually show (two caption lines). A field
+                // that silently discards the end is worse than one that stops.
+                .onChange(of: note) { new in
+                    if new.count > WhoopStore.maxProgramNoteLength {
+                        note = String(new.prefix(WhoopStore.maxProgramNoteLength))
                     }
-                    .disabled(index == 0)
-                    .accessibilityLabel("Move up")
-
-                    Button {
-                        move(from: index, by: 1)
-                    } label: {
-                        Image(systemName: "chevron.down")
-                    }
-                    .disabled(index == items.count - 1)
-                    .accessibilityLabel("Move down")
-
-                    Button(role: .destructive) {
-                        items.removeAll { $0.id == item.id }
-                        items = LiftSuperset.normalized(items)
-                    } label: {
-                        Image(systemName: "trash")
-                    }
-                    .accessibilityLabel("Remove exercise")
                 }
-                .font(.system(size: 12, weight: .semibold))
-                .buttonStyle(.plain)
+                .textFieldStyle(.plain)
+                .font(StrandFont.body)
                 .foregroundStyle(StrandPalette.textSecondary)
-            }
+                .focused($focused, equals: .note)
         }
     }
 
-    /// "4 × 8 · 60 kg · 2:00 rest" — only the parts that were actually filled in.
-    private func targetSummary(_ item: LiftProgramItemRow) -> String {
-        var parts: [String] = []
-        if let sets = item.targetSets {
-            if let reps = item.targetRepsLow {
-                parts.append("\(sets) × \(reps)")
-            } else {
-                parts.append(String(localized: "\(sets) sets"))
+    // MARK: - Exercise blocks
+
+    private func exerciseBlock(_ item: LiftProgramItemRow, index: Int) -> some View {
+        let rows = max(item.targetSets ?? 1, 1)
+        let linked = item.supersetGroup != nil
+        return VStack(alignment: .leading, spacing: NoopMetrics.gap) {
+            HStack(spacing: NoopMetrics.gap) {
+                GymExerciseThumb(catalogueId: item.catalogueId)
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(item.exercise)
+                        .font(StrandFont.headline)
+                        .foregroundStyle(StrandPalette.gymAccent)
+                        .lineLimit(2)
+                    if linked {
+                        Label("Superset", systemImage: "link")
+                            .font(StrandFont.caption)
+                            .foregroundStyle(StrandPalette.textTertiary)
+                    }
+                }
+                Spacer(minLength: 0)
+                lineMenu(item, index: index)
+            }
+
+            HStack(spacing: NoopMetrics.rowSpacing) {
+                restMenu(item)
+                Button {
+                    if noteOpen.contains(item.id) { noteOpen.remove(item.id) } else { noteOpen.insert(item.id) }
+                } label: {
+                    GymPill(title: String(localized: "Note"), systemImage: "note.text",
+                            selected: noteOpen.contains(item.id) || !(item.note ?? "").isEmpty)
+                }
+                .buttonStyle(.plain)
+            }
+
+            if noteOpen.contains(item.id) || !(item.note ?? "").isEmpty {
+                TextField("Technique note", text: noteBinding(item.id), axis: .vertical)
+                    .textFieldStyle(.plain)
+                    .font(StrandFont.body)
+                    .foregroundStyle(StrandPalette.textPrimary)
+                    .padding(NoopMetrics.gap)
+                    .background(StrandPalette.surfaceRaised, in: RoundedRectangle(cornerRadius: 12, style: .continuous))
+                    .focused($focused, equals: .itemNote(item.id))
+            }
+
+            GymSetHeader(unitSystem: unitSystem)
+            // A line's targets are the same for each set, so every row shows the same pair and an
+            // edit to one is an edit to all: the rows cannot disagree with what is stored.
+            ForEach(1...rows, id: \.self) { number in
+                HStack(spacing: NoopMetrics.rowSpacing) {
+                    GymSetBadge(index: number)
+                    GymNumberCell(placeholder: "–",
+                                  value: item.targetWeightKg.map { LiftFormat.display(fromKilograms: $0, system: unitSystem) },
+                                  focus: $focused, field: .weight(item.id, number)) { value in
+                        update(item.id) {
+                            $0.targetWeightKg = value.map { LiftFormat.kilograms(fromDisplay: $0, system: unitSystem) }
+                        }
+                    }
+                    GymNumberCell(placeholder: "–",
+                                  value: item.targetRepsLow.map(Double.init),
+                                  focus: $focused, field: .reps(item.id, number)) { value in
+                        update(item.id) {
+                            let reps = value.map { Int($0.rounded()) }
+                            $0.targetRepsLow = reps
+                            // A rep range collapses to the single number typed.
+                            if $0.targetRepsHigh != nil { $0.targetRepsHigh = reps }
+                        }
+                    }
+                }
+            }
+
+            HStack(spacing: NoopMetrics.rowSpacing) {
+                Button {
+                    update(item.id) { $0.targetSets = rows + 1 }
+                } label: {
+                    Label("Add set", systemImage: "plus")
+                        .font(StrandFont.subhead)
+                        .frame(maxWidth: .infinity, minHeight: 44)
+                        .background(StrandPalette.surfaceRaised, in: Capsule())
+                }
+                .buttonStyle(.plain)
+                .foregroundStyle(StrandPalette.textPrimary)
+                if rows > 1 {
+                    Button {
+                        update(item.id) { $0.targetSets = rows - 1 }
+                    } label: {
+                        Image(systemName: "minus")
+                            .font(.system(size: 15, weight: .semibold))
+                            .frame(width: 44, height: 44)
+                            .background(StrandPalette.surfaceRaised, in: Circle())
+                    }
+                    .buttonStyle(.plain)
+                    .foregroundStyle(StrandPalette.textSecondary)
+                    .accessibilityLabel("Remove set")
+                }
             }
         }
-        if let kg = item.targetWeightKg {
-            parts.append(LiftFormat.weight(kg, system: unitSystem))
+        .padding(.vertical, NoopMetrics.rowSpacing)
+    }
+
+    private func lineMenu(_ item: LiftProgramItemRow, index: Int) -> some View {
+        Menu {
+            Button { editingItem = ItemEditTarget(id: item.id, item: item) } label: {
+                Label("Edit details", systemImage: "slider.horizontal.3")
+            }
+            if index < items.count - 1 {
+                let linked = LiftSuperset.isLinkedToNext(items, index)
+                Button { items = LiftSuperset.toggledLink(items, at: index) } label: {
+                    Label(linked ? "Unlink superset" : "Superset with the next exercise",
+                          systemImage: linked ? "link" : "link.badge.plus")
+                }
+            }
+            if index > 0 {
+                Button { move(from: index, by: -1) } label: { Label("Move up", systemImage: "chevron.up") }
+            }
+            if index < items.count - 1 {
+                Button { move(from: index, by: 1) } label: { Label("Move down", systemImage: "chevron.down") }
+            }
+            Button(role: .destructive) {
+                items.removeAll { $0.id == item.id }
+                items = LiftSuperset.normalized(items)
+            } label: {
+                Label("Remove exercise", systemImage: "trash")
+            }
+        } label: {
+            Image(systemName: "ellipsis")
+                .font(.system(size: 17, weight: .semibold))
+                .foregroundStyle(StrandPalette.textSecondary)
+                .frame(width: 44, height: 44)
+                .contentShape(Rectangle())
         }
-        if let rpe = item.targetRpe {
-            parts.append(String(localized: "max RPE \(LiftFormat.trim(rpe))"))
+        .accessibilityLabel("Exercise options")
+    }
+
+    private func restMenu(_ item: LiftProgramItemRow) -> some View {
+        Menu {
+            ForEach(GymRestPresets.seconds, id: \.self) { seconds in
+                Button {
+                    update(item.id) { $0.restSec = seconds }
+                } label: {
+                    Text(seconds.map { LiftFormat.duration($0) } ?? String(localized: "No rest timer"))
+                }
+            }
+        } label: {
+            GymPill(title: item.restSec.map { LiftFormat.duration($0) } ?? String(localized: "Rest: off"),
+                    systemImage: "timer", selected: item.restSec != nil)
         }
-        if let rest = item.restSec {
-            parts.append(String(localized: "\(LiftFormat.duration(rest)) rest"))
-        }
-        return parts.isEmpty ? String(localized: "No targets set") : parts.joined(separator: " · ")
+        .accessibilityLabel("Rest timer")
     }
 
     // MARK: - Delete
 
     private var deleteSection: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Button(role: .destructive) {
-                confirmingDelete = true
-            } label: {
-                Label("Delete program", systemImage: "trash")
-            }
-            .buttonStyle(NoopButtonStyle(.secondary))
-            .confirmationDialog("Delete this program?",
-                                isPresented: $confirmingDelete,
-                                titleVisibility: .visible) {
-                Button("Delete", role: .destructive) { Task { await deleteProgram() } }
-                Button("Cancel", role: .cancel) { }
-            } message: {
-                Text("Sessions you already logged from it are kept.")
-            }
+        Button(role: .destructive) {
+            confirmingDelete = true
+        } label: {
+            Label("Delete routine", systemImage: "trash")
+                .frame(maxWidth: .infinity, minHeight: NoopMetrics.controlHeight)
         }
-    }
-
-    // MARK: - Footer
-
-    private var footer: some View {
-        HStack {
-            Button("Cancel") { dismiss() }
-                .buttonStyle(.plain)
-                .font(StrandFont.body)
-                .foregroundStyle(StrandPalette.textSecondary)
-            Spacer()
-            Button("Save") { Task { await save() } }
-                .buttonStyle(.noopPrimary)
-                .frame(maxWidth: 160)
-                .disabled(!canSave)
-                .opacity(canSave ? 1 : NoopButtonMetrics.disabledOpacity)
-                .accessibilityLabel("Save program")
+        .noopGlassButton()
+        .confirmationDialog("Delete this routine?",
+                            isPresented: $confirmingDelete,
+                            titleVisibility: .visible) {
+            Button("Delete", role: .destructive) { Task { await deleteProgram() } }
+            Button("Cancel", role: .cancel) { }
+        } message: {
+            Text("Sessions you already logged from it are kept.")
         }
     }
 
     // MARK: - Helpers
 
-    private func field<Content: View>(_ label: LocalizedStringKey,
-                                      @ViewBuilder _ content: () -> Content) -> some View {
-        VStack(alignment: .leading, spacing: 6) {
-            Text(label).strandOverline()
-            content()
-        }
-        .frame(maxWidth: .infinity, alignment: .leading)
+    /// Change one line in place, by id.
+    private func update(_ id: String, _ mutate: (inout LiftProgramItemRow) -> Void) {
+        guard let index = items.firstIndex(where: { $0.id == id }) else { return }
+        mutate(&items[index])
+    }
+
+    private func noteBinding(_ id: String) -> Binding<String> {
+        Binding(
+            get: { items.first { $0.id == id }?.note ?? "" },
+            set: { new in update(id) { $0.note = new.isEmpty ? nil : new } }
+        )
+    }
+
+    /// A line for an exercise picked from the picker: three working sets, no weight until the user says.
+    private func addLine(_ picked: LiftPickedExercise) {
+        items.append(LiftProgramItemRow(
+            id: UUID().uuidString, deviceId: repo.deviceId, programId: program?.id ?? "",
+            ord: items.count, exercise: picked.name, targetSets: 3, targetRepsLow: nil,
+            targetRepsHigh: nil, targetRpe: nil, targetWeightKg: nil, restSec: nil, note: nil,
+            catalogueId: picked.catalogueId))
     }
 
     private func move(from index: Int, by offset: Int) {

@@ -80,7 +80,7 @@ struct LiftSessionDetailSheet: View {
         #else
         .frame(width: 560, height: 780)
         #endif
-        .noopBackdrop(StrandPalette.effortColor)
+        .noopBackdrop(StrandPalette.gymAccent)
         .task { await load() }
         .sheet(item: $openExercise) { target in
             NavigationStack {
@@ -156,35 +156,50 @@ struct LiftSessionDetailSheet: View {
     /// The workout at a glance, as a gym app ends one: how long, how many working sets, how many records. The
     /// three numbers come from the same values the figures below read, so the two can never disagree.
     private var summaryHero: some View {
-        NoopGlassCard(tint: StrandPalette.effortColor, padding: NoopMetrics.space5) {
-            VStack(alignment: .leading, spacing: NoopMetrics.space3) {
-                Text("Workout complete").strandOverline()
-                Text((session.programName ?? String(localized: "Session")).uppercased())
-                    .font(StrandFont.rounded(30, weight: .black))
+        VStack(alignment: .leading, spacing: NoopMetrics.gap) {
+            VStack(alignment: .leading, spacing: 2) {
+                Text("Workout complete")
+                    .font(StrandFont.footnote.weight(.semibold))
+                    .foregroundStyle(StrandPalette.gymAccent)
+                Text(session.programName ?? String(localized: "Session"))
+                    .font(StrandFont.title1)
                     .foregroundStyle(StrandPalette.textPrimary)
                     .lineLimit(2)
-                    .minimumScaleFactor(0.6)
-                HStack(alignment: .top, spacing: 0) {
-                    heroNumber(ActiveWorkoutClock.clock(durationSec), String(localized: "Duration"))
-                    heroNumber("\(workingSetCount)", String(localized: "Working sets"))
-                    heroNumber("\(records.count)", String(localized: "Records"))
-                }
+                    .minimumScaleFactor(0.7)
+            }
+            // Three equal columns on one baseline, so the values and their labels line up whatever the
+            // width of a figure: 1:29:30 no longer pushes its neighbours.
+            HStack(alignment: .top, spacing: 0) {
+                heroNumber(ActiveWorkoutClock.clock(durationSec), String(localized: "Duration"))
+                heroDivider
+                heroNumber("\(workingSetCount)", String(localized: "Working sets"))
+                heroDivider
+                heroNumber("\(records.count)", String(localized: "Records"))
             }
         }
+        .padding(NoopMetrics.space5)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .gymCard()
+    }
+
+    private var heroDivider: some View {
+        Rectangle().fill(StrandPalette.hairline).frame(width: 0.5, height: 40)
     }
 
     private func heroNumber(_ value: String, _ label: String) -> some View {
-        VStack(alignment: .leading, spacing: 2) {
+        VStack(spacing: 4) {
             Text(value)
-                .font(StrandFont.rounded(26, weight: .heavy))
+                .font(StrandFont.rounded(24, weight: .semibold).monospacedDigit())
                 .foregroundStyle(StrandPalette.textPrimary)
                 .lineLimit(1)
-                .minimumScaleFactor(0.6)
+                .minimumScaleFactor(0.7)
             Text(label)
-                .font(StrandFont.caption)
+                .font(StrandFont.footnote)
                 .foregroundStyle(StrandPalette.textSecondary)
+                .lineLimit(1)
+                .minimumScaleFactor(0.8)
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
+        .frame(maxWidth: .infinity)
         .accessibilityElement(children: .combine)
     }
 
@@ -192,8 +207,9 @@ struct LiftSessionDetailSheet: View {
 
     private var figuresSection: some View {
         VStack(alignment: .leading, spacing: NoopMetrics.gap) {
-            SectionHeader("This session", overline: "Figures")
-            LazyVGrid(columns: [GridItem(.adaptive(minimum: 150), spacing: NoopMetrics.rowSpacing)],
+            GymSectionTitle(title: "This session")
+            LazyVGrid(columns: [GridItem(.flexible(), spacing: NoopMetrics.rowSpacing, alignment: .top),
+                                GridItem(.flexible(), spacing: NoopMetrics.rowSpacing, alignment: .top)],
                       alignment: .leading, spacing: NoopMetrics.rowSpacing) {
                 // Weight x reps, summed. Exact, but only meaningful against the SAME program run
                 // again: 100 kg of leg press is not 100 kg of squat, so the total across different
@@ -247,30 +263,36 @@ struct LiftSessionDetailSheet: View {
     }
 
     private func tile(_ label: String, _ value: String, _ caption: String) -> some View {
-        NoopGlassCard(padding: 14) {
-            VStack(alignment: .leading, spacing: 3) {
-                Text(label).strandOverline()
-                Text(value)
-                    .font(StrandFont.rounded(24, weight: .bold))
-                    .foregroundStyle(StrandPalette.textPrimary)
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.6)
-                Text(caption)
-                    .font(StrandFont.caption)
-                    .foregroundStyle(StrandPalette.textTertiary)
-                    .lineLimit(2)
-            }
-            .frame(maxWidth: .infinity, alignment: .leading)
+        VStack(alignment: .leading, spacing: 4) {
+            Text(label)
+                .font(StrandFont.footnote)
+                .foregroundStyle(StrandPalette.textSecondary)
+                .lineLimit(1)
+            Text(value)
+                .font(StrandFont.rounded(28, weight: .semibold).monospacedDigit())
+                .foregroundStyle(StrandPalette.textPrimary)
+                .lineLimit(1)
+                .minimumScaleFactor(0.6)
+            Text(caption)
+                .font(StrandFont.footnote)
+                .foregroundStyle(StrandPalette.textTertiary)
+                .lineLimit(3)
+                .fixedSize(horizontal: false, vertical: true)
+            Spacer(minLength: 0)
         }
+        .padding(NoopMetrics.gap)
+        // One height for every tile, so a longer caption never makes its neighbour look short.
+        .frame(maxWidth: .infinity, minHeight: 124, alignment: .topLeading)
+        .gymCard()
     }
 
     // MARK: - Per exercise, with every set
 
     private var exercisesSection: some View {
         VStack(alignment: .leading, spacing: NoopMetrics.gap) {
-            SectionHeader("Exercises", overline: "As performed")
+            GymSectionTitle(title: "Exercises")
             if performed.isEmpty {
-                NoopCard {
+                GymCard {
                     Text("No sets were performed. Discarded sets stay under Edit sets as zeros you can fill in.")
                         .font(StrandFont.footnote)
                         .foregroundStyle(StrandPalette.textSecondary)
@@ -286,7 +308,7 @@ struct LiftSessionDetailSheet: View {
     private func exerciseCard(_ summary: LiftMetrics.ExerciseSummary) -> some View {
         let rows = performed.filter { $0.exercise == summary.exercise }.sorted { $0.ord < $1.ord }
         let entry = catalogueByName[summary.exercise]
-        return NoopCard {
+        return GymCard {
             VStack(alignment: .leading, spacing: NoopMetrics.rowSpacing) {
                 Button {
                     openExercise = ExerciseSheetTarget(name: summary.exercise, catalogue: entry)
@@ -321,7 +343,7 @@ struct LiftSessionDetailSheet: View {
 
                 HStack(alignment: .firstTextBaseline, spacing: NoopMetrics.gap) {
                     VStack(alignment: .leading, spacing: 2) {
-                        Text("Best set").strandOverline()
+                        Text("Best set").gymLabel()
                         Text(bestSetText(summary))
                             .font(StrandFont.bodyNumber)
                             .foregroundStyle(StrandPalette.textPrimary)
@@ -335,7 +357,7 @@ struct LiftSessionDetailSheet: View {
                     }
                     Spacer(minLength: 0)
                     VStack(alignment: .trailing, spacing: 2) {
-                        Text("Volume").strandOverline()
+                        Text("Volume").gymLabel()
                         Text(LiftFormat.weight(summary.volumeKg, system: unitSystem))
                             .font(StrandFont.bodyNumber)
                             .foregroundStyle(StrandPalette.textPrimary)
@@ -351,15 +373,19 @@ struct LiftSessionDetailSheet: View {
     }
 
     private func setLine(_ row: LiftSetRow) -> some View {
-        HStack(spacing: NoopMetrics.rowSpacing) {
+        let reps = row.reps.map(String.init) ?? "—"
+        return HStack(spacing: NoopMetrics.rowSpacing) {
+            // Fixed columns: the set number, the weight (right-aligned so the units stack), the reps and the rest.
             Text(row.isWarmup ? String(localized: "W") : "\(row.setIndex)")
                 .font(StrandFont.captionNumber)
-                .foregroundStyle(row.isWarmup ? StrandPalette.textTertiary : StrandPalette.effortColor)
-                .frame(width: 18, alignment: .leading)
+                .foregroundStyle(row.isWarmup ? StrandPalette.textTertiary : StrandPalette.gymAccent)
+                .frame(width: 24, alignment: .leading)
 
-            Text(setValueText(row))
-                .font(StrandFont.bodyNumber)
-                .foregroundStyle(row.isWarmup ? StrandPalette.textSecondary : StrandPalette.textPrimary)
+            Text(row.weightKg.map { LiftFormat.weight($0, system: unitSystem) } ?? "–")
+                .frame(width: 84, alignment: .trailing)
+            Text("×").foregroundStyle(StrandPalette.textTertiary)
+            Text(reps)
+                .frame(width: 36, alignment: .leading)
 
             Spacer(minLength: 0)
 
@@ -370,13 +396,17 @@ struct LiftSessionDetailSheet: View {
             }
             if let rest = row.restSec {
                 Text(LiftFormat.duration(rest))
-                    .font(StrandFont.caption)
+                    .font(StrandFont.captionNumber)
                     .foregroundStyle(StrandPalette.textTertiary)
+                    .frame(minWidth: 40, alignment: .trailing)
             }
             if let kinds = records[row.id] {
                 LiftRecordBadge(kinds: kinds)
             }
         }
+        .font(StrandFont.bodyNumber)
+        .foregroundStyle(row.isWarmup ? StrandPalette.textSecondary : StrandPalette.textPrimary)
+        .frame(minHeight: 32)
     }
 
     private func setValueText(_ row: LiftSetRow) -> String {
@@ -419,16 +449,16 @@ struct LiftSessionDetailSheet: View {
         let counts = LiftMetrics.muscleCounts(performed)
         let ordered = LiftMuscle.ordered.filter { (counts.fractional[$0] ?? 0) > 0 }
         return VStack(alignment: .leading, spacing: NoopMetrics.gap) {
-            SectionHeader("Sets per muscle", overline: "This session · estimated")
+            GymSectionTitle(title: "Sets per muscle")
             if ordered.isEmpty {
-                NoopCard {
+                GymCard {
                     Text("None of these exercises has a muscle group yet. Add one on the exercise and every future session counts toward it.")
                         .font(StrandFont.footnote)
                         .foregroundStyle(StrandPalette.textSecondary)
                         .fixedSize(horizontal: false, vertical: true)
                 }
             } else {
-                NoopCard {
+                GymCard {
                     VStack(alignment: .leading, spacing: 8) {
                         ForEach(ordered, id: \.self) { muscle in
                             HStack(spacing: NoopMetrics.rowSpacing) {
@@ -438,7 +468,7 @@ struct LiftSessionDetailSheet: View {
                                 Spacer(minLength: 0)
                                 Text(LiftFormat.trim(counts.fractional[muscle] ?? 0))
                                     .font(StrandFont.bodyNumber)
-                                    .foregroundStyle(StrandPalette.effortColor)
+                                    .foregroundStyle(StrandPalette.gymAccent)
                                 Text(componentText(counts, muscle))
                                     .font(StrandFont.caption)
                                     .foregroundStyle(StrandPalette.textTertiary)
@@ -469,8 +499,8 @@ struct LiftSessionDetailSheet: View {
     private var rpeSection: some View {
         let p = LiftMetrics.rpeProfile(performed)
         return VStack(alignment: .leading, spacing: NoopMetrics.gap) {
-            SectionHeader("How hard it felt", overline: "RPE")
-            NoopCard {
+            GymSectionTitle(title: "How hard it felt")
+            GymCard {
                 VStack(alignment: .leading, spacing: 8) {
                     HStack {
                         Text("Mean RPE")

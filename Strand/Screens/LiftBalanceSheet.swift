@@ -46,14 +46,14 @@ struct LiftBalanceSheet: View {
         #else
         .frame(width: 560, height: 800)
         #endif
-        .noopBackdrop(StrandPalette.effortColor)
+        .noopBackdrop(StrandPalette.gymAccent)
         .task { await load() }
     }
 
     // MARK: - Pieces
 
     private var tableCard: some View {
-        NoopCard {
+        GymCard {
             VStack(alignment: .leading, spacing: NoopMetrics.rowSpacing) {
                 Picker("Table", selection: $selectedId) {
                     Text("Poliquin").tag("poliquin")
@@ -79,7 +79,7 @@ struct LiftBalanceSheet: View {
     }
 
     private var weighInCard: some View {
-        NoopCard(tint: StrandPalette.statusWarning) {
+        GymCard(tint: StrandPalette.statusWarning) {
             Text("Set your weight in your profile: lifts on your own body (dips, pull-ups) and the body-weight ratios need it.")
                 .font(StrandFont.footnote)
                 .foregroundStyle(StrandPalette.textSecondary)
@@ -89,7 +89,7 @@ struct LiftBalanceSheet: View {
 
     private func roleRow(_ template: LiftBalanceTemplate, _ r: LiftBalanceResult) -> some View {
         let role = template.roles.first { $0.id == r.roleId }
-        return NoopCard {
+        return GymCard {
             VStack(alignment: .leading, spacing: 4) {
                 HStack(alignment: .firstTextBaseline) {
                     Text(exerciseName(r.mappedExerciseId ?? r.configuredExerciseId))
@@ -119,7 +119,7 @@ struct LiftBalanceSheet: View {
     }
 
     private var noteCard: some View {
-        NoopCard {
+        GymCard {
             Text("These ratios come from coaching literature and are not a norm for anyone. A weak anchor makes every other lift look strong, and a lift below its ratio only says which one trails the others in your log.")
                 .font(StrandFont.footnote)
                 .foregroundStyle(StrandPalette.textTertiary)

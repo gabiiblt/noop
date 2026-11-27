@@ -78,7 +78,7 @@ struct LiftSessionEditSheet: View {
         #else
         .frame(width: 560, height: 780)
         #endif
-        .noopBackdrop(StrandPalette.effortColor)
+        .noopBackdrop(StrandPalette.gymAccent)
         .keyboardDoneToolbar($focused)
         .dismissesKeyboardOnTap($focused)
         // A field holding 0 (a discarded set) empties when focused, so typing replaces the 0 instead of
@@ -92,9 +92,9 @@ struct LiftSessionEditSheet: View {
     }
 
     private var sessionRpeCard: some View {
-        NoopCard {
+        GymCard {
             VStack(alignment: .leading, spacing: NoopMetrics.gap) {
-                Text("How hard was the whole session? (1–10)").strandOverline()
+                Text("How hard was the whole session? (1–10)").gymLabel()
                 field(.sessionRpe, text: Binding(
                     get: { sessionRpeText },
                     set: { sessionRpeText = $0.replacingOccurrences(of: ",", with: ".") }))
@@ -104,17 +104,17 @@ struct LiftSessionEditSheet: View {
 
     private func exerciseCard(_ index: Int) -> some View {
         let group = exercises[index]
-        return NoopCard {
+        return GymCard {
             VStack(alignment: .leading, spacing: NoopMetrics.rowSpacing) {
                 Text(group.name)
                     .font(StrandFont.headline)
                     .foregroundStyle(StrandPalette.textPrimary)
                 HStack(spacing: 8) {
-                    Text("Set").strandOverline()
+                    Text("Set").gymLabel()
                         .frame(width: LiftSessionView.setColumnWidth, alignment: .center)
-                    Text(weightHeading).strandOverline().frame(maxWidth: .infinity, alignment: .leading)
-                    Text("Reps").strandOverline().frame(maxWidth: .infinity, alignment: .leading)
-                    Text("RPE").strandOverline().frame(maxWidth: .infinity, alignment: .leading)
+                    Text(weightHeading).gymLabel().frame(maxWidth: .infinity, alignment: .leading)
+                    Text("Reps").gymLabel().frame(maxWidth: .infinity, alignment: .leading)
+                    Text("RPE").gymLabel().frame(maxWidth: .infinity, alignment: .leading)
                 }
                 .lineLimit(1)
                 .minimumScaleFactor(0.8)
@@ -162,7 +162,7 @@ struct LiftSessionEditSheet: View {
                         .font(.system(size: 17, weight: .semibold))
                     Text("Add set").font(StrandFont.caption)
                 }
-                .foregroundStyle(canAdd ? StrandPalette.effortColor : StrandPalette.textTertiary)
+                .foregroundStyle(canAdd ? StrandPalette.gymAccent : StrandPalette.textTertiary)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .contentShape(Rectangle())
             }
@@ -260,7 +260,7 @@ struct LiftSessionEditSheet: View {
                 .foregroundStyle(StrandPalette.textSecondary)
             Spacer()
             Button("Save changes") { Task { await save() } }
-                .buttonStyle(.noopPrimary)
+                .noopGlassButton(prominent: true, tint: StrandPalette.gymAccent)
                 .frame(maxWidth: 180)
                 .disabled(saving || !hasChanges)
                 .opacity(saving || !hasChanges ? NoopButtonMetrics.disabledOpacity : 1)

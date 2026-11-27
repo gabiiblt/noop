@@ -283,6 +283,12 @@ public enum StrandPalette {
     /// Diagonal accent pair for the Charge card wash + gauge stroke (deep → bright).
     public static var chargeGradient: Gradient { Gradient(colors: [chargeDeep, chargeBright]) }
 
+    /// The accent of the gym screens: a light blue that stands where openGym uses its green.
+    public static var gymAccent: Color { Color(light: "#1A9FE0", dark: "#5CC8FF") }
+
+    /// The ink on a `gymAccent` fill: dark in dark mode, white in light, as openGym's `--on-acc`.
+    public static var onGymAccent: Color { Color(light: "#FFFFFF", dark: "#000000") }
+
     /// Effort (strain) — amber world / Classic blue.
     public static var effortColor: Color   { isClassic ? Color(light: "#3A74C4", dark: "#4A90E2") : Color(light: "#2A78C8", dark: "#4090E0") }
 
