@@ -97,11 +97,11 @@ struct LiftMusclePicker: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: NoopMetrics.gap) {
-            SectionHeader("Muscles", overline: "Counted once per exercise")
-            NoopCard {
+            GymSectionTitle(title: "Muscles")
+            GymCard {
                 VStack(alignment: .leading, spacing: 14) {
                     VStack(alignment: .leading, spacing: 6) {
-                        Text("Primary").strandOverline()
+                        Text("Primary").gymLabel()
                         Menu {
                             Button("Not classified") { primary = nil }
                             ForEach(LiftMuscle.Region.allCases, id: \.self) { region in
@@ -129,7 +129,7 @@ struct LiftMusclePicker: View {
                     }
 
                     VStack(alignment: .leading, spacing: 6) {
-                        Text("Also works (counted as half a set)").strandOverline()
+                        Text("Also works (counted as half a set)").gymLabel()
                         LazyVGrid(columns: [GridItem(.adaptive(minimum: 104), spacing: 8)],
                                   alignment: .leading, spacing: 8) {
                             ForEach(LiftMuscle.allCases, id: \.self) { muscle in

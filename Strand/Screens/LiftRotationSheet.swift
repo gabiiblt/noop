@@ -46,7 +46,7 @@ struct LiftRotationSheet: View {
     // MARK: - Pieces
 
     private var emptyCard: some View {
-        NoopCard {
+        GymCard {
             Text("No program is in the rotation yet. Add the programs below in the order you train them: push, pull, legs, for instance.")
                 .font(StrandFont.footnote)
                 .foregroundStyle(StrandPalette.textSecondary)
@@ -55,7 +55,7 @@ struct LiftRotationSheet: View {
     }
 
     private func stepCard(_ step: LiftRotationStep, index: Int) -> some View {
-        NoopCard {
+        GymCard {
             VStack(alignment: .leading, spacing: NoopMetrics.rowSpacing) {
                 HStack(alignment: .firstTextBaseline) {
                     Text("\(index + 1)")
@@ -93,9 +93,9 @@ struct LiftRotationSheet: View {
 
     private var outsideSection: some View {
         VStack(alignment: .leading, spacing: NoopMetrics.gap) {
-            SectionHeader("Not in the rotation", overline: nil)
+            GymSectionTitle(title: "Not in the rotation")
             ForEach(outside, id: \.id) { program in
-                NoopCard {
+                GymCard {
                     HStack {
                         Text(program.name)
                             .font(StrandFont.body)
@@ -104,7 +104,7 @@ struct LiftRotationSheet: View {
                         Button("Add to the rotation") { change { LiftRotation.adding($0, id: program.id) } }
                             .buttonStyle(.plain)
                             .font(StrandFont.body)
-                            .foregroundStyle(StrandPalette.accent)
+                            .foregroundStyle(StrandPalette.gymAccent)
                     }
                 }
             }

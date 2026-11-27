@@ -273,7 +273,7 @@ struct LiftLogView: View {
         list.append(Tool(id: "gyms", title: String(localized: "Gyms and plates"), systemImage: "scalemass.fill",
                          tint: StrandPalette.metricCyan) { showingGyms = true })
         list.append(Tool(id: "import", title: String(localized: "Import"), systemImage: "tablecells",
-                         tint: StrandPalette.accent) { importing = true })
+                         tint: StrandPalette.gymAccent) { importing = true })
         return list
     }
 

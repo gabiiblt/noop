@@ -297,7 +297,7 @@ struct LiftSessionView: View {
             } label: {
                 Image(systemName: "arrow.left.arrow.right.circle")
                     .font(.system(size: 20, weight: .regular))
-                    .foregroundStyle(StrandPalette.accent)
+                    .foregroundStyle(StrandPalette.gymAccent)
             }
             .accessibilityLabel(String(localized: "Swap this exercise for a backup"))
         }
@@ -492,7 +492,7 @@ struct LiftSessionView: View {
             } label: {
                 Image(systemName: extras.isEmpty ? "ellipsis.circle" : "ellipsis.circle.fill")
                     .font(.system(size: 18, weight: .regular))
-                    .foregroundStyle(extras.isEmpty ? StrandPalette.textTertiary : StrandPalette.accent)
+                    .foregroundStyle(extras.isEmpty ? StrandPalette.textTertiary : StrandPalette.gymAccent)
             }
             .buttonStyle(.plain)
             .frame(width: Self.detailColumnWidth)
@@ -582,7 +582,7 @@ struct LiftSessionView: View {
     private func restBand(_ engine: LiftSessionEngine) -> some View {
         VStack(alignment: .leading, spacing: NoopMetrics.space2) {
             HStack(alignment: .firstTextBaseline, spacing: 8) {
-                Text("Rest period").strandOverline()
+                Text("Rest period").gymLabel()
                     .foregroundStyle(StrandPalette.metricAmber)
                 Spacer(minLength: 0)
                 LiftRunningClock { engine.restRemaining(now: $0) ?? 0 }
@@ -823,7 +823,7 @@ struct LiftSessionView: View {
     /// resting, the effort colour otherwise.
     private func actionTint(_ engine: LiftSessionEngine) -> Color {
         switch engine.stage {
-        case .working: return StrandPalette.statusPositive
+        case .working: return StrandPalette.gymAccent
         case .resting: return StrandPalette.metricAmber
         case .warmup, .finished: return StrandPalette.gymAccent
         }
@@ -849,7 +849,7 @@ struct LiftSessionView: View {
 
     private func labelled<Value: View>(_ label: String, @ViewBuilder value: () -> Value) -> some View {
         VStack(alignment: .leading, spacing: 1) {
-            Text(label).strandOverline()
+            Text(label).gymLabel()
                 .lineLimit(1)
                 .minimumScaleFactor(0.7)
             value()
@@ -860,7 +860,7 @@ struct LiftSessionView: View {
     private func stageClock(_ engine: LiftSessionEngine) -> some View {
         switch engine.stage {
         case .working:
-            clock(String(localized: "This set"), tint: StrandPalette.statusPositive) {
+            clock(String(localized: "This set"), tint: StrandPalette.gymAccent) {
                 $0 - engine.stageStartedAt
             }
         case .resting:
@@ -896,9 +896,9 @@ struct LiftSessionView: View {
         return ScreenScaffold(title: "Finish session",
                               subtitle: "One number for the whole session, so a leg day can be compared with a run.") {
             VStack(alignment: .leading, spacing: NoopMetrics.sectionGap) {
-                NoopCard {
+                GymCard {
                     VStack(alignment: .leading, spacing: NoopMetrics.gap) {
-                        Text("How hard was the whole session? (1–10)").strandOverline()
+                        Text("How hard was the whole session? (1–10)").gymLabel()
                         TextField("7", text: $sessionRpeText)
                             .textFieldStyle(.plain)
                             .font(StrandFont.bodyNumber)
@@ -917,7 +917,7 @@ struct LiftSessionView: View {
                 // One way to save. Session RPE above is optional, so an empty field is simply no rating;
                 // a separate "Skip" saved exactly the same way and read as a second choice.
                 Button("Save session") { Task { await save() } }
-                    .buttonStyle(.noopPrimary)
+                    .noopGlassButton(prominent: true, tint: StrandPalette.gymAccent)
                     .disabled(saving || !answered)
                     .opacity(saving || !answered ? NoopButtonMetrics.disabledOpacity : 1)
                 if !answered {
@@ -967,9 +967,9 @@ struct LiftSessionView: View {
     /// to zeros that every figure leaves out and Edit sets can still fill in. A set that was done is never
     /// asked about — it is complete (`LiftSessionController.setsToSave`).
     private func unfinishedCard(count: Int) -> some View {
-        NoopCard {
+        GymCard {
             VStack(alignment: .leading, spacing: NoopMetrics.gap) {
-                Text("Unfinished sets").strandOverline()
+                Text("Unfinished sets").gymLabel()
                 Text("Sets not started: \(count)")
                     .font(StrandFont.body)
                     .foregroundStyle(StrandPalette.textPrimary)
@@ -1005,9 +1005,9 @@ struct LiftSessionView: View {
     /// if asked to — one answer for all of them, listed so the lifter sees what "update" would write.
     private var programCard: some View {
         let added = addedExercises
-        return NoopCard {
+        return GymCard {
             VStack(alignment: .leading, spacing: NoopMetrics.gap) {
-                Text("Program").strandOverline()
+                Text("Program").gymLabel()
                 Text(programQuestion(countsChanged: !setCountChanges.isEmpty, exercisesAdded: !added.isEmpty))
                     .font(StrandFont.body)
                     .foregroundStyle(StrandPalette.textPrimary)

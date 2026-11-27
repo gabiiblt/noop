@@ -329,3 +329,25 @@ extension View {
                 .stroke(StrandPalette.hairline, lineWidth: 0.5))
     }
 }
+
+/// A padded flat card for the gym sheets. `tint` outlines it, for the one card that is current or selected.
+struct GymCard<Content: View>: View {
+    var tint: Color?
+    @ViewBuilder var content: () -> Content
+
+    var body: some View {
+        content()
+            .padding(NoopMetrics.cardPadding)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .gymCard()
+            .overlay(RoundedRectangle(cornerRadius: 14, style: .continuous)
+                .stroke((tint ?? .clear).opacity(0.7), lineWidth: tint == nil ? 0 : 1.5))
+    }
+}
+
+extension View {
+    /// A small sentence-case label above a field, in the quiet voice of the gym lists.
+    func gymLabel() -> some View {
+        self.font(StrandFont.footnote).foregroundStyle(StrandPalette.textSecondary)
+    }
+}

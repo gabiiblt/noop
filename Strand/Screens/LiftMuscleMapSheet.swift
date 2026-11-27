@@ -179,7 +179,7 @@ struct LiftMuscleMapSheet: View {
     // MARK: - Pieces
 
     private var modeCard: some View {
-        NoopCard {
+        GymCard {
             VStack(alignment: .leading, spacing: NoopMetrics.rowSpacing) {
                 Picker("Show", selection: $mode) {
                     Text("Recovery").tag(LiftMuscleMapMode.recovery)
@@ -213,7 +213,7 @@ struct LiftMuscleMapSheet: View {
     }
 
     @ViewBuilder private var figureCard: some View {
-        NoopCard {
+        GymCard {
             VStack(alignment: .leading, spacing: NoopMetrics.rowSpacing) {
                 if let sides {
                     HStack(spacing: 8) {
@@ -265,7 +265,7 @@ struct LiftMuscleMapSheet: View {
     private var selectedEntry: LiftMuscleMapEntry? { selected.flatMap { m in map.first { $0.muscle == m } } }
 
     private func detailCard(_ e: LiftMuscleMapEntry) -> some View {
-        NoopCard(tint: tint) {
+        GymCard(tint: tint) {
             VStack(alignment: .leading, spacing: 4) {
                 Text(e.muscle.displayName)
                     .font(StrandFont.headline)
@@ -297,7 +297,7 @@ struct LiftMuscleMapSheet: View {
     }
 
     private var emptyCard: some View {
-        NoopCard {
+        GymCard {
             Text("Log a session and the map fills in: what you worked, what is still recovering, what you have left alone.")
                 .font(StrandFont.footnote)
                 .foregroundStyle(StrandPalette.textSecondary)
@@ -323,8 +323,8 @@ struct LiftMuscleMapSheet: View {
 
     private func listCard(title: LocalizedStringKey, lines: [String]) -> some View {
         VStack(alignment: .leading, spacing: NoopMetrics.gap) {
-            SectionHeader(title, overline: nil)
-            NoopCard {
+            GymSectionTitle(title: title)
+            GymCard {
                 VStack(alignment: .leading, spacing: NoopMetrics.space3) {
                     ForEach(lines, id: \.self) { line in
                         HStack(spacing: NoopMetrics.space3) {

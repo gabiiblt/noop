@@ -292,7 +292,7 @@ struct LiftSessionDetailSheet: View {
         VStack(alignment: .leading, spacing: NoopMetrics.gap) {
             GymSectionTitle(title: "Exercises")
             if performed.isEmpty {
-                NoopCard {
+                GymCard {
                     Text("No sets were performed. Discarded sets stay under Edit sets as zeros you can fill in.")
                         .font(StrandFont.footnote)
                         .foregroundStyle(StrandPalette.textSecondary)
@@ -308,7 +308,7 @@ struct LiftSessionDetailSheet: View {
     private func exerciseCard(_ summary: LiftMetrics.ExerciseSummary) -> some View {
         let rows = performed.filter { $0.exercise == summary.exercise }.sorted { $0.ord < $1.ord }
         let entry = catalogueByName[summary.exercise]
-        return NoopCard {
+        return GymCard {
             VStack(alignment: .leading, spacing: NoopMetrics.rowSpacing) {
                 Button {
                     openExercise = ExerciseSheetTarget(name: summary.exercise, catalogue: entry)
@@ -343,7 +343,7 @@ struct LiftSessionDetailSheet: View {
 
                 HStack(alignment: .firstTextBaseline, spacing: NoopMetrics.gap) {
                     VStack(alignment: .leading, spacing: 2) {
-                        Text("Best set").strandOverline()
+                        Text("Best set").gymLabel()
                         Text(bestSetText(summary))
                             .font(StrandFont.bodyNumber)
                             .foregroundStyle(StrandPalette.textPrimary)
@@ -357,7 +357,7 @@ struct LiftSessionDetailSheet: View {
                     }
                     Spacer(minLength: 0)
                     VStack(alignment: .trailing, spacing: 2) {
-                        Text("Volume").strandOverline()
+                        Text("Volume").gymLabel()
                         Text(LiftFormat.weight(summary.volumeKg, system: unitSystem))
                             .font(StrandFont.bodyNumber)
                             .foregroundStyle(StrandPalette.textPrimary)
@@ -449,16 +449,16 @@ struct LiftSessionDetailSheet: View {
         let counts = LiftMetrics.muscleCounts(performed)
         let ordered = LiftMuscle.ordered.filter { (counts.fractional[$0] ?? 0) > 0 }
         return VStack(alignment: .leading, spacing: NoopMetrics.gap) {
-            SectionHeader("Sets per muscle", overline: "This session · estimated")
+            GymSectionTitle(title: "Sets per muscle")
             if ordered.isEmpty {
-                NoopCard {
+                GymCard {
                     Text("None of these exercises has a muscle group yet. Add one on the exercise and every future session counts toward it.")
                         .font(StrandFont.footnote)
                         .foregroundStyle(StrandPalette.textSecondary)
                         .fixedSize(horizontal: false, vertical: true)
                 }
             } else {
-                NoopCard {
+                GymCard {
                     VStack(alignment: .leading, spacing: 8) {
                         ForEach(ordered, id: \.self) { muscle in
                             HStack(spacing: NoopMetrics.rowSpacing) {
@@ -499,8 +499,8 @@ struct LiftSessionDetailSheet: View {
     private var rpeSection: some View {
         let p = LiftMetrics.rpeProfile(performed)
         return VStack(alignment: .leading, spacing: NoopMetrics.gap) {
-            SectionHeader("How hard it felt", overline: "RPE")
-            NoopCard {
+            GymSectionTitle(title: "How hard it felt")
+            GymCard {
                 VStack(alignment: .leading, spacing: 8) {
                     HStack {
                         Text("Mean RPE")

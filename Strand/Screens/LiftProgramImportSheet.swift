@@ -36,7 +36,7 @@ struct LiftProgramImportSheet: View {
                         intro
                     }
                     if let failure {
-                        NoopCard {
+                        GymCard {
                             Text(failure)
                                 .font(StrandFont.footnote)
                                 .foregroundStyle(StrandPalette.statusCritical)
@@ -80,7 +80,7 @@ struct LiftProgramImportSheet: View {
 
     private var intro: some View {
         VStack(alignment: .leading, spacing: NoopMetrics.gap) {
-            NoopCard {
+            GymCard {
                 VStack(alignment: .leading, spacing: 8) {
                     Text("Fill it in on a computer")
                         .font(StrandFont.headline)
@@ -102,14 +102,14 @@ struct LiftProgramImportSheet: View {
                 Label("Choose a file", systemImage: "doc.badge.plus")
                     .frame(maxWidth: .infinity)
             }
-            .buttonStyle(.noopPrimary)
+            .noopGlassButton(prominent: true, tint: StrandPalette.gymAccent)
         }
     }
 
     private func preview(_ result: LiftProgramImportResult) -> some View {
         VStack(alignment: .leading, spacing: NoopMetrics.gap) {
             ForEach(Array(result.programs.enumerated()), id: \.offset) { _, program in
-                NoopCard {
+                GymCard {
                     VStack(alignment: .leading, spacing: 6) {
                         Text(program.name)
                             .font(StrandFont.headline)
@@ -133,7 +133,7 @@ struct LiftProgramImportSheet: View {
             }
 
             if !result.warnings.isEmpty {
-                NoopCard {
+                GymCard {
                     VStack(alignment: .leading, spacing: 6) {
                         // No count in the heading: the warnings are listed directly beneath it, so
                         // the number adds nothing — and it dodges plural agreement in ten languages.
